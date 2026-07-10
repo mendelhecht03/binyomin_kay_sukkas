@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buy Sukkah Package | Benyamin Kay Sukkas</title>
+  <link rel="stylesheet" href="../../../styles.css?v=28">
+  <script src="../../../scripts/buy-form.js?v=1" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="/">Benyamin Kay Sukkas</a>
+    <nav class="site-nav" aria-label="Main navigation">
+      <details class="nav-dropdown">
+        <summary>Services</summary>
+        <div class="nav-menu">
+          <a href="/services/">All Services</a>
+          <a href="/services/sukka-packages/">Sukkah Packages</a>
+          <a href="/services/#sukkah-rentals">Sukkah Rentals</a>
+          <a href="/services/#custom-sukkahs">Custom Sukkahs</a>
+          <a href="/services/#pergolas">Pergolas</a>
+          <a href="/services/#tree-trimming">Tree Trimming</a>
+          <a href="/services/#eruv-work">Eruv Work</a>
+        </div>
+      </details>
+      <a href="/about/">About</a>
+      <a href="/contact/">Contact</a>
+    </nav>
+  </header>
+
+  <main class="page buy-page">
+    <section class="buy-form-card" aria-label="Sample buy form">
+      <p class="eyebrow">Buy Form</p>
+      <h1>Sample Sukkah Order Form</h1>
+      <p>
+        Sample form only: these fields are placeholders for testing the buying
+        flow. Replace them with the real checkout or request process later.
+      </p>
+
+      <form class="buy-form">
+        <div class="form-grid">
+          <div class="field">
+            <label for="package">Package</label>
+            <select id="package" name="package" data-package-select>
+              <option value="basic">Basic Sukkah - $850</option>
+              <option value="standard">Standard Sukkah - $1,250</option>
+              <option value="family">Family Sukkah - $1,750</option>
+              <option value="premium">Premium Sukkah - $2,400</option>
+              <option value="deluxe">Deluxe Sukkah - $3,200</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="quantity">Quantity</label>
+            <input id="quantity" name="quantity" type="number" min="1" value="1">
+          </div>
+
+          <div class="field">
+            <label for="first-name">First Name</label>
+            <input id="first-name" name="first-name" type="text" placeholder="First name">
+          </div>
+
+          <div class="field">
+            <label for="last-name">Last Name</label>
+            <input id="last-name" name="last-name" type="text" placeholder="Last name">
+          </div>
+
+          <div class="field">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" placeholder="you@example.com">
+          </div>
+
+          <div class="field">
+            <label for="phone">Phone</label>
+            <input id="phone" name="phone" type="tel" placeholder="Phone number">
+          </div>
+
+          <div class="field full-width">
+            <label for="address">Installation Address</label>
+            <input id="address" name="address" type="text" placeholder="Street address">
+          </div>
+
+          <div class="field">
+            <label for="city">City</label>
+            <input id="city" name="city" type="text" placeholder="City">
+          </div>
+
+          <div class="field">
+            <label for="zip">ZIP Code</label>
+            <input id="zip" name="zip" type="text" placeholder="ZIP code">
+          </div>
+
+          <div class="field">
+            <label for="setup-date">Preferred Setup Date</label>
+            <input id="setup-date" name="setup-date" type="date">
+          </div>
+
+          <div class="field">
+            <label for="setup-window">Preferred Time Window</label>
+            <select id="setup-window" name="setup-window">
+              <option value="">Choose a sample option</option>
+              <option value="morning">Morning</option>
+              <option value="afternoon">Afternoon</option>
+              <option value="evening">Evening</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="payment">Payment Preference</label>
+            <select id="payment" name="payment">
+              <option value="">Choose a sample option</option>
+              <option value="card">Credit card</option>
+              <option value="cash">Cash</option>
+              <option value="check">Check</option>
+              <option value="zelle">Zelle</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="size">Approximate Size Needed</label>
+            <input id="size" name="size" type="text" placeholder="Example: 8x10">
+          </div>
+
+          <div class="field full-width">
+            <label for="notes">Notes</label>
+            <textarea id="notes" name="notes" placeholder="Sample notes field: delivery details, sizing questions, or special instructions."></textarea>
+          </div>
+        </div>
+
+        <label class="checkbox-field" for="sample-confirmation">
+          <input id="sample-confirmation" name="sample-confirmation" type="checkbox">
+          <span>I understand this is a sample form and does not submit an order yet.</span>
+        </label>
+
+        <div class="button-row">
+          <button class="button primary" type="submit">Submit Sample Request</button>
+          <a class="button secondary" href="/services/sukka-packages/">Back</a>
+        </div>
+      </form>
+    </section>
+  </main>
+</body>
+</html>
