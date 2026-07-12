@@ -128,6 +128,15 @@ The home page is the animated `/` route in `index.html`. Do not create a
 separate `/home/` route unless the navigation and architecture docs are updated
 at the same time.
 
+The root page has three cylinder-style panels:
+
+- Home
+- About
+- Contact
+
+Visitors move between these panels by scrolling, swiping, or using keyboard
+scroll keys. The panel behavior lives in `scripts/main.js`.
+
 ## Deployment Checklist
 
 1. Edit the HTML, CSS, JS, or image files.
