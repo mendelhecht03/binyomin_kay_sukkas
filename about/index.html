@@ -4,42 +4,54 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>About | Benyamin Kay Sukkas</title>
-  <link rel="stylesheet" href="../styles.css?v=29">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../styles.css?v=42">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" defer></script>
 </head>
 <body>
-  <header class="site-header">
-    <a class="brand" href="/">Benyamin Kay Sukkas</a>
-    <nav class="site-nav" aria-label="Main navigation">
-      <details class="nav-dropdown">
-        <summary>Services</summary>
-        <div class="nav-menu">
-          <a href="/services/">All Services</a>
-          <a href="/services/sukka-packages/">Sukkah Packages</a>
-          <a href="/services/#sukkah-rentals">Sukkah Rentals</a>
-          <a href="/services/#custom-sukkahs">Custom Sukkahs</a>
-          <a href="/services/#pergolas">Pergolas</a>
-          <a href="/services/#tree-trimming">Tree Trimming</a>
-          <a href="/services/#eruv-work">Eruv Work</a>
-        </div>
-      </details>
-      <a href="/about/">About</a>
-      <a href="/contact/">Contact</a>
-    </nav>
+  <header class="site-header navbar navbar-expand-xl navbar-light">
+    <div class="container-fluid site-header-inner">
+      <a class="navbar-brand brand" href="/">Benyamin Kay Sukkas</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#site-navigation"
+        aria-controls="site-navigation"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <nav class="collapse navbar-collapse site-nav" id="site-navigation" aria-label="Main navigation">
+        <ul class="navbar-nav ms-auto align-items-xl-center">
+          <li class="nav-item"><a class="nav-link" href="/services/">Services</a></li>
+          <li class="nav-item"><a class="nav-link" href="/services/sukka-packages/">Sukkah Packages</a></li>
+          <li class="nav-item"><a class="nav-link" href="/services/#sukkah-rentals">Rentals</a></li>
+          <li class="nav-item"><a class="nav-link" href="/services/#custom-sukkahs">Custom Sukkahs</a></li>
+          <li class="nav-item"><a class="nav-link" href="/services/#pergolas">Pergolas</a></li>
+          <li class="nav-item"><a class="nav-link" href="/services/#tree-trimming">Tree Trimming</a></li>
+          <li class="nav-item"><a class="nav-link" href="/services/#eruv-work">Eruv Work</a></li>
+          <li class="nav-item"><a class="nav-link" href="/gallery/">Gallery</a></li>
+          <li class="nav-item"><a class="nav-link" href="/about/">About</a></li>
+          <li class="nav-item"><a class="nav-link nav-cta" href="/contact/">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
   </header>
 
   <main class="page about-page">
     <section class="root-panel-layout standalone-about-layout" aria-label="About">
       <div class="root-panel-copy">
         <p class="eyebrow">About</p>
-        <h1>Sample About Section</h1>
+        <h1>Hands-on work with clear communication.</h1>
         <p>
-          Sample text only: this is temporary writing to test the layout.
-          Replace this with the real story about Benyamin, the work he does,
-          and why customers should feel comfortable reaching out.
+          Benyamin helps with seasonal projects that need care, timing, and
+          reliable follow-through, especially around the busy sukkah season.
         </p>
         <p>
-          Sample text only: this paragraph is here to help judge spacing,
-          length, and readability. It is not intended to be final website copy.
+          This section can grow into the full story behind the work, the areas
+          served, and what customers can expect from the process.
         </p>
         <div class="button-row">
           <a class="button secondary" href="/contact/">Contact</a>

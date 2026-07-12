@@ -89,3 +89,13 @@ If these design requirements do not mention a detail, make a simple, conservativ
 ## Documentation
 
 When a decision affects the website's design, structure, or requirements, suggest updating the matching file in `docs/`.
+
+## Route and Architecture Changes
+
+Whenever Codex changes routes, navigation, hosting structure, file layout, or the static Worker setup:
+
+- Update `architecture.md` in the project root.
+- Update the route list in `docs/requirements.md` when the public route list changes.
+- Keep the repeated navbar markup consistent across every HTML page.
+- Regenerate `index.mjs` with `node scripts\generate-static-worker.cjs` before deployment.
+- Check that new deployable assets use supported, size-conscious formats. Prefer compressed `.jpg` files for normal photos.

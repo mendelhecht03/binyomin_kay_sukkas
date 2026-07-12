@@ -3,41 +3,45 @@ const path = require("path");
 
 const rootDir = path.resolve(__dirname, "..");
 
-const filesToServe = [
-  "index.html",
-  "styles.css",
-  "about/index.html",
-  "contact/index.html",
-  "home/index.html",
-  "services/index.html",
-  "services/sukka-packages/index.html",
-  "services/sukka-packages/buy/index.html",
-  "services/sukka-packages/samples/level-1/index.html",
-  "services/sukka-packages/samples/level-2/index.html",
-  "services/sukka-packages/samples/level-3/index.html",
-  "services/sukka-packages/samples/level-4/index.html",
-  "services/sukka-packages/samples/level-5/index.html",
-  "scripts/build-sukkah-form.js",
-  "scripts/buy-form.js",
-  "scripts/buy-request.js",
-  "scripts/main.js",
-  "scripts/splide-carousel.js",
-  "assets/images/profile-photo1.jpg",
-  "assets/images/sample-sukka1.jpg",
-  "assets/images/sample-sukka2.jpg",
-  "assets/images/sample-sukka3.jpg",
-  "assets/images/sample-sukka4.jpg",
-  "assets/images/sample-sukka5.jpg",
-  "assets/images/sukka-background.jpg",
-];
-
 const contentTypes = {
   ".css": "text/css; charset=utf-8",
   ".html": "text/html; charset=utf-8",
   ".jpg": "image/jpeg",
   ".js": "text/javascript; charset=utf-8",
-  ".png": "image/png",
 };
+
+const servedExtensions = new Set(Object.keys(contentTypes));
+const ignoredDirectories = new Set([".git", ".openai"]);
+
+function collectFiles(directory) {
+  const entries = fs.readdirSync(directory, { withFileTypes: true });
+  const files = [];
+
+  for (const entry of entries) {
+    if (ignoredDirectories.has(entry.name)) {
+      continue;
+    }
+
+    const absolutePath = path.join(directory, entry.name);
+
+    if (entry.isDirectory()) {
+      files.push(...collectFiles(absolutePath));
+      continue;
+    }
+
+    const extension = path.extname(entry.name);
+
+    if (!servedExtensions.has(extension)) {
+      continue;
+    }
+
+    files.push(path.relative(rootDir, absolutePath).replace(/\\/g, "/"));
+  }
+
+  return files.sort();
+}
+
+const filesToServe = collectFiles(rootDir);
 
 function routeForFile(filePath) {
   const route = `/${filePath.replace(/\\/g, "/")}`;
