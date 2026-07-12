@@ -22,18 +22,19 @@ const filesToServe = [
   "scripts/buy-request.js",
   "scripts/main.js",
   "scripts/splide-carousel.js",
-  "assets/images/profile-photo1.png",
-  "assets/images/sample-sukka1.png",
-  "assets/images/sample-sukka2.png",
-  "assets/images/sample-sukka3.png",
-  "assets/images/sample-sukka4.png",
-  "assets/images/sample-sukka5.png",
-  "assets/images/sukka-background.png",
+  "assets/images/profile-photo1.jpg",
+  "assets/images/sample-sukka1.jpg",
+  "assets/images/sample-sukka2.jpg",
+  "assets/images/sample-sukka3.jpg",
+  "assets/images/sample-sukka4.jpg",
+  "assets/images/sample-sukka5.jpg",
+  "assets/images/sukka-background.jpg",
 ];
 
 const contentTypes = {
   ".css": "text/css; charset=utf-8",
   ".html": "text/html; charset=utf-8",
+  ".jpg": "image/jpeg",
   ".js": "text/javascript; charset=utf-8",
   ".png": "image/png",
 };
