@@ -30,7 +30,7 @@ body {
   overflow-x: hidden;
   color: var(--site-ink);
   background:
-    linear-gradient(180deg, rgba(247, 249, 248, 0.88), rgba(255, 255, 255, 0.66)),
+    linear-gradient(180deg, rgba(247, 249, 248, 0.62), rgba(255, 255, 255, 0.36)),
     url("assets/images/sukka-background.jpg") center / cover fixed no-repeat;
 }
 
@@ -40,8 +40,8 @@ body::before {
   inset: 0;
   z-index: -1;
   background:
-    linear-gradient(90deg, rgba(22, 61, 48, 0.08), transparent 42%),
-    linear-gradient(180deg, transparent 0%, rgba(241, 245, 249, 0.3) 100%);
+    linear-gradient(90deg, rgba(22, 61, 48, 0.04), transparent 42%),
+    linear-gradient(180deg, transparent 0%, rgba(241, 245, 249, 0.14) 100%);
   pointer-events: none;
 }
 
