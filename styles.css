@@ -1057,6 +1057,45 @@ body.has-image-lightbox {
   margin-top: 18px;
 }
 
+.contact-method-field {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.contact-method-field legend {
+  margin: 0;
+  color: var(--site-ink);
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.contact-method-toggle {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.contact-method-button {
+  width: 100%;
+}
+
+.contact-toast {
+  border: 1px solid var(--site-border);
+  border-radius: var(--site-radius);
+  box-shadow: var(--site-shadow);
+}
+
+.contact-toast.is-success .toast-header {
+  color: var(--site-green-dark);
+}
+
+.contact-toast.is-error .toast-header {
+  color: #8a2a2a;
+}
+
 @media (max-width: 1199.98px) {
   .site-header-inner {
     padding: 12px 18px;

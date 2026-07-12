@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Contact | Benyamin Kay Sukkas</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="../styles.css?v=43">
+  <link rel="stylesheet" href="../styles.css?v=44">
+  <script src="../scripts/contact-form.js?v=1" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" defer></script>
 </head>
 <body>
@@ -62,19 +63,37 @@
           <li>WhatsApp: add WhatsApp number</li>
           <li>Instagram: add Instagram handle</li>
         </ul>
-        <form class="contact-form compact-form">
+        <form class="contact-form compact-form" data-contact-form>
+          <fieldset class="contact-method-field" aria-label="Choose contact method">
+            <legend>Send by</legend>
+            <div class="contact-method-toggle" role="group" aria-label="Choose how to send your message">
+              <button class="button secondary contact-method-button" type="button" data-contact-method="email" aria-pressed="false">Email</button>
+              <button class="button secondary contact-method-button" type="button" data-contact-method="whatsapp" aria-pressed="false">Whatsapp</button>
+            </div>
+          </fieldset>
+
           <div class="field">
             <label for="name">Name</label>
             <input id="name" name="name" type="text" placeholder="Your name">
           </div>
           <div class="field">
             <label for="message">Message</label>
-            <textarea id="message" name="message" placeholder="What do you need help with?"></textarea>
+            <textarea id="message" name="message" placeholder="Choose Email or Whatsapp, then write your message."></textarea>
           </div>
-          <button class="button primary" type="button">Send Message</button>
+          <button class="button primary" type="submit">Send Message</button>
         </form>
       </div>
     </section>
   </main>
+
+  <div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div class="toast contact-toast" data-contact-toast role="status" aria-live="polite" aria-atomic="true">
+      <div class="toast-header">
+        <strong class="me-auto" data-contact-toast-title>Message</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+      <div class="toast-body" data-contact-toast-body></div>
+    </div>
+  </div>
 </body>
 </html>
