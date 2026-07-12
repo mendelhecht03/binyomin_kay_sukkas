@@ -133,55 +133,9 @@ img {
   padding: 56px 24px;
 }
 
-.page:has(.stage) {
-  min-height: calc(100vh - 76px);
-  display: flex;
-  align-items: center;
-  perspective: 1400px;
-}
-
 .hero-copy,
 .page-panel {
   width: min(100%, 760px);
-}
-
-.stage {
-  position: relative;
-  width: min(100%, 990px);
-  min-height: 900px;
-  transform-style: preserve-3d;
-}
-
-.stage-face {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  opacity: 0;
-  pointer-events: none;
-  transform-origin: center center -260px;
-  transform: rotateX(-92deg) translateY(38px);
-  transition:
-    transform 760ms cubic-bezier(0.2, 0.8, 0.2, 1),
-    opacity 280ms ease;
-  backface-visibility: hidden;
-}
-
-.stage-face.is-active {
-  opacity: 1;
-  pointer-events: auto;
-  transform: rotateX(0deg) translateZ(0);
-}
-
-.stage-face.is-entering {
-  opacity: 0;
-  transform: rotateX(-92deg) translateY(38px);
-}
-
-.stage-face.is-exiting {
-  opacity: 0;
-  pointer-events: none;
-  transform: rotateX(92deg) translateY(-38px);
 }
 
 .root-panel-layout {
@@ -1032,23 +986,34 @@ body.has-image-lightbox {
   overflow: hidden;
 }
 
+.root-page {
+  display: grid;
+  gap: 22px;
+}
+
+.root-section {
+  width: min(100%, 980px);
+  padding: 28px;
+  border: 1px solid var(--site-border);
+  border-radius: var(--site-radius);
+  background: var(--site-panel);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  box-shadow: var(--site-shadow);
+}
+
+.root-hero {
+  padding: 34px 32px;
+}
+
+.root-hero h1 {
+  max-width: 780px;
+}
+
 .section {
   margin-top: 28px;
   padding-top: 24px;
   border-top: 1px solid rgba(30, 37, 43, 0.12);
-}
-
-.root-featured-work,
-.root-testimonials {
-  margin-top: 28px;
-  padding-top: 22px;
-  border-top: 1px solid rgba(30, 37, 43, 0.12);
-}
-
-.root-featured-work h2,
-.root-testimonials h2 {
-  margin-bottom: 12px;
-  font-size: 1.18rem;
 }
 
 .root-featured-grid .placeholder {
@@ -1204,18 +1169,6 @@ body.has-image-lightbox {
     padding: 34px 18px;
   }
 
-  .page:has(.stage) {
-    align-items: flex-start;
-  }
-
-  .stage {
-    min-height: 1380px;
-  }
-
-  .stage-face {
-    transform-origin: center center -180px;
-  }
-
   .root-panel-layout {
     grid-template-columns: 1fr;
     gap: 26px;
@@ -1270,7 +1223,9 @@ body.has-image-lightbox {
   .buy-form-card,
   .build-form-header,
   .build-form-section,
-  .gallery-hero {
+  .gallery-hero,
+  .root-section,
+  .root-hero {
     padding: 20px;
   }
 
