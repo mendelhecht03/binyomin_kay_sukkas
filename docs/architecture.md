@@ -17,14 +17,18 @@ Hosted Worker: index.mjs
   |     +-- /about/                   -> about/index.html
   |     +-- /contact/                 -> contact/index.html
   |     +-- /gallery/                 -> gallery/index.html
-  |     +-- /services/                -> services/index.html
-  |     +-- /services/sukka-packages/ -> services/sukka-packages/index.html
-  |     +-- /services/sukka-packages/buy/
-  |     +-- /services/sukka-packages/samples/level-1/
-  |     +-- /services/sukka-packages/samples/level-2/
-  |     +-- /services/sukka-packages/samples/level-3/
-  |     +-- /services/sukka-packages/samples/level-4/
-  |     +-- /services/sukka-packages/samples/level-5/
+  |     +-- /sukkah-packages/         -> sukkah-packages/index.html
+  |     +-- /sukkah-packages/buy/
+  |     +-- /sukkah-packages/samples/level-1/
+  |     +-- /sukkah-packages/samples/level-2/
+  |     +-- /sukkah-packages/samples/level-3/
+  |     +-- /sukkah-packages/samples/level-4/
+  |     +-- /sukkah-packages/samples/level-5/
+  |     +-- /sukkah-rentals/          -> sukkah-rentals/index.html
+  |     +-- /custom-sukkahs/          -> custom-sukkahs/index.html
+  |     +-- /pergolas/                -> pergolas/index.html
+  |     +-- /tree-trimming/           -> tree-trimming/index.html
+  |     +-- /eruv-work/               -> eruv-work/index.html
   |
   +-- serves shared files
         +-- styles.css
@@ -39,17 +43,22 @@ Hosted Worker: index.mjs
 +-- index.html
 +-- styles.css
 +-- index.mjs
-+-- architecture.md
 +-- about/
 +-- contact/
 +-- gallery/
 +-- home/
-+-- services/
++-- sukkah-packages/
 |   +-- index.html
-|   +-- sukkah-packages/
-|       +-- index.html
-|       +-- buy/
-|       +-- samples/
+|   +-- buy/
+|   +-- samples/
++-- sukkah-rentals/
++-- custom-sukkahs/
++-- pergolas/
++-- tree-trimming/
++-- eruv-work/
++-- docs/
+|   +-- architecture.md
+|   +-- requirements.md
 +-- scripts/
 |   +-- generate-static-worker.cjs
 |   +-- main.js
@@ -118,7 +127,7 @@ The mobile hamburger is Bootstrap's standard navbar collapse behavior.
 ## Deployment Checklist
 
 1. Edit the HTML, CSS, JS, or image files.
-2. If routes or architecture changed, update this `architecture.md` file.
+2. If routes or architecture changed, update this `docs/architecture.md` file.
 3. Run `node scripts\generate-static-worker.cjs`.
 4. Test the Worker locally with Node or a local server.
 5. Commit the changes.

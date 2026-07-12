@@ -94,7 +94,7 @@ When a decision affects the website's design, structure, or requirements, sugges
 
 Whenever Codex changes routes, navigation, hosting structure, file layout, or the static Worker setup:
 
-- Update `architecture.md` in the project root.
+- Update `docs/architecture.md`.
 - Update the route list in `docs/requirements.md` when the public route list changes.
 - Keep the repeated navbar markup consistent across every HTML page.
 - Regenerate `index.mjs` with `node scripts\generate-static-worker.cjs` before deployment.
