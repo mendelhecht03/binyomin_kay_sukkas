@@ -327,6 +327,43 @@ p {
   margin-bottom: 18px;
 }
 
+.contact-links {
+  display: grid;
+  gap: 10px;
+  margin: 0 0 18px;
+  padding: 0;
+  list-style: none;
+}
+
+.contact-link {
+  width: 100%;
+  gap: 10px;
+  text-align: center;
+}
+
+.contact-link span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.contact-link-copy {
+  display: grid;
+  gap: 2px;
+  line-height: 1.25;
+  text-align: center;
+}
+
+.contact-link-value {
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.contact-link-icon {
+  width: 1.2rem;
+  height: 1.2rem;
+  flex: 0 0 auto;
+}
+
 .compact-form {
   gap: 10px;
 }
@@ -691,7 +728,6 @@ select:focus {
 }
 
 button:not(.navbar-toggler):not(.splide__arrow):not(.image-lightbox-close) {
-  width: fit-content;
   border: 0;
   cursor: pointer;
 }
@@ -1096,28 +1132,8 @@ body.has-image-lightbox {
   margin-top: 18px;
 }
 
-.contact-method-field {
-  display: grid;
-  gap: 8px;
-  margin: 0;
-  padding: 0;
-  border: 0;
-}
-
-.contact-method-field legend {
-  margin: 0;
-  color: var(--site-ink);
-  font-size: 1rem;
-  font-weight: 800;
-}
-
-.contact-method-toggle {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
-}
-
-.contact-method-button {
+.contact-form > .button,
+.build-form-actions .button {
   width: 100%;
 }
 
@@ -1162,7 +1178,13 @@ body.has-image-lightbox {
 
 @media (max-width: 760px) {
   body {
-    background-attachment: scroll;
+    background:
+      var(--site-cream) url("assets/images/sukka-background.jpg")
+      center top / 100% auto no-repeat;
+  }
+
+  body::before {
+    display: none;
   }
 
   .page {

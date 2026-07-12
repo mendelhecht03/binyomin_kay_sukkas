@@ -12,10 +12,13 @@
 [] Few sample videos (for Hero page)
 
 **Contact information**
-- Email
-- Phone number
-- Instagram
-- Whatsapp
+- Email: mendelhecht16@gmail.com
+- Phone: (347) 454-2282
+- Instagram: @bkaysukkahbuilders
+- WhatsApp: +1 (669) 290-9004
+
+The contact page shows each method as a full-width link. The message form opens
+the visitor's email app with their message filled in.
 
 **Routes**
 
