@@ -21,8 +21,6 @@
 
 /
 
-/home
-
 /about
 
 /contact

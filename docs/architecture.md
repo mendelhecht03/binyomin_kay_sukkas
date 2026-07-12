@@ -13,7 +13,6 @@ Hosted Worker: index.mjs
   |
   +-- serves HTML routes
   |     +-- /                         -> index.html
-  |     +-- /home/                    -> home/index.html
   |     +-- /about/                   -> about/index.html
   |     +-- /contact/                 -> contact/index.html
   |     +-- /gallery/                 -> gallery/index.html
@@ -46,7 +45,6 @@ Hosted Worker: index.mjs
 +-- about/
 +-- contact/
 +-- gallery/
-+-- home/
 +-- sukkah-packages/
 |   +-- index.html
 |   +-- buy/
@@ -123,6 +121,12 @@ When changing navigation links, update every HTML page that contains:
 ```
 
 The mobile hamburger is Bootstrap's standard navbar collapse behavior.
+
+## Home Page
+
+The home page is the animated `/` route in `index.html`. Do not create a
+separate `/home/` route unless the navigation and architecture docs are updated
+at the same time.
 
 ## Deployment Checklist
 

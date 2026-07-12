@@ -148,7 +148,7 @@ img {
 .stage {
   position: relative;
   width: min(100%, 990px);
-  min-height: 560px;
+  min-height: 900px;
   transform-style: preserve-3d;
 }
 
@@ -1038,6 +1038,23 @@ body.has-image-lightbox {
   border-top: 1px solid rgba(30, 37, 43, 0.12);
 }
 
+.root-featured-work,
+.root-testimonials {
+  margin-top: 28px;
+  padding-top: 22px;
+  border-top: 1px solid rgba(30, 37, 43, 0.12);
+}
+
+.root-featured-work h2,
+.root-testimonials h2 {
+  margin-bottom: 12px;
+  font-size: 1.18rem;
+}
+
+.root-featured-grid .placeholder {
+  min-height: 118px;
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1049,8 +1066,7 @@ body.has-image-lightbox {
   margin-bottom: 14px;
 }
 
-.testimonial-grid,
-.root-testimonials {
+.testimonial-grid {
   display: grid;
   gap: 14px;
 }
@@ -1058,12 +1074,6 @@ body.has-image-lightbox {
 .testimonial-grid {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   margin-top: 16px;
-}
-
-.root-testimonials {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  max-width: 690px;
-  margin-top: 22px;
 }
 
 .testimonial-card {
@@ -1199,7 +1209,7 @@ body.has-image-lightbox {
   }
 
   .stage {
-    min-height: 900px;
+    min-height: 1380px;
   }
 
   .stage-face {
@@ -1244,8 +1254,7 @@ body.has-image-lightbox {
   .service-grid,
   .gallery-grid,
   .grid,
-  .testimonial-grid,
-  .root-testimonials {
+  .testimonial-grid {
     grid-template-columns: 1fr;
   }
 
