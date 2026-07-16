@@ -1,0 +1,289 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import MediaPlaceholder from "../../components/MediaPlaceholder.astro";
+
+const illustrativeImages = [
+  {
+    src: "/assets/images/sample-sukka1.jpg",
+    alt: "Illustrative view of an open-front wooden sukkah with schach",
+    title: "Open-front sukkah example",
+  },
+  {
+    src: "/assets/images/sample-sukka2.jpg",
+    alt: "Illustrative view of a light wooden sukkah with schach",
+    title: "Light wood sukkah example",
+  },
+  {
+    src: "/assets/images/sample-sukka3.jpg",
+    alt: "Illustrative view of a wide wooden sukkah with schach",
+    title: "Wide sukkah example",
+  },
+  {
+    src: "/assets/images/sample-sukka4.jpg",
+    alt: "Illustrative view of a warm-toned wooden sukkah with schach",
+    title: "Warm wood sukkah example",
+  },
+  {
+    src: "/assets/images/sample-sukka5.jpg",
+    alt: "Illustrative view of a large wooden sukkah with schach",
+    title: "Large sukkah example",
+  },
+  {
+    src: "/assets/images/sukka-background.jpg",
+    alt: "Illustrative close view of sukkah framing and schach",
+    title: "Framing and schach detail",
+  },
+];
+---
+
+<BaseLayout
+  title="Gallery"
+  description="View the current illustrative sukkah images and reserved spaces for future real project photography."
+>
+  <div class="gallery-page">
+    <section class="gallery-hero shell" aria-labelledby="gallery-heading">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="/">Home</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">Gallery</span>
+      </nav>
+      <p class="eyebrow">Gallery</p>
+      <h1 id="gallery-heading">Sukkah images and space for real project stories.</h1>
+      <p class="lead">
+        The current sukkah images are illustrative examples. They help show the
+        visual direction of the site, but they are not presented as photographs of
+        completed customer projects.
+      </p>
+    </section>
+
+    <section class="illustration-section shell" aria-labelledby="illustrations-heading">
+      <div class="gallery-heading-row">
+        <div>
+          <p class="eyebrow">Current imagery</p>
+          <h2 id="illustrations-heading">Illustrative sukkah views</h2>
+        </div>
+        <p class="image-note">
+          <strong>Image note:</strong> These are temporary illustrative visuals.
+        </p>
+      </div>
+
+      <div class="gallery-grid">
+        {
+          illustrativeImages.map((image, index) => (
+            <figure class:list={["gallery-item", { "gallery-item--wide": index === 0 }]}>
+              <div class="gallery-image">
+                <img
+                  src={image.src}
+                  alt={image.alt}
+                  width="1672"
+                  height="941"
+                  loading={index < 2 ? "eager" : "lazy"}
+                  decoding="async"
+                />
+                <span>Illustrative image</span>
+              </div>
+              <figcaption>{image.title}</figcaption>
+            </figure>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="future-section" aria-labelledby="future-projects-heading">
+      <div class="shell">
+        <div class="section-heading">
+          <p class="eyebrow">Future project photography</p>
+          <h2 id="future-projects-heading">Real examples will replace these spaces.</h2>
+          <p>
+            The planned gallery areas remain visible so the layout is ready when
+            verified project photos become available.
+          </p>
+        </div>
+        <div class="placeholder-grid">
+          <MediaPlaceholder label="Completed sukkah project" />
+          <MediaPlaceholder label="Before-and-after project" />
+          <MediaPlaceholder label="Pergola or outdoor work" />
+        </div>
+      </div>
+    </section>
+
+    <section class="gallery-cta shell" aria-labelledby="gallery-contact-heading">
+      <div>
+        <p class="eyebrow">Have a project in mind?</p>
+        <h2 id="gallery-contact-heading">Share your space, timing, and questions.</h2>
+        <p>Photos and approximate measurements can make the first conversation easier.</p>
+      </div>
+      <a class="button button-light" href="/contact/">Request a quote</a>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .gallery-page {
+    padding-top: clamp(2.5rem, 6vw, 5rem);
+  }
+
+  .gallery-hero {
+    padding-bottom: clamp(3rem, 7vw, 5.5rem);
+  }
+
+  .gallery-hero h1 {
+    max-width: 14ch;
+    font-size: clamp(2.7rem, 7vw, 5.25rem);
+  }
+
+  .gallery-hero .lead {
+    max-width: 46rem;
+  }
+
+  .illustration-section {
+    padding-bottom: clamp(4rem, 9vw, 7.5rem);
+  }
+
+  .gallery-heading-row {
+    display: flex;
+    gap: 2rem;
+    align-items: end;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+  }
+
+  .gallery-heading-row h2 {
+    margin-bottom: 0;
+  }
+
+  .image-note {
+    max-width: 23rem;
+    margin-bottom: 0.3rem;
+    padding: 0.8rem 1rem;
+    border-left: 3px solid var(--wood-500);
+    background: var(--cream-100);
+    font-size: 0.9rem;
+  }
+
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .gallery-item {
+    min-width: 0;
+    margin: 0;
+  }
+
+  .gallery-image {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border-radius: var(--radius);
+    background: var(--cream-200);
+  }
+
+  .gallery-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 240ms ease;
+  }
+
+  .gallery-image span {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    padding: 0.35rem 0.55rem;
+    border-radius: 999px;
+    color: var(--forest-950);
+    background: rgba(255, 253, 248, 0.9);
+    font-size: 0.68rem;
+    font-weight: 850;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    backdrop-filter: blur(8px);
+  }
+
+  .gallery-item:hover img {
+    transform: scale(1.015);
+  }
+
+  .gallery-item figcaption {
+    padding: 0.75rem 0.2rem 0;
+    color: var(--forest-900);
+    font-weight: 800;
+  }
+
+  .future-section {
+    padding-block: clamp(4rem, 9vw, 7rem);
+    background: var(--cream-100);
+  }
+
+  .placeholder-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .gallery-cta {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    justify-content: space-between;
+    margin-block: clamp(4rem, 9vw, 7rem);
+    padding: clamp(1.75rem, 5vw, 3.5rem);
+    border-radius: var(--radius-large);
+    background: var(--forest-900);
+  }
+
+  .gallery-cta h2 {
+    max-width: 23ch;
+    margin-bottom: 0.55rem;
+    color: white;
+  }
+
+  .gallery-cta .eyebrow {
+    color: #f0bd7e;
+  }
+
+  .gallery-cta p:last-child {
+    margin-bottom: 0;
+    color: rgba(255, 255, 255, 0.74);
+  }
+
+  .gallery-cta .button {
+    flex: 0 0 auto;
+  }
+
+  @media (max-width: 54rem) {
+    .gallery-grid,
+    .placeholder-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .gallery-heading-row {
+      align-items: start;
+      flex-direction: column;
+    }
+  }
+
+  @media (max-width: 38rem) {
+    .gallery-grid,
+    .placeholder-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .gallery-cta {
+      align-items: stretch;
+      flex-direction: column;
+    }
+
+    .gallery-cta .button {
+      width: 100%;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .gallery-image img {
+      transition: none;
+    }
+  }
+</style>

@@ -1,0 +1,163 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const formUrl =
+  "https://docs.google.com/forms/d/e/1FAIpQLSewoKTBcC23Ox_Gb6wRtXG_cUwB312FQSuQIfBmymV30IaJpg/viewform?usp=embedded_form_link";
+const embedUrl =
+  "https://docs.google.com/forms/d/e/1FAIpQLSewoKTBcC23Ox_Gb6wRtXG_cUwB312FQSuQIfBmymV30IaJpg/viewform?embedded=true";
+---
+
+<BaseLayout
+  title="Sukka Builder"
+  description="Use the BKAY Sukka Builder Google Form to share your sukkah setup, takedown, size, location, timing, and site details."
+>
+  <section class="builder-hero">
+    <div class="shell builder-hero-inner">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="/">Home</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">Sukka Builder</span>
+      </nav>
+      <p class="eyebrow">Sukka Builder</p>
+      <h1>Tell us about your sukkah.</h1>
+      <p class="lead">
+        Complete the BKAY form below with your contact information, requested
+        work, sukkah details, location, and preferred timing.
+      </p>
+      <div class="button-row">
+        <a class="button" href="/sukka-builder-alt/">
+          Compare Custom Form
+        </a>
+        <a class="button" href={formUrl} target="_blank" rel="noopener noreferrer">
+          Open Full Google Form
+        </a>
+        <a class="button button-secondary" href="tel:+13474542282">
+          Questions? Call (347) 454-2282
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="builder-section" aria-labelledby="builder-form-heading">
+    <div class="shell">
+      <div class="builder-heading">
+        <div>
+          <p class="eyebrow">Google Form</p>
+          <h2 id="builder-form-heading">BKAY Sukkah Builders form</h2>
+        </div>
+        <p>
+          The form includes an optional photo upload. Google may ask you to open
+          the full form and sign in before uploading a file.
+        </p>
+      </div>
+
+      <div class="form-embed-card">
+        <iframe
+          class="google-form-frame"
+          src={embedUrl}
+          title="BKAY Sukka Builder Google Form"
+          loading="eager"
+        >
+          Loading the Sukka Builder form…
+        </iframe>
+      </div>
+
+      <div class="form-fallback">
+        <p>
+          If the embedded form asks you to continue or does not load correctly,
+          open it directly in Google Forms.
+        </p>
+        <a class="text-link" href={formUrl} target="_blank" rel="noopener noreferrer">
+          Open the full form
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .builder-hero {
+    padding-block: clamp(3.5rem, 8vw, 6.5rem);
+    background:
+      radial-gradient(circle at 88% 10%, rgba(200, 134, 67, 0.14), transparent 32%),
+      var(--cream-100);
+  }
+
+  .builder-hero-inner {
+    max-width: 900px;
+  }
+
+  .builder-hero h1 {
+    max-width: 760px;
+  }
+
+  .builder-section {
+    padding-block: clamp(3.5rem, 8vw, 6rem);
+  }
+
+  .builder-heading {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 440px);
+    gap: 2rem;
+    align-items: end;
+    margin-bottom: 1.5rem;
+  }
+
+  .builder-heading h2,
+  .builder-heading p:last-child {
+    margin-bottom: 0;
+  }
+
+  .form-embed-card {
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-large);
+    background: white;
+    box-shadow: var(--shadow-medium);
+  }
+
+  .google-form-frame {
+    width: 100%;
+    min-height: 680px;
+    height: 78vh;
+    display: block;
+    border: 0;
+    background: white;
+  }
+
+  .form-fallback {
+    display: flex;
+    gap: 1rem 2rem;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1rem;
+    padding: 1rem 1.15rem;
+    border-left: 4px solid var(--wood-500);
+    background: var(--cream-100);
+  }
+
+  .form-fallback p {
+    margin: 0;
+  }
+
+  .form-fallback .text-link {
+    flex: 0 0 auto;
+  }
+
+  @media (max-width: 740px) {
+    .builder-heading {
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+    }
+
+    .google-form-frame {
+      min-height: 600px;
+      height: 72vh;
+    }
+
+    .form-fallback {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+  }
+</style>

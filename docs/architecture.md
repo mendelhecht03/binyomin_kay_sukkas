@@ -1,141 +1,185 @@
 # Site Architecture
 
-This project is a static website. There is no build framework like React,
-Next.js, or Vite. Each route is a normal `index.html` file inside a folder.
+This project uses Astro to build a static website. "Static" means Astro turns
+the source files into normal HTML, CSS, JavaScript, and image files before the
+site is deployed. A server does not need to assemble each page when a visitor
+opens it.
 
-## Visual Map
+## Build and Hosting Flow
 
 ```text
-Visitor
-  |
-  v
-Hosted Worker: index.mjs
-  |
-  +-- serves HTML routes
-  |     +-- /                         -> index.html
-  |     +-- /about/                   -> about/index.html
-  |     +-- /contact/                 -> contact/index.html
-  |     +-- /gallery/                 -> gallery/index.html
-  |     +-- /sukkah-packages/         -> sukkah-packages/index.html
-  |     +-- /sukkah-packages/buy/
-  |     +-- /sukkah-packages/samples/level-1/
-  |     +-- /sukkah-packages/samples/level-2/
-  |     +-- /sukkah-packages/samples/level-3/
-  |     +-- /sukkah-packages/samples/level-4/
-  |     +-- /sukkah-packages/samples/level-5/
-  |     +-- /sukkah-rentals/          -> sukkah-rentals/index.html
-  |     +-- /custom-sukkahs/          -> custom-sukkahs/index.html
-  |     +-- /pergolas/                -> pergolas/index.html
-  |     +-- /tree-trimming/           -> tree-trimming/index.html
-  |     +-- /eruv-work/               -> eruv-work/index.html
-  |
-  +-- serves shared files
-        +-- styles.css
-        +-- scripts/*.js
-        +-- assets/images/*.jpg
+Astro source files
+  src/ and public/
+        |
+        | npm run build:site
+        v
+Static website
+  dist/
+        |
+        | npm run build:worker
+        v
+Hosted Worker
+  index.mjs
 ```
 
-## Folder Layout
+The hosted Sites project still deploys the root `index.mjs` file. Astro does
+not replace that hosting step. Instead, Astro creates the static site first,
+and `scripts/generate-static-worker.cjs` packages the finished files into the
+Worker.
+
+## Important Folders
 
 ```text
 .
-+-- index.html
-+-- styles.css
-+-- index.mjs
-+-- about/
-+-- contact/
-+-- gallery/
-+-- sukkah-packages/
-|   +-- index.html
-|   +-- buy/
-|   +-- samples/
-+-- sukkah-rentals/
-+-- custom-sukkahs/
-+-- pergolas/
-+-- tree-trimming/
-+-- eruv-work/
-+-- docs/
-|   +-- architecture.md
-|   +-- requirements.md
++-- astro.config.mjs
++-- package.json
++-- index.mjs                 generated deployment file
++-- src/
+|   +-- pages/                one Astro page for each public route
+|   +-- components/           reusable page pieces such as navigation
+|   +-- layouts/              shared page structure
++-- public/
+|   +-- assets/               files copied without changing their URLs
++-- dist/                     temporary result of `astro build`
 +-- scripts/
 |   +-- generate-static-worker.cjs
-|   +-- main.js
-|   +-- build-sukkah-form.js
-|   +-- buy-form.js
-|   +-- splide-carousel.js
-+-- assets/
-    +-- images/
++-- docs/
+    +-- architecture.md
+    +-- requirements.md
 ```
 
-## How Hosting Works
+The three main folders have different jobs:
 
-The deployed file is `index.mjs`. It is a generated Worker file that contains
-the static site files encoded inside it.
+- `src/` contains the Astro pages, components, layouts, styles, and JavaScript
+  that developers edit.
+- `public/` contains files that should keep a fixed public URL. For example,
+  `public/assets/images/photo.jpg` becomes `/assets/images/photo.jpg`.
+- `dist/` is created by Astro. Do not edit it by hand because the next build
+  replaces it. It is ignored by Git.
 
-The source file for generating it is:
+## Public Routes
+
+Astro builds these routes as directory-style HTML files. For example,
+`/about/` is built as `dist/about/index.html`.
 
 ```text
-scripts/generate-static-worker.cjs
+/
+/about/
+/contact/
+/gallery/
+/sukka-builder/
+/sukka-builder-alt/
+/sukkah-rentals/
+/custom-sukkahs/
+/pergolas/
+/tree-trimming/
+/eruv-work/
 ```
 
-When you add or edit routes, run:
+The configuration uses static output, directory-format pages, and trailing
+slashes. The Worker also keeps the previous convenience behavior where a URL
+without a trailing slash, such as `/about`, can load the `/about/` page.
+
+The former package overview, buy, and sample URLs are generated as compatibility
+redirect pages that send visitors to `/sukka-builder/`.
+
+`/sukka-builder-alt/` is a temporary comparison page that recreates the Google
+Form fields as a custom, site-styled form. It is a visual prototype only and
+does not send or save submissions.
+
+The custom comparison form places the project address in its location and
+service section. It reads `PUBLIC_GOOGLE_MAPS_API_KEY` during the Astro build.
+When the key is configured, Google Places upgrades the address field with US
+address suggestions and stores the formatted address selected by the visitor.
+Without the key, the field remains a normal required address input and can use
+addresses saved in the visitor's browser.
+
+The Google Cloud project must have Maps JavaScript API and Places API (New)
+enabled. The browser key must be restricted to those APIs and to the deployed
+website domains. Copy `.env.example` to `.env` for local development; never
+commit the real key.
+
+## Sukka Builder
+
+The `/sukka-builder/` page embeds the official BKAY Google Form. Google controls
+the questions, responses, authentication, and optional file upload. The page
+also includes a direct link to the full Google Form because Google may require
+visitors to sign in or leave the iframe to upload a file.
+
+The form is not recreated as a custom HTML form. Posting directly to Google's
+internal `entry.*` fields is undocumented and cannot reliably support the
+form's authenticated file-upload question.
+
+## Shared Page Structure
+
+Navigation and other repeated markup belong in reusable Astro components and
+layouts. Changing a shared component updates every page that uses it during
+the next build. This replaces the old system where the same navbar HTML had to
+be copied into every page.
+
+## Worker Generation
+
+`scripts/generate-static-worker.cjs` reads only the completed `dist/` folder.
+It does not scan `src/`, `node_modules/`, or old root HTML files. Each built
+file is encoded into `index.mjs` with its route and content type.
+
+The Worker preserves the existing placeholder endpoint:
+
+```text
+POST /api/sukkah-quote
+```
+
+This endpoint returns a sample JSON response. It does not yet calculate,
+store, or send a quote. Astro is being used as a static builder, so a real form
+backend should remain separate from the Astro pages.
+
+Requests for a missing page use Astro's generated `404.html` while keeping the
+correct HTTP `404` status. This gives visitors a useful way back to the site
+instead of a plain error message.
+
+Photos should use compressed, size-conscious formats. The generated Worker
+prints both its normal size and compressed size after each build so deployment
+growth is easier to notice.
+
+## Commands
+
+Install dependencies once after cloning the project:
 
 ```powershell
-node scripts\generate-static-worker.cjs
+npm install
 ```
 
-That script currently includes files ending in:
+Start Astro's local development server:
 
-- `.html`
-- `.css`
-- `.js`
-- `.jpg`
-
-PNG images are intentionally not served by the Worker because large PNG files
-previously pushed the Worker over the 10 MiB deployment limit. Use compressed
-`.jpg` images for normal site photos.
-
-## Styling
-
-The site uses Bootstrap `5.3.8` from a CDN for standard layout, forms, buttons,
-and responsive navbar behavior.
-
-The custom visual theme lives in:
-
-```text
-styles.css
+```powershell
+npm run dev
 ```
 
-Use Bootstrap for common structure, then use `styles.css` only for the site's
-brand feel, spacing, cards, gallery, carousel, and special page layouts.
+Build both the static site and the deployable Worker:
 
-## Navigation
-
-The navigation is repeated in each HTML file because this is a static site with
-no templating system yet.
-
-When changing navigation links, update every HTML page that contains:
-
-```html
-<header class="site-header navbar navbar-expand-xl navbar-light">
+```powershell
+npm run build
 ```
 
-The mobile hamburger is Bootstrap's standard navbar collapse behavior.
+The full build runs these two steps in order:
 
-## Home Page
+1. `npm run build:site` creates `dist/`.
+2. `npm run build:worker` reads `dist/` and regenerates `index.mjs`.
 
-The home page is the `/` route in `index.html`. It is a normal scrolling page
-with stacked sections for the hero, featured work, testimonials, about content,
-and contact content. Do not create a separate `/home/` route unless the
-navigation and architecture docs are updated at the same time.
+`npm run preview` previews the static Astro output. It does not reproduce the
+Worker-only `POST /api/sukkah-quote` behavior.
 
 ## Deployment Checklist
 
-1. Edit the HTML, CSS, JS, or image files.
-2. If routes or architecture changed, update this `docs/architecture.md` file.
-3. Run `node scripts\generate-static-worker.cjs`.
-4. Test the Worker locally with Node or a local server.
-5. Commit the changes.
-6. Push the commit to the Sites source repository.
-7. Save a new Sites version.
-8. Deploy the saved version.
+1. Run `npm install` when dependencies have changed.
+2. Run `npm run build`.
+3. Test all public routes on phone and desktop sizes.
+4. Check the reported generated Worker size.
+5. Update this file when routes, folders, or hosting behavior change.
+6. Commit the Astro source, lockfile, and regenerated `index.mjs`.
+7. Push the commit to the Sites source repository.
+8. Save a new Sites version and deploy it.
+
+`dist/` and `node_modules/` are local build folders and should not be
+committed. `index.mjs` must remain committed because it is the Sites deployment
+artifact.

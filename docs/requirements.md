@@ -1,15 +1,32 @@
 **Assets**
 
-[x] Profile photo
-[x] All Branding assets (logos, color scheme etc)
-[x] Sample pictures of each Sukka level with a price and size
-[x] Sample Pergola pictures
-[x] Sample rental Sukka (with prices and sizes)
-[x] Custom Sukka sample picture
-[x] Pictures of other people that work with Benyamin
-[] Tree trimming before and after pictures (if possible)
-[] Eruv pictures
-[] Few sample videos (for Hero page)
+- ☑ Profile photo
+- ☑ Forest, cream, and wood color palette
+- ☑ Simple code-based brand mark and favicon
+- ☑ Five illustrative sukkah images and one sukkah detail image
+- ☐ Real completed-sukkah hero photo or video
+- ☐ Real sukkah project photos with confirmed descriptions
+- ☐ Rental sukkah photos
+- ☐ Custom sukkah photos
+- ☐ Pergola photos
+- ☐ Tree-trimming before and after photos
+- ☐ Eruv-work photos
+- ☐ Photos of other team members, if they should appear on the site
+
+The current sukkah images look illustrative, so the site labels them as examples
+instead of completed customer projects. Missing photography keeps a fixed-size
+"Photo coming soon" area so adding a real image later will not change the page
+layout.
+
+**Content decisions to confirm**
+
+- The existing public name, "Benyamin Kay Sukkas," is kept for now. Confirm
+  whether "Benyamin" or "Binyomin" is the intended spelling before launch.
+- The Sukka Builder uses the owner's Google Form as the submission source.
+  Because the form includes a Google file-upload question and requires Google
+  authentication, use Google's official embed rather than an undocumented
+  custom submission endpoint.
+- Add only real, approved testimonials. The old sample testimonials were removed.
 
 **Contact information**
 - Email: mendelhecht16@gmail.com
@@ -22,6 +39,10 @@ the visitor's email app with their message filled in.
 
 **Routes**
 
+The Astro redesign must keep all of these public routes available. Pages are
+built as directory-style files, so `/about` is represented by
+`dist/about/index.html` and is normally linked as `/about/`.
+
 /
 
 /about
@@ -30,19 +51,9 @@ the visitor's email app with their message filled in.
 
 /gallery
 
-/sukkah-packages
+/sukka-builder
 
-/sukkah-packages/buy
-
-/sukkah-packages/samples/level-1
-
-/sukkah-packages/samples/level-2
-
-/sukkah-packages/samples/level-3
-
-/sukkah-packages/samples/level-4
-
-/sukkah-packages/samples/level-5
+/sukka-builder-alt
 
 /sukkah-rentals
 
@@ -54,4 +65,40 @@ the visitor's email app with their message filled in.
 
 /eruv-work
 
+The former `/sukkah-packages` route and its old buy/sample routes redirect to
+`/sukka-builder/` so saved links do not lead to a missing page.
 
+The temporary `/sukka-builder-alt` comparison route reproduces the Google Form
+fields with the website's native styling. Its submission is intentionally
+disabled until a supported storage and upload backend is selected.
+
+In the comparison form, collect the project address under Location and Service
+instead of Contact Details. Use Google Places suggestions when a restricted
+Maps browser key is configured, require selection of a suggested address, and
+keep a normal required address field as the no-key fallback.
+
+**Build requirements**
+
+- Use Astro's static output. The website does not need server-side rendering.
+- Use directory-format pages and trailing-slash links.
+- Keep shared navigation in an Astro component so every page stays
+  consistent.
+- Keep editable website code in `src/`.
+- Keep fixed-URL images and other unchanged assets in `public/`.
+- Treat `dist/` as generated output: build it with Astro and do not edit or
+  commit it.
+- Generate the deployable root `index.mjs` from `dist/` after every production
+  build.
+
+**Navigation behavior**
+
+- On desktop, the Sukkahs and Other Services menus open on pointer hover or
+  keyboard focus.
+- On phones and tablets, those menus open when tapped.
+- The mobile navigation panel and both nested service menus open and close with
+  smooth motion. Respect the visitor's reduced-motion preference.
+- Normal navigation links use an animated gold underline for hover, focus, and
+  the active page. Do not place them on filled green backgrounds; keep the
+  Request a Quote item visually distinct as the filled action button.
+- Desktop submenus use a flat rail attached to the header. Do not use a
+  floating card, rounded dropdown container, or dropdown shadow.

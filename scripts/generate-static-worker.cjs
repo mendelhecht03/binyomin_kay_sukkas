@@ -1,27 +1,40 @@
 const fs = require("fs");
 const path = require("path");
+const zlib = require("zlib");
 
 const rootDir = path.resolve(__dirname, "..");
+const outputDir = path.join(rootDir, "dist");
 
 const contentTypes = {
+  ".avif": "image/avif",
   ".css": "text/css; charset=utf-8",
+  ".gif": "image/gif",
   ".html": "text/html; charset=utf-8",
+  ".ico": "image/x-icon",
+  ".jpeg": "image/jpeg",
   ".jpg": "image/jpeg",
   ".js": "text/javascript; charset=utf-8",
+  ".json": "application/json; charset=utf-8",
+  ".map": "application/json; charset=utf-8",
+  ".mjs": "text/javascript; charset=utf-8",
+  ".mp4": "video/mp4",
+  ".png": "image/png",
+  ".svg": "image/svg+xml",
+  ".txt": "text/plain; charset=utf-8",
+  ".wasm": "application/wasm",
+  ".webm": "video/webm",
+  ".webmanifest": "application/manifest+json; charset=utf-8",
+  ".webp": "image/webp",
+  ".woff": "font/woff",
+  ".woff2": "font/woff2",
+  ".xml": "application/xml; charset=utf-8",
 };
-
-const servedExtensions = new Set(Object.keys(contentTypes));
-const ignoredDirectories = new Set([".git", ".openai"]);
 
 function collectFiles(directory) {
   const entries = fs.readdirSync(directory, { withFileTypes: true });
   const files = [];
 
   for (const entry of entries) {
-    if (ignoredDirectories.has(entry.name)) {
-      continue;
-    }
-
     const absolutePath = path.join(directory, entry.name);
 
     if (entry.isDirectory()) {
@@ -29,19 +42,19 @@ function collectFiles(directory) {
       continue;
     }
 
-    const extension = path.extname(entry.name);
-
-    if (!servedExtensions.has(extension)) {
-      continue;
-    }
-
-    files.push(path.relative(rootDir, absolutePath).replace(/\\/g, "/"));
+    files.push(path.relative(outputDir, absolutePath).replace(/\\/g, "/"));
   }
 
   return files.sort();
 }
 
-const filesToServe = collectFiles(rootDir);
+if (!fs.existsSync(outputDir) || !fs.statSync(outputDir).isDirectory()) {
+  throw new Error(
+    "The dist directory is missing. Run `npm run build:site` before generating the Worker.",
+  );
+}
+
+const filesToServe = collectFiles(outputDir);
 
 function routeForFile(filePath) {
   const route = `/${filePath.replace(/\\/g, "/")}`;
@@ -54,8 +67,8 @@ function routeForFile(filePath) {
 }
 
 const records = filesToServe.map((filePath) => {
-  const absolutePath = path.join(rootDir, filePath);
-  const extension = path.extname(filePath);
+  const absolutePath = path.join(outputDir, filePath);
+  const extension = path.extname(filePath).toLowerCase();
 
   return {
     path: routeForFile(filePath),
@@ -123,9 +136,22 @@ export default {
     const file = getFile(url.pathname);
 
     if (!file) {
-      return new Response("Not found", {
+      const notFoundPage = files.get("/404.html");
+      const notFoundBody =
+        request.method === "HEAD"
+          ? null
+          : notFoundPage
+            ? base64ToBytes(notFoundPage.body)
+            : "Not found";
+
+      return new Response(notFoundBody, {
         status: 404,
-        headers: { "Content-Type": "text/plain; charset=utf-8" },
+        headers: {
+          "Content-Type": notFoundPage
+            ? notFoundPage.contentType
+            : "text/plain; charset=utf-8",
+          "Cache-Control": "public, max-age=60",
+        },
       });
     }
 
@@ -141,3 +167,10 @@ export default {
 `;
 
 fs.writeFileSync(path.join(rootDir, "index.mjs"), workerSource);
+
+const rawSize = Buffer.byteLength(workerSource);
+const gzipSize = zlib.gzipSync(workerSource).byteLength;
+
+console.log(
+  `Generated index.mjs from ${records.length} files (${rawSize} bytes, ${gzipSize} bytes gzipped).`,
+);

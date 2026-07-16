@@ -1,0 +1,8 @@
+---
+const { number, eyebrow, heading, id } = Astro.props;
+---
+
+<div class="form-group-heading">
+  <span class="step-number" aria-hidden="true">{number}</span>
+  <div><p class="eyebrow">{eyebrow}</p><h3 id={id}>{heading}</h3></div>
+</div>

@@ -1,0 +1,52 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Page not found"
+  description="The requested page could not be found on the Benyamin Kay Sukkas website."
+>
+  <section class="not-found shell" aria-labelledby="not-found-heading">
+    <div class="not-found__mark" aria-hidden="true">404</div>
+    <p class="eyebrow">Page not found</p>
+    <h1 id="not-found-heading">We could not find that page.</h1>
+    <p class="lead">
+      The address may have changed, or the link may be incomplete. You can return
+      home or contact Benyamin if you were looking for a particular service.
+    </p>
+    <div class="button-row">
+      <a class="button" href="/">Return home</a>
+      <a class="button button-secondary" href="/contact/">Contact Benyamin</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .not-found {
+    min-height: min(43rem, calc(100vh - 10rem));
+    display: grid;
+    place-content: center;
+    justify-items: start;
+    padding-block: clamp(4rem, 12vw, 8rem);
+  }
+
+  .not-found__mark {
+    margin-bottom: 0.4rem;
+    color: var(--wood-500);
+    font-family: var(--font-heading);
+    font-size: clamp(5rem, 20vw, 12rem);
+    font-weight: 700;
+    letter-spacing: -0.08em;
+    line-height: 0.72;
+    opacity: 0.22;
+  }
+
+  .not-found h1 {
+    max-width: 12ch;
+    font-size: clamp(2.7rem, 7vw, 5rem);
+  }
+
+  .not-found .lead {
+    max-width: 42rem;
+  }
+</style>

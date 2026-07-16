@@ -1,0 +1,303 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="About"
+  description="Learn about Benyamin Kay's practical approach to sukkah-season projects and outdoor work."
+>
+  <div class="about-page">
+    <section class="about-hero shell" aria-labelledby="about-heading">
+      <div class="about-copy">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <a href="/">Home</a>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page">About</span>
+        </nav>
+        <p class="eyebrow">About Benyamin</p>
+        <h1 id="about-heading">Hands-on work with clear communication.</h1>
+        <p class="lead">
+          Benyamin helps with sukkah-season projects and practical outdoor work.
+          The starting point is simple: explain what you need, review the important
+          details, and agree on a clear next step.
+        </p>
+        <p>
+          The work listed on this site includes the Sukka Builder, rentals, custom
+          sukkahs, pergolas, tree trimming, and eruv work. Each kind of request has
+          different details, so photos, measurements, and timing are useful when you
+          first get in touch.
+        </p>
+        <div class="button-row">
+          <a class="button" href="/contact/">Request a quote</a>
+          <a class="button button-secondary" href="/gallery/">View the gallery</a>
+        </div>
+      </div>
+
+      <figure class="about-photo">
+        <img
+          src="/assets/images/profile-photo1.jpg"
+          alt="Benyamin Kay smiling as he crosses the finish line of a road race"
+          width="1448"
+          height="1086"
+        />
+        <figcaption>Benyamin Kay</figcaption>
+      </figure>
+    </section>
+
+    <section class="about-section section-muted" aria-labelledby="approach-heading">
+      <div class="shell">
+        <div class="section-heading">
+          <p class="eyebrow">A straightforward approach</p>
+          <h2 id="approach-heading">Make the important details easy to understand.</h2>
+          <p>
+            A useful first conversation does not need to be complicated. Start with
+            what you know, and fill in the remaining details as the request is reviewed.
+          </p>
+        </div>
+
+        <div class="approach-grid">
+          <article>
+            <span aria-hidden="true">01</span>
+            <h3>Describe the request</h3>
+            <p>Share the kind of work, approximate size, timing, and location details.</p>
+          </article>
+          <article>
+            <span aria-hidden="true">02</span>
+            <h3>Show the space</h3>
+            <p>Clear photos can explain access, measurements, and unusual conditions.</p>
+          </article>
+          <article>
+            <span aria-hidden="true">03</span>
+            <h3>Confirm the next step</h3>
+            <p>Review the scope, availability, and price before scheduling the work.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="services-overview shell" aria-labelledby="services-heading">
+      <div>
+        <p class="eyebrow">Services</p>
+        <h2 id="services-heading">Find the page that matches your project.</h2>
+      </div>
+      <div class="service-links">
+        <a href="/sukka-builder/">Sukka Builder <span aria-hidden="true">→</span></a>
+        <a href="/sukkah-rentals/">Sukkah rentals <span aria-hidden="true">→</span></a>
+        <a href="/custom-sukkahs/">Custom sukkahs <span aria-hidden="true">→</span></a>
+        <a href="/pergolas/">Pergolas <span aria-hidden="true">→</span></a>
+        <a href="/tree-trimming/">Tree trimming <span aria-hidden="true">→</span></a>
+        <a href="/eruv-work/">Eruv work <span aria-hidden="true">→</span></a>
+      </div>
+    </section>
+
+    <section class="about-cta shell" aria-labelledby="about-contact-heading">
+      <div>
+        <p class="eyebrow">Get started</p>
+        <h2 id="about-contact-heading">Tell Benyamin what you need help with.</h2>
+        <p>Share the project type, timing, and any photos or measurements you have.</p>
+      </div>
+      <a class="button button-light" href="/contact/">Contact Benyamin</a>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .about-page {
+    padding-block: clamp(2rem, 5vw, 4.5rem) 0;
+  }
+
+  .about-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.08fr) minmax(18rem, 0.72fr);
+    gap: clamp(2rem, 7vw, 6rem);
+    align-items: center;
+    padding-bottom: clamp(4rem, 9vw, 7.5rem);
+  }
+
+  .about-copy {
+    min-width: 0;
+  }
+
+  .about-copy h1 {
+    max-width: 12ch;
+    font-size: clamp(2.7rem, 7vw, 5.3rem);
+  }
+
+  .about-copy > p:not(.eyebrow) {
+    max-width: 42rem;
+  }
+
+  .about-photo {
+    position: relative;
+    margin: 0;
+    padding: 0 0 1.15rem 1.15rem;
+  }
+
+  .about-photo::before {
+    position: absolute;
+    inset: 1.15rem 1.15rem 0 0;
+    z-index: -1;
+    border-radius: var(--radius-large);
+    content: "";
+    background: var(--wood-500);
+  }
+
+  .about-photo img {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    border-radius: var(--radius-large);
+    box-shadow: var(--shadow-medium);
+    object-fit: cover;
+    object-position: 42% center;
+  }
+
+  .about-photo figcaption {
+    position: absolute;
+    right: 1.75rem;
+    bottom: 2rem;
+    padding: 0.45rem 0.75rem;
+    border-radius: var(--radius-small);
+    color: var(--forest-950);
+    background: rgba(255, 253, 248, 0.9);
+    font-size: 0.86rem;
+    font-weight: 800;
+    backdrop-filter: blur(8px);
+  }
+
+  .about-section {
+    padding-block: clamp(4rem, 9vw, 7rem);
+  }
+
+  .approach-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .approach-grid article {
+    min-width: 0;
+    padding: 1.5rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: rgba(255, 255, 255, 0.76);
+  }
+
+  .approach-grid article > span {
+    display: inline-block;
+    margin-bottom: 1.8rem;
+    color: var(--wood-600);
+    font-size: 0.82rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+  }
+
+  .approach-grid p {
+    margin-bottom: 0;
+  }
+
+  .services-overview {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(20rem, 1.2fr);
+    gap: clamp(2rem, 7vw, 5rem);
+    padding-block: clamp(4rem, 9vw, 7rem);
+  }
+
+  .service-links {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+
+  .service-links a {
+    min-height: 4.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1.15rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-small);
+    color: var(--forest-900);
+    background: white;
+    font-weight: 800;
+    text-decoration: none;
+  }
+
+  .service-links a:hover {
+    border-color: var(--border-strong);
+    background: var(--cream-100);
+  }
+
+  .service-links span {
+    color: var(--wood-600);
+  }
+
+  .about-cta {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: clamp(4rem, 9vw, 7rem);
+    padding: clamp(1.75rem, 5vw, 3.5rem);
+    border-radius: var(--radius-large);
+    background: var(--forest-900);
+  }
+
+  .about-cta h2 {
+    max-width: 22ch;
+    margin-bottom: 0.55rem;
+    color: white;
+  }
+
+  .about-cta .eyebrow {
+    color: #f0bd7e;
+  }
+
+  .about-cta p:last-child {
+    margin-bottom: 0;
+    color: rgba(255, 255, 255, 0.74);
+  }
+
+  .about-cta .button {
+    flex: 0 0 auto;
+  }
+
+  @media (max-width: 54rem) {
+    .about-hero,
+    .services-overview {
+      grid-template-columns: 1fr;
+    }
+
+    .about-photo {
+      max-width: 30rem;
+    }
+
+    .approach-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .approach-grid article:last-child {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (max-width: 38rem) {
+    .approach-grid,
+    .service-links {
+      grid-template-columns: 1fr;
+    }
+
+    .approach-grid article:last-child {
+      grid-column: auto;
+    }
+
+    .about-cta {
+      align-items: stretch;
+      flex-direction: column;
+    }
+
+    .about-cta .button {
+      width: 100%;
+    }
+  }
+</style>

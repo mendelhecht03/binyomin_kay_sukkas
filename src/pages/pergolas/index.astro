@@ -1,0 +1,8 @@
+---
+import ServicePage from "../../components/ServicePage.astro";
+import { servicesBySlug } from "../../data/services.js";
+
+const service = servicesBySlug.pergolas;
+---
+
+<ServicePage service={service} />
