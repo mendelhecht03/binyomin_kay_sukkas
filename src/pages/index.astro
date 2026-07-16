@@ -660,8 +660,18 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       border-radius: 70px 12px 12px 12px;
     }
 
+    .hero-visual figcaption {
+      position: static;
+      width: fit-content;
+      margin: 0.75rem 12px 0 auto;
+    }
+
     .hero-label {
-      left: 12px;
+      position: relative;
+      bottom: auto;
+      left: auto;
+      width: min(100% - 24px, 30rem);
+      margin: 1rem 12px 0;
     }
 
     .work-grid {
