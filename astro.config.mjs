@@ -3,6 +3,9 @@ import { defineConfig } from "astro/config";
 export default defineConfig({
   output: "static",
   trailingSlash: "always",
+  server: {
+    allowedHosts: ["subcutaneously-skinking-karen.ngrok-free.dev"],
+  },
   redirects: {
     "/sukkah-packages/": "/sukka-builder/",
     "/sukkah-packages/buy/": "/sukka-builder/",

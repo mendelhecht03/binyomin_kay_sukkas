@@ -48,7 +48,7 @@ const isActive = (href: string) =>
       <a class:list={["nav-link", { "is-active": isActive("/") }]} href="/"><span>Home</span></a>
 
       <details class="nav-group">
-        <summary class:list={["nav-link", { "is-active": sukkahLinks.some((link) => isActive(link.href)) }]}><span>Sukkahs</span></summary>
+        <summary class="nav-link"><span>Sukkahs</span></summary>
         <div class="nav-dropdown">
           <div class="nav-dropdown-inner">
             {sukkahLinks.map((link) => (
@@ -61,7 +61,7 @@ const isActive = (href: string) =>
       </details>
 
       <details class="nav-group">
-        <summary class:list={["nav-link", { "is-active": serviceLinks.some((link) => isActive(link.href)) }]}><span>Other Services</span></summary>
+        <summary class="nav-link"><span>Other Services</span></summary>
         <div class="nav-dropdown">
           <div class="nav-dropdown-inner">
             {serviceLinks.map((link) => (
@@ -134,7 +134,14 @@ const isActive = (href: string) =>
   });
 
   navigation?.addEventListener("click", (event) => {
-    if (event.target instanceof HTMLAnchorElement) {
+    const clickedLink =
+      event.target instanceof Element ? event.target.closest("a") : null;
+
+    if (clickedLink) {
+      navigation.querySelectorAll(".is-active").forEach((link) => {
+        link.classList.remove("is-active");
+      });
+      clickedLink.classList.add("is-active");
       closeMenu();
     }
   });

@@ -7,10 +7,10 @@ const { legend, name, options, type, required = false, requiredHint = false, oth
   {requiredHint && <p class="field-hint">{type === "radio" ? "Choose one." : "Choose one or more."}</p>}
   <div class={stacked ? "choice-stack" : "choice-grid"}>
     {options.map((option) => (
-      <label class="choice-card"><input type={type} name={name} value={option} required={required} /><span>{option}</span></label>
+      <label class="choice-card"><input type={type} name={name} value={option} required={type === "radio" && required} /><span>{option}</span></label>
     ))}
     <label class="choice-card choice-other">
-      <input type={type} name={name} value="Other" required={required} />
+      <input type={type} name={name} value="Other" required={type === "radio" && required} />
       <span>Other</span>
       <input name={`${name}Other`} aria-label={otherLabel} placeholder="Please describe" />
     </label>

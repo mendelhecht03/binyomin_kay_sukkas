@@ -98,7 +98,7 @@ const addOns = ["Put up lights", "Pressure wash the area the day before", "Bambo
               <div class="address-widget" data-address-widget hidden></div>
               <p class="address-status" data-address-status aria-live="polite"></p>
             </div>
-            <Choices legend="Requested work" name="service" options={services} type="radio" required requiredHint otherLabel="Other requested service" />
+            <Choices legend="Requested work" name="service" options={services} type="checkbox" required requiredHint otherLabel="Other requested service" />
           </section>
 
           <section id="sukkah-details" class="form-card form-group" aria-labelledby="details-heading" data-form-step="3">
@@ -108,9 +108,9 @@ const addOns = ["Put up lights", "Pressure wash the area the day before", "Bambo
               <input id="estimated-size" name="estimatedSize" placeholder="For example, 8 × 10 feet" required />
               <p class="field-hint">An estimate is fine if you do not know the exact measurements.</p>
             </div>
-            <Choices legend="Sukkah type" name="sukkahType" options={sukkahTypes} type="radio" required otherLabel="Other sukkah type" />
-            <Choices legend="Schach type" name="schach" options={schachTypes} type="radio" required requiredHint otherLabel="Other schach type" />
-            <Choices legend="Optional add-ons" name="addOns" options={addOns} type="radio" otherLabel="Other add-on" />
+            <Choices legend="Sukkah type" name="sukkahType" options={sukkahTypes} type="checkbox" required requiredHint otherLabel="Other sukkah type" />
+            <Choices legend="Schach type" name="schach" options={schachTypes} type="checkbox" required requiredHint otherLabel="Other schach type" />
+            <Choices legend="Optional add-ons" name="addOns" options={addOns} type="checkbox" otherLabel="Other add-on" />
           </section>
 
           <section id="site-details" class="form-card form-group" aria-labelledby="site-heading" data-form-step="4">
@@ -228,6 +228,7 @@ const addOns = ["Put up lights", "Pressure wash the area the day before", "Bambo
     event.preventDefault();
     if (!(form instanceof HTMLFormElement) || !(status instanceof HTMLElement)) return;
     const serviceCount = form.querySelectorAll('input[name="service"]:checked').length;
+    const sukkahTypeCount = form.querySelectorAll('input[name="sukkahType"]:checked').length;
     const schachCount = form.querySelectorAll('input[name="schach"]:checked').length;
     const photo = form.querySelector('input[type="file"]');
     if (addressContainer instanceof HTMLElement && addressContainer.dataset.enhanced === "true" && addressContainer.dataset.addressSelected !== "true") {
@@ -236,9 +237,9 @@ const addOns = ["Put up lights", "Pressure wash the area the day before", "Bambo
       addressContainer.scrollIntoView({ behavior: "smooth", block: "center" });
       return;
     }
-    if (!serviceCount || !schachCount) {
+    if (!serviceCount || !sukkahTypeCount || !schachCount) {
       status.dataset.state = "error";
-      status.textContent = "Please choose at least one requested service and one schach type.";
+      status.textContent = "Please choose at least one requested service, sukkah type, and schach type.";
       return;
     }
     if (photo instanceof HTMLInputElement && photo.files?.[0] && photo.files[0].size > 10 * 1024 * 1024) {

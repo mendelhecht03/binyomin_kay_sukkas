@@ -464,11 +464,7 @@ strong {
   transition: transform 200ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.nav-link:hover > span::after,
-.nav-link:focus-visible > span::after,
 .nav-link.is-active > span::after,
-.dropdown-link:hover > span::after,
-.dropdown-link:focus-visible > span::after,
 .dropdown-link.is-active > span::after {
   transform: scaleX(1);
 }
