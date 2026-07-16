@@ -378,6 +378,7 @@ strong {
 }
 
 .menu-toggle {
+  position: relative;
   width: 46px;
   height: 46px;
   display: none;
@@ -391,12 +392,28 @@ strong {
 }
 
 .menu-toggle span:not(.sr-only) {
+  position: absolute;
+  top: 50%;
+  left: 50%;
   width: 22px;
   height: 2px;
   display: block;
   border-radius: 999px;
   background: currentColor;
-  transition: opacity 180ms ease, transform 220ms ease;
+  transform-origin: center;
+  transition: opacity 160ms ease, transform 220ms ease;
+}
+
+.menu-toggle span:not(.sr-only):nth-of-type(2) {
+  transform: translate(-50%, calc(-50% - 6px));
+}
+
+.menu-toggle span:not(.sr-only):nth-of-type(3) {
+  transform: translate(-50%, -50%);
+}
+
+.menu-toggle span:not(.sr-only):nth-of-type(4) {
+  transform: translate(-50%, calc(-50% + 6px));
 }
 
 .site-navigation {
@@ -978,7 +995,7 @@ textarea:focus {
   }
 
   .site-header[data-menu-open] .menu-toggle span:not(.sr-only):nth-of-type(2) {
-    transform: translateY(6px) rotate(45deg);
+    transform: translate(-50%, -50%) rotate(45deg);
   }
 
   .site-header[data-menu-open] .menu-toggle span:not(.sr-only):nth-of-type(3) {
@@ -986,7 +1003,7 @@ textarea:focus {
   }
 
   .site-header[data-menu-open] .menu-toggle span:not(.sr-only):nth-of-type(4) {
-    transform: translateY(-6px) rotate(-45deg);
+    transform: translate(-50%, -50%) rotate(-45deg);
   }
 
   .nav-link {
