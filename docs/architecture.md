@@ -19,13 +19,14 @@ Static website
         | npm run build:worker
         v
 Hosted Worker
-  index.mjs
+  index.mjs and dist/server/index.js
 ```
 
-The hosted Sites project still deploys the root `index.mjs` file. Astro does
-not replace that hosting step. Instead, Astro creates the static site first,
-and `scripts/generate-static-worker.cjs` packages the finished files into the
-Worker.
+The hosted Sites project deploys the generated Worker from
+`dist/server/index.js`. The same generated code is also kept in the root
+`index.mjs` file for source history and compatibility. Astro creates the static
+site first, and `scripts/generate-static-worker.cjs` packages the finished files
+into both Worker files.
 
 ## Important Folders
 
@@ -33,14 +34,14 @@ Worker.
 .
 +-- astro.config.mjs
 +-- package.json
-+-- index.mjs                 generated deployment file
++-- index.mjs                 generated Worker copy kept in source history
 +-- src/
 |   +-- pages/                one Astro page for each public route
 |   +-- components/           reusable page pieces such as navigation
 |   +-- layouts/              shared page structure
 +-- public/
 |   +-- assets/               files copied without changing their URLs
-+-- dist/                     temporary result of `astro build`
++-- dist/                     temporary build and deployment package
 +-- scripts/
 |   +-- generate-static-worker.cjs
 +-- docs/
@@ -119,7 +120,8 @@ be copied into every page.
 
 ## Worker Generation
 
-`scripts/generate-static-worker.cjs` reads only the completed `dist/` folder.
+`scripts/generate-static-worker.cjs` reads only the completed static files in
+the `dist/` folder.
 It does not scan `src/`, `node_modules/`, or old root HTML files. Each built
 file is encoded into `index.mjs` with its route and content type.
 
@@ -164,7 +166,8 @@ npm run build
 The full build runs these two steps in order:
 
 1. `npm run build:site` creates `dist/`.
-2. `npm run build:worker` reads `dist/` and regenerates `index.mjs`.
+2. `npm run build:worker` reads `dist/`, regenerates `index.mjs`, and creates
+   `dist/server/index.js` plus the hosting metadata required for deployment.
 
 `npm run preview` previews the static Astro output. It does not reproduce the
 Worker-only `POST /api/sukkah-quote` behavior.

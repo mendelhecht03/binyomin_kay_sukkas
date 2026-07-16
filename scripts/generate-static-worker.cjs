@@ -166,11 +166,21 @@ export default {
 };
 `;
 
+const serverDir = path.join(outputDir, "server");
+const hostingDir = path.join(outputDir, ".openai");
+
+fs.mkdirSync(serverDir, { recursive: true });
+fs.mkdirSync(hostingDir, { recursive: true });
 fs.writeFileSync(path.join(rootDir, "index.mjs"), workerSource);
+fs.writeFileSync(path.join(serverDir, "index.js"), workerSource);
+fs.copyFileSync(
+  path.join(rootDir, ".openai", "hosting.json"),
+  path.join(hostingDir, "hosting.json"),
+);
 
 const rawSize = Buffer.byteLength(workerSource);
 const gzipSize = zlib.gzipSync(workerSource).byteLength;
 
 console.log(
-  `Generated index.mjs from ${records.length} files (${rawSize} bytes, ${gzipSize} bytes gzipped).`,
+  `Generated Worker files from ${records.length} files (${rawSize} bytes, ${gzipSize} bytes gzipped).`,
 );
