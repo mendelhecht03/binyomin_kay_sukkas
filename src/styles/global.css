@@ -457,7 +457,7 @@ strong {
 }
 
 .nav-group {
-  position: static;
+  position: relative;
 }
 
 .nav-group summary {
@@ -488,7 +488,8 @@ strong {
   position: absolute;
   top: 100%;
   left: 0;
-  width: 100%;
+  width: max-content;
+  min-width: 100%;
   display: grid;
   grid-template-rows: 0fr;
   padding: 0 0.35rem;
@@ -512,7 +513,8 @@ strong {
 .nav-dropdown-inner {
   min-height: 0;
   display: flex;
-  justify-content: flex-end;
+  flex-direction: column;
+  justify-content: flex-start;
   overflow: hidden;
 }
 
@@ -531,12 +533,16 @@ strong {
 .dropdown-link {
   position: relative;
   padding: 0.85rem 1.15rem;
-  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
   border-radius: 0;
   color: var(--ink-700);
   font-size: 0.9rem;
   font-weight: 750;
   text-decoration: none;
+}
+
+.dropdown-link:last-child {
+  border-bottom: 0;
 }
 
 .dropdown-link:hover,

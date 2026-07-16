@@ -4,7 +4,7 @@ const { legend, name, options, type, required = false, requiredHint = false, oth
 
 <fieldset>
   <legend>{legend} {(required || requiredHint) && <span class="required-mark">*</span>}</legend>
-  {requiredHint && <p class="field-hint">Choose one or more.</p>}
+  {requiredHint && <p class="field-hint">{type === "radio" ? "Choose one." : "Choose one or more."}</p>}
   <div class={stacked ? "choice-stack" : "choice-grid"}>
     {options.map((option) => (
       <label class="choice-card"><input type={type} name={name} value={option} required={required} /><span>{option}</span></label>

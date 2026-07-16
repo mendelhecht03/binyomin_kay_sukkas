@@ -111,6 +111,17 @@ const isActive = (href: string) =>
     closeTimers.set(group, timer);
   }
 
+  function openGroup(activeGroup) {
+    navGroups.forEach((group) => {
+      if (group !== activeGroup) {
+        cancelScheduledClose(group);
+        group.removeAttribute("open");
+      }
+    });
+
+    activeGroup.open = true;
+  }
+
   function closeMenu() {
     header?.removeAttribute("data-menu-open");
     menuButton?.setAttribute("aria-expanded", "false");
@@ -133,7 +144,7 @@ const isActive = (href: string) =>
 
     group.addEventListener("mouseenter", () => {
       cancelScheduledClose(group);
-      if (desktopNavigation.matches) group.open = true;
+      if (desktopNavigation.matches) openGroup(group);
     });
 
     group.addEventListener("mouseleave", () => {
@@ -142,7 +153,7 @@ const isActive = (href: string) =>
 
     group.addEventListener("focusin", () => {
       cancelScheduledClose(group);
-      if (desktopNavigation.matches) group.open = true;
+      if (desktopNavigation.matches) openGroup(group);
     });
 
     group.addEventListener("focusout", (event) => {
