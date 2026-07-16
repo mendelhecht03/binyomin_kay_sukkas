@@ -654,6 +654,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
     .hero-visual {
       margin-top: 1rem;
+      margin-bottom: 2.75rem;
     }
 
     .hero-visual img {
@@ -661,17 +662,26 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     }
 
     .hero-visual figcaption {
-      position: static;
-      width: fit-content;
-      margin: 0.75rem 12px 0 auto;
+      top: 0.9rem;
+      right: 0.9rem;
+      bottom: auto;
     }
 
     .hero-label {
-      position: relative;
-      bottom: auto;
-      left: auto;
-      width: min(100% - 24px, 30rem);
-      margin: 1rem 12px 0;
+      bottom: -2.1rem;
+      left: clamp(12px, 4vw, 22px);
+      width: auto;
+      max-width: calc(100% - 24px);
+      padding: 0.8rem 1rem;
+    }
+
+    .hero-label span {
+      font-size: 0.63rem;
+    }
+
+    .hero-label strong {
+      font-size: clamp(0.82rem, 3.3vw, 0.92rem);
+      white-space: nowrap;
     }
 
     .work-grid {
