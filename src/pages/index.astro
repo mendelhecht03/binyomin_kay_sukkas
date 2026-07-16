@@ -50,7 +50,11 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             <img src="/assets/images/sample-sukka1.jpg" alt="Illustrative wooden sukkah" />
           </div>
           <div class="offering-body">
-            <span class="card-number">01</span>
+            <span class="card-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="M8 5h8M9 3.5h6v3H9zM7 5.5H5.5v15h13v-15H17M8.5 14l2.25 2.25 4.75-5" />
+              </svg>
+            </span>
             <h3>Sukka Builder</h3>
             <p>Share your contact details, sukkah type, size, requested work, preferred dates, and site information.</p>
             <a class="text-link" href="/sukka-builder/">Open the builder</a>
@@ -65,7 +69,11 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             <span>Rental photo coming soon</span>
           </div>
           <div class="offering-body">
-            <span class="card-number">02</span>
+            <span class="card-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="m4 10 8-5 8 5M6 9v10h12V9M9 19v-6h6v6M6 9h12" />
+              </svg>
+            </span>
             <h3>Sukkah Rentals</h3>
             <p>Ask about seasonal availability, sizing, delivery, setup, and takedown for your location.</p>
             <a class="text-link" href="/sukkah-rentals/">See rental details</a>
@@ -80,7 +88,11 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             <span>Custom build photo coming soon</span>
           </div>
           <div class="offering-body">
-            <span class="card-number">03</span>
+            <span class="card-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="M4 19V9h16v10M3 9h18M6 9V5M10 9V4M14 9V4M18 9V5M9 19v-6h6v6" />
+              </svg>
+            </span>
             <h3>Custom Sukkahs</h3>
             <p>Work through tight spaces, unusual dimensions, rooflines, and other site-specific needs.</p>
             <a class="text-link" href="/custom-sukkahs/">Plan a custom build</a>
@@ -400,7 +412,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     min-height: 5.1rem;
   }
 
-  .card-number {
+  .card-icon {
     position: absolute;
     top: -1.15rem;
     right: 1.2rem;
@@ -412,8 +424,16 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     border-radius: 50%;
     color: white;
     background: var(--wood-600);
-    font-size: 0.72rem;
-    font-weight: 850;
+  }
+
+  .card-icon svg {
+    width: 22px;
+    height: 22px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
   }
 
   .other-services-heading {
