@@ -69,7 +69,8 @@ const addOns = ["Put up lights", "Pressure wash the area the day before", "Bambo
             <FormHeading icon="contact" eyebrow="Contact details" heading="How can we reach you?" id="contact-heading" />
             <p class="section-copy">We’ll only use these details to follow up about your sukkah.</p>
             <div class="form-grid">
-              <Field id="name" label="Full name" autocomplete="name" required />
+              <Field id="firstName" label="First name" autocomplete="given-name" required />
+              <Field id="lastName" label="Last name" autocomplete="family-name" required />
               <Field id="phone" label="Phone number" type="tel" autocomplete="tel" required />
               <Field id="email" label="Email address" type="email" autocomplete="email" required />
             </div>
