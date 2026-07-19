@@ -75,6 +75,10 @@ backends are selected.
 The `/sukkah-rentals` page uses only the primary Ask about rentals action in
 its hero and omits the generic What to share section.
 
+The `/gallery` route temporarily shows a branded under-construction page while
+the client prepares approved project photography. Replace it with the completed
+gallery later without changing the public route.
+
 The Site Details section accepts up to three optional area photos. Each photo
 may be a JPG, PNG, or HEIC file and must be no larger than 10 MB.
 
