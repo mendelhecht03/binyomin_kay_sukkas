@@ -85,10 +85,11 @@ The contact section collects first name and last name in separate required
 fields, followed by the visitor's phone number and email address.
 
 In the custom form, collect the project address under Location and Service
-instead of Contact Details. The visitor must enter the address manually, then
-separately choose one required neighborhood from the mutually exclusive radio
-button list. Keep an Other option for neighborhoods outside the listed service
-areas.
+instead of Contact Details. The address uses separate fields for street
+address, optional apartment or unit, city, two-letter state abbreviation, and
+ZIP code. The visitor must then separately choose one required neighborhood
+from the mutually exclusive radio-button list. Keep an Other option for
+neighborhoods outside the listed service areas.
 
 **Build requirements**
 
