@@ -22,10 +22,9 @@ layout.
 
 - The existing public name, "Benyamin Kay Sukkas," is kept for now. Confirm
   whether "Benyamin" or "Binyomin" is the intended spelling before launch.
-- The Sukka Builder uses the owner's Google Form as the submission source.
-  Because the form includes a Google file-upload question and requires Google
-  authentication, use Google's official embed rather than an undocumented
-  custom submission endpoint.
+- The Sukka Builder uses the website's custom form. The former Google Form
+  embed has been removed. Keep submission disabled and clearly explained until
+  supported form and photo-upload backends are selected.
 - Add only real, approved testimonials. The old sample testimonials were removed.
 
 **Contact information**
@@ -53,8 +52,6 @@ built as directory-style files, so `/about` is represented by
 
 /sukka-builder
 
-/sukka-builder-alt
-
 /sukkah-rentals
 
 /custom-sukkahs
@@ -68,14 +65,14 @@ built as directory-style files, so `/about` is represented by
 The former `/sukkah-packages` route and its old buy/sample routes redirect to
 `/sukka-builder/` so saved links do not lead to a missing page.
 
-The temporary `/sukka-builder-alt` comparison route reproduces the Google Form
-fields with the website's native styling. Its submission is intentionally
-disabled until a supported storage and upload backend is selected.
+The `/sukka-builder` route contains the website's custom, native-styled form.
+Its submission is intentionally disabled until supported form and upload
+backends are selected.
 
-The comparison form collects estimated sukkah width and length with separate
+The custom form collects estimated sukkah width and length with separate
 sliders. Each slider ranges from 0 to 30 feet and shows its current value.
 
-In the comparison form, collect the project address under Location and Service
+In the custom form, collect the project address under Location and Service
 instead of Contact Details. The visitor must enter the address manually, then
 separately choose one required neighborhood from the mutually exclusive radio
 button list. Keep an Other option for neighborhoods outside the listed service

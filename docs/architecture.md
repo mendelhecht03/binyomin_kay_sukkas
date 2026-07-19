@@ -69,7 +69,6 @@ Astro builds these routes as directory-style HTML files. For example,
 /contact/
 /gallery/
 /sukka-builder/
-/sukka-builder-alt/
 /sukkah-rentals/
 /custom-sukkahs/
 /pergolas/
@@ -84,26 +83,22 @@ without a trailing slash, such as `/about`, can load the `/about/` page.
 The former package overview, buy, and sample URLs are generated as compatibility
 redirect pages that send visitors to `/sukka-builder/`.
 
-`/sukka-builder-alt/` is a temporary comparison page that recreates the Google
-Form fields as a custom, site-styled form. It is a visual prototype only and
-does not send or save submissions.
+`/sukka-builder/` uses the custom, site-styled form. The former Google Form
+embed and temporary `/sukka-builder-alt/` comparison route have been removed.
+The custom form is not yet connected to a submission or upload backend, so its
+current submit action only validates the visitor's entries.
 
-The custom comparison form places the project address in its location and
-service section. The address is a normal required text input that the visitor
-fills in manually. A separate required radio group records exactly one
-neighborhood, with an Other option for locations outside the listed service
-areas. The comparison page does not load a third-party address service.
+The custom builder places the project address in its location and service
+section. The address is a normal required text input that the visitor fills in
+manually. A separate required radio group records exactly one neighborhood,
+with an Other option for locations outside the listed service areas. The page
+does not load a third-party address service.
 
 ## Sukka Builder
 
-The `/sukka-builder/` page embeds the official BKAY Google Form. Google controls
-the questions, responses, authentication, and optional file upload. The page
-also includes a direct link to the full Google Form because Google may require
-visitors to sign in or leave the iframe to upload a file.
-
-The form is not recreated as a custom HTML form. Posting directly to Google's
-internal `entry.*` fields is undocumented and cannot reliably support the
-form's authenticated file-upload question.
+The `/sukka-builder/` page contains the custom form directly. Before it can
+accept live customer requests, the text fields and optional photo upload need
+supported submission and storage backends.
 
 ## Shared Page Structure
 
