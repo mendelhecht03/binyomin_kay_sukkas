@@ -30,9 +30,15 @@ interface Service {
 
 interface Props {
   service: Service;
+  showSecondaryAction?: boolean;
+  showRequestSection?: boolean;
 }
 
-const { service } = Astro.props;
+const {
+  service,
+  showSecondaryAction = true,
+  showRequestSection = true,
+} = Astro.props;
 const heroHeadingId = `${service.slug}-heading`;
 ---
 
@@ -48,7 +54,7 @@ const heroHeadingId = `${service.slug}-heading`;
             {service.primaryAction.label}
           </a>
           {
-            service.secondaryAction && (
+            showSecondaryAction && service.secondaryAction && (
               <a class="action action--secondary" href={service.secondaryAction.href}>
                 {service.secondaryAction.label}
               </a>
@@ -83,19 +89,23 @@ const heroHeadingId = `${service.slug}-heading`;
       </div>
     </section>
 
-    <section class="request-section" aria-labelledby={`${service.slug}-request-heading`}>
-      <div>
-        <p class="eyebrow">What to share</p>
-        <h2 id={`${service.slug}-request-heading`}>Help make the first conversation useful.</h2>
-        <p>
-          You do not need every answer before getting in touch. These details simply make
-          it easier to understand the request.
-        </p>
-      </div>
-      <ul class="check-list">
-        {service.requestItems.map((item) => <li>{item}</li>)}
-      </ul>
-    </section>
+    {
+      showRequestSection && (
+        <section class="request-section" aria-labelledby={`${service.slug}-request-heading`}>
+          <div>
+            <p class="eyebrow">What to share</p>
+            <h2 id={`${service.slug}-request-heading`}>Help make the first conversation useful.</h2>
+            <p>
+              You do not need every answer before getting in touch. These details simply make
+              it easier to understand the request.
+            </p>
+          </div>
+          <ul class="check-list">
+            {service.requestItems.map((item) => <li>{item}</li>)}
+          </ul>
+        </section>
+      )
+    }
 
     <section class="section-shell" aria-labelledby={`${service.slug}-process-heading`}>
       <div class="section-heading">
