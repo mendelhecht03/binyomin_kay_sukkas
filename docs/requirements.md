@@ -78,6 +78,9 @@ sliders. Each slider ranges from 0 to 30 feet and shows its current value.
 The visitor must choose exactly one sukkah type. Sukkah-type choices use a
 required, mutually exclusive radio-button group.
 
+The visitor must also choose exactly one schach type using a required,
+mutually exclusive radio-button group.
+
 The contact section collects first name and last name in separate required
 fields, followed by the visitor's phone number and email address.
 

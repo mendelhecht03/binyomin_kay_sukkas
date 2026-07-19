@@ -115,7 +115,7 @@ const addOns = ["Put up lights", "Pressure wash the area the day before", "Bambo
               </div>
             </fieldset>
             <Choices legend="Sukkah type" name="sukkahType" options={sukkahTypes} type="radio" required requiredHint otherLabel="Other sukkah type" />
-            <Choices legend="Schach type" name="schach" options={schachTypes} type="checkbox" required requiredHint otherLabel="Other schach type" />
+            <Choices legend="Schach type" name="schach" options={schachTypes} type="radio" required requiredHint otherLabel="Other schach type" />
             <Choices legend="Add-ons" name="addOns" options={addOns} type="checkbox" otherLabel="Other add-on" />
           </section>
 
@@ -201,7 +201,7 @@ const addOns = ["Put up lights", "Pressure wash the area the day before", "Bambo
     const photo = form.querySelector('input[type="file"]');
     if (!serviceCount || !sukkahTypeCount || !schachCount) {
       status.dataset.state = "error";
-      status.textContent = "Please choose at least one requested service, one sukkah type, and at least one schach type.";
+      status.textContent = "Please choose at least one requested service, one sukkah type, and one schach type.";
       return;
     }
     if (photo instanceof HTMLInputElement && photo.files?.[0] && photo.files[0].size > 10 * 1024 * 1024) {
