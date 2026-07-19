@@ -28,10 +28,13 @@ layout.
 - Add only real, approved testimonials. The old sample testimonials were removed.
 
 **Contact information**
-- Email: mendelhecht16@gmail.com
+- Email: bkaysukkahbuilders@gmail.com
 - Phone: (347) 454-2282
 - Instagram: @bkaysukkahbuilders
 - WhatsApp: +1 (669) 290-9004
+
+See `docs/client-information.md` for the confirmed client-information reference
+and the remaining details that need confirmation.
 
 The contact page shows each method as a full-width link. The message form opens
 the visitor's email app with their message filled in.
