@@ -89,16 +89,10 @@ Form fields as a custom, site-styled form. It is a visual prototype only and
 does not send or save submissions.
 
 The custom comparison form places the project address in its location and
-service section. It reads `PUBLIC_GOOGLE_MAPS_API_KEY` during the Astro build.
-When the key is configured, Google Places upgrades the address field with US
-address suggestions and stores the formatted address selected by the visitor.
-Without the key, the field remains a normal required address input and can use
-addresses saved in the visitor's browser.
-
-The Google Cloud project must have Maps JavaScript API and Places API (New)
-enabled. The browser key must be restricted to those APIs and to the deployed
-website domains. Copy `.env.example` to `.env` for local development; never
-commit the real key.
+service section. The address is a normal required text input that the visitor
+fills in manually. A separate required radio group records exactly one
+neighborhood, with an Other option for locations outside the listed service
+areas. The comparison page does not load a third-party address service.
 
 ## Sukka Builder
 

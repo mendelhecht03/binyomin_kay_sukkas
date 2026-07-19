@@ -76,9 +76,10 @@ The comparison form collects estimated sukkah width and length with separate
 sliders. Each slider ranges from 0 to 30 feet and shows its current value.
 
 In the comparison form, collect the project address under Location and Service
-instead of Contact Details. Use Google Places suggestions when a restricted
-Maps browser key is configured, require selection of a suggested address, and
-keep a normal required address field as the no-key fallback.
+instead of Contact Details. The visitor must enter the address manually, then
+separately choose one required neighborhood from the mutually exclusive radio
+button list. Keep an Other option for neighborhoods outside the listed service
+areas.
 
 **Build requirements**
 
