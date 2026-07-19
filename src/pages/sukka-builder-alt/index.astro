@@ -103,11 +103,28 @@ const addOns = ["Put up lights", "Pressure wash the area the day before", "Bambo
 
           <section id="sukkah-details" class="form-card form-group" aria-labelledby="details-heading" data-form-step="3">
             <FormHeading icon="sukkah" eyebrow="Sukkah details" heading="Tell us what you have" id="details-heading" />
-            <div class="field short-field">
-              <label for="estimated-size">Estimated size <span class="required-label">Required</span></label>
-              <input id="estimated-size" name="estimatedSize" placeholder="For example, 8 × 10 feet" required />
-              <p class="field-hint">An estimate is fine if you do not know the exact measurements.</p>
-            </div>
+            <fieldset class="size-field">
+              <legend>Estimated size <span class="required-label">Required</span></legend>
+              <p id="size-hint" class="field-hint">An estimate is fine. Adjust both sliders from 0 to 30 feet.</p>
+              <div class="size-grid">
+                <div class="size-control">
+                  <div class="size-label-row">
+                    <label for="estimated-width">Width</label>
+                    <output for="estimated-width" data-size-output="estimated-width">10 ft</output>
+                  </div>
+                  <input id="estimated-width" name="estimatedWidth" type="range" min="0" max="30" step="1" value="10" aria-describedby="size-hint width-scale" data-size-slider />
+                  <div id="width-scale" class="range-scale" aria-hidden="true"><span>0 ft</span><span>30 ft</span></div>
+                </div>
+                <div class="size-control">
+                  <div class="size-label-row">
+                    <label for="estimated-length">Length</label>
+                    <output for="estimated-length" data-size-output="estimated-length">10 ft</output>
+                  </div>
+                  <input id="estimated-length" name="estimatedLength" type="range" min="0" max="30" step="1" value="10" aria-describedby="size-hint length-scale" data-size-slider />
+                  <div id="length-scale" class="range-scale" aria-hidden="true"><span>0 ft</span><span>30 ft</span></div>
+                </div>
+              </div>
+            </fieldset>
             <Choices legend="Sukkah type" name="sukkahType" options={sukkahTypes} type="checkbox" required requiredHint otherLabel="Other sukkah type" />
             <Choices legend="Schach type" name="schach" options={schachTypes} type="checkbox" required requiredHint otherLabel="Other schach type" />
             <Choices legend="Optional add-ons" name="addOns" options={addOns} type="checkbox" otherLabel="Other add-on" />
@@ -163,6 +180,18 @@ const addOns = ["Put up lights", "Pressure wash the area the day before", "Bambo
   const addressInput = document.querySelector("[data-address-input]");
   const addressWidget = document.querySelector("[data-address-widget]");
   const addressStatus = document.querySelector("[data-address-status]");
+  const sizeSliders = Array.from(document.querySelectorAll("[data-size-slider]"));
+
+  const updateSizeValue = (slider) => {
+    if (!(slider instanceof HTMLInputElement)) return;
+    const output = document.querySelector(`[data-size-output="${slider.id}"]`);
+    if (output instanceof HTMLOutputElement) output.textContent = `${slider.value} ft`;
+  };
+
+  sizeSliders.forEach((slider) => {
+    updateSizeValue(slider);
+    slider.addEventListener("input", () => updateSizeValue(slider));
+  });
 
   const setActiveStep = (stepNumber) => {
     stepLinks.forEach((link) => link.toggleAttribute("data-active", link.getAttribute("data-step-link") === stepNumber));
@@ -254,6 +283,7 @@ const addOns = ["Put up lights", "Pressure wash the area the day before", "Bambo
 
   form?.addEventListener("reset", () => {
     if (status instanceof HTMLElement) { status.textContent = ""; status.removeAttribute("data-state"); }
+    requestAnimationFrame(() => sizeSliders.forEach(updateSizeValue));
   });
 </script>
 
@@ -271,9 +301,10 @@ const addOns = ["Put up lights", "Pressure wash the area the day before", "Bambo
   .builder-form .field{gap:.5rem}.builder-form label,.builder-form legend{font-family:"Segoe UI",Arial,sans-serif;font-size:.94rem;font-weight:700;letter-spacing:0}.builder-form input,.builder-form textarea{min-height:54px;border-color:rgba(29,41,37,.2);border-radius:10px;background:#fff}.builder-form input:not([type="radio"]):not([type="checkbox"]):focus,.builder-form textarea:focus{border-color:var(--forest-700);box-shadow:0 0 0 4px rgba(45,104,85,.1)}.builder-form input::placeholder,.builder-form textarea::placeholder{color:#89938f;font-weight:400}.required-label{display:inline-block;margin-left:.4rem;padding:.15rem .4rem;border-radius:4px;color:var(--wood-600);background:#fbf2e5;font-size:.64rem;font-weight:850;letter-spacing:.06em;text-transform:uppercase}.required-mark{color:var(--wood-600)}
   .address-field{display:grid;gap:.5rem;max-width:720px;padding:1.15rem;border:1px solid var(--border);border-radius:12px;background:#f9fbf9}.address-field>label{font-size:1rem}.address-field>.field-hint{margin-bottom:.2rem}.address-widget,.google-address-autocomplete{width:100%}.address-status{min-height:1.25rem;margin:0;color:var(--forest-700);font-size:.82rem;font-weight:700}.address-status:empty{display:none}
   .form-grid,.date-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.15rem}.short-field{max-width:520px}.builder-form fieldset{display:grid;gap:.8rem;min-width:0;margin:0;padding:0;border:0}.builder-form legend{margin-bottom:.25rem;font-size:1rem}.choice-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.65rem}.choice-stack{display:grid;gap:.65rem}.choice-card{display:flex;gap:.65rem;align-items:center;min-height:52px;padding:.7rem .8rem;border:1px solid rgba(29,41,37,.16);border-radius:10px;background:#fff;cursor:pointer;transition:border-color 160ms ease,background 160ms ease,box-shadow 160ms ease}.choice-card:hover{border-color:rgba(45,104,85,.45);background:#fbfdfb}.choice-card:has(input:checked){border-color:var(--forest-700);background:var(--forest-100);box-shadow:inset 0 0 0 1px var(--forest-700)}.choice-card:has(input[type="radio"]:checked){background:#fff}.choice-card input[type="radio"],.choice-card input[type="checkbox"]{flex:0 0 auto;width:1.05rem;min-height:1.05rem;height:1.05rem;margin:0;accent-color:var(--forest-700)}.choice-card span{line-height:1.3}.choice-other{flex-wrap:wrap}.choice-other>input:last-child{flex:1 1 135px;min-height:38px;padding:.5rem .65rem;background:white}.field-hint{font-size:.82rem}
+  .size-field{max-width:760px}.size-field>.field-hint{margin:-.2rem 0 .2rem}.size-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}.size-control{display:grid;gap:.55rem;padding:1rem 1.1rem;border:1px solid rgba(29,41,37,.16);border-radius:12px;background:#f9fbf9}.size-label-row{display:flex;align-items:center;justify-content:space-between;gap:1rem}.size-label-row output{min-width:3.7rem;padding:.2rem .5rem;border-radius:6px;color:white;background:var(--forest-800);font-size:.82rem;font-weight:800;text-align:center}.builder-form .size-control input[type="range"]{width:100%;min-height:28px;height:28px;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;accent-color:var(--forest-700)}.builder-form .size-control input[type="range"]:focus{border:0;box-shadow:none}.range-scale{display:flex;justify-content:space-between;color:var(--ink-500);font-size:.72rem;font-weight:700}
   .upload-field{display:grid;grid-template-columns:auto 1fr minmax(190px,auto);gap:1rem;align-items:center;padding:1.15rem;border:1px dashed rgba(45,104,85,.38);border-radius:12px;background:#f7faf7}.upload-icon{display:grid;width:2.65rem;height:2.65rem;place-items:center;border-radius:10px;color:var(--forest-800);background:var(--forest-100);font-size:1.25rem;font-weight:900}.upload-field label{display:block;margin-bottom:.15rem}.upload-field p{margin:0;color:var(--ink-500);font-size:.8rem}.upload-field input{min-height:auto;padding:.45rem;font-size:.82rem;background:white}
   .review-panel{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:1rem 2rem;align-items:center;padding:clamp(1.6rem,4vw,2.4rem);border-radius:20px;color:white;background:linear-gradient(135deg,var(--forest-950),var(--forest-800));box-shadow:0 22px 55px rgba(16,45,37,.18)}.review-copy h3{margin-bottom:.5rem;color:white;font-size:clamp(1.6rem,3vw,2.1rem)}.review-copy p{max-width:620px;margin-bottom:0;color:rgba(255,255,255,.72)}.review-copy .eyebrow{margin-bottom:.45rem;color:#e5c28e}.submit-actions{display:flex;flex-wrap:wrap;gap:.75rem}.clear-button{min-height:48px;padding:.7rem 1rem;border:0;color:rgba(255,255,255,.75);background:transparent;font-weight:750;text-decoration:underline;text-underline-offset:4px}.review-panel .form-status{grid-column:1/-1;margin:0;color:#fff0bf}.review-panel .form-status[data-state="error"]{color:#ffd1cc}
   @media(max-width:950px){.hero-grid{grid-template-columns:1fr;gap:2.5rem}.prep-card{max-width:620px}.form-layout{grid-template-columns:1fr}.form-rail{position:static;display:none}.choice-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-  @media(max-width:700px){.preview-hero{padding-block:2.5rem 4rem}.hero-meta{gap:.7rem 1.2rem}.form-intro,.form-grid,.date-grid,.review-panel{grid-template-columns:1fr}.form-intro{gap:.6rem}.choice-grid{grid-template-columns:1fr}.section-copy{margin-left:0}.upload-field{grid-template-columns:auto 1fr}.upload-field input{grid-column:1/-1;width:100%}.submit-actions{align-items:stretch;flex-direction:column}.submit-actions .button{width:100%}}
+  @media(max-width:700px){.preview-hero{padding-block:2.5rem 4rem}.hero-meta{gap:.7rem 1.2rem}.form-intro,.form-grid,.date-grid,.size-grid,.review-panel{grid-template-columns:1fr}.form-intro{gap:.6rem}.choice-grid{grid-template-columns:1fr}.section-copy{margin-left:0}.upload-field{grid-template-columns:auto 1fr}.upload-field input{grid-column:1/-1;width:100%}.submit-actions{align-items:stretch;flex-direction:column}.submit-actions .button{width:100%}}
   @media(prefers-reduced-motion:reduce){.progress-track span,.form-rail nav a,.choice-card{transition:none}}
 </style>

@@ -72,6 +72,9 @@ The temporary `/sukka-builder-alt` comparison route reproduces the Google Form
 fields with the website's native styling. Its submission is intentionally
 disabled until a supported storage and upload backend is selected.
 
+The comparison form collects estimated sukkah width and length with separate
+sliders. Each slider ranges from 0 to 30 feet and shows its current value.
+
 In the comparison form, collect the project address under Location and Service
 instead of Contact Details. Use Google Places suggestions when a restricted
 Maps browser key is configured, require selection of a suggested address, and
