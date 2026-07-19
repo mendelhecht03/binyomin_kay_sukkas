@@ -72,6 +72,9 @@ The `/sukka-builder` route contains the website's custom, native-styled form.
 Its submission is intentionally disabled until supported form and upload
 backends are selected.
 
+The Site Details section accepts up to three optional area photos. Each photo
+may be a JPG, PNG, or HEIC file and must be no larger than 10 MB.
+
 The custom form collects estimated sukkah width and length with separate
 sliders. Each slider ranges from 0 to 30 feet and shows its current value.
 

@@ -96,9 +96,10 @@ does not load a third-party address service.
 
 ## Sukka Builder
 
-The `/sukka-builder/` page contains the custom form directly. Before it can
-accept live customer requests, the text fields and optional photo upload need
-supported submission and storage backends.
+The `/sukka-builder/` page contains the custom form directly. Visitors can
+select up to three optional area photos, with a 10 MB limit for each photo.
+Before the page can accept live customer requests, the text fields and photo
+uploads need supported submission and storage backends.
 
 ## Shared Page Structure
 
