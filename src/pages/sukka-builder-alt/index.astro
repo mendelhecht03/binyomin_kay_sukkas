@@ -85,13 +85,11 @@ const addOns = ["Put up lights", "Pressure wash the area the day before", "Bambo
             <FormHeading icon="location" eyebrow="Location and service" heading="Where are you, and what do you need?" id="service-heading" />
             <div class="address-field" data-address-autocomplete data-maps-api-key={mapsApiKey}>
               <label for="project-address">Project address <span class="required-label">Required</span></label>
-              <p class="field-hint">Start typing, then select the complete address from the suggestions.</p>
               <input
                 id="project-address"
                 name="address"
                 type="text"
                 autocomplete="street-address"
-                placeholder="123 Eastern Parkway, Brooklyn, NY 11213"
                 data-address-input
                 required
               />
@@ -230,7 +228,7 @@ const addOns = ["Put up lights", "Pressure wash the area the day before", "Bambo
       const maps = await loadGoogleMaps(apiKey);
       const { PlaceAutocompleteElement } = await maps.importLibrary("places");
       const autocomplete = new PlaceAutocompleteElement();
-      autocomplete.placeholder = "Start typing the project address";
+      autocomplete.placeholder = "";
       autocomplete.includedRegionCodes = ["us"];
       autocomplete.className = "google-address-autocomplete";
       autocomplete.addEventListener("gmp-select", async (event) => {
