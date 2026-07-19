@@ -75,6 +75,9 @@ backends are selected.
 The custom form collects estimated sukkah width and length with separate
 sliders. Each slider ranges from 0 to 30 feet and shows its current value.
 
+The visitor must choose exactly one sukkah type. Sukkah-type choices use a
+required, mutually exclusive radio-button group.
+
 The contact section collects first name and last name in separate required
 fields, followed by the visitor's phone number and email address.
 
