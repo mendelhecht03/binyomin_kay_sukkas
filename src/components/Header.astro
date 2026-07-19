@@ -125,12 +125,24 @@ const isActive = (href: string) =>
   function closeMenu() {
     header?.removeAttribute("data-menu-open");
     menuButton?.setAttribute("aria-expanded", "false");
+
+    if (!desktopNavigation.matches) {
+      navGroups.forEach((group) => {
+        cancelScheduledClose(group);
+        group.removeAttribute("open");
+      });
+    }
   }
 
   menuButton?.addEventListener("click", () => {
     const willOpen = !header?.hasAttribute("data-menu-open");
-    header?.toggleAttribute("data-menu-open", willOpen);
-    menuButton.setAttribute("aria-expanded", String(willOpen));
+
+    if (willOpen) {
+      header?.setAttribute("data-menu-open", "");
+      menuButton.setAttribute("aria-expanded", "true");
+    } else {
+      closeMenu();
+    }
   });
 
   navigation?.addEventListener("click", (event) => {
@@ -172,6 +184,23 @@ const isActive = (href: string) =>
         scheduleClose(group);
       }
     });
+  });
+
+  function isOutsideOpenMobileMenu(event) {
+    return (
+      !desktopNavigation.matches &&
+      header?.hasAttribute("data-menu-open") &&
+      event.target instanceof Node &&
+      !header.contains(event.target)
+    );
+  }
+
+  document.addEventListener("pointerdown", (event) => {
+    if (isOutsideOpenMobileMenu(event)) closeMenu();
+  });
+
+  document.addEventListener("focusin", (event) => {
+    if (isOutsideOpenMobileMenu(event)) closeMenu();
   });
 
   document.addEventListener("keydown", (event) => {

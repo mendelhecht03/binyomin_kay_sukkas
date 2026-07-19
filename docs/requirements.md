@@ -112,6 +112,8 @@ neighborhoods outside the listed service areas.
 - On desktop, the Sukkahs and Other Services menus open on pointer hover or
   keyboard focus.
 - On phones and tablets, those menus open when tapped.
+- On phones and tablets, tapping or moving keyboard focus outside an open
+  navigation panel closes the panel and its expanded nested menus.
 - The mobile navigation panel and both nested service menus open and close with
   smooth motion. Respect the visitor's reduced-motion preference.
 - Normal navigation links use an animated gold underline for hover, focus, and
