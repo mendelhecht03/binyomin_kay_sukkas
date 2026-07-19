@@ -40,6 +40,4 @@ confirmed them in this document.
 
 ## Project Follow-up
 
-The website source currently contains the older email address
-`mendelhecht16@gmail.com` on the contact page and in the footer. Replace it with
-the confirmed main email address before the next public deployment.
+The contact page and footer now use the confirmed main email address.
