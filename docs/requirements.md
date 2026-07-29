@@ -29,6 +29,9 @@ layout.
   three primary sukkah paths, testimonials, and a compact owner introduction.
   Do not add process steps, decorative quotes, promotional blurbs, or extra
   homepage sections without approval.
+- Style those four parts as one light, spacious page using the existing forest
+  palette with wood accents. Give each section a distinct composition through
+  photography, spacing, and restrained tactile states rather than extra copy.
 - The testimonial section uses two image-led cards with a customer name and a
   short statement. Add only real, approved testimonials. Until customer photos
   and copy are supplied, retain clearly labeled placeholders rather than

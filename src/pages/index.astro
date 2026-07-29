@@ -10,7 +10,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     <section class="home-hero">
       <div class="home-hero-grid shell">
         <div class="home-hero-copy">
-          <h1>Your sukkah, handled.</h1>
+          <h1><span>Your sukkah,</span> <strong>handled.</strong></h1>
           <p>Buying, renting, or preparing the sukkah you already own starts here.</p>
           <div class="home-hero-actions">
             <a class="button home-primary-action" href="#services">Choose a service</a>
@@ -22,6 +22,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           <img
             src="/assets/images/sukka-background.jpg"
             alt="Illustrative wooden sukkah with a schach roof beneath a blue sky"
+            loading="eager"
+            fetchpriority="high"
           />
           <figcaption>Example sukkah style</figcaption>
         </figure>
@@ -107,6 +109,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
 <style>
   .home-page {
+    overflow: clip;
     background: var(--cream-50);
   }
 
@@ -117,13 +120,25 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   }
 
   .home-hero {
-    padding-block: clamp(3.5rem, 8vw, 7rem);
+    position: relative;
+    isolation: isolate;
+    padding-block: clamp(3.5rem, 7vw, 6.5rem);
+    background:
+      linear-gradient(
+        104deg,
+        var(--cream-50) 0%,
+        var(--cream-50) 59%,
+        rgba(229, 238, 232, 0.72) 59%,
+        rgba(229, 238, 232, 0.72) 100%
+      );
   }
 
   .home-hero-grid {
+    position: relative;
+    z-index: 1;
     display: grid;
-    grid-template-columns: minmax(0, 0.85fr) minmax(420px, 1.15fr);
-    gap: clamp(3rem, 7vw, 6.5rem);
+    grid-template-columns: minmax(0, 0.88fr) minmax(420px, 1.12fr);
+    gap: clamp(3.25rem, 7vw, 6.75rem);
     align-items: center;
   }
 
@@ -131,13 +146,36 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     max-width: 560px;
   }
 
+  .home-hero-copy::before {
+    width: 54px;
+    height: 4px;
+    display: block;
+    margin-bottom: 1.5rem;
+    border-radius: 999px;
+    content: "";
+    background: var(--wood-500);
+  }
+
   .home-hero-copy h1 {
     max-width: 11ch;
     margin-bottom: 1.5rem;
-    font-size: clamp(3rem, 6vw, 4.8rem);
-    font-weight: 650;
+    font-size: clamp(3.2rem, 6vw, 5rem);
+    font-weight: 620;
     letter-spacing: -0.06em;
-    line-height: 0.98;
+    line-height: 0.96;
+  }
+
+  .home-hero-copy h1 span,
+  .home-hero-copy h1 strong {
+    display: block;
+  }
+
+  .home-hero-copy h1 strong {
+    width: fit-content;
+    padding-bottom: 0.08em;
+    border-bottom: 0.1em solid rgba(200, 134, 67, 0.62);
+    color: var(--forest-800);
+    font: inherit;
   }
 
   .home-hero-copy > p {
@@ -157,12 +195,13 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
   .home-primary-action {
     min-width: 156px;
-    font-weight: 650;
-    box-shadow: none;
+    border-radius: 12px;
+    font-weight: 640;
+    box-shadow: 0 10px 24px rgba(16, 45, 37, 0.14);
   }
 
   .home-primary-action:hover {
-    box-shadow: none;
+    box-shadow: 0 14px 30px rgba(16, 45, 37, 0.18);
     transform: translateY(-1px);
   }
 
@@ -183,19 +222,33 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   }
 
   .home-hero-photo {
+    position: relative;
+    z-index: 0;
     margin: 0;
+    padding: 0 0 1.15rem 1.15rem;
+  }
+
+  .home-hero-photo::before {
+    position: absolute;
+    z-index: -1;
+    inset: 1.35rem -1.35rem 0 0;
+    border-radius: 16px;
+    content: "";
+    background: var(--forest-900);
   }
 
   .home-hero-photo img {
     width: 100%;
     aspect-ratio: 4 / 3;
+    border: 1px solid rgba(16, 45, 37, 0.12);
     border-radius: 16px;
+    box-shadow: 0 24px 60px rgba(16, 45, 37, 0.17);
     object-fit: cover;
   }
 
   .home-hero-photo figcaption {
-    margin-top: 0.65rem;
-    color: var(--ink-500);
+    margin: 0.65rem 0 0;
+    color: rgba(255, 255, 255, 0.76);
     font-size: 0.78rem;
     text-align: right;
   }
@@ -219,19 +272,40 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     line-height: 1.05;
   }
 
+  .home-services {
+    background: var(--white);
+  }
+
+  .home-services > .shell {
+    display: grid;
+    grid-template-columns: minmax(230px, 0.68fr) minmax(0, 1.32fr);
+    gap: clamp(3rem, 8vw, 7rem);
+    align-items: start;
+  }
+
+  .home-services .home-section-heading {
+    position: sticky;
+    top: 7.5rem;
+    margin: 0;
+    padding-left: 1.5rem;
+    border-left: 4px solid var(--wood-500);
+  }
+
   .service-paths {
     display: grid;
-    border-bottom: 1px solid var(--border-strong);
+    border-top: 1px solid var(--border-strong);
   }
 
   .service-path {
+    position: relative;
     display: grid;
-    grid-template-columns: minmax(210px, 0.8fr) minmax(280px, 1.2fr) auto;
-    gap: clamp(1.5rem, 4vw, 4rem);
+    grid-template-columns: minmax(190px, 0.82fr) minmax(230px, 1.18fr);
+    gap: clamp(1.25rem, 3vw, 2.75rem);
     align-items: center;
-    padding-block: clamp(1.6rem, 3vw, 2.3rem);
-    border-top: 1px solid var(--border-strong);
+    padding: clamp(1.65rem, 3vw, 2.2rem) 1.25rem;
+    border-bottom: 1px solid var(--border-strong);
     text-decoration: none;
+    transition: background-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
   }
 
   .service-path h3,
@@ -252,6 +326,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   }
 
   .service-path span {
+    grid-column: 2;
     color: var(--forest-800);
     font-size: 0.88rem;
     font-weight: 700;
@@ -262,49 +337,104 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     transition: text-decoration-color 150ms ease, transform 150ms ease;
   }
 
+  .service-path span::after {
+    display: inline-block;
+    margin-left: 0.4rem;
+    content: "→";
+    transition: transform 180ms ease;
+  }
+
+  .service-path:hover,
+  .service-path:focus-visible {
+    background: rgba(229, 238, 232, 0.52);
+    box-shadow: inset 4px 0 0 var(--wood-500);
+    transform: translateX(4px);
+  }
+
   .service-path:hover h3 {
     color: var(--forest-700);
   }
 
-  .service-path:hover span {
+  .service-path:hover span,
+  .service-path:focus-visible span {
     text-decoration-color: currentColor;
+  }
+
+  .service-path:hover span::after,
+  .service-path:focus-visible span::after {
+    transform: translateX(3px);
+  }
+
+  .service-path:active {
     transform: translateX(2px);
   }
 
-  .service-path:active span {
-    transform: translateX(0);
+  .testimonials-section {
+    position: relative;
+    background:
+      linear-gradient(135deg, rgba(229, 238, 232, 0.72), rgba(248, 244, 234, 0.7));
   }
 
-  .testimonials-section {
-    background: rgba(229, 238, 232, 0.34);
+  .testimonials-section::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: min(18vw, 220px);
+    height: 8px;
+    content: "";
+    background: var(--wood-500);
   }
 
   .testimonial-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1.25rem;
+    grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+    gap: clamp(1.25rem, 3vw, 2rem);
+    align-items: stretch;
   }
 
   .testimonial-card {
+    position: relative;
+    overflow: hidden;
     display: grid;
-    grid-template-columns: 132px minmax(0, 1fr);
-    gap: 1.35rem;
+    grid-template-columns: 142px minmax(0, 1fr);
+    gap: 1.5rem;
     align-items: center;
-    min-height: 184px;
-    padding: 1.25rem;
+    min-height: 210px;
+    padding: 1.4rem;
     border: 1px solid var(--border);
     border-radius: 16px;
-    background: var(--white);
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 18px 42px rgba(16, 45, 37, 0.08);
+  }
+
+  .testimonial-card::after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 4px;
+    content: "";
+    background: var(--wood-500);
+  }
+
+  .testimonial-card:nth-child(2) {
+    grid-template-columns: 112px minmax(0, 1fr);
+    background: rgba(255, 253, 248, 0.92);
   }
 
   .testimonial-photo-placeholder {
+    position: relative;
     display: grid;
     width: 100%;
     aspect-ratio: 1;
     place-items: center;
+    padding: 0.75rem;
+    border: 1px solid rgba(23, 63, 52, 0.18);
     border-radius: 12px;
     color: var(--forest-800);
-    background: var(--forest-100);
+    background:
+      linear-gradient(145deg, rgba(255, 255, 255, 0.55), transparent 48%),
+      var(--forest-100);
     font-size: 0.72rem;
     font-weight: 700;
     letter-spacing: 0.04em;
@@ -317,9 +447,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   }
 
   .testimonial-copy blockquote p {
-    margin-bottom: 1rem;
+    margin-bottom: 1.15rem;
     color: var(--ink-900);
-    font-size: 1rem;
+    font-size: clamp(1rem, 1.7vw, 1.1rem);
     line-height: 1.55;
   }
 
@@ -332,25 +462,59 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
   .about-owner {
     padding-block: clamp(4.5rem, 8vw, 6.5rem);
+    background: var(--cream-50);
   }
 
   .about-owner-grid {
+    position: relative;
+    overflow: hidden;
     display: grid;
-    grid-template-columns: minmax(190px, 260px) minmax(0, 560px);
-    gap: clamp(2.5rem, 7vw, 6rem);
+    grid-template-columns: minmax(200px, 280px) minmax(0, 560px);
+    gap: clamp(2.75rem, 7vw, 6rem);
     align-items: center;
     justify-content: center;
+    max-width: 980px;
+    padding: clamp(1.5rem, 4vw, 2.5rem);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--white);
+    box-shadow: 0 20px 50px rgba(16, 45, 37, 0.08);
+  }
+
+  .about-owner-grid::after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 8px;
+    height: 100%;
+    content: "";
+    background: var(--wood-500);
   }
 
   .owner-photo {
+    position: relative;
+    z-index: 0;
     margin: 0;
+    padding: 0 0.75rem 0.75rem 0;
+  }
+
+  .owner-photo::before {
+    position: absolute;
+    z-index: -1;
+    inset: 0.75rem 0 0 0.75rem;
+    border-radius: 16px;
+    content: "";
+    background: var(--forest-100);
   }
 
   .owner-photo img {
     width: 100%;
     aspect-ratio: 4 / 5;
+    border: 1px solid rgba(16, 45, 37, 0.12);
     border-radius: 16px;
+    box-shadow: 0 14px 34px rgba(16, 45, 37, 0.12);
     object-fit: cover;
+    object-position: 45% center;
   }
 
   .owner-copy h2 {
@@ -365,13 +529,38 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   }
 
   .owner-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
     color: var(--forest-800);
     font-size: 0.92rem;
     font-weight: 700;
     text-underline-offset: 0.3em;
   }
 
+  .owner-link::after {
+    display: inline-block;
+    content: "→";
+    transition: transform 180ms ease;
+  }
+
+  .owner-link:hover::after,
+  .owner-link:focus-visible::after {
+    transform: translateX(3px);
+  }
+
   @media (max-width: 900px) {
+    .home-hero {
+      background:
+        linear-gradient(
+          180deg,
+          var(--cream-50) 0%,
+          var(--cream-50) 57%,
+          rgba(229, 238, 232, 0.72) 57%,
+          rgba(229, 238, 232, 0.72) 100%
+        );
+    }
+
     .home-hero-grid {
       grid-template-columns: minmax(0, 1fr);
       gap: 2.75rem;
@@ -389,12 +578,18 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       max-width: 760px;
     }
 
-    .service-path {
-      grid-template-columns: minmax(200px, 0.8fr) minmax(0, 1.2fr);
+    .home-services > .shell {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
     }
 
-    .service-path span {
-      grid-column: 2;
+    .home-services .home-section-heading {
+      position: static;
+      max-width: 620px;
+    }
+
+    .service-path {
+      grid-template-columns: minmax(190px, 0.78fr) minmax(0, 1.22fr);
     }
 
     .testimonial-card {
@@ -405,6 +600,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   @media (max-width: 700px) {
     .home-hero {
       padding-block: 3.25rem 4.5rem;
+    }
+
+    .home-hero-copy::before {
+      margin-bottom: 1.25rem;
     }
 
     .home-hero-copy h1 {
@@ -429,7 +628,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     .service-path {
       grid-template-columns: 1fr;
       gap: 0.65rem;
-      padding-block: 1.6rem;
+      padding: 1.6rem 1rem;
     }
 
     .service-path span {
@@ -447,10 +646,15 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       padding: 1rem;
     }
 
+    .testimonial-card:nth-child(2) {
+      grid-template-columns: 88px minmax(0, 1fr);
+    }
+
     .about-owner-grid {
       grid-template-columns: 112px minmax(0, 1fr);
       gap: 1.5rem;
       align-items: start;
+      padding: 1.25rem;
     }
 
     .owner-copy h2 {
@@ -475,12 +679,20 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     .owner-photo {
       width: 128px;
     }
+
+    .about-owner-grid::after {
+      width: 100%;
+      height: 6px;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
     .home-primary-action,
+    .service-path,
     .service-path h3,
-    .service-path span {
+    .service-path span,
+    .service-path span::after,
+    .owner-link::after {
       transition: none;
     }
   }
