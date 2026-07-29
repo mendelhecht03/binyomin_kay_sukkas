@@ -99,6 +99,8 @@ smaller field labels and input text on desktop. At 700 pixels and below, use
 when a visitor focuses a field. Radio and checkbox option cards use a 40-pixel
 height in a two-column desktop grid and a one-column small-screen grid. Date
 controls, uploads, and sliders retain their specialized touch-friendly sizes.
+Hide the Timing notes placeholder at 700 pixels and below so the compact field
+does not show clipped instructional text; keep its visible label.
 
 Stack every address control vertically at all screen widths. The controls
 should still reflect the expected answer length instead of filling the entire
