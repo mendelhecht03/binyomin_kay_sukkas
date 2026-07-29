@@ -172,8 +172,15 @@ those holiday names and show weekday plus Gregorian date for every option.
 Include an Other date option that reveals a required date field. Limit that
 field to the inclusive range from 30 days before Sukkos through Erev Sukkos.
 Use the device's native date picker on mobile and the site's themed flatpickr
-calendar on desktop. Hide and disable this Timing card when neither triggering
-Requested work option is selected.
+calendar on desktop.
+
+Selecting Take down or Bring to storage reveals the same Timing card with that
+service's own required dropdown. If both are checked, keep one card and show
+two clearly labeled dropdowns. List the same holiday-window dates in reverse
+order, from Erev Sukkos back through Motzei Yom Kippur. Each dropdown includes
+its own Other date option and date field with the same 30-day limit. Use the
+Choices.js CDN component for these holiday-window dropdowns. Hide and disable
+the Timing card when no triggering Requested work option is selected.
 
 When the purchase path is selected, show a required question titled "How would
 you like to receive your sukkah?" immediately below the project-path selector.
