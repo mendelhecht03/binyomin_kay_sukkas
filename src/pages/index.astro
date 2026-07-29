@@ -4,720 +4,484 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
 <BaseLayout
   title="Benyamin Kay Sukkas"
-  description="Sukkah setup, rentals, custom builds, pergolas, tree trimming, and eruv work with a clear way to request a quote."
+  description="Plan a new sukkah, arrange seasonal service, or request a rental from Benyamin Kay Sukkas."
 >
-  <section class="home-hero">
-    <div class="hero-grid shell">
-      <div class="hero-copy">
-        <p class="eyebrow">Your Sukkah, Made Easier</p>
-        <h1>Built for the season. Planned for your space.</h1>
-        <p class="lead">
-          From setup and rentals to custom builds, get practical help with the details that make a sukkah work for your home.
-        </p>
-        <div class="button-row">
-          <a class="button" href="/contact/">Request a Quote</a>
+  <div class="home-page">
+    <section class="home-hero">
+      <div class="home-hero-grid shell">
+        <div class="home-hero-copy">
+          <h1>Your sukkah, handled.</h1>
+          <p>Buying, renting, or preparing the sukkah you already own starts here.</p>
+          <div class="home-hero-actions">
+            <a class="button home-primary-action" href="#services">Choose a service</a>
+            <a class="home-phone-link" href="tel:+13474542282">Call (347) 454-2282</a>
+          </div>
         </div>
-        <a class="hero-phone" href="tel:+13474542282">
-          <span aria-hidden="true">Call</span>
-          <strong>(347) 454-2282</strong>
-          <small>Questions are welcome</small>
-        </a>
-      </div>
 
-      <figure class="hero-visual">
-        <img src="/assets/images/sukka-background.jpg" alt="Wooden sukkah with a schach roof under a blue sky" />
-        <figcaption>Sample sukkah style</figcaption>
-        <div class="hero-label" aria-hidden="true">
-          <span>Sukkah services</span>
-          <strong>Setup · Rentals · Custom</strong>
-        </div>
-      </figure>
-    </div>
-  </section>
-
-  <section class="section" aria-labelledby="sukkah-services-heading">
-    <div class="shell">
-      <div class="section-heading">
-        <p class="eyebrow">Sukkah services</p>
-        <h2 id="sukkah-services-heading">Choose the kind of help you need.</h2>
-        <p class="lead">Use the Sukka Builder, rent for the season, or plan a build around an unusual space.</p>
-      </div>
-
-      <div class="offering-grid">
-        <article class="offering-card offering-card-featured">
-          <div class="offering-media">
-            <img src="/assets/images/sample-sukka1.jpg" alt="Illustrative wooden sukkah" />
-          </div>
-          <div class="offering-body">
-            <span class="card-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24">
-                <path d="M8 5h8M9 3.5h6v3H9zM7 5.5H5.5v15h13v-15H17M8.5 14l2.25 2.25 4.75-5" />
-              </svg>
-            </span>
-            <h3>Sukka Builder</h3>
-            <p>Share your contact details, sukkah type, size, requested work, preferred dates, and site information.</p>
-            <a class="text-link" href="/sukka-builder/">Open the builder</a>
-          </div>
-        </article>
-
-        <article class="offering-card">
-          <div class="home-placeholder" role="img" aria-label="Rental sukkah photo coming soon">
-            <svg viewBox="0 0 64 64" aria-hidden="true">
-              <path d="M10 25 32 12l22 13v28H10zM16 25h32M22 53V34h20v19" />
-            </svg>
-            <span>Rental photo coming soon</span>
-          </div>
-          <div class="offering-body">
-            <span class="card-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24">
-                <path d="m4 10 8-5 8 5M6 9v10h12V9M9 19v-6h6v6M6 9h12" />
-              </svg>
-            </span>
-            <h3>Sukkah Rentals</h3>
-            <p>Ask about seasonal availability, sizing, delivery, setup, and takedown for your location.</p>
-            <a class="text-link" href="/sukkah-rentals/">See rental details</a>
-          </div>
-        </article>
-
-        <article class="offering-card">
-          <div class="home-placeholder" role="img" aria-label="Custom sukkah photo coming soon">
-            <svg viewBox="0 0 64 64" aria-hidden="true">
-              <path d="M13 51V21h38v30M9 21h46M18 21V12M27 21V9M37 21V9M46 21v-9M25 51V34h14v17" />
-            </svg>
-            <span>Custom build photo coming soon</span>
-          </div>
-          <div class="offering-body">
-            <span class="card-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24">
-                <path d="M4 19V9h16v10M3 9h18M6 9V5M10 9V4M14 9V4M18 9V5M9 19v-6h6v6" />
-              </svg>
-            </span>
-            <h3>Custom Sukkahs</h3>
-            <p>Work through tight spaces, unusual dimensions, rooflines, and other site-specific needs.</p>
-            <a class="text-link" href="/custom-sukkahs/">Plan a custom build</a>
-          </div>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <section class="section section-dark other-services" aria-labelledby="other-services-heading">
-    <div class="shell">
-      <div class="other-services-heading">
-        <div>
-          <p class="eyebrow">Beyond sukkahs</p>
-          <h2 id="other-services-heading">Practical work for outdoor spaces.</h2>
-        </div>
-        <p>Each project starts with a conversation about the space, timing, and work involved.</p>
-      </div>
-
-      <div class="other-service-grid">
-        <a class="other-service-card" href="/pergolas/">
-          <svg viewBox="0 0 64 64" aria-hidden="true">
-            <path d="M9 20h46M13 14h38M17 20v34M47 20v34M24 14v8M32 14v8M40 14v8" />
-          </svg>
-          <span><strong>Pergolas</strong><small>Builds, repairs, and shade structures</small></span>
-          <b aria-hidden="true">→</b>
-        </a>
-        <a class="other-service-card" href="/tree-trimming/">
-          <svg viewBox="0 0 64 64" aria-hidden="true">
-            <path d="M32 55V30M32 39l-10-8M32 34l9-10M22 33c-8 0-12-6-9-12 2-4 6-5 10-4 1-7 12-10 17-3 7-2 13 4 11 11-1 5-6 8-11 8" />
-          </svg>
-          <span><strong>Tree Trimming</strong><small>Clearance, safety, and cleanup planning</small></span>
-          <b aria-hidden="true">→</b>
-        </a>
-        <a class="other-service-card" href="/eruv-work/">
-          <svg viewBox="0 0 64 64" aria-hidden="true">
-            <path d="M12 53V18M52 53V18M8 18h48M17 18l7-8M47 18l-7-8M25 18h14" />
-          </svg>
-          <span><strong>Eruv Work</strong><small>Checking, setup, repair, and maintenance</small></span>
-          <b aria-hidden="true">→</b>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <section class="section section-muted" aria-labelledby="process-heading">
-    <div class="shell">
-      <div class="section-heading process-heading">
-        <p class="eyebrow">A straightforward process</p>
-        <h2 id="process-heading">Know what happens next.</h2>
-        <p class="lead">A useful first message includes the project type, location, timing, and a few details about the space.</p>
-      </div>
-
-      <ol class="process-list">
-        <li>
-          <span>1</span>
-          <div><h3>Tell us about the project.</h3><p>Share what you need, where the work is, and when you hope to have it done.</p></div>
-        </li>
-        <li>
-          <span>2</span>
-          <div><h3>Confirm the details.</h3><p>Measurements, photos, and special site needs help make the next step clear.</p></div>
-        </li>
-        <li>
-          <span>3</span>
-          <div><h3>Agree on the plan.</h3><p>Before work begins, make sure the scope, timing, and price are understood.</p></div>
-        </li>
-      </ol>
-    </div>
-  </section>
-
-  <section class="section" aria-labelledby="work-heading">
-    <div class="shell">
-      <div class="work-heading-row">
-        <div class="section-heading">
-          <p class="eyebrow">Sample sukkah styles</p>
-          <h2 id="work-heading">See the space take shape.</h2>
-          <p>These sample images show different wooden sukkah sizes and proportions.</p>
-        </div>
-        <a class="text-link" href="/gallery/">Open the gallery</a>
-      </div>
-
-      <div class="work-grid">
-        <figure class="work-photo work-photo-large">
-          <img src="/assets/images/sample-sukka2.jpg" alt="Sample wide wooden sukkah with schach" />
-          <figcaption>Sample family-size layout</figcaption>
-        </figure>
-        <figure class="work-photo">
-          <img src="/assets/images/sample-sukka3.jpg" alt="Sample wooden sukkah interior" />
-          <figcaption>Sample wood panel style</figcaption>
-        </figure>
-        <figure class="work-photo">
-          <img src="/assets/images/sample-sukka4.jpg" alt="Sample wooden sukkah in warm light" />
-          <figcaption>Sample larger layout</figcaption>
+        <figure class="home-hero-photo">
+          <img
+            src="/assets/images/sukka-background.jpg"
+            alt="Illustrative wooden sukkah with a schach roof beneath a blue sky"
+          />
+          <figcaption>Example sukkah style</figcaption>
         </figure>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section class="section section-muted" aria-labelledby="about-heading">
-    <div class="two-column shell about-home">
-      <figure class="about-photo">
-        <img src="/assets/images/profile-photo1.jpg" alt="Benyamin celebrating while running in a race" />
-      </figure>
-      <div>
-        <p class="eyebrow">About Benyamin</p>
-        <h2 id="about-heading">Hands-on work. Clear communication.</h2>
-        <p class="lead">Sukkah season moves quickly. Benyamin helps customers work through the practical details with a direct, simple way to stay in touch.</p>
-        <p>Every space is different, so measurements, timing, access, and special requests are discussed before a plan is confirmed.</p>
-        <a class="text-link" href="/about/">More about Benyamin</a>
-      </div>
-    </div>
-  </section>
+    <section id="services" class="home-section home-services" aria-labelledby="services-heading">
+      <div class="shell">
+        <div class="home-section-heading">
+          <h2 id="services-heading">What do you need help with?</h2>
+        </div>
 
-  <section class="section">
-    <div class="cta-panel shell">
-      <div>
-        <p class="eyebrow">Ready to get started?</p>
-        <h2>Tell us what you are planning.</h2>
-        <p>Include the service, location, timing, and any measurements or photos you already have.</p>
+        <nav class="service-paths" aria-label="Sukkah services">
+          <a class="service-path" href="/sukka-builder/">
+            <h3>Buy a sukkah</h3>
+            <p>Plan a new sukkah and its installation around your space.</p>
+            <span>Start planning</span>
+          </a>
+          <a class="service-path" href="/sukka-builder/">
+            <h3>I already have a sukkah</h3>
+            <p>Arrange storage, setup, takedown, or other seasonal work.</p>
+            <span>Request service</span>
+          </a>
+          <a class="service-path" href="/sukkah-rentals/">
+            <h3>Rent a sukkah</h3>
+            <p>Share your dates, location, and the size you need.</p>
+            <span>View rentals</span>
+          </a>
+        </nav>
       </div>
-      <div class="button-row">
-        <a class="button button-light" href="/contact/">Request a Quote</a>
-        <a class="button button-secondary cta-phone" href="tel:+13474542282">Call (347) 454-2282</a>
+    </section>
+
+    <section class="home-section testimonials-section" aria-labelledby="testimonials-heading">
+      <div class="shell">
+        <div class="home-section-heading">
+          <h2 id="testimonials-heading">What customers say</h2>
+        </div>
+
+        <div class="testimonial-grid">
+          <article class="testimonial-card">
+            <div class="testimonial-photo-placeholder" role="img" aria-label="Customer photo placeholder">
+              <span>Customer photo</span>
+            </div>
+            <div class="testimonial-copy">
+              <blockquote>
+                <p>Approved customer testimonial will go here.</p>
+              </blockquote>
+              <p class="testimonial-name">Customer name</p>
+            </div>
+          </article>
+
+          <article class="testimonial-card">
+            <div class="testimonial-photo-placeholder" role="img" aria-label="Customer photo placeholder">
+              <span>Customer photo</span>
+            </div>
+            <div class="testimonial-copy">
+              <blockquote>
+                <p>Approved customer testimonial will go here.</p>
+              </blockquote>
+              <p class="testimonial-name">Customer name</p>
+            </div>
+          </article>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
+
+    <section class="home-section about-owner" aria-labelledby="owner-heading">
+      <div class="about-owner-grid shell">
+        <figure class="owner-photo">
+          <img src="/assets/images/profile-photo1.jpg" alt="Benyamin Kay, owner of Benyamin Kay Sukkas" />
+        </figure>
+        <div class="owner-copy">
+          <h2 id="owner-heading">Meet Benyamin</h2>
+          <p>
+            Benyamin Kay is the owner of Benyamin Kay Sukkas. His hands-on approach grew from helping families prepare their spaces for Sukkos.
+          </p>
+          <a class="owner-link" href="/about/">Read more about Benyamin</a>
+        </div>
+      </div>
+    </section>
+  </div>
 </BaseLayout>
 
 <style>
+  .home-page {
+    background: var(--cream-50);
+  }
+
+  .home-page h1,
+  .home-page h2,
+  .home-page h3 {
+    font-family: "Avenir Next", Avenir, "Segoe UI", sans-serif;
+  }
+
   .home-hero {
-    position: relative;
-    overflow: hidden;
     padding-block: clamp(3.5rem, 8vw, 7rem);
-    background:
-      radial-gradient(circle at 12% 15%, rgba(200, 134, 67, 0.13), transparent 34%),
-      var(--cream-100);
   }
 
-  .home-hero::before {
-    position: absolute;
-    right: -160px;
-    bottom: -250px;
-    width: 620px;
-    height: 620px;
-    border: 90px solid rgba(23, 63, 52, 0.055);
-    border-radius: 50%;
-    content: "";
-  }
-
-  .hero-grid {
-    position: relative;
-    z-index: 1;
+  .home-hero-grid {
     display: grid;
-    grid-template-columns: minmax(0, 0.9fr) minmax(420px, 1.1fr);
-    gap: clamp(2.5rem, 6vw, 5.5rem);
+    grid-template-columns: minmax(0, 0.85fr) minmax(420px, 1.15fr);
+    gap: clamp(3rem, 7vw, 6.5rem);
     align-items: center;
   }
 
-  .hero-copy h1 {
-    max-width: 720px;
-    animation: hero-title-enter 650ms cubic-bezier(0.22, 1, 0.36, 1) 120ms both;
+  .home-hero-copy {
+    max-width: 560px;
   }
 
-  @keyframes hero-title-enter {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+  .home-hero-copy h1 {
+    max-width: 11ch;
+    margin-bottom: 1.5rem;
+    font-size: clamp(3rem, 6vw, 4.8rem);
+    font-weight: 650;
+    letter-spacing: -0.06em;
+    line-height: 0.98;
   }
 
-  .hero-phone {
-    width: fit-content;
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 0 0.6rem;
-    margin-top: 1.6rem;
+  .home-hero-copy > p {
+    max-width: 35rem;
+    margin-bottom: 2rem;
+    color: var(--ink-700);
+    font-size: clamp(1.08rem, 1.8vw, 1.22rem);
+    line-height: 1.6;
+  }
+
+  .home-hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 1.35rem;
+    align-items: center;
+  }
+
+  .home-primary-action {
+    min-width: 156px;
+    font-weight: 650;
+    box-shadow: none;
+  }
+
+  .home-primary-action:hover {
+    box-shadow: none;
+    transform: translateY(-1px);
+  }
+
+  .home-primary-action:active {
+    transform: translateY(1px);
+  }
+
+  .home-phone-link {
     color: var(--forest-900);
-    text-decoration: none;
+    font-size: 0.96rem;
+    font-weight: 650;
+    text-decoration-color: rgba(23, 63, 52, 0.32);
+    text-underline-offset: 0.3em;
   }
 
-  .hero-phone > span {
-    grid-row: 1 / 3;
-    align-self: center;
-    padding: 0.35rem 0.55rem;
-    border-radius: 6px;
-    color: white;
-    background: var(--wood-600);
-    font-size: 0.72rem;
-    font-weight: 850;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+  .home-phone-link:hover {
+    text-decoration-color: currentColor;
   }
 
-  .hero-phone strong {
-    color: var(--forest-900);
-    line-height: 1.2;
-  }
-
-  .hero-phone small {
-    color: var(--ink-500);
-    font-size: 0.78rem;
-  }
-
-  .hero-visual {
-    position: relative;
+  .home-hero-photo {
     margin: 0;
   }
 
-  .hero-visual img {
+  .home-hero-photo img {
     width: 100%;
-    aspect-ratio: 4 / 3.2;
-    border: 10px solid white;
-    border-radius: 110px 14px 14px 14px;
-    box-shadow: var(--shadow-medium);
+    aspect-ratio: 4 / 3;
+    border-radius: 16px;
     object-fit: cover;
   }
 
-  .hero-visual figcaption {
-    position: absolute;
-    right: 1.2rem;
-    bottom: 1.1rem;
-    padding: 0.35rem 0.55rem;
-    border-radius: 6px;
-    color: white;
-    background: rgba(16, 45, 37, 0.78);
+  .home-hero-photo figcaption {
+    margin-top: 0.65rem;
+    color: var(--ink-500);
+    font-size: 0.78rem;
+    text-align: right;
+  }
+
+  .home-section {
+    padding-block: clamp(5rem, 9vw, 8rem);
+    border-top: 1px solid var(--border);
+  }
+
+  .home-section-heading {
+    max-width: 700px;
+    margin-bottom: clamp(2.25rem, 5vw, 4rem);
+  }
+
+  .home-section-heading h2,
+  .owner-copy h2 {
+    margin: 0;
+    font-size: clamp(2.15rem, 4.5vw, 3.6rem);
+    font-weight: 620;
+    letter-spacing: -0.05em;
+    line-height: 1.05;
+  }
+
+  .service-paths {
+    display: grid;
+    border-bottom: 1px solid var(--border-strong);
+  }
+
+  .service-path {
+    display: grid;
+    grid-template-columns: minmax(210px, 0.8fr) minmax(280px, 1.2fr) auto;
+    gap: clamp(1.5rem, 4vw, 4rem);
+    align-items: center;
+    padding-block: clamp(1.6rem, 3vw, 2.3rem);
+    border-top: 1px solid var(--border-strong);
+    text-decoration: none;
+  }
+
+  .service-path h3,
+  .service-path p {
+    margin: 0;
+  }
+
+  .service-path h3 {
+    font-size: clamp(1.35rem, 2.4vw, 1.85rem);
+    font-weight: 620;
+    transition: color 150ms ease;
+  }
+
+  .service-path p {
+    max-width: 42ch;
+    color: var(--ink-700);
+    font-size: 0.98rem;
+  }
+
+  .service-path span {
+    color: var(--forest-800);
+    font-size: 0.88rem;
+    font-weight: 700;
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-underline-offset: 0.3em;
+    white-space: nowrap;
+    transition: text-decoration-color 150ms ease, transform 150ms ease;
+  }
+
+  .service-path:hover h3 {
+    color: var(--forest-700);
+  }
+
+  .service-path:hover span {
+    text-decoration-color: currentColor;
+    transform: translateX(2px);
+  }
+
+  .service-path:active span {
+    transform: translateX(0);
+  }
+
+  .testimonials-section {
+    background: rgba(229, 238, 232, 0.34);
+  }
+
+  .testimonial-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+
+  .testimonial-card {
+    display: grid;
+    grid-template-columns: 132px minmax(0, 1fr);
+    gap: 1.35rem;
+    align-items: center;
+    min-height: 184px;
+    padding: 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--white);
+  }
+
+  .testimonial-photo-placeholder {
+    display: grid;
+    width: 100%;
+    aspect-ratio: 1;
+    place-items: center;
+    border-radius: 12px;
+    color: var(--forest-800);
+    background: var(--forest-100);
     font-size: 0.72rem;
     font-weight: 700;
-  }
-
-  .hero-label {
-    position: absolute;
-    bottom: -24px;
-    left: -28px;
-    display: grid;
-    gap: 0.15rem;
-    padding: 1rem 1.2rem;
-    border-left: 4px solid var(--wood-500);
-    border-radius: 0 10px 10px 0;
-    color: white;
-    background: var(--forest-900);
-    box-shadow: var(--shadow-small);
-  }
-
-  .hero-label span {
-    font-size: 0.68rem;
-    font-weight: 750;
-    letter-spacing: 0.09em;
+    letter-spacing: 0.04em;
+    text-align: center;
     text-transform: uppercase;
   }
 
-  .hero-label strong {
-    color: white;
-    font-size: 0.92rem;
+  .testimonial-copy blockquote {
+    margin: 0;
   }
 
-  .offering-grid {
+  .testimonial-copy blockquote p {
+    margin-bottom: 1rem;
+    color: var(--ink-900);
+    font-size: 1rem;
+    line-height: 1.55;
+  }
+
+  .testimonial-name {
+    margin: 0;
+    color: var(--forest-800);
+    font-size: 0.86rem;
+    font-weight: 750;
+  }
+
+  .about-owner {
+    padding-block: clamp(4.5rem, 8vw, 6.5rem);
+  }
+
+  .about-owner-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 1.3rem;
-  }
-
-  .offering-card {
-    overflow: hidden;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    background: white;
-    box-shadow: var(--shadow-small);
-  }
-
-  .offering-media,
-  .home-placeholder {
-    aspect-ratio: 16 / 10;
-    overflow: hidden;
-  }
-
-  .offering-media img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .home-placeholder {
-    display: grid;
-    place-content: center;
-    gap: 0.7rem;
-    padding: 1.4rem;
-    color: var(--forest-700);
-    background:
-      linear-gradient(135deg, rgba(23, 63, 52, 0.045) 25%, transparent 25%) 0 0 / 26px 26px,
-      var(--cream-100);
-    font-size: 0.78rem;
-    font-weight: 800;
-    text-align: center;
-  }
-
-  .home-placeholder svg {
-    width: 68px;
-    margin: 0 auto;
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 2.2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-  }
-
-  .offering-body {
-    position: relative;
-    padding: 1.5rem;
-  }
-
-  .offering-body p {
-    min-height: 5.1rem;
-  }
-
-  .card-icon {
-    position: absolute;
-    top: -1.15rem;
-    right: 1.2rem;
-    width: 42px;
-    height: 42px;
-    display: grid;
-    place-items: center;
-    border: 4px solid white;
-    border-radius: 50%;
-    color: white;
-    background: var(--wood-600);
-  }
-
-  .card-icon svg {
-    width: 22px;
-    height: 22px;
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 1.8;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-  }
-
-  .other-services-heading {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(280px, 430px);
-    gap: 2rem;
-    align-items: end;
-    margin-bottom: 2.5rem;
-  }
-
-  .other-services-heading h2,
-  .other-services-heading p {
-    margin-bottom: 0;
-  }
-
-  .other-service-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 1rem;
-  }
-
-  .other-service-card {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    gap: 1rem;
+    grid-template-columns: minmax(190px, 260px) minmax(0, 560px);
+    gap: clamp(2.5rem, 7vw, 6rem);
     align-items: center;
-    padding: 1.25rem;
-    border: 1px solid rgba(255, 255, 255, 0.16);
-    border-radius: var(--radius);
-    background: rgba(255, 255, 255, 0.055);
-    text-decoration: none;
-    transition: background-color 160ms ease, transform 160ms ease;
-  }
-
-  .other-service-card:hover {
-    background: rgba(255, 255, 255, 0.1);
-    transform: translateY(-2px);
-  }
-
-  .other-service-card svg {
-    width: 46px;
-    height: 46px;
-    padding: 0.45rem;
-    border-radius: 10px;
-    fill: none;
-    stroke: #f0bd7e;
-    stroke-width: 2.2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    background: rgba(255, 255, 255, 0.08);
-  }
-
-  .other-service-card span {
-    display: grid;
-  }
-
-  .other-service-card strong {
-    color: white;
-  }
-
-  .other-service-card small {
-    color: rgba(255, 255, 255, 0.6);
-    line-height: 1.4;
-  }
-
-  .other-service-card b {
-    color: #f0bd7e;
-  }
-
-  .process-heading {
-    margin-inline: auto;
-    text-align: center;
-  }
-
-  .process-heading .eyebrow {
     justify-content: center;
   }
 
-  .process-list {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 1rem;
+  .owner-photo {
     margin: 0;
-    padding: 0;
-    list-style: none;
   }
 
-  .process-list li {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 1rem;
-    padding: 1.5rem;
-    border-top: 3px solid var(--wood-500);
-    background: white;
-  }
-
-  .process-list > li > span {
-    width: 38px;
-    height: 38px;
-    display: grid;
-    place-items: center;
-    border-radius: 50%;
-    color: white;
-    background: var(--forest-900);
-    font-weight: 850;
-  }
-
-  .process-list h3 {
-    font-size: 1.3rem;
-  }
-
-  .process-list p {
-    margin: 0;
-    font-size: 0.94rem;
-  }
-
-  .work-heading-row {
-    display: flex;
-    align-items: end;
-    justify-content: space-between;
-    gap: 2rem;
-  }
-
-  .work-grid {
-    display: grid;
-    grid-template-columns: 1.35fr 0.65fr;
-    grid-template-rows: repeat(2, minmax(0, 1fr));
-    gap: 1rem;
-  }
-
-  .work-photo {
-    position: relative;
-    min-height: 220px;
-    overflow: hidden;
-    margin: 0;
-    border-radius: var(--radius);
-    background: var(--cream-200);
-  }
-
-  .work-photo-large {
-    grid-row: 1 / 3;
-    min-height: 500px;
-  }
-
-  .work-photo img {
+  .owner-photo img {
     width: 100%;
-    height: 100%;
+    aspect-ratio: 4 / 5;
+    border-radius: 16px;
     object-fit: cover;
   }
 
-  .work-photo figcaption {
-    position: absolute;
-    right: 0.85rem;
-    bottom: 0.85rem;
-    left: 0.85rem;
-    padding: 0.7rem 0.8rem;
-    border-radius: 8px;
-    color: white;
-    background: rgba(16, 45, 37, 0.82);
-    font-size: 0.82rem;
-    font-weight: 750;
+  .owner-copy h2 {
+    margin-bottom: 1.25rem;
   }
 
-  .about-photo {
-    position: relative;
-    overflow: hidden;
-    margin: 0;
-    border-radius: 90px 14px 14px 14px;
-    box-shadow: var(--shadow-medium);
+  .owner-copy p {
+    max-width: 52ch;
+    margin-bottom: 1.35rem;
+    font-size: 1.02rem;
+    line-height: 1.7;
   }
 
-  .about-photo img {
-    width: 100%;
-    aspect-ratio: 4 / 3.6;
-    object-fit: cover;
-    object-position: center;
+  .owner-link {
+    color: var(--forest-800);
+    font-size: 0.92rem;
+    font-weight: 700;
+    text-underline-offset: 0.3em;
   }
 
-  .cta-phone {
-    border-color: rgba(255, 255, 255, 0.7);
-    color: white;
+  @media (max-width: 900px) {
+    .home-hero-grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 2.75rem;
+    }
+
+    .home-hero-copy {
+      max-width: 670px;
+    }
+
+    .home-hero-copy h1 {
+      max-width: 12ch;
+    }
+
+    .home-hero-photo {
+      max-width: 760px;
+    }
+
+    .service-path {
+      grid-template-columns: minmax(200px, 0.8fr) minmax(0, 1.2fr);
+    }
+
+    .service-path span {
+      grid-column: 2;
+    }
+
+    .testimonial-card {
+      grid-template-columns: 108px minmax(0, 1fr);
+    }
   }
 
-  @media (max-width: 960px) {
-    .hero-grid {
-      grid-template-columns: 1fr 0.9fr;
+  @media (max-width: 700px) {
+    .home-hero {
+      padding-block: 3.25rem 4.5rem;
     }
 
-    .offering-grid,
-    .process-list {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+    .home-hero-copy h1 {
+      max-width: 11ch;
+      font-size: clamp(2.75rem, 13vw, 4rem);
+      line-height: 1;
     }
 
-    .offering-card-featured,
-    .process-list li:last-child {
-      grid-column: 1 / -1;
+    .home-hero-actions {
+      align-items: flex-start;
+      flex-direction: column;
     }
 
-    .offering-card-featured {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
+    .home-primary-action {
+      width: 100%;
     }
 
-    .other-service-grid {
+    .home-section {
+      padding-block: 4.75rem;
+    }
+
+    .service-path {
+      grid-template-columns: 1fr;
+      gap: 0.65rem;
+      padding-block: 1.6rem;
+    }
+
+    .service-path span {
+      grid-column: 1;
+      margin-top: 0.25rem;
+    }
+
+    .testimonial-grid {
       grid-template-columns: 1fr;
     }
-  }
 
-  @media (max-width: 740px) {
-    .hero-grid,
-    .other-services-heading,
-    .work-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .hero-copy {
-      max-width: 620px;
-    }
-
-    .hero-visual {
-      margin-top: 1rem;
-      margin-bottom: 2.75rem;
-    }
-
-    .hero-visual img {
-      border-radius: 70px 12px 12px 12px;
-    }
-
-    .hero-visual figcaption {
-      top: 0.9rem;
-      right: 0.9rem;
-      bottom: auto;
-    }
-
-    .hero-label {
-      bottom: -2.1rem;
-      left: clamp(12px, 4vw, 22px);
-      width: auto;
-      max-width: calc(100% - 24px);
-      padding: 0.8rem 1rem;
-    }
-
-    .hero-label span {
-      font-size: 0.63rem;
-    }
-
-    .hero-label strong {
-      font-size: clamp(0.82rem, 3.3vw, 0.92rem);
-      white-space: nowrap;
-    }
-
-    .work-grid {
-      grid-template-rows: auto;
-    }
-
-    .work-photo,
-    .work-photo-large {
-      grid-row: auto;
+    .testimonial-card {
+      grid-template-columns: 88px minmax(0, 1fr);
       min-height: 0;
-      aspect-ratio: 16 / 10;
+      padding: 1rem;
+    }
+
+    .about-owner-grid {
+      grid-template-columns: 112px minmax(0, 1fr);
+      gap: 1.5rem;
+      align-items: start;
+    }
+
+    .owner-copy h2 {
+      font-size: 2rem;
     }
   }
 
-  @media (max-width: 560px) {
-    .offering-grid,
-    .process-list,
-    .offering-card-featured {
+  @media (max-width: 460px) {
+    .testimonial-card {
+      grid-template-columns: 74px minmax(0, 1fr);
+      gap: 1rem;
+    }
+
+    .testimonial-photo-placeholder {
+      font-size: 0.62rem;
+    }
+
+    .about-owner-grid {
       grid-template-columns: 1fr;
     }
 
-    .offering-card-featured,
-    .process-list li:last-child {
-      grid-column: auto;
+    .owner-photo {
+      width: 128px;
     }
+  }
 
-    .offering-body p {
-      min-height: 0;
-    }
-
-    .work-heading-row {
-      display: block;
-    }
-
-    .work-heading-row .text-link {
-      margin-bottom: 1.5rem;
+  @media (prefers-reduced-motion: reduce) {
+    .home-primary-action,
+    .service-path h3,
+    .service-path span {
+      transition: none;
     }
   }
 </style>

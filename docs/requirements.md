@@ -25,7 +25,16 @@ layout.
 - The Sukka Builder uses the website's custom form. The former Google Form
   embed has been removed. Keep submission disabled and clearly explained until
   supported form and photo-upload backends are selected.
-- Add only real, approved testimonials. The old sample testimonials were removed.
+- Keep the homepage intentionally limited to four parts: a focused hero, the
+  three primary sukkah paths, testimonials, and a compact owner introduction.
+  Do not add process steps, decorative quotes, promotional blurbs, or extra
+  homepage sections without approval.
+- The testimonial section uses two image-led cards with a customer name and a
+  short statement. Add only real, approved testimonials. Until customer photos
+  and copy are supplied, retain clearly labeled placeholders rather than
+  inventing endorsements.
+- The compact homepage owner section uses Benyamin's profile photo and a short
+  editable company-history statement. Keep the full biography on `/about/`.
 
 **Contact information**
 - Email: bkaysukkahbuilders@gmail.com
