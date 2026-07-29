@@ -4,7 +4,7 @@
 - ☑ Forest, cream, and wood color palette
 - ☑ Simple code-based brand mark and favicon
 - ☑ Five illustrative sukkah images and one sukkah detail image
-- ☐ Real completed-sukkah hero photo or video
+- ☑ Real sukkah hero photo approved for the homepage
 - ☐ Real sukkah project photos with confirmed descriptions
 - ☐ Rental sukkah photos
 - ☐ Custom sukkah photos
