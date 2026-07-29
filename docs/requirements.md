@@ -72,8 +72,40 @@ The `/sukka-builder` route contains the website's custom, native-styled form.
 Its submission is intentionally disabled until supported form and upload
 backends are selected.
 
-The `/sukkah-rentals` page uses only the primary Ask about rentals action in
-its hero and omits the generic What to share section.
+The builder keeps a compact section-progress indicator visible while visitors
+move through the form. On desktop it uses a left-side section list; on smaller
+screens it becomes a narrow sticky status row so it does not crowd the fields.
+Form sections use one consistent card, input, and selected-choice style.
+On wide screens, all seven form-section cards use the same centered 720-pixel
+maximum width, with their content arranged inside a centered 640-pixel column.
+Labels and form text remain left-aligned for easy scanning. Multi-column
+choices, dates, sliders, and uploads must reflow before they can overflow.
+Use the same slim slider treatment for both estimated dimensions: a four-pixel
+track, forest-colored progress, and a white circular thumb with a forest border.
+Show each current measurement in a compact cream readout using the site's
+old-style serif numerals and a small sans-serif unit. When the value changes,
+use a brief directional pop for feedback and disable that motion when the
+visitor prefers reduced motion. Place each readout centered beneath its slider
+on desktop. At 700 pixels and below, place the readout beside its Width or
+Length label with the slider on the following row.
+Use a medium-weight system monospace font for the builder's Submit button. The
+button must not move or scale on hover or press; pressing it should only darken
+its green background slightly. Center the button within the form and place its
+temporary submission-status note directly underneath it.
+Keep standard text fields compact: approximately 36 pixels high on desktop,
+40 pixels on small tablets, and 44 pixels on phone-sized screens. Use slightly
+smaller field labels and input text. Radio and checkbox option cards use a
+40-pixel height in a two-column desktop grid and a one-column small-screen
+grid. Date controls, uploads, and sliders retain their specialized
+touch-friendly sizes.
+
+Stack every address control vertically at all screen widths. The controls
+should still reflect the expected answer length instead of filling the entire
+form card. Street address, city, and state share one width; ZIP remains compact.
+
+The `/sukkah-rentals` page embeds the client's published Google Form for rental
+requests. Google Forms owns the questions, validation, submission behavior, and
+response storage; those details are no longer implemented in the website code.
 
 The `/gallery` route temporarily shows a branded under-construction page while
 the client prepares approved project photography. Replace it with the completed
@@ -92,17 +124,48 @@ The visitor must also choose exactly one schach type using a required,
 mutually exclusive radio-button group.
 
 The contact section collects first name and last name in separate required
-fields, followed by the visitor's phone number and email address.
+fields, followed by the visitor's phone number and email address. Stack all
+four fields vertically in that order and give them the same width.
 
-Requested work choices appear as Bring out of storage, Build, Take down, Bring
-to storage, and Other. Visitors may choose more than one.
+For visitors who already own a sukkah, requested work choices appear as Bring
+out of storage, Build, Take down, Bring to storage, and Other. Visitors may
+choose more than one. Hide and disable this group on the purchase path.
 
 In the custom form, collect the project address under Location and Service
 instead of Contact Details. The address uses separate fields for street
-address, optional apartment or unit, city, two-letter state abbreviation, and
-ZIP code. The visitor must then separately choose one required neighborhood
-from the mutually exclusive radio-button list. Keep an Other option for
-neighborhoods outside the listed service areas.
+address, city, state, and ZIP code. State is a required dropdown containing the
+50 U.S. states and Washington, D.C. Street address, city, and state use the
+same full field width, while ZIP remains compact. The visitor must then
+separately choose one required neighborhood from the mutually exclusive
+radio-button list. Keep an Other option for neighborhoods outside the listed
+service areas. Place the instruction "Enter the address where the sukkah will
+be used." directly above the address fields without a visible address
+subheading.
+
+Size the ZIP Code field for the longest supported U.S. format, `12345-6789`.
+Accept no more than 10 characters while continuing to support both five-digit
+and ZIP+4 entries.
+
+The first form card asks the visitor to choose one required project path:
+I would like to buy or I already have a sukkah. Present the paths with the
+reusable, accessible project-path selector. Each option includes a short
+explanation, a visible radio indicator, and a warm selected state that uses the
+site's forest and wood colors. Rental requests belong on the dedicated
+`/sukkah-rentals` route and should not appear as a builder choice.
+
+The selected path tailors later questions. The purchase path uses new-sukkah
+wording, hides and disables Requested work, and asks for one preferred
+installation date. The existing-sukkah path uses current-sukkah wording, shows
+Requested work, and asks for both preferred build and takedown dates. Contact,
+location, site, and final-detail questions remain common to both paths. Switching
+paths should preserve previously entered values while excluding hidden controls
+from eventual form submission.
+
+When the purchase path is selected, show a required question titled "How would
+you like to receive your sukkah?" immediately below the project-path selector.
+Present two radio options: "I’ll pick it up" and "Please deliver it to me." Hide
+and disable this question on the existing-sukkah path so its value is excluded
+from eventual form submission.
 
 **Build requirements**
 
@@ -119,6 +182,13 @@ neighborhoods outside the listed service areas.
 
 **Navigation behavior**
 
+- Use the site's old-style serif heading family for normal navigation and
+  dropdown labels so the header feels consistent with the heritage craft
+  brand. Keep the Request a Quote button in the sans-serif body family so it
+  remains clearly actionable.
+- Keep the Request a Quote label medium-weight rather than bold. Use a small
+  northeast arrow that moves slightly on pointer hover and keyboard focus as
+  directional feedback. Respect reduced-motion preferences.
 - On desktop, the Sukkahs and Other Services menus open on pointer hover or
   keyboard focus.
 - On phones and tablets, those menus open when tapped.

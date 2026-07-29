@@ -88,6 +88,10 @@ embed and temporary `/sukka-builder-alt/` comparison route have been removed.
 The custom form is not yet connected to a submission or upload backend, so its
 current submit action only validates the visitor's entries.
 
+The builder's desktop date fields use Flatpickr 4.6.13 loaded from jsDelivr.
+Mobile browsers retain their native date picker. The original inputs continue
+to store dates in `YYYY-MM-DD` format for a future submission backend.
+
 The custom builder places the project address in its location and service
 section. The address is a normal required text input that the visitor fills in
 manually. A separate required radio group records exactly one neighborhood,

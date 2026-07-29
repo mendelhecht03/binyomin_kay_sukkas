@@ -85,6 +85,7 @@ If these design requirements do not mention a detail, make a simple, conservativ
 - Do not add large frameworks or dependencies unless they are clearly needed.
 - Keep changes focused on the user's request.
 - Do not rewrite unrelated files.
+- Prefer to use stable and quality component via a  CDN or another method before trying to recreate the component from scratch (inform the user if the tradeoffs are severe)
 
 ## Documentation
 

@@ -3,6 +3,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import FormHeading from "../../components/FormHeading.astro";
 import Field from "../../components/Field.astro";
 import Choices from "../../components/Choices.astro";
+import ProjectPathSelector from "../../components/ProjectPathSelector.astro";
 
 const services = ["Bring out of storage", "Build", "Take down", "Bring to storage"];
 const neighborhoods = [
@@ -19,12 +20,81 @@ const neighborhoods = [
   "New Haven",
   "South Florida",
 ];
+const states = [
+  { code: "AL", name: "Alabama" },
+  { code: "AK", name: "Alaska" },
+  { code: "AZ", name: "Arizona" },
+  { code: "AR", name: "Arkansas" },
+  { code: "CA", name: "California" },
+  { code: "CO", name: "Colorado" },
+  { code: "CT", name: "Connecticut" },
+  { code: "DE", name: "Delaware" },
+  { code: "DC", name: "District of Columbia" },
+  { code: "FL", name: "Florida" },
+  { code: "GA", name: "Georgia" },
+  { code: "HI", name: "Hawaii" },
+  { code: "ID", name: "Idaho" },
+  { code: "IL", name: "Illinois" },
+  { code: "IN", name: "Indiana" },
+  { code: "IA", name: "Iowa" },
+  { code: "KS", name: "Kansas" },
+  { code: "KY", name: "Kentucky" },
+  { code: "LA", name: "Louisiana" },
+  { code: "ME", name: "Maine" },
+  { code: "MD", name: "Maryland" },
+  { code: "MA", name: "Massachusetts" },
+  { code: "MI", name: "Michigan" },
+  { code: "MN", name: "Minnesota" },
+  { code: "MS", name: "Mississippi" },
+  { code: "MO", name: "Missouri" },
+  { code: "MT", name: "Montana" },
+  { code: "NE", name: "Nebraska" },
+  { code: "NV", name: "Nevada" },
+  { code: "NH", name: "New Hampshire" },
+  { code: "NJ", name: "New Jersey" },
+  { code: "NM", name: "New Mexico" },
+  { code: "NY", name: "New York" },
+  { code: "NC", name: "North Carolina" },
+  { code: "ND", name: "North Dakota" },
+  { code: "OH", name: "Ohio" },
+  { code: "OK", name: "Oklahoma" },
+  { code: "OR", name: "Oregon" },
+  { code: "PA", name: "Pennsylvania" },
+  { code: "RI", name: "Rhode Island" },
+  { code: "SC", name: "South Carolina" },
+  { code: "SD", name: "South Dakota" },
+  { code: "TN", name: "Tennessee" },
+  { code: "TX", name: "Texas" },
+  { code: "UT", name: "Utah" },
+  { code: "VT", name: "Vermont" },
+  { code: "VA", name: "Virginia" },
+  { code: "WA", name: "Washington" },
+  { code: "WV", name: "West Virginia" },
+  { code: "WI", name: "Wisconsin" },
+  { code: "WY", name: "Wyoming" },
+];
 const sukkahTypes = ["Canvas", "Canvas Bingo", "Snap / panel", "Wood boards with bolts", "Schach and beams only"];
-const schachTypes = ["Bamboo mat", "Bamboo sticks", "Evergreen or other branches"];
+const schachTypes = ["Bamboo mat", "Bamboo sticks", "Evergreen"];
 const addOns = ["Put up lights", "Pressure wash area day before", "Bamboo mat", "Evergreen"];
+const fulfillmentMethods = ["I’ll pick it up", "Please deliver it to me"];
+const projectPaths = [
+  {
+    value: "I would like to buy",
+    title: "I would like to buy",
+    description: "Help me choose a new sukkah and plan the installation.",
+  },
+  {
+    value: "I already have a sukkah",
+    title: "I already have a sukkah",
+    description: "Help me store, build, take down, or service my existing sukkah.",
+  },
+];
 ---
 
 <BaseLayout title="Sukka Builder" description="Share your sukkah setup, location, timing, and site details with Benyamin Kay Sukkas.">
+  <Fragment slot="head">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css" />
+  </Fragment>
   <section class="builder-hero">
     <div class="shell">
       <nav class="breadcrumb" aria-label="Breadcrumb">
@@ -36,8 +106,8 @@ const addOns = ["Put up lights", "Pressure wash area day before", "Bamboo mat", 
         <div class="hero-copy">
           <p class="eyebrow">Sukka Builder</p>
           <h1>Your sukkah starts with a good plan.</h1>
-          <p class="lead">Please fill out the form below and we will get back to you with a custom quote</p>
-          <p class="builder-notice"><span aria-hidden="true"></span>Online submission is not connected yet.</p>
+          <p class="lead">Share the details below and we’ll follow up with a custom quote.</p>
+          <p class="builder-notice">Online submission is not connected yet.</p>
         </div>
       </div>
     </div>
@@ -46,29 +116,57 @@ const addOns = ["Put up lights", "Pressure wash area day before", "Bamboo mat", 
   <section class="form-section" aria-labelledby="form-heading">
     <div class="shell form-shell">
       <div class="form-intro">
-        <div><p class="eyebrow">Project details</p><h2 id="form-heading">Tell us about your sukkah</h2></div>
+        <div>
+          <p class="eyebrow">Project details</p>
+          <h2 id="form-heading">Tell us about your sukkah</h2>
+          <p>Choose a project path, then complete the six short sections. Required fields are marked with an asterisk.</p>
+        </div>
       </div>
 
       <div class="form-layout">
         <aside class="form-rail" aria-label="Form sections">
           <p class="rail-title">Your progress</p>
-          <div class="progress-track" aria-hidden="true"><span data-progress-bar></span></div>
+          <div class="progress-track" role="progressbar" aria-label="Form progress" aria-valuemin="1" aria-valuemax="7" aria-valuenow="1"><span data-progress-bar></span></div>
+          <p class="mobile-progress-label"><span data-current-step>1 of 7</span><strong data-current-label>Start</strong></p>
           <nav>
-            <a href="#contact-details" data-step-link="1"><span>1</span> Contact</a>
-            <a href="#service-details" data-step-link="2"><span>2</span> Service</a>
-            <a href="#sukkah-details" data-step-link="3"><span>3</span> Sukkah</a>
-            <a href="#site-details" data-step-link="4"><span>4</span> Site</a>
-            <a href="#timing-details" data-step-link="5"><span>5</span> Timing</a>
-            <a href="#final-details" data-step-link="6"><span>6</span> Final details</a>
+            <a href="#project-path" data-step-link="1"><span>1</span> Start</a>
+            <a href="#contact-details" data-step-link="2"><span>2</span> Contact</a>
+            <a href="#service-details" data-step-link="3"><span>3</span> Location</a>
+            <a href="#sukkah-details" data-step-link="4"><span>4</span> Sukkah</a>
+            <a href="#site-details" data-step-link="5"><span>5</span> Site</a>
+            <a href="#timing-details" data-step-link="6"><span>6</span> Timing</a>
+            <a href="#final-details" data-step-link="7"><span>7</span> Final details</a>
           </nav>
           <p class="rail-help">Need help?<br /><a href="tel:+13474542282">Call (347) 454-2282</a></p>
         </aside>
 
         <form class="builder-form" data-builder-form>
-          <section id="contact-details" class="form-card form-group" aria-labelledby="contact-heading" data-form-step="1">
+          <section id="project-path" class="form-card form-group path-card" aria-labelledby="path-heading" data-form-step="1">
+            <FormHeading icon="sukkah" eyebrow="Start here" heading="How can we help?" id="path-heading" />
+            <ProjectPathSelector
+              name="sukkahPlan"
+              legend="Choose your project path"
+              hint="We’ll tailor the remaining questions to your choice."
+              hintId="branch-help"
+              options={projectPaths}
+              required
+            />
+            <div class="fulfillment-card" data-buy-only hidden>
+              <Choices
+                legend="How would you like to receive your sukkah?"
+                name="fulfillmentMethod"
+                options={fulfillmentMethods}
+                type="radio"
+                required
+                requiredHint
+              />
+            </div>
+          </section>
+
+          <section id="contact-details" class="form-card form-group" aria-labelledby="contact-heading" data-form-step="2">
             <FormHeading icon="contact" eyebrow="Contact details" heading="How can we reach you?" id="contact-heading" />
             <p class="section-copy">We’ll only use these details to follow up about your sukkah.</p>
-            <div class="form-grid">
+            <div class="form-grid contact-grid">
               <Field id="firstName" label="First name" autocomplete="given-name" required />
               <Field id="lastName" label="Last name" autocomplete="family-name" required />
               <Field id="phone" label="Phone number" type="tel" autocomplete="tel" required />
@@ -76,18 +174,14 @@ const addOns = ["Put up lights", "Pressure wash area day before", "Bamboo mat", 
             </div>
           </section>
 
-          <section id="service-details" class="form-card form-group" aria-labelledby="service-heading" data-form-step="2">
-            <FormHeading icon="location" eyebrow="Location and service" heading="Where are you, and what do you need?" id="service-heading" />
-            <div class="address-field" role="group" aria-labelledby="project-address-heading">
-              <p id="project-address-heading" class="address-title">Project address</p>
+          <section id="service-details" class="form-card form-group" aria-labelledby="service-heading" data-form-step="3">
+            <FormHeading icon="location" eyebrow="Project location" heading="Where will the project be?" id="service-heading" />
+            <div class="address-field" role="group" aria-label="Project address" aria-describedby="project-address-instruction">
+              <p id="project-address-instruction" class="field-hint address-instruction">Enter the address where the sukkah will be used.</p>
               <div class="address-grid">
                 <div class="field address-street">
                   <label for="address-line-1">Street address <span class="required-mark">*</span></label>
                   <input id="address-line-1" name="addressLine1" autocomplete="address-line1" required />
-                </div>
-                <div class="field address-unit">
-                  <label for="address-line-2">Apartment or unit</label>
-                  <input id="address-line-2" name="addressLine2" autocomplete="address-line2" />
                 </div>
                 <div class="field address-city">
                   <label for="address-city">City <span class="required-mark">*</span></label>
@@ -95,20 +189,25 @@ const addOns = ["Put up lights", "Pressure wash area day before", "Bamboo mat", 
                 </div>
                 <div class="field address-state">
                   <label for="address-state">State <span class="required-mark">*</span></label>
-                  <input id="address-state" name="state" autocomplete="address-level1" maxlength="2" pattern="[A-Za-z]{2}" title="Enter the two-letter state abbreviation" autocapitalize="characters" required />
+                  <select id="address-state" name="state" autocomplete="address-level1" required>
+                    <option value="">Select state</option>
+                    {states.map((state) => <option value={state.code}>{state.name}</option>)}
+                  </select>
                 </div>
                 <div class="field address-postal">
-                  <label for="address-postal">ZIP code <span class="required-mark">*</span></label>
-                  <input id="address-postal" name="postalCode" inputmode="numeric" autocomplete="postal-code" pattern="[0-9]{5}(-[0-9]{4})?" required />
+                  <label for="address-postal">Zip Code <span class="required-mark">*</span></label>
+                  <input id="address-postal" name="postalCode" inputmode="numeric" autocomplete="postal-code" pattern="[0-9]{5}(-[0-9]{4})?" size="10" maxlength="10" required />
                 </div>
               </div>
             </div>
             <Choices legend="Neighborhood" name="neighborhood" options={neighborhoods} type="radio" required requiredHint otherLabel="Other neighborhood" />
-            <Choices legend="Requested work" name="service" options={services} type="checkbox" required requiredHint otherLabel="Other requested service" />
+            <div data-existing-only hidden>
+              <Choices legend="Requested work" name="service" options={services} type="checkbox" required requiredHint otherLabel="Other requested service" />
+            </div>
           </section>
 
-          <section id="sukkah-details" class="form-card form-group" aria-labelledby="details-heading" data-form-step="3">
-            <FormHeading icon="sukkah" eyebrow="Sukkah details" heading="Tell us what you have" id="details-heading" />
+          <section id="sukkah-details" class="form-card form-group" aria-labelledby="details-heading" data-form-step="4">
+            <FormHeading icon="sukkah" eyebrow="Sukkah details" heading="Tell us about your sukkah" id="details-heading" />
             <fieldset class="size-field">
               <legend>Estimated size <span class="required-mark">*</span></legend>
               <p id="size-hint" class="field-hint">An estimate is fine. Adjust both sliders from 0 to 30 feet.</p>
@@ -116,16 +215,16 @@ const addOns = ["Put up lights", "Pressure wash area day before", "Bamboo mat", 
                 <div class="size-control">
                   <div class="size-label-row">
                     <label for="estimated-width">Width</label>
-                    <output for="estimated-width" data-size-output="estimated-width">10 ft</output>
                   </div>
                   <input id="estimated-width" name="estimatedWidth" type="range" min="0" max="30" step="1" value="10" aria-describedby="size-hint" data-size-slider />
+                  <output for="estimated-width" aria-label="10 feet" data-size-output="estimated-width"><span data-size-number>10</span><span class="size-unit">ft</span></output>
                 </div>
                 <div class="size-control">
                   <div class="size-label-row">
                     <label for="estimated-length">Length</label>
-                    <output for="estimated-length" data-size-output="estimated-length">10 ft</output>
                   </div>
                   <input id="estimated-length" name="estimatedLength" type="range" min="0" max="30" step="1" value="10" aria-describedby="size-hint" data-size-slider />
+                  <output for="estimated-length" aria-label="10 feet" data-size-output="estimated-length"><span data-size-number>10</span><span class="size-unit">ft</span></output>
                 </div>
               </div>
             </fieldset>
@@ -134,7 +233,7 @@ const addOns = ["Put up lights", "Pressure wash area day before", "Bamboo mat", 
             <Choices legend="Add-ons" name="addOns" options={addOns} type="checkbox" otherLabel="Other add-on" />
           </section>
 
-          <section id="site-details" class="form-card form-group" aria-labelledby="site-heading" data-form-step="4">
+          <section id="site-details" class="form-card form-group" aria-labelledby="site-heading" data-form-step="5">
             <FormHeading icon="site" eyebrow="Site details" heading="Help us understand the space" id="site-heading" />
             <div class="field">
               <label for="site-description">Where will the sukkah be built?</label>
@@ -142,31 +241,30 @@ const addOns = ["Put up lights", "Pressure wash area day before", "Bamboo mat", 
             </div>
             <div class="upload-field">
               <div class="upload-icon" aria-hidden="true">↑</div>
-              <div><label for="site-photos">Add up to 3 photos of the area</label><p>Optional · JPG, PNG, or HEIC · 10 MB per photo</p></div>
+              <div><label for="site-photos">Add up to 3 photos of the area</label><p>Optional. JPG, PNG, or HEIC. 10 MB per photo.</p></div>
               <input id="site-photos" name="sitePhotos" type="file" accept="image/*" multiple />
             </div>
           </section>
 
-          <section id="timing-details" class="form-card form-group" aria-labelledby="timing-heading" data-form-step="5">
+          <section id="timing-details" class="form-card form-group" aria-labelledby="timing-heading" data-form-step="6">
             <FormHeading icon="timing" eyebrow="Timing" heading="When should we come?" id="timing-heading" />
-            <p class="section-copy">Choose your preferred dates. We’ll confirm availability when we follow up.</p>
-            <div class="date-grid">
-              <div class="field"><label for="build-date">Preferred build date <span class="required-mark">*</span></label><div class="date-control"><input id="build-date" name="buildDate" type="date" required /></div></div>
-              <div class="field"><label for="takedown-date">Preferred takedown date <span class="required-mark">*</span></label><div class="date-control"><input id="takedown-date" name="takedownDate" type="date" required /></div></div>
+            <p class="section-copy" data-timing-copy>Choose your preferred dates. We’ll confirm availability when we follow up.</p>
+            <div class="date-grid" data-date-grid>
+              <div class="field"><label for="build-date"><span data-build-date-label>Preferred build date</span> <span class="required-mark">*</span></label><div class="date-control"><input id="build-date" name="buildDate" type="date" required /></div></div>
+              <div class="field" data-takedown-field><label for="takedown-date">Preferred takedown date <span class="required-mark">*</span></label><div class="date-control"><input id="takedown-date" name="takedownDate" type="date" required /></div></div>
             </div>
             <div class="field"><label for="timing-notes">Timing notes</label><input id="timing-notes" name="timingNotes" placeholder="Add any timing preferences or scheduling details" /></div>
           </section>
 
-          <section id="final-details" class="form-card form-group" aria-labelledby="final-heading" data-form-step="6">
+          <section id="final-details" class="form-card form-group" aria-labelledby="final-heading" data-form-step="7">
             <FormHeading icon="final" eyebrow="Final details" heading="Anything else we should know?" id="final-heading" />
             <div class="field"><label for="referral">How did you hear about us? <span class="required-mark">*</span></label><p class="field-hint">This helps us understand which advertising is useful.</p><input id="referral" name="referral" required /></div>
             <div class="field"><label for="comments">Comments or questions</label><textarea id="comments" name="comments" placeholder="Add any details that did not fit above."></textarea></div>
           </section>
 
-          <div class="review-panel">
-            <div class="review-copy"><p class="eyebrow">Ready to review?</p><h3>Check that every required detail is complete.</h3><p>This page currently checks the form without sending or saving customer information.</p></div>
-            <div class="submit-actions"><button class="button" type="submit">Check details</button><button class="clear-button" type="reset">Clear form</button></div>
-            <p class="form-status" data-builder-status role="status" aria-live="polite"></p>
+          <div class="submit-row">
+            <button class="button" type="button">Submit</button>
+            <p>Online submission is coming soon.</p>
           </div>
         </form>
       </div>
@@ -174,18 +272,176 @@ const addOns = ["Put up lights", "Pressure wash area day before", "Bamboo mat", 
   </section>
 </BaseLayout>
 
+<script is:inline src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js"></script>
+<script is:inline>
+  const buildDateInput = document.querySelector("#build-date");
+  const takedownDateInput = document.querySelector("#takedown-date");
+
+  if (window.flatpickr && buildDateInput && takedownDateInput) {
+    const sharedOptions = {
+      altInput: true,
+      altInputClass: "builder-date-input",
+      altFormat: "F j, Y",
+      dateFormat: "Y-m-d",
+      minDate: "today",
+      disableMobile: false,
+      monthSelectorType: "static",
+      position: "below left",
+    };
+
+    const takedownPicker = window.flatpickr(takedownDateInput, sharedOptions);
+    takedownPicker.altInput?.setAttribute("aria-label", "Preferred takedown date");
+    takedownPicker.altInput?.setAttribute("placeholder", "Select a date");
+
+    const buildPicker = window.flatpickr(buildDateInput, {
+      ...sharedOptions,
+      onChange: ([selectedDate]) => {
+        takedownPicker.set("minDate", selectedDate || "today");
+        if (
+          selectedDate &&
+          takedownPicker.selectedDates[0] &&
+          takedownPicker.selectedDates[0] < selectedDate
+        ) {
+          takedownPicker.clear();
+        }
+      },
+    });
+    buildPicker.altInput?.setAttribute("aria-label", "Preferred build date");
+    buildPicker.altInput?.setAttribute("placeholder", "Select a date");
+  }
+</script>
+
 <script>
-  const form = document.querySelector("[data-builder-form]");
-  const status = document.querySelector("[data-builder-status]");
   const progressBar = document.querySelector("[data-progress-bar]");
+  const progressTrack = document.querySelector(".progress-track");
+  const currentStep = document.querySelector("[data-current-step]");
+  const currentLabel = document.querySelector("[data-current-label]");
   const stepLinks = Array.from(document.querySelectorAll("[data-step-link]"));
   const steps = Array.from(document.querySelectorAll("[data-form-step]"));
   const sizeSliders = Array.from(document.querySelectorAll("[data-size-slider]"));
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const sizeAnimations = new WeakMap();
+  const branchInputs = Array.from(document.querySelectorAll("[data-branch-input]"));
+  const branchSummary = document.querySelector("[data-branch-summary]");
+  const buyOnly = document.querySelector("[data-buy-only]");
+  const existingOnly = document.querySelector("[data-existing-only]");
+  const detailsHeading = document.querySelector("#details-heading");
+  const timingHeading = document.querySelector("#timing-heading");
+  const timingCopy = document.querySelector("[data-timing-copy]");
+  const buildDateLabel = document.querySelector("[data-build-date-label]");
+  const dateGrid = document.querySelector("[data-date-grid]");
+  const takedownField = document.querySelector("[data-takedown-field]");
+  const buildDateInput = document.querySelector("#build-date");
+  const takedownDateInput = document.querySelector("#takedown-date");
+
+  const setInputsDisabled = (container, disabled) => {
+    if (!(container instanceof HTMLElement)) return;
+    container.querySelectorAll("input, select, textarea").forEach((control) => {
+      if (
+        control instanceof HTMLInputElement ||
+        control instanceof HTMLSelectElement ||
+        control instanceof HTMLTextAreaElement
+      ) {
+        control.disabled = disabled;
+      }
+    });
+  };
+
+  const setBranch = (branch) => {
+    const isBuy = branch === "I would like to buy";
+    const isExisting = branch === "I already have a sukkah";
+
+    if (buyOnly instanceof HTMLElement) {
+      buyOnly.hidden = !isBuy;
+      setInputsDisabled(buyOnly, !isBuy);
+    }
+
+    if (existingOnly instanceof HTMLElement) {
+      existingOnly.hidden = !isExisting;
+      setInputsDisabled(existingOnly, !isExisting);
+    }
+
+    if (takedownField instanceof HTMLElement) {
+      takedownField.hidden = !isExisting;
+      setInputsDisabled(takedownField, !isExisting);
+    }
+    if (takedownDateInput instanceof HTMLInputElement) takedownDateInput.required = isExisting;
+    if (dateGrid instanceof HTMLElement) dateGrid.toggleAttribute("data-single-date", !isExisting);
+
+    if (detailsHeading instanceof HTMLElement) {
+      detailsHeading.textContent = isBuy ? "Plan your new sukkah" : isExisting ? "Tell us what you have" : "Tell us about your sukkah";
+    }
+    if (timingHeading instanceof HTMLElement) {
+      timingHeading.textContent = isBuy ? "When would you like it installed?" : isExisting ? "When should we come?" : "Tell us your preferred timing";
+    }
+    if (timingCopy instanceof HTMLElement) {
+      timingCopy.textContent = isBuy
+        ? "Choose your preferred installation date. We’ll confirm availability when we follow up."
+        : isExisting
+          ? "Choose your preferred build and takedown dates. We’ll confirm availability when we follow up."
+          : "Choose a project path above to tailor the timing questions.";
+    }
+    if (buildDateLabel instanceof HTMLElement) {
+      buildDateLabel.textContent = isBuy ? "Preferred installation date" : isExisting ? "Preferred build date" : "Preferred date";
+    }
+    if (buildDateInput instanceof HTMLInputElement) {
+      buildDateInput.setAttribute("aria-label", isBuy ? "Preferred installation date" : isExisting ? "Preferred build date" : "Preferred date");
+      const alternateInput = buildDateInput.parentElement?.querySelector(".builder-date-input");
+      alternateInput?.setAttribute("aria-label", buildDateInput.getAttribute("aria-label") ?? "Preferred date");
+    }
+    if (branchSummary instanceof HTMLElement) {
+      branchSummary.textContent = isBuy
+        ? "We’ll show questions for purchasing and installing a new sukkah."
+        : isExisting
+          ? "We’ll show questions for working with the sukkah you already own."
+          : "Choose an option to personalize the form.";
+    }
+  };
 
   const updateSizeValue = (slider) => {
     if (!(slider instanceof HTMLInputElement)) return;
     const output = document.querySelector(`[data-size-output="${slider.id}"]`);
-    if (output instanceof HTMLOutputElement) output.textContent = `${slider.value} ft`;
+    const minimum = Number(slider.min || 0);
+    const maximum = Number(slider.max || 100);
+    const value = Number(slider.value);
+    if (output instanceof HTMLOutputElement) {
+      const number = output.querySelector("[data-size-number]");
+      const previousValue = Number(output.dataset.value ?? value);
+      if (number instanceof HTMLElement) number.textContent = slider.value;
+      output.setAttribute("aria-label", `${slider.value} feet`);
+
+      if (
+        previousValue !== value &&
+        number instanceof HTMLElement &&
+        !prefersReducedMotion.matches &&
+        typeof number.animate === "function" &&
+        typeof output.animate === "function"
+      ) {
+        sizeAnimations.get(number)?.cancel();
+        sizeAnimations.get(output)?.cancel();
+        const entryOffset = value > previousValue ? 5 : -5;
+
+        sizeAnimations.set(number, number.animate(
+          [
+            { opacity: 0.45, transform: `translateY(${entryOffset}px) scale(.92)` },
+            { opacity: 1, transform: "translateY(-1px) scale(1.08)", offset: 0.68 },
+            { opacity: 1, transform: "translateY(0) scale(1)" },
+          ],
+          { duration: 220, easing: "cubic-bezier(.16,1,.3,1)" },
+        ));
+        sizeAnimations.set(output, output.animate(
+          [
+            { transform: "scale(.97)" },
+            { transform: "scale(1.025)", offset: 0.65 },
+            { transform: "scale(1)" },
+          ],
+          { duration: 220, easing: "cubic-bezier(.16,1,.3,1)" },
+        ));
+      }
+      output.dataset.value = slider.value;
+    }
+    const progress = ((value - minimum) / (maximum - minimum)) * 100;
+    slider.style.setProperty("--slider-progress", `${progress}%`);
   };
 
   sizeSliders.forEach((slider) => {
@@ -193,9 +449,23 @@ const addOns = ["Put up lights", "Pressure wash area day before", "Bamboo mat", 
     slider.addEventListener("input", () => updateSizeValue(slider));
   });
 
+  branchInputs.forEach((input) => {
+    input.addEventListener("change", () => {
+      if (input instanceof HTMLInputElement && input.checked) setBranch(input.value);
+    });
+  });
+  const selectedBranch = branchInputs.find((input) => input instanceof HTMLInputElement && input.checked);
+  setBranch(selectedBranch instanceof HTMLInputElement ? selectedBranch.value : "");
+
   const setActiveStep = (stepNumber) => {
     stepLinks.forEach((link) => link.toggleAttribute("data-active", link.getAttribute("data-step-link") === stepNumber));
     if (progressBar instanceof HTMLElement) progressBar.style.width = `${(Number(stepNumber) / steps.length) * 100}%`;
+    if (progressTrack instanceof HTMLElement) progressTrack.setAttribute("aria-valuenow", stepNumber);
+    if (currentStep instanceof HTMLElement) currentStep.textContent = `${stepNumber} of ${steps.length}`;
+    const activeLink = stepLinks.find((link) => link.getAttribute("data-step-link") === stepNumber);
+    if (currentLabel instanceof HTMLElement && activeLink instanceof HTMLElement) {
+      currentLabel.textContent = activeLink.textContent?.replace(stepNumber, "").trim() || "";
+    }
   };
 
   if ("IntersectionObserver" in window) {
@@ -207,58 +477,34 @@ const addOns = ["Put up lights", "Pressure wash area day before", "Bamboo mat", 
   }
   setActiveStep("1");
 
-  form?.addEventListener("submit", (event) => {
-    event.preventDefault();
-    if (!(form instanceof HTMLFormElement) || !(status instanceof HTMLElement)) return;
-    const serviceCount = form.querySelectorAll('input[name="service"]:checked').length;
-    const sukkahTypeCount = form.querySelectorAll('input[name="sukkahType"]:checked').length;
-    const schachCount = form.querySelectorAll('input[name="schach"]:checked').length;
-    const photos = form.querySelector("#site-photos");
-    if (!serviceCount || !sukkahTypeCount || !schachCount) {
-      status.dataset.state = "error";
-      status.textContent = "Please choose at least one requested service, one sukkah type, and one schach type.";
-      return;
-    }
-    if (photos instanceof HTMLInputElement && photos.files) {
-      if (photos.files.length > 3) {
-        status.dataset.state = "error";
-        status.textContent = "Please choose no more than 3 photos.";
-        return;
-      }
-      if (Array.from(photos.files).some((file) => file.size > 10 * 1024 * 1024)) {
-        status.dataset.state = "error";
-        status.textContent = "Each photo must be 10 MB or smaller.";
-        return;
-      }
-    }
-    status.dataset.state = "success";
-    status.textContent = "All required details look complete. Online submission is not connected yet, so nothing was sent or saved.";
-    status.scrollIntoView({ behavior: "smooth", block: "center" });
-  });
-
-  form?.addEventListener("reset", () => {
-    if (status instanceof HTMLElement) { status.textContent = ""; status.removeAttribute("data-state"); }
-    requestAnimationFrame(() => sizeSliders.forEach(updateSizeValue));
-  });
 </script>
 
 <style is:global>
   @font-face{font-family:"Inter Variable";src:url("/assets/fonts/inter-variable.woff2") format("woff2");font-style:normal;font-weight:100 900;font-display:swap}
-  .builder-hero{position:relative;overflow:hidden;padding-block:clamp(3rem,7vw,6.5rem);background:linear-gradient(135deg,#f8f4ea 0%,#f3ecdd 55%,#e9efe9 100%)}
-  .builder-hero::after{position:absolute;right:-9rem;bottom:-15rem;width:34rem;height:34rem;border:1px solid rgba(23,63,52,.12);border-radius:50%;box-shadow:0 0 0 5rem rgba(255,255,255,.16),0 0 0 10rem rgba(255,255,255,.12);content:"";pointer-events:none}
-  .hero-grid{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,900px);padding-top:clamp(2.5rem,5vw,4.5rem)}
-  .hero-copy h1{max-width:900px;font-size:clamp(3.2rem,7vw,6.25rem)}.hero-copy .lead{max-width:700px;font-size:clamp(1.1rem,2vw,1.3rem)}
-  .builder-notice{display:inline-flex;gap:.6rem;align-items:center;margin:1.75rem 0 0;color:var(--ink-500);font-size:.82rem}.builder-notice span{flex:0 0 .45rem;width:.45rem;height:.45rem;border-radius:50%;background:var(--wood-500);box-shadow:0 0 0 4px rgba(200,134,67,.12)}
-  .form-section{padding-block:clamp(4rem,8vw,7rem);background:#fdfbf6}.form-shell{max-width:1180px}.form-intro{display:grid;grid-template-columns:1fr;margin-bottom:2.25rem;padding-bottom:1.75rem;border-bottom:1px solid var(--border)}.form-intro h2{margin-bottom:0}
-  .form-layout{display:grid;grid-template-columns:210px minmax(0,1fr);gap:clamp(2rem,5vw,4.5rem);align-items:start}.form-rail{position:sticky;top:6.5rem;padding:1.25rem 0}.rail-title{margin-bottom:.65rem;color:var(--forest-900);font-size:.78rem;font-weight:850;letter-spacing:.12em;text-transform:uppercase}.progress-track{height:4px;margin-bottom:1.25rem;overflow:hidden;border-radius:99px;background:var(--cream-200)}.progress-track span{display:block;width:16.66%;height:100%;border-radius:inherit;background:var(--wood-500);transition:width 240ms ease}.form-rail nav{display:grid;gap:.15rem}.form-rail nav a{display:flex;gap:.8rem;align-items:center;padding:.55rem 0;color:var(--ink-500);text-decoration:none;transition:color 160ms ease,transform 160ms ease}.form-rail nav a span{color:var(--wood-600);font-size:.72rem;font-weight:850;letter-spacing:.08em}.form-rail nav a[data-active]{color:var(--forest-900);font-weight:800;transform:translateX(4px)}.rail-help{margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid var(--border);color:var(--ink-500);font-size:.84rem}.rail-help a{color:var(--forest-800);font-weight:800}
-  .builder-form{display:grid;gap:1.25rem;min-width:0}.form-card{scroll-margin-top:7rem;padding:clamp(1.5rem,4vw,2.6rem);border:1px solid var(--border);border-radius:20px;background:white;box-shadow:0 10px 35px rgba(16,45,37,.055)}.form-group{display:grid;gap:1.8rem}.form-group-heading{display:grid;grid-template-columns:3rem 1fr;gap:1rem;align-items:center}.form-group-heading h3,.form-group-heading .eyebrow{margin-bottom:0}.form-group-heading h3{font-size:clamp(1.65rem,3vw,2.25rem)}.step-icon{display:grid;width:3rem;height:3rem;place-items:center;border:1px solid rgba(200,134,67,.4);border-radius:12px;color:var(--forest-900);background:#fbf2e5}.step-icon svg{width:1.6rem;height:1.6rem}.section-copy{margin:-.65rem 0 0 4rem;color:var(--ink-500);font-size:.92rem}
-  .builder-form .field{gap:.5rem}.builder-form label,.builder-form legend{font-family:"Inter Variable",Inter,Arial,sans-serif;font-size:.94rem;font-weight:600;letter-spacing:-.005em}.builder-form input,.builder-form textarea{min-height:54px;border-color:rgba(29,41,37,.2);border-radius:10px;background:#fff}.builder-form input:not([type="radio"]):not([type="checkbox"]):focus,.builder-form textarea:focus{border-color:var(--forest-700);box-shadow:0 0 0 4px rgba(45,104,85,.1)}.builder-form input::placeholder,.builder-form textarea::placeholder{color:#89938f;font-weight:400}.required-mark{color:#b23a2b;font-weight:700}
-  .address-field{display:grid;gap:1rem}.address-title{margin:0;font-family:"Inter Variable",Inter,Arial,sans-serif;font-size:1rem;font-weight:600;letter-spacing:-.005em}.address-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:1rem}.address-street{grid-column:span 4}.address-unit{grid-column:span 2}.address-city{grid-column:span 3}.address-state{grid-column:span 1}.address-postal{grid-column:span 2}
-  .form-grid,.date-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.15rem}.date-grid,.date-grid .field{min-width:0}.date-control{display:flex;width:100%;min-width:0;min-height:54px;align-items:center;padding-inline:.85rem;border:1px solid rgba(29,41,37,.2);border-radius:10px;background:#fff}.date-control:focus-within{border-color:var(--forest-700);box-shadow:0 0 0 4px rgba(45,104,85,.1)}.date-grid .date-control input[type="date"]{display:block;width:100%;min-width:0;max-width:100%;min-height:52px;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;outline:0}.short-field{max-width:520px}.builder-form fieldset{display:grid;gap:.8rem;min-width:0;margin:0;padding:0;border:0}.builder-form legend{margin-bottom:.25rem;font-size:1rem}.choice-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.65rem}.choice-stack{display:grid;gap:.65rem}.builder-form .choice-card{display:flex;gap:.65rem;align-items:center;min-height:52px;padding:.7rem .8rem;border:1px solid rgba(29,41,37,.16);border-radius:10px;background:#fff;cursor:pointer;font-family:"Inter Variable",Inter,Arial,sans-serif;font-weight:400;letter-spacing:-.01em;transition:border-color 160ms ease,background 160ms ease,box-shadow 160ms ease}.choice-card:hover{border-color:rgba(45,104,85,.45);background:#fbfdfb}.choice-card:has(input:checked){border-color:var(--forest-700);background:#fff;box-shadow:inset 0 0 0 1px var(--forest-700)}.choice-card input[type="radio"],.choice-card input[type="checkbox"]{flex:0 0 auto;width:1.05rem;min-height:1.05rem;height:1.05rem;margin:0;accent-color:var(--forest-700)}.choice-card span{line-height:1.35}.choice-other{flex-wrap:wrap}.choice-other>input:last-child{flex:1 1 135px;min-height:38px;padding:.5rem .65rem;background:white;font-family:"Inter Variable",Inter,Arial,sans-serif;font-weight:400}.field-hint{font-size:.82rem}
-  .size-field{max-width:760px}.size-field>.field-hint{margin:-.2rem 0 .35rem}.size-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(1.5rem,4vw,3rem)}.size-control{display:grid;gap:.45rem;padding:.15rem 0 .25rem}.size-label-row{display:flex;align-items:baseline;justify-content:space-between;gap:1rem}.size-label-row output{color:var(--forest-800);font-family:"Inter Variable",Inter,Arial,sans-serif;font-size:.94rem;font-weight:600;letter-spacing:-.005em;font-variant-numeric:tabular-nums;text-align:right}.builder-form .size-control input[type="range"]{width:100%;min-height:28px;height:28px;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;accent-color:var(--forest-700)}.builder-form .size-control input[type="range"]:focus{border:0;box-shadow:none}
-  .upload-field{display:grid;grid-template-columns:auto 1fr minmax(190px,auto);gap:1rem;align-items:center;padding:1.15rem;border:1px dashed rgba(45,104,85,.38);border-radius:12px;background:#f7faf7}.upload-icon{display:grid;width:2.65rem;height:2.65rem;place-items:center;border-radius:10px;color:var(--forest-800);background:var(--forest-100);font-size:1.25rem;font-weight:900}.upload-field label{display:block;margin-bottom:.15rem}.upload-field p{margin:0;color:var(--ink-500);font-size:.8rem}.upload-field input{min-height:auto;padding:.45rem;font-size:.82rem;background:white}
-  .review-panel{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:1rem 2rem;align-items:center;padding:clamp(1.6rem,4vw,2.4rem);border-radius:20px;color:white;background:linear-gradient(135deg,var(--forest-950),var(--forest-800));box-shadow:0 22px 55px rgba(16,45,37,.18)}.review-copy h3{margin-bottom:.5rem;color:white;font-size:clamp(1.6rem,3vw,2.1rem)}.review-copy p{max-width:620px;margin-bottom:0;color:rgba(255,255,255,.72)}.review-copy .eyebrow{margin-bottom:.45rem;color:#e5c28e}.submit-actions{display:flex;flex-wrap:wrap;gap:.75rem}.clear-button{min-height:48px;padding:.7rem 1rem;border:0;color:rgba(255,255,255,.75);background:transparent;font-weight:750;text-decoration:underline;text-underline-offset:4px}.review-panel .form-status{grid-column:1/-1;margin:0;color:#fff0bf}.review-panel .form-status[data-state="error"]{color:#ffd1cc}
-  @media(max-width:950px){.form-layout{grid-template-columns:1fr}.form-rail{position:static;display:none}.choice-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-  @media(max-width:700px){.builder-hero{padding-block:2.5rem 4rem}.form-intro,.form-grid,.date-grid,.size-grid,.review-panel,.address-grid{grid-template-columns:1fr}.form-intro{gap:.6rem}.address-grid .field{grid-column:1}.choice-grid{grid-template-columns:1fr}.section-copy{margin-left:0}.upload-field{grid-template-columns:auto 1fr}.upload-field input{grid-column:1/-1;width:100%}.submit-actions{align-items:stretch;flex-direction:column}.submit-actions .button{width:100%}}
-  @media(prefers-reduced-motion:reduce){.progress-track span,.form-rail nav a,.choice-card{transition:none}}
+  .builder-hero{position:relative;overflow:hidden;padding-block:clamp(2.75rem,5vw,4.75rem);background:linear-gradient(135deg,#f8f4ea 0%,#f3ecdd 55%,#e9efe9 100%)}
+  .builder-hero::after{position:absolute;right:-8rem;bottom:-18rem;width:32rem;height:32rem;border:1px solid rgba(23,63,52,.1);border-radius:50%;box-shadow:0 0 0 5rem rgba(255,255,255,.14),0 0 0 10rem rgba(255,255,255,.1);content:"";pointer-events:none}
+  .hero-grid{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,780px);padding-top:clamp(1.5rem,3vw,2.75rem)}
+  .hero-copy h1{max-width:780px;font-size:clamp(3rem,6vw,5rem)}.hero-copy .lead{max-width:620px;font-size:clamp(1.05rem,1.8vw,1.22rem)}
+  .builder-notice{display:inline-flex;margin:1.35rem 0 0;padding:.45rem .65rem;border-left:3px solid var(--wood-500);color:var(--ink-600);background:rgba(255,255,255,.45);font-size:.82rem}
+  .form-section{padding-block:clamp(3.5rem,7vw,6rem);background:#fdfbf6}.form-shell{max-width:1180px}.form-intro{display:grid;grid-template-columns:1fr;margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border)}.form-intro h2{margin-bottom:.5rem}.form-intro>div>p:last-child{max-width:620px;margin:0;color:var(--ink-500)}
+  .form-layout{display:grid;grid-template-columns:210px minmax(0,720px);gap:clamp(2rem,4vw,3.5rem);justify-content:center;align-items:start}.form-rail{position:sticky;top:5.5rem;padding:1.1rem 0}.rail-title{margin-bottom:.65rem;color:var(--forest-900);font-size:.78rem;font-weight:850;letter-spacing:.12em;text-transform:uppercase}.progress-track{height:4px;margin-bottom:1.1rem;overflow:hidden;border-radius:99px;background:var(--cream-200)}.progress-track span{display:block;width:14.285%;height:100%;border-radius:inherit;background:var(--wood-500);transition:width 240ms ease}.mobile-progress-label{display:none}.form-rail nav{display:grid;gap:.15rem}.form-rail nav a{display:flex;gap:.8rem;align-items:center;padding:.55rem 0;color:var(--ink-500);text-decoration:none;transition:color 160ms ease,transform 160ms ease}.form-rail nav a span{color:var(--wood-600);font-size:.72rem;font-weight:850;letter-spacing:.08em}.form-rail nav a[data-active]{color:var(--forest-900);font-weight:800;transform:translateX(4px)}.rail-help{margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid var(--border);color:var(--ink-500);font-size:.84rem}.rail-help a{color:var(--forest-800);font-weight:800}
+  .builder-form{display:grid;width:min(100%,720px);gap:1rem;min-width:0;justify-self:center}.form-card{scroll-margin-top:7rem;padding:clamp(1.4rem,3.5vw,2.25rem);border:1px solid rgba(29,41,37,.14);border-radius:16px;background:white;box-shadow:0 8px 28px rgba(16,45,37,.045)}.form-group{display:grid;gap:1.55rem}.form-group-heading{display:grid;grid-template-columns:2.75rem 1fr;gap:.9rem;align-items:center;padding-bottom:1.15rem;border-bottom:1px solid var(--border)}.form-group-heading .eyebrow{display:none}.form-group-heading h3{margin:0;font-size:clamp(1.55rem,2.7vw,2.05rem)}.step-icon{display:grid;width:2.75rem;height:2.75rem;place-items:center;border:1px solid rgba(200,134,67,.38);border-radius:10px;color:var(--forest-900);background:#fbf2e5}.step-icon svg{width:1.45rem;height:1.45rem}.section-copy{margin:-.55rem 0 0 3.65rem;color:var(--ink-500);font-size:.9rem}
+  .builder-form [hidden]{display:none!important}
+  .builder-form .field{gap:.3rem}.builder-form label,.builder-form legend{font-family:"Inter Variable",Inter,Arial,sans-serif;font-size:.9rem;font-weight:600;letter-spacing:-.005em}.builder-form input,.builder-form select,.builder-form textarea{min-height:36px;padding:.35rem .65rem;border-color:rgba(29,41,37,.2);border-radius:9px;background:#fff;font-size:.88rem;line-height:1.25}.builder-form textarea{min-height:84px}.builder-form input:not([type="radio"]):not([type="checkbox"]):focus,.builder-form select:focus,.builder-form textarea:focus{border-color:var(--forest-700);box-shadow:0 0 0 4px rgba(45,104,85,.1)}.builder-form input::placeholder,.builder-form textarea::placeholder{color:#89938f;font-weight:400}.required-mark{color:#b23a2b;font-weight:700}
+  .fulfillment-card{padding:1rem;border:1px solid rgba(200,134,67,.28);border-radius:12px;background:#fffaf2;animation:fulfillment-reveal 180ms cubic-bezier(.16,1,.3,1)}.fulfillment-card .choice-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.fulfillment-card .choice-card{background:rgba(255,255,255,.82)}.fulfillment-card .choice-card:has(input:checked){background:var(--forest-100)}@keyframes fulfillment-reveal{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+  .address-field{display:grid;max-width:640px;gap:.85rem}.address-instruction{margin:0}.address-grid{display:grid;grid-template-columns:1fr;gap:.85rem}.address-grid .field{grid-column:1}.address-street,.address-city,.address-state{width:100%}.address-postal{width:min(100%,calc(10ch + 1.4rem + 2px))}
+  .form-grid,.date-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.75rem}.contact-grid{max-width:640px;grid-template-columns:1fr}.contact-grid .field{width:100%}.date-grid,.date-grid .field{min-width:0}.date-grid[data-single-date]{grid-template-columns:1fr}.date-control{display:flex;width:100%;min-width:0;min-height:40px;align-items:center;padding-inline:.7rem;border:1px solid rgba(29,41,37,.2);border-radius:10px;background:#fff}.date-control:focus-within{border-color:var(--forest-700);box-shadow:0 0 0 4px rgba(45,104,85,.1)}.date-grid .date-control input[type="date"]{display:block;width:100%;min-width:0;max-width:100%;min-height:38px;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;outline:0}.short-field{max-width:520px}.builder-form fieldset{display:grid;gap:.65rem;min-width:0;margin:0;padding:0;border:0}.builder-form legend{margin-bottom:.15rem;font-size:.96rem}.choice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.5rem}.choice-stack{display:grid;gap:.5rem}.builder-form .choice-card{display:flex;gap:.6rem;align-items:center;min-height:40px;padding:.35rem .7rem;border:1px solid rgba(29,41,37,.16);border-radius:10px;background:#fff;cursor:pointer;font-family:"Inter Variable",Inter,Arial,sans-serif;font-weight:400;letter-spacing:-.01em;transition:border-color 160ms ease,background 160ms ease,box-shadow 160ms ease,transform 160ms ease}.choice-card:hover,.choice-card:has(input:focus-visible){border-color:rgba(45,104,85,.45);background:#f7faf7}.choice-card:has(input:checked){border-color:var(--forest-700);background:var(--forest-100);box-shadow:inset 0 0 0 1px var(--forest-700)}.choice-card:active{transform:scale(.99)}.choice-card input[type="radio"],.choice-card input[type="checkbox"]{flex:0 0 auto;width:1.05rem;min-height:1.05rem;height:1.05rem;margin:0;padding:0;border:0;background:transparent;box-shadow:none;outline:0;accent-color:var(--forest-700)}.choice-card input[type="radio"]:focus,.choice-card input[type="checkbox"]:focus{border:0;box-shadow:none;outline:0}.choice-card span{line-height:1.35}.builder-form .choice-other{flex-wrap:nowrap;padding-block:.25rem}.builder-form .choice-other>input.choice-other-text{flex:1 1 0;width:auto;min-width:0;min-height:30px;height:30px;padding:.2rem .5rem;background:white;font-family:"Inter Variable",Inter,Arial,sans-serif;font-size:.78rem;font-weight:400}.field-hint{font-size:.8rem}
+  .size-field{max-width:760px}.size-field>.field-hint{margin:-.2rem 0 .35rem}.size-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(1.5rem,4vw,3rem)}.size-control{display:grid;gap:.45rem;padding:.15rem 0 .25rem}.size-label-row{display:flex;align-items:center;gap:1rem}.size-control output{display:inline-flex;min-width:3.8rem;min-height:2.25rem;align-items:center;justify-content:center;justify-self:center;gap:.22rem;margin-top:.05rem;padding:.25rem .55rem;border:1px solid rgba(200,134,67,.32);border-radius:10px;color:var(--forest-900);background:#fbf2e5;box-shadow:0 3px 10px rgba(93,65,30,.08),inset 0 1px 0 rgba(255,255,255,.72);font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;font-size:1.15rem;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1;text-align:center;transform-origin:center}.size-control output [data-size-number]{display:inline-block}.size-control output .size-unit{font-family:"Inter Variable",Inter,Arial,sans-serif;font-size:.62rem;font-weight:750;letter-spacing:.08em;line-height:1;text-transform:uppercase}.builder-form .size-control input[type="range"]{--slider-progress:33.333%;--slider-track:#dfe5e1;--slider-fill:var(--forest-700);width:100%;min-height:30px;height:30px;margin:0;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;outline:0;cursor:pointer;appearance:none;-webkit-appearance:none}.builder-form .size-control input[type="range"]::-webkit-slider-runnable-track{height:4px;border:0;border-radius:999px;background:linear-gradient(to right,var(--slider-fill) 0 var(--slider-progress),var(--slider-track) var(--slider-progress) 100%)}.builder-form .size-control input[type="range"]::-moz-range-track{height:4px;border:0;border-radius:999px;background:var(--slider-track)}.builder-form .size-control input[type="range"]::-moz-range-progress{height:4px;border-radius:999px;background:var(--slider-fill)}.builder-form .size-control input[type="range"]::-webkit-slider-thumb{width:18px;height:18px;margin-top:-7px;border:2px solid var(--forest-700);border-radius:50%;background:white;box-shadow:0 1px 4px rgba(16,45,37,.16);transition:box-shadow 160ms ease,transform 160ms ease;appearance:none;-webkit-appearance:none}.builder-form .size-control input[type="range"]::-moz-range-thumb{width:14px;height:14px;border:2px solid var(--forest-700);border-radius:50%;background:white;box-shadow:0 1px 4px rgba(16,45,37,.16);transition:box-shadow 160ms ease,transform 160ms ease}.builder-form .size-control input[type="range"]:hover::-webkit-slider-thumb{transform:scale(1.06)}.builder-form .size-control input[type="range"]:hover::-moz-range-thumb{transform:scale(1.06)}.builder-form .size-control input[type="range"]:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 4px rgba(45,104,85,.16),0 1px 4px rgba(16,45,37,.18)}.builder-form .size-control input[type="range"]:focus-visible::-moz-range-thumb{box-shadow:0 0 0 4px rgba(45,104,85,.16),0 1px 4px rgba(16,45,37,.18)}.builder-form .size-control input[type="range"]:focus,.builder-form .size-control input[type="range"]:focus-visible{border:0;outline:0;box-shadow:none}
+  .upload-field{display:grid;grid-template-columns:auto 1fr minmax(190px,auto);gap:1rem;align-items:center;padding:1.15rem;border:1px dashed rgba(45,104,85,.38);border-radius:12px;background:#f7faf7}.upload-icon{display:grid;width:2.65rem;height:2.65rem;place-items:center;border-radius:10px;color:var(--forest-800);background:var(--forest-100);font-size:1.25rem;font-weight:900}.upload-field label{display:block;margin-bottom:.15rem}.upload-field p{margin:0;color:var(--ink-500);font-size:.8rem}.upload-field input[type="file"]{min-height:46px;padding:.3rem;border:1px solid rgba(29,41,37,.2);border-radius:10px;color:var(--ink-500);font-family:"Inter Variable",Inter,Arial,sans-serif;font-size:.82rem;background:white;cursor:pointer}.upload-field input[type="file"]::file-selector-button{min-height:36px;margin-right:.65rem;padding:.5rem .8rem;border:0;border-radius:7px;color:white;background:var(--forest-800);font-family:inherit;font-weight:800;cursor:pointer;transition:background 160ms ease}.upload-field input[type="file"]::file-selector-button:hover{background:var(--forest-950)}
+  .builder-form .form-card>*{width:100%;max-width:640px;margin-inline:auto}.builder-form .form-card>.section-copy{padding-inline-start:3.65rem}
+  .submit-row{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.55rem;padding:1rem 0 .25rem}.submit-row .button{min-width:170px;font-family:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;font-size:1.02rem;font-weight:600;letter-spacing:-.01em;box-shadow:none;transform:none;transition:background-color 100ms ease,border-color 100ms ease}.submit-row .button:hover{border-color:var(--forest-900);background:var(--forest-900);box-shadow:none;transform:none}.submit-row .button:active{border-color:var(--forest-950);background:var(--forest-950);box-shadow:none;transform:none}.submit-row p{margin:0;color:var(--ink-500);font-size:.84rem;text-align:center}
+  .date-grid .date-control input.builder-date-input{min-height:38px;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;outline:0}.date-grid .date-control input.builder-date-input:focus,.date-grid .date-control input.builder-date-input:focus-visible{border:0;box-shadow:none;outline:0}
+  .flatpickr-calendar{width:340px;padding:.65rem;border:1px solid rgba(29,41,37,.14);border-radius:16px;background:#fffdf8;box-shadow:0 22px 60px rgba(16,45,37,.2);font-family:"Inter Variable",Inter,Arial,sans-serif}.flatpickr-calendar.arrowTop::before{border-bottom-color:rgba(29,41,37,.14)}.flatpickr-calendar.arrowTop::after{border-bottom-color:#fffdf8}.flatpickr-months{height:48px;align-items:center}.flatpickr-months .flatpickr-month{height:48px;color:var(--forest-950);background:transparent}.flatpickr-current-month{top:0;left:18%;width:64%;height:48px;display:flex;align-items:center;justify-content:center;gap:.25rem;padding:0;font-size:1rem;font-weight:800}.flatpickr-current-month span.cur-month{margin-left:0;font-weight:800}.flatpickr-current-month .numInputWrapper{width:4.2rem}.flatpickr-current-month input.cur-year{width:100%;min-height:0;height:32px;padding:0 .2rem;border:0;border-radius:6px;color:var(--forest-950);font:inherit;font-weight:800;background:transparent;box-shadow:none;outline:0}.flatpickr-current-month input.cur-year:focus,.flatpickr-current-month input.cur-year:focus-visible{border:0;background:var(--cream-100);box-shadow:none;outline:0}.flatpickr-current-month .numInputWrapper span{border-color:transparent}.flatpickr-calendar .flatpickr-months .flatpickr-prev-month,.flatpickr-calendar .flatpickr-months .flatpickr-next-month{top:.65rem;width:36px;height:36px;display:grid;place-items:center;padding:0;border-radius:9px;color:var(--forest-800);fill:var(--forest-800)}.flatpickr-calendar .flatpickr-months .flatpickr-prev-month{left:.65rem}.flatpickr-calendar .flatpickr-months .flatpickr-next-month{right:.65rem}.flatpickr-calendar .flatpickr-months .flatpickr-prev-month:hover,.flatpickr-calendar .flatpickr-months .flatpickr-next-month:hover{background:var(--forest-100)}.flatpickr-calendar .flatpickr-months .flatpickr-prev-month:hover svg,.flatpickr-calendar .flatpickr-months .flatpickr-next-month:hover svg{fill:var(--forest-950)}.flatpickr-innerContainer,.flatpickr-rContainer,.flatpickr-weekdays,.flatpickr-days,.dayContainer{width:100%;max-width:100%}.flatpickr-weekdays{height:34px}.flatpickr-weekdaycontainer{display:grid;grid-template-columns:repeat(7,1fr)}span.flatpickr-weekday{color:var(--ink-500);font-size:.72rem;font-weight:850}.flatpickr-day{max-width:none;height:40px;line-height:40px;border-radius:9px;color:var(--ink-800);font-size:.84rem;font-weight:650}.flatpickr-day:hover,.flatpickr-day:focus{border-color:var(--forest-100);background:var(--forest-100)}.flatpickr-day.today{border-color:var(--wood-500);color:var(--forest-950)}.flatpickr-day.today:hover{border-color:var(--wood-500);background:#fbf2e5}.flatpickr-day.selected,.flatpickr-day.selected:hover{border-color:var(--forest-800);color:white;background:var(--forest-800);box-shadow:0 3px 10px rgba(29,82,66,.22)}.flatpickr-day.flatpickr-disabled,.flatpickr-day.flatpickr-disabled:hover{color:rgba(83,103,95,.3);background:transparent}
+  body .flatpickr-calendar{padding:.75rem;border-color:var(--border);border-radius:12px;background:white;box-shadow:var(--shadow-medium)}body .flatpickr-calendar.arrowTop::before{border-bottom-color:var(--border)}body .flatpickr-calendar.arrowTop::after{border-bottom-color:white}body .flatpickr-months{margin-bottom:.3rem;border-radius:9px;background:var(--cream-100)}body .flatpickr-current-month{font-size:.96rem}body span.flatpickr-weekday{color:var(--forest-800);letter-spacing:.025em}body .flatpickr-day{border-radius:8px}body .flatpickr-day:hover,body .flatpickr-day:focus{border-color:var(--cream-200);background:var(--cream-100)}body .flatpickr-day.today{border-color:var(--wood-500);background:#fffaf2}body .flatpickr-day.selected,body .flatpickr-day.selected:hover{border-color:var(--forest-800);background:var(--forest-800);box-shadow:none}
+  @media(max-width:380px){.flatpickr-calendar{width:calc(100vw - 24px);padding:.45rem}.flatpickr-day{height:38px;line-height:38px}}
+  @media(max-width:950px){.form-layout{grid-template-columns:1fr;gap:1rem}.form-rail{position:sticky;top:58px;z-index:20;margin-inline:-16px;padding:.75rem 16px;border-block:1px solid var(--border);background:rgba(253,251,246,.96);box-shadow:0 8px 20px rgba(16,45,37,.05);backdrop-filter:blur(10px)}.rail-title,.form-rail nav,.rail-help{display:none}.progress-track{margin-bottom:.45rem}.mobile-progress-label{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin:0;color:var(--ink-500);font-size:.78rem}.mobile-progress-label strong{color:var(--forest-900);font-size:.88rem}.choice-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.form-card{scroll-margin-top:9rem}}
+  @media(max-width:700px){.builder-hero{padding-block:2.25rem 3.5rem}.hero-grid{padding-top:1.25rem}.hero-copy h1{font-size:clamp(2.65rem,13vw,4rem)}.form-section{padding-block:3rem 4.5rem}.form-intro,.form-grid,.date-grid,.size-grid,.address-grid{grid-template-columns:1fr}.form-intro{gap:.6rem;margin-bottom:1rem;padding-bottom:1.25rem}.address-grid .field{grid-column:1}.builder-form input:not([type="radio"]):not([type="checkbox"]):not([type="range"]):not([type="file"]):not([type="date"]):not(.choice-other-text),.builder-form select{min-height:40px}.builder-form textarea{min-height:92px}.date-control{min-height:50px}.date-grid .date-control input[type="date"],.date-grid .date-control input.builder-date-input{min-height:48px}.choice-grid,.fulfillment-card .choice-grid{grid-template-columns:1fr}.builder-form .choice-card{min-height:40px;padding:.35rem .7rem}.builder-form .choice-other{padding-block:.25rem}.fulfillment-card{padding:.85rem}.form-group-heading{grid-template-columns:2.5rem 1fr;gap:.75rem}.step-icon{width:2.5rem;height:2.5rem}.form-group-heading h3{font-size:1.55rem}.section-copy{margin-left:0}.builder-form .form-card>.section-copy{padding-inline-start:0}.upload-field{grid-template-columns:auto 1fr}.upload-field input{grid-column:1/-1;width:100%}.submit-row{align-items:stretch;flex-direction:column}.submit-row .button{width:100%}.submit-row p{text-align:center}}
+  @media(max-width:700px){.size-control{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"size-label size-output" "size-slider size-slider";column-gap:1rem;align-items:center}.size-label-row{grid-area:size-label}.builder-form .size-control input[type="range"]{grid-area:size-slider}.size-control output{grid-area:size-output;justify-self:end;margin-top:0}}
+  @media(max-width:480px){.builder-form input:not([type="radio"]):not([type="checkbox"]):not([type="range"]):not([type="file"]):not([type="date"]):not(.choice-other-text),.builder-form select{min-height:44px}}
+  @media(prefers-reduced-motion:reduce){.progress-track span,.form-rail nav a,.choice-card{transition:none}.fulfillment-card{animation:none}}
 </style>

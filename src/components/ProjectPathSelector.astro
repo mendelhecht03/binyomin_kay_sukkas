@@ -1,0 +1,241 @@
+---
+const {
+  name,
+  legend,
+  hint,
+  hintId,
+  options,
+  required = false,
+} = Astro.props;
+---
+
+<fieldset class="project-path-selector" aria-describedby={hintId}>
+  <legend>
+    {legend}
+    {required && <span class="required-mark">*</span>}
+  </legend>
+  <p id={hintId} class="project-path-selector__hint">{hint}</p>
+
+  <div class="project-path-selector__options">
+    {options.map((option) => (
+      <label class="project-path-option">
+        <input
+          type="radio"
+          name={name}
+          value={option.value}
+          required={required}
+          data-branch-input
+        />
+        <span class="project-path-option__surface">
+          <span class="project-path-option__control" aria-hidden="true">
+            <span></span>
+          </span>
+          <span class="project-path-option__copy">
+            <strong>{option.title}</strong>
+            <span>{option.description}</span>
+          </span>
+        </span>
+      </label>
+    ))}
+  </div>
+
+  <p class="project-path-selector__summary" aria-live="polite" data-branch-summary>
+    Choose an option to personalize the form.
+  </p>
+</fieldset>
+
+<style>
+  .project-path-selector {
+    display: grid;
+    gap: 0.7rem;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .project-path-selector__hint {
+    margin: -0.25rem 0 0.2rem;
+    color: var(--ink-500);
+    font-size: 0.84rem;
+    line-height: 1.5;
+  }
+
+  .project-path-selector__options {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+
+  .project-path-option {
+    position: relative;
+    min-width: 0;
+    cursor: pointer;
+  }
+
+  .project-path-option > input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .project-path-option__surface {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.8rem;
+    min-height: 104px;
+    align-items: start;
+    padding: 1rem;
+    overflow: hidden;
+    border: 1px solid rgba(29, 41, 37, 0.16);
+    border-radius: 14px;
+    color: var(--ink-700);
+    background: linear-gradient(145deg, #fbfaf6 0%, #f3f4ef 100%);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.75),
+      inset 0 -2px 5px rgba(16, 45, 37, 0.035);
+    transition:
+      transform 180ms cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 180ms ease,
+      background-color 180ms ease,
+      box-shadow 180ms ease;
+  }
+
+  .project-path-option__surface::before {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 4px;
+    border-radius: 0 4px 4px 0;
+    background: var(--wood-500);
+    content: "";
+    opacity: 0;
+    transform: scaleY(0.45);
+    transition:
+      opacity 180ms ease,
+      transform 180ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .project-path-option__control {
+    display: grid;
+    width: 1.35rem;
+    height: 1.35rem;
+    place-items: center;
+    margin-top: 0.05rem;
+    border: 1.5px solid rgba(29, 82, 66, 0.55);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.72);
+    transition:
+      border-color 160ms ease,
+      background-color 160ms ease,
+      box-shadow 160ms ease;
+  }
+
+  .project-path-option__control > span {
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 50%;
+    background: var(--forest-700);
+    opacity: 0;
+    transform: scale(0.35);
+    transition:
+      opacity 160ms ease,
+      transform 180ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .project-path-option__copy {
+    display: grid;
+    gap: 0.35rem;
+    min-width: 0;
+  }
+
+  .project-path-option__copy strong {
+    color: var(--forest-950);
+    font-size: 0.98rem;
+    font-weight: 650;
+    letter-spacing: -0.015em;
+    line-height: 1.25;
+  }
+
+  .project-path-option__copy > span {
+    color: var(--ink-500);
+    font-size: 0.8rem;
+    font-weight: 400;
+    line-height: 1.45;
+  }
+
+  .project-path-option:hover .project-path-option__surface {
+    border-color: rgba(29, 82, 66, 0.34);
+    background: linear-gradient(145deg, #fffdf8 0%, #f2f5ef 100%);
+    transform: translateY(-1px);
+  }
+
+  .project-path-option > input:checked + .project-path-option__surface {
+    border-color: var(--forest-700);
+    background: linear-gradient(145deg, #fffdf8 0%, #eef5f0 100%);
+    box-shadow:
+      0 8px 18px rgba(16, 45, 37, 0.1),
+      inset 0 0 0 1px rgba(29, 82, 66, 0.12);
+    transform: translateY(-2px);
+  }
+
+  .project-path-option > input:checked + .project-path-option__surface::before {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+
+  .project-path-option > input:checked + .project-path-option__surface .project-path-option__control {
+    border-color: var(--forest-700);
+    background: #fffdf8;
+    box-shadow: 0 0 0 3px rgba(45, 104, 85, 0.1);
+  }
+
+  .project-path-option > input:checked + .project-path-option__surface .project-path-option__control > span {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .project-path-option > input:focus-visible + .project-path-option__surface {
+    outline: 3px solid rgba(45, 104, 85, 0.28);
+    outline-offset: 3px;
+  }
+
+  .project-path-option:active .project-path-option__surface {
+    transform: translateY(0);
+  }
+
+  .project-path-selector__summary {
+    margin: 0.15rem 0 0;
+    padding: 0.75rem 0.9rem;
+    border: 1px solid rgba(200, 134, 67, 0.2);
+    border-radius: 10px;
+    color: var(--ink-500);
+    background: rgba(251, 242, 229, 0.62);
+    font-size: 0.82rem;
+    line-height: 1.5;
+  }
+
+  @media (max-width: 700px) {
+    .project-path-selector__options {
+      grid-template-columns: 1fr;
+    }
+
+    .project-path-option__surface {
+      min-height: 92px;
+      padding: 0.9rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .project-path-option__surface,
+    .project-path-option__surface::before,
+    .project-path-option__control,
+    .project-path-option__control > span {
+      transition: none;
+    }
+  }
+</style>
