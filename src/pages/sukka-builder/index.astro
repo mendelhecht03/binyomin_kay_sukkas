@@ -248,10 +248,28 @@ const projectPaths = [
 
           <section id="timing-details" class="form-card form-group" aria-labelledby="timing-heading" data-form-step="6">
             <FormHeading icon="timing" eyebrow="Timing" heading="When should we come?" id="timing-heading" />
-            <p class="section-copy" data-timing-copy>Choose your preferred dates. We’ll confirm availability when we follow up.</p>
-            <div class="date-grid" data-date-grid>
-              <div class="field"><label for="build-date"><span data-build-date-label>Preferred build date</span> <span class="required-mark">*</span></label><div class="date-control"><input id="build-date" name="buildDate" type="date" required /></div></div>
-              <div class="field" data-takedown-field><label for="takedown-date">Preferred takedown date <span class="required-mark">*</span></label><div class="date-control"><input id="takedown-date" name="takedownDate" type="date" required /></div></div>
+            <div data-purchase-timing>
+              <p class="section-copy" data-timing-copy>Choose your preferred installation date. We’ll confirm availability when we follow up.</p>
+              <div class="date-grid" data-date-grid data-single-date>
+                <div class="field"><label for="build-date"><span data-build-date-label>Preferred installation date</span> <span class="required-mark">*</span></label><div class="date-control"><input id="build-date" name="buildDate" type="date" required /></div></div>
+              </div>
+            </div>
+            <div class="conditional-schedule" data-pre-sukkos-schedule hidden>
+              <p class="section-copy">Choose a preferred time from Motzei Yom Kippur through Erev Sukkos.</p>
+              <div class="schedule-window">
+                <div class="field">
+                  <label for="pre-sukkos-date">Preferred day <span class="required-mark">*</span></label>
+                  <select id="pre-sukkos-date" name="preSukkosDate" required data-holiday-date-select>
+                    <option value="">Choose a date</option>
+                    <option value="other" data-other-date-option>Other date</option>
+                  </select>
+                </div>
+                <div class="field" data-other-date-field hidden>
+                  <label for="custom-service-date">Choose another date <span class="required-mark">*</span></label>
+                  <p id="custom-service-date-hint" class="field-hint" data-custom-date-range>Choose a date within the 30 days before Sukkos.</p>
+                  <div class="date-control"><input id="custom-service-date" name="customServiceDate" type="date" aria-describedby="custom-service-date-hint" /></div>
+                </div>
+              </div>
             </div>
             <div class="field"><label for="timing-notes">Timing notes</label><input id="timing-notes" name="timingNotes" placeholder="Add any timing preferences or scheduling details" /></div>
           </section>
@@ -275,9 +293,8 @@ const projectPaths = [
 <script is:inline src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js"></script>
 <script is:inline>
   const buildDateInput = document.querySelector("#build-date");
-  const takedownDateInput = document.querySelector("#takedown-date");
 
-  if (window.flatpickr && buildDateInput && takedownDateInput) {
+  if (window.flatpickr && buildDateInput) {
     const sharedOptions = {
       altInput: true,
       altInputClass: "builder-date-input",
@@ -289,24 +306,8 @@ const projectPaths = [
       position: "below left",
     };
 
-    const takedownPicker = window.flatpickr(takedownDateInput, sharedOptions);
-    takedownPicker.altInput?.setAttribute("aria-label", "Preferred takedown date");
-    takedownPicker.altInput?.setAttribute("placeholder", "Select a date");
-
-    const buildPicker = window.flatpickr(buildDateInput, {
-      ...sharedOptions,
-      onChange: ([selectedDate]) => {
-        takedownPicker.set("minDate", selectedDate || "today");
-        if (
-          selectedDate &&
-          takedownPicker.selectedDates[0] &&
-          takedownPicker.selectedDates[0] < selectedDate
-        ) {
-          takedownPicker.clear();
-        }
-      },
-    });
-    buildPicker.altInput?.setAttribute("aria-label", "Preferred build date");
+    const buildPicker = window.flatpickr(buildDateInput, sharedOptions);
+    buildPicker.altInput?.setAttribute("aria-label", "Preferred installation date");
     buildPicker.altInput?.setAttribute("placeholder", "Select a date");
   }
 </script>
@@ -325,14 +326,20 @@ const projectPaths = [
   const branchSummary = document.querySelector("[data-branch-summary]");
   const buyOnly = document.querySelector("[data-buy-only]");
   const existingOnly = document.querySelector("[data-existing-only]");
+  const timingDetails = document.querySelector("#timing-details");
+  const purchaseTiming = document.querySelector("[data-purchase-timing]");
+  const preSukkosSchedule = document.querySelector("[data-pre-sukkos-schedule]");
+  const serviceInputs = Array.from(document.querySelectorAll('input[name="service"]'));
+  const holidayDateSelect = document.querySelector("[data-holiday-date-select]");
+  const otherDateField = document.querySelector("[data-other-date-field]");
+  const customServiceDateInput = document.querySelector("#custom-service-date");
+  const customDateRange = document.querySelector("[data-custom-date-range]");
   const detailsHeading = document.querySelector("#details-heading");
   const timingHeading = document.querySelector("#timing-heading");
   const timingCopy = document.querySelector("[data-timing-copy]");
   const buildDateLabel = document.querySelector("[data-build-date-label]");
-  const dateGrid = document.querySelector("[data-date-grid]");
-  const takedownField = document.querySelector("[data-takedown-field]");
   const buildDateInput = document.querySelector("#build-date");
-  const takedownDateInput = document.querySelector("#takedown-date");
+  let activeBranch = "";
 
   const setInputsDisabled = (container, disabled) => {
     if (!(container instanceof HTMLElement)) return;
@@ -347,9 +354,53 @@ const projectPaths = [
     });
   };
 
+  const setContainerVisible = (container, visible) => {
+    if (!(container instanceof HTMLElement)) return;
+    container.hidden = !visible;
+    setInputsDisabled(container, !visible);
+  };
+
+  const updateOtherDateField = () => {
+    const showOtherDate =
+      preSukkosSchedule instanceof HTMLElement &&
+      !preSukkosSchedule.hidden &&
+      holidayDateSelect instanceof HTMLSelectElement &&
+      holidayDateSelect.value === "other";
+
+    setContainerVisible(otherDateField, showOtherDate);
+    if (customServiceDateInput instanceof HTMLInputElement) {
+      customServiceDateInput.required = showOtherDate;
+    }
+  };
+
+  const updateTimingSchedule = () => {
+    const isBuy = activeBranch === "I would like to buy";
+    const isExisting = activeBranch === "I already have a sukkah";
+    const needsPreSukkosSchedule =
+      isExisting &&
+      serviceInputs.some(
+        (input) =>
+          input instanceof HTMLInputElement &&
+          input.checked &&
+          (input.value === "Bring out of storage" || input.value === "Build"),
+      );
+    const showTimingCard = isBuy || needsPreSukkosSchedule;
+
+    setContainerVisible(timingDetails, showTimingCard);
+    setContainerVisible(purchaseTiming, isBuy);
+    setContainerVisible(preSukkosSchedule, needsPreSukkosSchedule);
+
+    if (buildDateInput instanceof HTMLInputElement) buildDateInput.required = isBuy;
+    if (holidayDateSelect instanceof HTMLSelectElement) {
+      holidayDateSelect.required = needsPreSukkosSchedule;
+    }
+    updateOtherDateField();
+  };
+
   const setBranch = (branch) => {
     const isBuy = branch === "I would like to buy";
     const isExisting = branch === "I already have a sukkah";
+    activeBranch = branch;
 
     if (buyOnly instanceof HTMLElement) {
       buyOnly.hidden = !isBuy;
@@ -361,33 +412,22 @@ const projectPaths = [
       setInputsDisabled(existingOnly, !isExisting);
     }
 
-    if (takedownField instanceof HTMLElement) {
-      takedownField.hidden = !isExisting;
-      setInputsDisabled(takedownField, !isExisting);
-    }
-    if (takedownDateInput instanceof HTMLInputElement) takedownDateInput.required = isExisting;
-    if (dateGrid instanceof HTMLElement) dateGrid.toggleAttribute("data-single-date", !isExisting);
-
     if (detailsHeading instanceof HTMLElement) {
       detailsHeading.textContent = isBuy ? "Plan your new sukkah" : isExisting ? "Tell us what you have" : "Tell us about your sukkah";
     }
     if (timingHeading instanceof HTMLElement) {
-      timingHeading.textContent = isBuy ? "When would you like it installed?" : isExisting ? "When should we come?" : "Tell us your preferred timing";
+      timingHeading.textContent = isBuy ? "When would you like it installed?" : "When should we come?";
     }
     if (timingCopy instanceof HTMLElement) {
-      timingCopy.textContent = isBuy
-        ? "Choose your preferred installation date. We’ll confirm availability when we follow up."
-        : isExisting
-          ? "Choose your preferred build and takedown dates. We’ll confirm availability when we follow up."
-          : "Choose a project path above to tailor the timing questions.";
+      timingCopy.textContent = "Choose your preferred installation date. We’ll confirm availability when we follow up.";
     }
     if (buildDateLabel instanceof HTMLElement) {
-      buildDateLabel.textContent = isBuy ? "Preferred installation date" : isExisting ? "Preferred build date" : "Preferred date";
+      buildDateLabel.textContent = "Preferred installation date";
     }
     if (buildDateInput instanceof HTMLInputElement) {
-      buildDateInput.setAttribute("aria-label", isBuy ? "Preferred installation date" : isExisting ? "Preferred build date" : "Preferred date");
+      buildDateInput.setAttribute("aria-label", "Preferred installation date");
       const alternateInput = buildDateInput.parentElement?.querySelector(".builder-date-input");
-      alternateInput?.setAttribute("aria-label", buildDateInput.getAttribute("aria-label") ?? "Preferred date");
+      alternateInput?.setAttribute("aria-label", "Preferred installation date");
     }
     if (branchSummary instanceof HTMLElement) {
       branchSummary.textContent = isBuy
@@ -396,7 +436,122 @@ const projectPaths = [
           ? "We’ll show questions for working with the sukkah you already own."
           : "Choose an option to personalize the form.";
     }
+    updateTimingSchedule();
   };
+
+  const atLocalNoon = (date) =>
+    new Date(date.getFullYear(), date.getMonth(), date.getDate(), 12);
+
+  const addCalendarDays = (date, days) => {
+    const result = atLocalNoon(date);
+    result.setDate(result.getDate() + days);
+    return result;
+  };
+
+  const toIsoDate = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
+  const hebrewDateFormatter = new Intl.DateTimeFormat("en-US-u-ca-hebrew", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+  const fullDateFormatter = new Intl.DateTimeFormat("en-US", {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+  const shortDateFormatter = new Intl.DateTimeFormat("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+
+  const getHebrewDate = (date) => {
+    const parts = hebrewDateFormatter.formatToParts(date);
+    return {
+      day: Number(parts.find((part) => part.type === "day")?.value ?? 0),
+      month: parts.find((part) => part.type === "month")?.value ?? "",
+    };
+  };
+
+  const findNextSukkos = () => {
+    const today = atLocalNoon(new Date());
+    for (let offset = 0; offset <= 500; offset += 1) {
+      const candidate = addCalendarDays(today, offset);
+      const hebrewDate = getHebrewDate(candidate);
+      if (hebrewDate.day === 15 && /^Tishr/i.test(hebrewDate.month)) {
+        return candidate;
+      }
+    }
+    return null;
+  };
+
+  const initializeHolidayDates = () => {
+    if (
+      !(holidayDateSelect instanceof HTMLSelectElement) ||
+      !(customServiceDateInput instanceof HTMLInputElement)
+    ) {
+      return;
+    }
+
+    const sukkosDate = findNextSukkos();
+    if (!(sukkosDate instanceof Date)) return;
+
+    const motzeiYomKippur = addCalendarDays(sukkosDate, -5);
+    const erevSukkos = addCalendarDays(sukkosDate, -1);
+    const customMinimum = addCalendarDays(sukkosDate, -30);
+    const otherOption = holidayDateSelect.querySelector("[data-other-date-option]");
+
+    for (
+      let date = motzeiYomKippur;
+      date <= erevSukkos;
+      date = addCalendarDays(date, 1)
+    ) {
+      const option = document.createElement("option");
+      option.value = toIsoDate(date);
+      if (date.getTime() === motzeiYomKippur.getTime()) {
+        option.textContent = `Motzei Yom Kippur — ${fullDateFormatter.format(date).replace(",", " evening,")}`;
+      } else if (date.getTime() === erevSukkos.getTime()) {
+        option.textContent = `Erev Sukkos — ${fullDateFormatter.format(date)}`;
+      } else {
+        option.textContent = fullDateFormatter.format(date);
+      }
+      holidayDateSelect.insertBefore(option, otherOption);
+    }
+
+    const minimumDate = toIsoDate(customMinimum);
+    const maximumDate = toIsoDate(erevSukkos);
+    customServiceDateInput.min = minimumDate;
+    customServiceDateInput.max = maximumDate;
+
+    if (customDateRange instanceof HTMLElement) {
+      customDateRange.textContent = `Choose a date from ${shortDateFormatter.format(customMinimum)} through ${shortDateFormatter.format(erevSukkos)}.`;
+    }
+
+    if (typeof window.flatpickr === "function") {
+      const customDatePicker = window.flatpickr(customServiceDateInput, {
+        altInput: true,
+        altInputClass: "builder-date-input",
+        altFormat: "F j, Y",
+        dateFormat: "Y-m-d",
+        minDate: minimumDate,
+        maxDate: maximumDate,
+        disableMobile: false,
+        monthSelectorType: "static",
+        position: "below left",
+      });
+      customDatePicker.altInput?.setAttribute("aria-label", "Choose another date");
+      customDatePicker.altInput?.setAttribute("placeholder", "Select a date");
+    }
+  };
+
+  initializeHolidayDates();
 
   const updateSizeValue = (slider) => {
     if (!(slider instanceof HTMLInputElement)) return;
@@ -449,6 +604,11 @@ const projectPaths = [
     slider.addEventListener("input", () => updateSizeValue(slider));
   });
 
+  serviceInputs.forEach((input) => {
+    input.addEventListener("change", updateTimingSchedule);
+  });
+  holidayDateSelect?.addEventListener("change", updateOtherDateField);
+
   branchInputs.forEach((input) => {
     input.addEventListener("change", () => {
       if (input instanceof HTMLInputElement && input.checked) setBranch(input.value);
@@ -492,19 +652,20 @@ const projectPaths = [
   .builder-form [hidden]{display:none!important}
   .builder-form .field{gap:.3rem}.builder-form label,.builder-form legend{font-family:"Inter Variable",Inter,Arial,sans-serif;font-size:.9rem;font-weight:600;letter-spacing:-.005em}.builder-form input,.builder-form select,.builder-form textarea{min-height:36px;padding:.35rem .65rem;border-color:rgba(29,41,37,.2);border-radius:9px;background:#fff;font-size:.88rem;line-height:1.25}.builder-form textarea{min-height:84px}.builder-form input:not([type="radio"]):not([type="checkbox"]):focus,.builder-form select:focus,.builder-form textarea:focus{border-color:var(--forest-700);box-shadow:0 0 0 4px rgba(45,104,85,.1)}.builder-form input::placeholder,.builder-form textarea::placeholder{color:#89938f;font-weight:400}.required-mark{color:#b23a2b;font-weight:700}
   .fulfillment-card{padding:1rem;border:1px solid rgba(200,134,67,.28);border-radius:12px;background:#fffaf2;animation:fulfillment-reveal 180ms cubic-bezier(.16,1,.3,1)}.fulfillment-card .choice-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.fulfillment-card .choice-card{background:rgba(255,255,255,.82)}.fulfillment-card .choice-card:has(input:checked){background:var(--forest-100)}@keyframes fulfillment-reveal{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+  [data-purchase-timing],.conditional-schedule{display:grid;gap:1rem}.conditional-schedule{animation:fulfillment-reveal 180ms cubic-bezier(.16,1,.3,1)}[data-purchase-timing] .section-copy,.conditional-schedule .section-copy{margin-left:0}.schedule-window{display:grid;max-width:640px;gap:1rem}.schedule-window select{width:100%}
   .address-field{display:grid;max-width:640px;gap:.85rem}.address-instruction{margin:0}.address-grid{display:grid;grid-template-columns:1fr;gap:.85rem}.address-grid .field{grid-column:1}.address-street,.address-city,.address-state{width:100%}.address-postal{width:min(100%,calc(10ch + 1.4rem + 2px))}
-  .form-grid,.date-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.75rem}.contact-grid{max-width:640px;grid-template-columns:1fr}.contact-grid .field{width:100%}.date-grid,.date-grid .field{min-width:0}.date-grid[data-single-date]{grid-template-columns:1fr}.date-control{display:flex;width:100%;min-width:0;min-height:40px;align-items:center;padding-inline:.7rem;border:1px solid rgba(29,41,37,.2);border-radius:10px;background:#fff}.date-control:focus-within{border-color:var(--forest-700);box-shadow:0 0 0 4px rgba(45,104,85,.1)}.date-grid .date-control input[type="date"]{display:block;width:100%;min-width:0;max-width:100%;min-height:38px;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;outline:0}.short-field{max-width:520px}.builder-form fieldset{display:grid;gap:.65rem;min-width:0;margin:0;padding:0;border:0}.builder-form legend{margin-bottom:.15rem;font-size:.96rem}.choice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.5rem}.choice-stack{display:grid;gap:.5rem}.builder-form .choice-card{display:flex;gap:.6rem;align-items:center;min-height:40px;padding:.35rem .7rem;border:1px solid rgba(29,41,37,.16);border-radius:10px;background:#fff;cursor:pointer;font-family:"Inter Variable",Inter,Arial,sans-serif;font-weight:400;letter-spacing:-.01em;transition:border-color 160ms ease,background 160ms ease,box-shadow 160ms ease,transform 160ms ease}.choice-card:hover,.choice-card:has(input:focus-visible){border-color:rgba(45,104,85,.45);background:#f7faf7}.choice-card:has(input:checked){border-color:var(--forest-700);background:var(--forest-100);box-shadow:inset 0 0 0 1px var(--forest-700)}.choice-card:active{transform:scale(.99)}.choice-card input[type="radio"],.choice-card input[type="checkbox"]{flex:0 0 auto;width:1.05rem;min-height:1.05rem;height:1.05rem;margin:0;padding:0;border:0;background:transparent;box-shadow:none;outline:0;accent-color:var(--forest-700)}.choice-card input[type="radio"]:focus,.choice-card input[type="checkbox"]:focus{border:0;box-shadow:none;outline:0}.choice-card span{line-height:1.35}.builder-form .choice-other{flex-wrap:nowrap;padding-block:.25rem}.builder-form .choice-other>input.choice-other-text{flex:1 1 0;width:auto;min-width:0;min-height:30px;height:30px;padding:.2rem .5rem;background:white;font-family:"Inter Variable",Inter,Arial,sans-serif;font-size:.78rem;font-weight:400}.field-hint{font-size:.8rem}
+  .form-grid,.date-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.75rem}.contact-grid{max-width:640px;grid-template-columns:1fr}.contact-grid .field{width:100%}.date-grid,.date-grid .field{min-width:0}.date-grid[data-single-date]{grid-template-columns:1fr}.date-control{display:flex;width:100%;min-width:0;min-height:40px;align-items:center;padding-inline:.7rem;border:1px solid rgba(29,41,37,.2);border-radius:10px;background:#fff}.date-control:focus-within{border-color:var(--forest-700);box-shadow:0 0 0 4px rgba(45,104,85,.1)}.date-grid .date-control input[type="date"],.schedule-window .date-control input[type="date"],.schedule-window .date-control input.builder-date-input{display:block;width:100%;min-width:0;max-width:100%;min-height:38px;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;outline:0}.short-field{max-width:520px}.builder-form fieldset{display:grid;gap:.65rem;min-width:0;margin:0;padding:0;border:0}.builder-form legend{margin-bottom:.15rem;font-size:.96rem}.choice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.5rem}.choice-stack{display:grid;gap:.5rem}.builder-form .choice-card{display:flex;gap:.6rem;align-items:center;min-height:40px;padding:.35rem .7rem;border:1px solid rgba(29,41,37,.16);border-radius:10px;background:#fff;cursor:pointer;font-family:"Inter Variable",Inter,Arial,sans-serif;font-weight:400;letter-spacing:-.01em;transition:border-color 160ms ease,background 160ms ease,box-shadow 160ms ease,transform 160ms ease}.choice-card:hover,.choice-card:has(input:focus-visible){border-color:rgba(45,104,85,.45);background:#f7faf7}.choice-card:has(input:checked){border-color:var(--forest-700);background:var(--forest-100);box-shadow:inset 0 0 0 1px var(--forest-700)}.choice-card:active{transform:scale(.99)}.choice-card input[type="radio"],.choice-card input[type="checkbox"]{flex:0 0 auto;width:1.05rem;min-height:1.05rem;height:1.05rem;margin:0;padding:0;border:0;background:transparent;box-shadow:none;outline:0;accent-color:var(--forest-700)}.choice-card input[type="radio"]:focus,.choice-card input[type="checkbox"]:focus{border:0;box-shadow:none;outline:0}.choice-card span{line-height:1.35}.builder-form .choice-other{flex-wrap:nowrap;padding-block:.25rem}.builder-form .choice-other>input.choice-other-text{flex:1 1 0;width:auto;min-width:0;min-height:30px;height:30px;padding:.2rem .5rem;background:white;font-family:"Inter Variable",Inter,Arial,sans-serif;font-size:.78rem;font-weight:400}.field-hint{font-size:.8rem}
   .size-field{max-width:760px}.size-field>.field-hint{margin:-.2rem 0 .35rem}.size-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(1.5rem,4vw,3rem)}.size-control{display:grid;gap:.45rem;padding:.15rem 0 .25rem}.size-label-row{display:flex;align-items:center;gap:1rem}.size-control output{display:inline-flex;min-width:3.8rem;min-height:2.25rem;align-items:center;justify-content:center;justify-self:center;gap:.22rem;margin-top:.05rem;padding:.25rem .55rem;border:1px solid rgba(200,134,67,.32);border-radius:10px;color:var(--forest-900);background:#fbf2e5;box-shadow:0 3px 10px rgba(93,65,30,.08),inset 0 1px 0 rgba(255,255,255,.72);font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;font-size:1.15rem;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1;text-align:center;transform-origin:center}.size-control output [data-size-number]{display:inline-block}.size-control output .size-unit{font-family:"Inter Variable",Inter,Arial,sans-serif;font-size:.62rem;font-weight:750;letter-spacing:.08em;line-height:1;text-transform:uppercase}.builder-form .size-control input[type="range"]{--slider-progress:33.333%;--slider-track:#dfe5e1;--slider-fill:var(--forest-700);width:100%;min-height:30px;height:30px;margin:0;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;outline:0;cursor:pointer;appearance:none;-webkit-appearance:none}.builder-form .size-control input[type="range"]::-webkit-slider-runnable-track{height:4px;border:0;border-radius:999px;background:linear-gradient(to right,var(--slider-fill) 0 var(--slider-progress),var(--slider-track) var(--slider-progress) 100%)}.builder-form .size-control input[type="range"]::-moz-range-track{height:4px;border:0;border-radius:999px;background:var(--slider-track)}.builder-form .size-control input[type="range"]::-moz-range-progress{height:4px;border-radius:999px;background:var(--slider-fill)}.builder-form .size-control input[type="range"]::-webkit-slider-thumb{width:18px;height:18px;margin-top:-7px;border:2px solid var(--forest-700);border-radius:50%;background:white;box-shadow:0 1px 4px rgba(16,45,37,.16);transition:box-shadow 160ms ease,transform 160ms ease;appearance:none;-webkit-appearance:none}.builder-form .size-control input[type="range"]::-moz-range-thumb{width:14px;height:14px;border:2px solid var(--forest-700);border-radius:50%;background:white;box-shadow:0 1px 4px rgba(16,45,37,.16);transition:box-shadow 160ms ease,transform 160ms ease}.builder-form .size-control input[type="range"]:hover::-webkit-slider-thumb{transform:scale(1.06)}.builder-form .size-control input[type="range"]:hover::-moz-range-thumb{transform:scale(1.06)}.builder-form .size-control input[type="range"]:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 4px rgba(45,104,85,.16),0 1px 4px rgba(16,45,37,.18)}.builder-form .size-control input[type="range"]:focus-visible::-moz-range-thumb{box-shadow:0 0 0 4px rgba(45,104,85,.16),0 1px 4px rgba(16,45,37,.18)}.builder-form .size-control input[type="range"]:focus,.builder-form .size-control input[type="range"]:focus-visible{border:0;outline:0;box-shadow:none}
   .upload-field{display:grid;grid-template-columns:auto 1fr minmax(190px,auto);gap:1rem;align-items:center;padding:1.15rem;border:1px dashed rgba(45,104,85,.38);border-radius:12px;background:#f7faf7}.upload-icon{display:grid;width:2.65rem;height:2.65rem;place-items:center;border-radius:10px;color:var(--forest-800);background:var(--forest-100);font-size:1.25rem;font-weight:900}.upload-field label{display:block;margin-bottom:.15rem}.upload-field p{margin:0;color:var(--ink-500);font-size:.8rem}.upload-field input[type="file"]{min-height:46px;padding:.3rem;border:1px solid rgba(29,41,37,.2);border-radius:10px;color:var(--ink-500);font-family:"Inter Variable",Inter,Arial,sans-serif;font-size:.82rem;background:white;cursor:pointer}.upload-field input[type="file"]::file-selector-button{min-height:36px;margin-right:.65rem;padding:.5rem .8rem;border:0;border-radius:7px;color:white;background:var(--forest-800);font-family:inherit;font-weight:800;cursor:pointer;transition:background 160ms ease}.upload-field input[type="file"]::file-selector-button:hover{background:var(--forest-950)}
   .builder-form .form-card>*{width:100%;max-width:640px;margin-inline:auto}.builder-form .form-card>.section-copy{padding-inline-start:3.65rem}
   .submit-row{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.55rem;padding:1rem 0 .25rem}.submit-row .button{min-width:170px;font-family:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;font-size:1.02rem;font-weight:600;letter-spacing:-.01em;box-shadow:none;transform:none;transition:background-color 100ms ease,border-color 100ms ease}.submit-row .button:hover{border-color:var(--forest-900);background:var(--forest-900);box-shadow:none;transform:none}.submit-row .button:active{border-color:var(--forest-950);background:var(--forest-950);box-shadow:none;transform:none}.submit-row p{margin:0;color:var(--ink-500);font-size:.84rem;text-align:center}
-  .date-grid .date-control input.builder-date-input{min-height:38px;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;outline:0}.date-grid .date-control input.builder-date-input:focus,.date-grid .date-control input.builder-date-input:focus-visible{border:0;box-shadow:none;outline:0}
+  .date-grid .date-control input.builder-date-input,.schedule-window .date-control input.builder-date-input{min-height:38px;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;outline:0}.date-grid .date-control input.builder-date-input:focus,.date-grid .date-control input.builder-date-input:focus-visible,.schedule-window .date-control input.builder-date-input:focus,.schedule-window .date-control input.builder-date-input:focus-visible{border:0;box-shadow:none;outline:0}
   .flatpickr-calendar{width:340px;padding:.65rem;border:1px solid rgba(29,41,37,.14);border-radius:16px;background:#fffdf8;box-shadow:0 22px 60px rgba(16,45,37,.2);font-family:"Inter Variable",Inter,Arial,sans-serif}.flatpickr-calendar.arrowTop::before{border-bottom-color:rgba(29,41,37,.14)}.flatpickr-calendar.arrowTop::after{border-bottom-color:#fffdf8}.flatpickr-months{height:48px;align-items:center}.flatpickr-months .flatpickr-month{height:48px;color:var(--forest-950);background:transparent}.flatpickr-current-month{top:0;left:18%;width:64%;height:48px;display:flex;align-items:center;justify-content:center;gap:.25rem;padding:0;font-size:1rem;font-weight:800}.flatpickr-current-month span.cur-month{margin-left:0;font-weight:800}.flatpickr-current-month .numInputWrapper{width:4.2rem}.flatpickr-current-month input.cur-year{width:100%;min-height:0;height:32px;padding:0 .2rem;border:0;border-radius:6px;color:var(--forest-950);font:inherit;font-weight:800;background:transparent;box-shadow:none;outline:0}.flatpickr-current-month input.cur-year:focus,.flatpickr-current-month input.cur-year:focus-visible{border:0;background:var(--cream-100);box-shadow:none;outline:0}.flatpickr-current-month .numInputWrapper span{border-color:transparent}.flatpickr-calendar .flatpickr-months .flatpickr-prev-month,.flatpickr-calendar .flatpickr-months .flatpickr-next-month{top:.65rem;width:36px;height:36px;display:grid;place-items:center;padding:0;border-radius:9px;color:var(--forest-800);fill:var(--forest-800)}.flatpickr-calendar .flatpickr-months .flatpickr-prev-month{left:.65rem}.flatpickr-calendar .flatpickr-months .flatpickr-next-month{right:.65rem}.flatpickr-calendar .flatpickr-months .flatpickr-prev-month:hover,.flatpickr-calendar .flatpickr-months .flatpickr-next-month:hover{background:var(--forest-100)}.flatpickr-calendar .flatpickr-months .flatpickr-prev-month:hover svg,.flatpickr-calendar .flatpickr-months .flatpickr-next-month:hover svg{fill:var(--forest-950)}.flatpickr-innerContainer,.flatpickr-rContainer,.flatpickr-weekdays,.flatpickr-days,.dayContainer{width:100%;max-width:100%}.flatpickr-weekdays{height:34px}.flatpickr-weekdaycontainer{display:grid;grid-template-columns:repeat(7,1fr)}span.flatpickr-weekday{color:var(--ink-500);font-size:.72rem;font-weight:850}.flatpickr-day{max-width:none;height:40px;line-height:40px;border-radius:9px;color:var(--ink-800);font-size:.84rem;font-weight:650}.flatpickr-day:hover,.flatpickr-day:focus{border-color:var(--forest-100);background:var(--forest-100)}.flatpickr-day.today{border-color:var(--wood-500);color:var(--forest-950)}.flatpickr-day.today:hover{border-color:var(--wood-500);background:#fbf2e5}.flatpickr-day.selected,.flatpickr-day.selected:hover{border-color:var(--forest-800);color:white;background:var(--forest-800);box-shadow:0 3px 10px rgba(29,82,66,.22)}.flatpickr-day.flatpickr-disabled,.flatpickr-day.flatpickr-disabled:hover{color:rgba(83,103,95,.3);background:transparent}
   body .flatpickr-calendar{padding:.75rem;border-color:var(--border);border-radius:12px;background:white;box-shadow:var(--shadow-medium)}body .flatpickr-calendar.arrowTop::before{border-bottom-color:var(--border)}body .flatpickr-calendar.arrowTop::after{border-bottom-color:white}body .flatpickr-months{margin-bottom:.3rem;border-radius:9px;background:var(--cream-100)}body .flatpickr-current-month{font-size:.96rem}body span.flatpickr-weekday{color:var(--forest-800);letter-spacing:.025em}body .flatpickr-day{border-radius:8px}body .flatpickr-day:hover,body .flatpickr-day:focus{border-color:var(--cream-200);background:var(--cream-100)}body .flatpickr-day.today{border-color:var(--wood-500);background:#fffaf2}body .flatpickr-day.selected,body .flatpickr-day.selected:hover{border-color:var(--forest-800);background:var(--forest-800);box-shadow:none}
   @media(max-width:380px){.flatpickr-calendar{width:calc(100vw - 24px);padding:.45rem}.flatpickr-day{height:38px;line-height:38px}}
   @media(max-width:950px){.form-layout{grid-template-columns:1fr;gap:1rem}.form-rail{position:sticky;top:58px;z-index:20;margin-inline:-16px;padding:.75rem 16px;border-block:1px solid var(--border);background:rgba(253,251,246,.96);box-shadow:0 8px 20px rgba(16,45,37,.05);backdrop-filter:blur(10px)}.rail-title,.form-rail nav,.rail-help{display:none}.progress-track{margin-bottom:.45rem}.mobile-progress-label{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin:0;color:var(--ink-500);font-size:.78rem}.mobile-progress-label strong{color:var(--forest-900);font-size:.88rem}.choice-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.form-card{scroll-margin-top:9rem}}
-  @media(max-width:700px){.builder-hero{padding-block:2.25rem 3.5rem}.hero-grid{padding-top:1.25rem}.hero-copy h1{font-size:clamp(2.65rem,13vw,4rem)}.form-section{padding-block:3rem 4.5rem}.form-intro,.form-grid,.date-grid,.size-grid,.address-grid{grid-template-columns:1fr}.form-intro{gap:.6rem;margin-bottom:1rem;padding-bottom:1.25rem}.address-grid .field{grid-column:1}.builder-form input:not([type="radio"]):not([type="checkbox"]):not([type="range"]),.builder-form select,.builder-form textarea{font-size:16px}.builder-form input:not([type="radio"]):not([type="checkbox"]):not([type="range"]):not([type="file"]):not([type="date"]):not(.choice-other-text),.builder-form select{min-height:40px}.builder-form textarea{min-height:92px}#timing-notes::placeholder{color:transparent}.date-control{min-height:50px}.date-grid .date-control input[type="date"],.date-grid .date-control input.builder-date-input{min-height:48px}.choice-grid,.fulfillment-card .choice-grid{grid-template-columns:1fr}.builder-form .choice-card{min-height:40px;padding:.35rem .7rem}.builder-form .choice-other{padding-block:.25rem}.fulfillment-card{padding:.85rem}.form-group-heading{grid-template-columns:2.5rem 1fr;gap:.75rem}.step-icon{width:2.5rem;height:2.5rem}.form-group-heading h3{font-size:1.55rem}.section-copy{margin-left:0}.builder-form .form-card>.section-copy{padding-inline-start:0}.upload-field{grid-template-columns:auto 1fr}.upload-field input{grid-column:1/-1;width:100%}.submit-row{align-items:stretch;flex-direction:column}.submit-row .button{width:100%}.submit-row p{text-align:center}}
+  @media(max-width:700px){.builder-hero{padding-block:2.25rem 3.5rem}.hero-grid{padding-top:1.25rem}.hero-copy h1{font-size:clamp(2.65rem,13vw,4rem)}.form-section{padding-block:3rem 4.5rem}.form-intro,.form-grid,.date-grid,.size-grid,.address-grid{grid-template-columns:1fr}.form-intro{gap:.6rem;margin-bottom:1rem;padding-bottom:1.25rem}.address-grid .field{grid-column:1}.builder-form input:not([type="radio"]):not([type="checkbox"]):not([type="range"]),.builder-form select,.builder-form textarea{font-size:16px}.builder-form input:not([type="radio"]):not([type="checkbox"]):not([type="range"]):not([type="file"]):not([type="date"]):not(.choice-other-text),.builder-form select{min-height:40px}.builder-form textarea{min-height:92px}#timing-notes::placeholder{color:transparent}.date-control{min-height:50px}.date-grid .date-control input[type="date"],.date-grid .date-control input.builder-date-input,.schedule-window .date-control input[type="date"],.schedule-window .date-control input.builder-date-input{min-height:48px}.choice-grid,.fulfillment-card .choice-grid{grid-template-columns:1fr}.builder-form .choice-card{min-height:40px;padding:.35rem .7rem}.builder-form .choice-other{padding-block:.25rem}.fulfillment-card{padding:.85rem}.form-group-heading{grid-template-columns:2.5rem 1fr;gap:.75rem}.step-icon{width:2.5rem;height:2.5rem}.form-group-heading h3{font-size:1.55rem}.section-copy{margin-left:0}.builder-form .form-card>.section-copy{padding-inline-start:0}.upload-field{grid-template-columns:auto 1fr}.upload-field input{grid-column:1/-1;width:100%}.submit-row{align-items:stretch;flex-direction:column}.submit-row .button{width:100%}.submit-row p{text-align:center}}
   @media(max-width:700px){.size-control{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"size-label size-output" "size-slider size-slider";column-gap:1rem;align-items:center}.size-label-row{grid-area:size-label}.builder-form .size-control input[type="range"]{grid-area:size-slider}.size-control output{grid-area:size-output;justify-self:end;margin-top:0}}
   @media(max-width:480px){.builder-form input:not([type="radio"]):not([type="checkbox"]):not([type="range"]):not([type="file"]):not([type="date"]):not(.choice-other-text),.builder-form select{min-height:44px}}
-  @media(prefers-reduced-motion:reduce){.progress-track span,.form-rail nav a,.choice-card{transition:none}.fulfillment-card{animation:none}}
+  @media(prefers-reduced-motion:reduce){.progress-track span,.form-rail nav a,.choice-card{transition:none}.fulfillment-card,.conditional-schedule{animation:none}}
 </style>

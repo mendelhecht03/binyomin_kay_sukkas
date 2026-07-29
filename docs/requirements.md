@@ -158,11 +158,22 @@ site's forest and wood colors. Rental requests belong on the dedicated
 
 The selected path tailors later questions. The purchase path uses new-sukkah
 wording, hides and disables Requested work, and asks for one preferred
-installation date. The existing-sukkah path uses current-sukkah wording, shows
-Requested work, and asks for both preferred build and takedown dates. Contact,
-location, site, and final-detail questions remain common to both paths. Switching
-paths should preserve previously entered values while excluding hidden controls
-from eventual form submission.
+installation date. The existing-sukkah path uses current-sukkah wording and
+shows Requested work. Contact, location, site, and final-detail questions
+remain common to both paths. Switching paths should preserve previously
+entered values while excluding hidden controls from eventual form submission.
+
+For an existing sukkah, selecting either Bring out of storage or Build reveals
+one shared Timing card titled "When should we come?" If both are checked, show
+only one card. Populate its Preferred day dropdown automatically from the
+browser's Hebrew calendar with every civil date from Motzei Yom Kippur through
+Erev Sukkos for the next upcoming Sukkos. Label the first and last options with
+those holiday names and show weekday plus Gregorian date for every option.
+Include an Other date option that reveals a required date field. Limit that
+field to the inclusive range from 30 days before Sukkos through Erev Sukkos.
+Use the device's native date picker on mobile and the site's themed flatpickr
+calendar on desktop. Hide and disable this Timing card when neither triggering
+Requested work option is selected.
 
 When the purchase path is selected, show a required question titled "How would
 you like to receive your sukkah?" immediately below the project-path selector.
