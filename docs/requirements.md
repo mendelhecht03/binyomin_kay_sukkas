@@ -94,10 +94,11 @@ its green background slightly. Center the button within the form and place its
 temporary submission-status note directly underneath it.
 Keep standard text fields compact: approximately 36 pixels high on desktop,
 40 pixels on small tablets, and 44 pixels on phone-sized screens. Use slightly
-smaller field labels and input text. Radio and checkbox option cards use a
-40-pixel height in a two-column desktop grid and a one-column small-screen
-grid. Date controls, uploads, and sliders retain their specialized
-touch-friendly sizes.
+smaller field labels and input text on desktop. At 700 pixels and below, use
+16-pixel text for editable controls so iPhone Safari does not zoom the page
+when a visitor focuses a field. Radio and checkbox option cards use a 40-pixel
+height in a two-column desktop grid and a one-column small-screen grid. Date
+controls, uploads, and sliders retain their specialized touch-friendly sizes.
 
 Stack every address control vertically at all screen widths. The controls
 should still reflect the expected answer length instead of filling the entire
