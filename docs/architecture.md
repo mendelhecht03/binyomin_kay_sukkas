@@ -85,8 +85,9 @@ redirect pages that send visitors to `/sukka-builder/`.
 
 `/sukka-builder/` uses the custom, site-styled form. The former Google Form
 embed and temporary `/sukka-builder-alt/` comparison route have been removed.
-The custom form is not yet connected to a submission or upload backend, so its
-current submit action only validates the visitor's entries.
+The form submits to the site's Worker, which validates the request, stores
+optional site photos, and sends the row data to a private Google Sheet through
+a small Google Apps Script webhook.
 
 The builder's desktop date fields use Flatpickr 4.6.13 loaded from jsDelivr.
 Mobile browsers retain their native date picker. The original inputs continue
@@ -102,8 +103,36 @@ does not load a third-party address service.
 
 The `/sukka-builder/` page contains the custom form directly. Visitors can
 select up to three optional area photos, with a 10 MB limit for each photo.
-Before the page can accept live customer requests, the text fields and photo
-uploads need supported submission and storage backends.
+
+The form uses this flow:
+
+```text
+Browser form
+    |
+    | multipart POST /api/sukkah-submissions
+    v
+Sites Worker
+    |-- validates required fields and photo limits
+    |-- stores photo files in the SUBMISSION_PHOTOS R2 binding
+    `-- sends text fields and photo links to Google Apps Script
+                                      |
+                                      v
+                         Private Google Sheet row
+```
+
+The Google Sheet stores answers and private, unlisted links to the uploaded
+photos. Photo bytes do not go inside spreadsheet cells.
+
+Two production environment values are required:
+
+```text
+SUKKAH_SHEETS_WEBHOOK_URL
+SUKKAH_SHEETS_WEBHOOK_SECRET
+```
+
+The webhook secret is stored only in the Sites environment and Google Apps
+Script properties. Do not place it in source control. The Apps Script source
+template and setup notes are in `integrations/google-apps-script/`.
 
 ## Shared Page Structure
 
@@ -119,15 +148,28 @@ the `dist/` folder.
 It does not scan `src/`, `node_modules/`, or old root HTML files. Each built
 file is encoded into `index.mjs` with its route and content type.
 
-The Worker preserves the existing placeholder endpoint:
+The Worker handles the live builder endpoint:
+
+```text
+POST /api/sukkah-submissions
+GET  /api/sukkah-submission-photos/<unlisted-photo-key>
+```
+
+The POST endpoint accepts the custom builder's form data. It validates required
+fields and photo limits, stores photos in R2, and forwards a normalized JSON
+record to the Google Sheet webhook. If the Sheet write fails, newly uploaded
+photos from that request are removed so partial submissions are not left
+behind.
+
+The Worker also preserves the existing placeholder endpoint:
 
 ```text
 POST /api/sukkah-quote
 ```
 
-This endpoint returns a sample JSON response. It does not yet calculate,
-store, or send a quote. Astro is being used as a static builder, so a real form
-backend should remain separate from the Astro pages.
+This endpoint returns a sample JSON response. It does not calculate, store, or
+send a quote. Astro remains a static page builder; the generated Worker owns the
+small amount of server-side submission logic.
 
 Requests for a missing page use Astro's generated `404.html` while keeping the
 correct HTTP `404` status. This gives visitors a useful way back to the site
@@ -164,7 +206,7 @@ The full build runs these two steps in order:
    `dist/server/index.js` plus the hosting metadata required for deployment.
 
 `npm run preview` previews the static Astro output. It does not reproduce the
-Worker-only `POST /api/sukkah-quote` behavior.
+Worker-only API endpoints.
 
 ## Deployment Checklist
 

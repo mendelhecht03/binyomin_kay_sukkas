@@ -23,8 +23,9 @@ layout.
 - The existing public name, "Benyamin Kay Sukkas," is kept for now. Confirm
   whether "Benyamin" or "Binyomin" is the intended spelling before launch.
 - The Sukka Builder uses the website's custom form. The former Google Form
-  embed has been removed. Keep submission disabled and clearly explained until
-  supported form and photo-upload backends are selected.
+  embed has been removed. Submit completed requests to the private Google Sheet
+  through the site's server-side Worker and a protected Google Apps Script
+  webhook. Keep Google credentials and the webhook secret out of browser code.
 - Keep the homepage intentionally limited to four parts: a focused hero, the
   three primary sukkah paths, testimonials, and a compact owner introduction.
   Do not add process steps, decorative quotes, promotional blurbs, or extra
@@ -81,8 +82,10 @@ The former `/sukkah-packages` route and its old buy/sample routes redirect to
 `/sukka-builder/` so saved links do not lead to a missing page.
 
 The `/sukka-builder` route contains the website's custom, native-styled form.
-Its submission is intentionally disabled until supported form and upload
-backends are selected.
+Its Submit button sends every enabled answer to the private Sukkah Builder
+Submissions Google Sheet. Optional site photos are stored in the site's upload
+storage, and the matching Sheet row receives unlisted links to those files.
+Show a clear sending, success, or retry message beneath the button.
 
 The builder keeps a compact section-progress indicator visible while visitors
 move through the form. On desktop it uses a left-side section list; on smaller
@@ -127,7 +130,8 @@ the client prepares approved project photography. Replace it with the completed
 gallery later without changing the public route.
 
 The Site Details section accepts up to three optional area photos. Each photo
-may be a JPG, PNG, or HEIC file and must be no larger than 10 MB.
+may be a JPG, PNG, or HEIC file and must be no larger than 10 MB. Enforce these
+limits in both the browser and the server-side Worker.
 
 The custom form collects estimated sukkah width and length with separate
 sliders. Each slider ranges from 0 to 30 feet and shows its current value.
@@ -196,7 +200,7 @@ the Timing card when no triggering Requested work option is selected.
 
 When the purchase path is selected, show a required question titled "How would
 you like to receive your sukkah?" immediately below the project-path selector.
-Present two radio options: "I’ll pick it up" and "Please deliver it to me." Hide
+Present two radio options: "I’ll pick it up" and "Deliver it to me." Hide
 and disable this question on the existing-sukkah path so its value is excluded
 from eventual form submission.
 

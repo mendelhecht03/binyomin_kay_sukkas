@@ -76,7 +76,7 @@ const states = [
 const sukkahTypes = ["Canvas", "Canvas Bingo", "Snap / panel", "Wood boards with bolts", "Schach and beams only"];
 const schachTypes = ["Bamboo mat", "Bamboo sticks", "Evergreen"];
 const addOns = ["Put up lights", "Pressure wash area day before", "Bamboo mat", "Evergreen"];
-const fulfillmentMethods = ["I’ll pick it up", "Please deliver it to me"];
+const fulfillmentMethods = ["I’ll pick it up", "Deliver it to me"];
 const projectPaths = [
   {
     value: "I would like to buy",
@@ -108,7 +108,7 @@ const projectPaths = [
           <p class="eyebrow">Sukka Builder</p>
           <h1>Your sukkah starts with a good plan.</h1>
           <p class="lead">Share the details below and we’ll follow up with a custom quote.</p>
-          <p class="builder-notice">Online submission is not connected yet.</p>
+          <p class="builder-notice">Your request will be sent securely to Benyamin.</p>
         </div>
       </div>
     </div>
@@ -141,7 +141,11 @@ const projectPaths = [
           <p class="rail-help">Need help?<br /><a href="tel:+13474542282">Call (347) 454-2282</a></p>
         </aside>
 
-        <form class="builder-form" data-builder-form>
+        <form class="builder-form" data-builder-form enctype="multipart/form-data">
+          <div class="form-honeypot" aria-hidden="true">
+            <label for="website">Leave this field empty</label>
+            <input id="website" name="website" type="text" tabindex="-1" autocomplete="off" />
+          </div>
           <section id="project-path" class="form-card form-group path-card" aria-labelledby="path-heading" data-form-step="1">
             <FormHeading icon="sukkah" eyebrow="Start here" heading="How can we help?" id="path-heading" />
             <ProjectPathSelector
@@ -243,7 +247,7 @@ const projectPaths = [
             <div class="upload-field">
               <div class="upload-icon" aria-hidden="true">↑</div>
               <div><label for="site-photos">Add up to 3 photos of the area</label><p>Optional. JPG, PNG, or HEIC. 10 MB per photo.</p></div>
-              <input id="site-photos" name="sitePhotos" type="file" accept="image/*" multiple />
+              <input id="site-photos" name="sitePhotos" type="file" accept=".jpg,.jpeg,.png,.heic,.heif,image/jpeg,image/png,image/heic,image/heif" multiple />
             </div>
           </section>
 
@@ -315,8 +319,8 @@ const projectPaths = [
           </section>
 
           <div class="submit-row">
-            <button class="button" type="button">Submit</button>
-            <p>Online submission is coming soon.</p>
+            <button class="button" type="submit" data-submit-button>Submit</button>
+            <p data-submit-status role="status" aria-live="polite">Your information will be added to our private request sheet.</p>
           </div>
         </form>
       </div>
@@ -393,6 +397,10 @@ const projectPaths = [
   const timingCopy = document.querySelector("[data-timing-copy]");
   const buildDateLabel = document.querySelector("[data-build-date-label]");
   const buildDateInput = document.querySelector("#build-date");
+  const builderForm = document.querySelector("[data-builder-form]");
+  const submitButton = document.querySelector("[data-submit-button]");
+  const submitStatus = document.querySelector("[data-submit-status]");
+  const sitePhotos = document.querySelector("#site-photos");
   let activeBranch = "";
 
   const setInputsDisabled = (container, disabled) => {
@@ -735,6 +743,76 @@ const projectPaths = [
   }
   setActiveStep("1");
 
+  if (builderForm instanceof HTMLFormElement) {
+    builderForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const photos =
+        sitePhotos instanceof HTMLInputElement && sitePhotos.files
+          ? Array.from(sitePhotos.files)
+          : [];
+      const invalidPhoto = photos.find((photo) => photo.size > 10 * 1024 * 1024);
+
+      if (photos.length > 3 || invalidPhoto) {
+        if (submitStatus instanceof HTMLElement) {
+          submitStatus.textContent =
+            photos.length > 3
+              ? "Please choose no more than three photos."
+              : "Each photo must be no larger than 10 MB.";
+          submitStatus.dataset.state = "error";
+        }
+        if (sitePhotos instanceof HTMLInputElement) sitePhotos.focus();
+        return;
+      }
+
+      if (submitButton instanceof HTMLButtonElement) {
+        submitButton.disabled = true;
+        submitButton.textContent = "Sending...";
+      }
+      if (submitStatus instanceof HTMLElement) {
+        submitStatus.textContent =
+          photos.length > 0
+            ? "Uploading your photos and sending your request..."
+            : "Sending your request...";
+        submitStatus.dataset.state = "working";
+      }
+
+      try {
+        const response = await fetch("/api/sukkah-submissions", {
+          method: "POST",
+          headers: { Accept: "application/json" },
+          body: new FormData(builderForm),
+        });
+        const result = await response.json().catch(() => null);
+
+        if (!response.ok || result?.ok !== true) {
+          throw new Error(result?.message || "We could not send your request.");
+        }
+
+        if (submitButton instanceof HTMLButtonElement) {
+          submitButton.textContent = "Request sent";
+        }
+        if (submitStatus instanceof HTMLElement) {
+          submitStatus.textContent =
+            result.message || "Thank you. Your request was sent to Benyamin.";
+          submitStatus.dataset.state = "success";
+        }
+      } catch (error) {
+        if (submitButton instanceof HTMLButtonElement) {
+          submitButton.disabled = false;
+          submitButton.textContent = "Try again";
+        }
+        if (submitStatus instanceof HTMLElement) {
+          submitStatus.textContent =
+            error instanceof Error
+              ? error.message
+              : "We could not send your request. Please try again or call (347) 454-2282.";
+          submitStatus.dataset.state = "error";
+        }
+      }
+    });
+  }
+
 </script>
 
 <style is:global>
@@ -745,8 +823,8 @@ const projectPaths = [
   .hero-copy h1{max-width:780px;font-size:clamp(3rem,6vw,5rem)}.hero-copy .lead{max-width:620px;font-size:clamp(1.05rem,1.8vw,1.22rem)}
   .builder-notice{display:inline-flex;margin:1.35rem 0 0;padding:.45rem .65rem;border-left:3px solid var(--wood-500);color:var(--ink-600);background:rgba(255,255,255,.45);font-size:.82rem}
   .form-section{padding-block:clamp(3.5rem,7vw,6rem);background:#fdfbf6}.form-shell{max-width:1180px}.form-intro{display:grid;grid-template-columns:1fr;margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border)}.form-intro h2{margin-bottom:.5rem}.form-intro>div>p:last-child{max-width:620px;margin:0;color:var(--ink-500)}
-  .form-layout{display:grid;grid-template-columns:210px minmax(0,720px);gap:clamp(2rem,4vw,3.5rem);justify-content:center;align-items:start}.form-rail{position:sticky;top:5.5rem;padding:1.1rem 0}.rail-title{margin-bottom:.65rem;color:var(--forest-900);font-size:.78rem;font-weight:850;letter-spacing:.12em;text-transform:uppercase}.progress-track{height:4px;margin-bottom:1.1rem;overflow:hidden;border-radius:99px;background:var(--cream-200)}.progress-track span{display:block;width:14.285%;height:100%;border-radius:inherit;background:var(--wood-500);transition:width 240ms ease}.mobile-progress-label{display:none}.form-rail nav{display:grid;gap:.15rem}.form-rail nav a{display:flex;gap:.8rem;align-items:center;padding:.55rem 0;color:var(--ink-500);text-decoration:none;transition:color 160ms ease,transform 160ms ease}.form-rail nav a span{color:var(--wood-600);font-size:.72rem;font-weight:850;letter-spacing:.08em}.form-rail nav a[data-active]{color:var(--forest-900);font-weight:800;transform:translateX(4px)}.rail-help{margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid var(--border);color:var(--ink-500);font-size:.84rem}.rail-help a{color:var(--forest-800);font-weight:800}
-  .builder-form{display:grid;width:min(100%,720px);gap:1rem;min-width:0;justify-self:center}.form-card{scroll-margin-top:7rem;padding:clamp(1.4rem,3.5vw,2.25rem);border:1px solid rgba(29,41,37,.14);border-radius:16px;background:white;box-shadow:0 8px 28px rgba(16,45,37,.045)}.form-group{display:grid;gap:1.55rem}.form-group-heading{display:grid;grid-template-columns:2.75rem 1fr;gap:.9rem;align-items:center;padding-bottom:1.15rem;border-bottom:1px solid var(--border)}.form-group-heading .eyebrow{display:none}.form-group-heading h3{margin:0;font-size:clamp(1.55rem,2.7vw,2.05rem)}.step-icon{display:grid;width:2.75rem;height:2.75rem;place-items:center;border:1px solid rgba(200,134,67,.38);border-radius:10px;color:var(--forest-900);background:#fbf2e5}.step-icon svg{width:1.45rem;height:1.45rem}.section-copy{margin:-.55rem 0 0 3.65rem;color:var(--ink-500);font-size:.9rem}
+  .form-layout{display:grid;grid-template-columns:210px minmax(0,720px);gap:clamp(2rem,4vw,3.5rem);justify-content:start;align-items:start}.form-rail{position:sticky;top:5.5rem;padding:1.1rem 0}.rail-title{margin-bottom:.65rem;color:var(--forest-900);font-size:.78rem;font-weight:850;letter-spacing:.12em;text-transform:uppercase}.progress-track{height:4px;margin-bottom:1.1rem;overflow:hidden;border-radius:99px;background:var(--cream-200)}.progress-track span{display:block;width:14.285%;height:100%;border-radius:inherit;background:var(--wood-500);transition:width 240ms ease}.mobile-progress-label{display:none}.form-rail nav{display:grid;gap:.15rem}.form-rail nav a{display:flex;gap:.8rem;align-items:center;padding:.55rem 0;color:var(--ink-500);text-decoration:none;transition:color 160ms ease,transform 160ms ease}.form-rail nav a span{color:var(--wood-600);font-size:.72rem;font-weight:850;letter-spacing:.08em}.form-rail nav a[data-active]{color:var(--forest-900);font-weight:800;transform:translateX(4px)}.rail-help{margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid var(--border);color:var(--ink-500);font-size:.84rem}.rail-help a{color:var(--forest-800);font-weight:800}
+  .builder-form{display:grid;width:min(100%,720px);gap:1rem;min-width:0;justify-self:center}.form-honeypot{position:absolute!important;left:-10000px!important;width:1px!important;height:1px!important;overflow:hidden!important}.form-card{scroll-margin-top:7rem;padding:clamp(1.4rem,3.5vw,2.25rem);border:1px solid rgba(29,41,37,.14);border-radius:16px;background:white;box-shadow:0 8px 28px rgba(16,45,37,.045)}.form-group{display:grid;gap:1.55rem}.form-group-heading{display:grid;grid-template-columns:2.75rem 1fr;gap:.9rem;align-items:center;padding-bottom:1.15rem;border-bottom:1px solid var(--border)}.form-group-heading .eyebrow{display:none}.form-group-heading h3{margin:0;font-size:clamp(1.55rem,2.7vw,2.05rem)}.step-icon{display:grid;width:2.75rem;height:2.75rem;place-items:center;border:1px solid rgba(200,134,67,.38);border-radius:10px;color:var(--forest-900);background:#fbf2e5}.step-icon svg{width:1.45rem;height:1.45rem}.section-copy{margin:-.55rem 0 0 3.65rem;color:var(--ink-500);font-size:.9rem}
   .builder-form [hidden]{display:none!important}
   .builder-form .field{gap:.3rem}.builder-form label,.builder-form legend{font-family:"Inter Variable",Inter,Arial,sans-serif;font-size:.9rem;font-weight:600;letter-spacing:-.005em}.builder-form input,.builder-form select,.builder-form textarea{min-height:36px;padding:.35rem .65rem;border-color:rgba(29,41,37,.2);border-radius:9px;background:#fff;font-size:.88rem;line-height:1.25}.builder-form textarea{min-height:84px}.builder-form input:not([type="radio"]):not([type="checkbox"]):focus,.builder-form select:focus,.builder-form textarea:focus{border-color:var(--forest-700);box-shadow:0 0 0 4px rgba(45,104,85,.1)}.builder-form input::placeholder,.builder-form textarea::placeholder{color:#89938f;font-weight:400}.required-mark{color:#b23a2b;font-weight:700}
   .fulfillment-card{padding:1rem;border:1px solid rgba(200,134,67,.28);border-radius:12px;background:#fffaf2;animation:fulfillment-reveal 180ms cubic-bezier(.16,1,.3,1)}.fulfillment-card .choice-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.fulfillment-card .choice-card{background:rgba(255,255,255,.82)}.fulfillment-card .choice-card:has(input:checked){background:var(--forest-100)}@keyframes fulfillment-reveal{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
@@ -756,7 +834,7 @@ const projectPaths = [
   .size-field{max-width:760px}.size-field>.field-hint{margin:-.2rem 0 .35rem}.size-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(1.5rem,4vw,3rem)}.size-control{display:grid;gap:.45rem;padding:.15rem 0 .25rem}.size-label-row{display:flex;align-items:center;gap:1rem}.size-control output{display:inline-flex;min-width:3.8rem;min-height:2.25rem;align-items:center;justify-content:center;justify-self:center;gap:.22rem;margin-top:.05rem;padding:.25rem .55rem;border:1px solid rgba(200,134,67,.32);border-radius:10px;color:var(--forest-900);background:#fbf2e5;box-shadow:0 3px 10px rgba(93,65,30,.08),inset 0 1px 0 rgba(255,255,255,.72);font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;font-size:1.15rem;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1;text-align:center;transform-origin:center}.size-control output [data-size-number]{display:inline-block}.size-control output .size-unit{font-family:"Inter Variable",Inter,Arial,sans-serif;font-size:.62rem;font-weight:750;letter-spacing:.08em;line-height:1;text-transform:uppercase}.builder-form .size-control input[type="range"]{--slider-progress:33.333%;--slider-track:#dfe5e1;--slider-fill:var(--forest-700);width:100%;min-height:30px;height:30px;margin:0;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;outline:0;cursor:pointer;appearance:none;-webkit-appearance:none}.builder-form .size-control input[type="range"]::-webkit-slider-runnable-track{height:4px;border:0;border-radius:999px;background:linear-gradient(to right,var(--slider-fill) 0 var(--slider-progress),var(--slider-track) var(--slider-progress) 100%)}.builder-form .size-control input[type="range"]::-moz-range-track{height:4px;border:0;border-radius:999px;background:var(--slider-track)}.builder-form .size-control input[type="range"]::-moz-range-progress{height:4px;border-radius:999px;background:var(--slider-fill)}.builder-form .size-control input[type="range"]::-webkit-slider-thumb{width:18px;height:18px;margin-top:-7px;border:2px solid var(--forest-700);border-radius:50%;background:white;box-shadow:0 1px 4px rgba(16,45,37,.16);transition:box-shadow 160ms ease,transform 160ms ease;appearance:none;-webkit-appearance:none}.builder-form .size-control input[type="range"]::-moz-range-thumb{width:14px;height:14px;border:2px solid var(--forest-700);border-radius:50%;background:white;box-shadow:0 1px 4px rgba(16,45,37,.16);transition:box-shadow 160ms ease,transform 160ms ease}.builder-form .size-control input[type="range"]:hover::-webkit-slider-thumb{transform:scale(1.06)}.builder-form .size-control input[type="range"]:hover::-moz-range-thumb{transform:scale(1.06)}.builder-form .size-control input[type="range"]:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 4px rgba(45,104,85,.16),0 1px 4px rgba(16,45,37,.18)}.builder-form .size-control input[type="range"]:focus-visible::-moz-range-thumb{box-shadow:0 0 0 4px rgba(45,104,85,.16),0 1px 4px rgba(16,45,37,.18)}.builder-form .size-control input[type="range"]:focus,.builder-form .size-control input[type="range"]:focus-visible{border:0;outline:0;box-shadow:none}
   .upload-field{display:grid;grid-template-columns:auto 1fr minmax(190px,auto);gap:1rem;align-items:center;padding:1.15rem;border:1px dashed rgba(45,104,85,.38);border-radius:12px;background:#f7faf7}.upload-icon{display:grid;width:2.65rem;height:2.65rem;place-items:center;border-radius:10px;color:var(--forest-800);background:var(--forest-100);font-size:1.25rem;font-weight:900}.upload-field label{display:block;margin-bottom:.15rem}.upload-field p{margin:0;color:var(--ink-500);font-size:.8rem}.upload-field input[type="file"]{min-height:46px;padding:.3rem;border:1px solid rgba(29,41,37,.2);border-radius:10px;color:var(--ink-500);font-family:"Inter Variable",Inter,Arial,sans-serif;font-size:.82rem;background:white;cursor:pointer}.upload-field input[type="file"]::file-selector-button{min-height:36px;margin-right:.65rem;padding:.5rem .8rem;border:0;border-radius:7px;color:white;background:var(--forest-800);font-family:inherit;font-weight:800;cursor:pointer;transition:background 160ms ease}.upload-field input[type="file"]::file-selector-button:hover{background:var(--forest-950)}
   .builder-form .form-card>*{width:100%;max-width:640px;margin-inline:auto}.builder-form .form-card>.section-copy{padding-inline-start:3.65rem}
-  .submit-row{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.55rem;padding:1rem 0 .25rem}.submit-row .button{min-width:170px;font-family:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;font-size:1.02rem;font-weight:600;letter-spacing:-.01em;box-shadow:none;transform:none;transition:background-color 100ms ease,border-color 100ms ease}.submit-row .button:hover{border-color:var(--forest-900);background:var(--forest-900);box-shadow:none;transform:none}.submit-row .button:active{border-color:var(--forest-950);background:var(--forest-950);box-shadow:none;transform:none}.submit-row p{margin:0;color:var(--ink-500);font-size:.84rem;text-align:center}
+  .submit-row{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.55rem;padding:1rem 0 .25rem}.submit-row .button{min-width:170px;font-family:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;font-size:1.02rem;font-weight:600;letter-spacing:-.01em;box-shadow:none;transform:none;transition:background-color 100ms ease,border-color 100ms ease}.submit-row .button:hover{border-color:var(--forest-900);background:var(--forest-900);box-shadow:none;transform:none}.submit-row .button:active{border-color:var(--forest-950);background:var(--forest-950);box-shadow:none;transform:none}.submit-row .button:disabled{cursor:wait;opacity:.76}.submit-row p{margin:0;color:var(--ink-500);font-size:.84rem;text-align:center}.submit-row p[data-state="success"]{color:var(--forest-800);font-weight:700}.submit-row p[data-state="error"]{color:#9d2e22;font-weight:700}
   .date-grid .date-control input.builder-date-input,.schedule-window .date-control input.builder-date-input{min-height:38px;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;outline:0}.date-grid .date-control input.builder-date-input:focus,.date-grid .date-control input.builder-date-input:focus-visible,.schedule-window .date-control input.builder-date-input:focus,.schedule-window .date-control input.builder-date-input:focus-visible{border:0;box-shadow:none;outline:0}
   .flatpickr-calendar{width:340px;padding:.65rem;border:1px solid rgba(29,41,37,.14);border-radius:16px;background:#fffdf8;box-shadow:0 22px 60px rgba(16,45,37,.2);font-family:"Inter Variable",Inter,Arial,sans-serif}.flatpickr-calendar.arrowTop::before{border-bottom-color:rgba(29,41,37,.14)}.flatpickr-calendar.arrowTop::after{border-bottom-color:#fffdf8}.flatpickr-months{height:48px;align-items:center}.flatpickr-months .flatpickr-month{height:48px;color:var(--forest-950);background:transparent}.flatpickr-current-month{top:0;left:18%;width:64%;height:48px;display:flex;align-items:center;justify-content:center;gap:.25rem;padding:0;font-size:1rem;font-weight:800}.flatpickr-current-month span.cur-month{margin-left:0;font-weight:800}.flatpickr-current-month .numInputWrapper{width:4.2rem}.flatpickr-current-month input.cur-year{width:100%;min-height:0;height:32px;padding:0 .2rem;border:0;border-radius:6px;color:var(--forest-950);font:inherit;font-weight:800;background:transparent;box-shadow:none;outline:0}.flatpickr-current-month input.cur-year:focus,.flatpickr-current-month input.cur-year:focus-visible{border:0;background:var(--cream-100);box-shadow:none;outline:0}.flatpickr-current-month .numInputWrapper span{border-color:transparent}.flatpickr-calendar .flatpickr-months .flatpickr-prev-month,.flatpickr-calendar .flatpickr-months .flatpickr-next-month{top:.65rem;width:36px;height:36px;display:grid;place-items:center;padding:0;border-radius:9px;color:var(--forest-800);fill:var(--forest-800)}.flatpickr-calendar .flatpickr-months .flatpickr-prev-month{left:.65rem}.flatpickr-calendar .flatpickr-months .flatpickr-next-month{right:.65rem}.flatpickr-calendar .flatpickr-months .flatpickr-prev-month:hover,.flatpickr-calendar .flatpickr-months .flatpickr-next-month:hover{background:var(--forest-100)}.flatpickr-calendar .flatpickr-months .flatpickr-prev-month:hover svg,.flatpickr-calendar .flatpickr-months .flatpickr-next-month:hover svg{fill:var(--forest-950)}.flatpickr-innerContainer,.flatpickr-rContainer,.flatpickr-weekdays,.flatpickr-days,.dayContainer{width:100%;max-width:100%}.flatpickr-weekdays{height:34px}.flatpickr-weekdaycontainer{display:grid;grid-template-columns:repeat(7,1fr)}span.flatpickr-weekday{color:var(--ink-500);font-size:.72rem;font-weight:850}.flatpickr-day{max-width:none;height:40px;line-height:40px;border-radius:9px;color:var(--ink-800);font-size:.84rem;font-weight:650}.flatpickr-day:hover,.flatpickr-day:focus{border-color:var(--forest-100);background:var(--forest-100)}.flatpickr-day.today{border-color:var(--wood-500);color:var(--forest-950)}.flatpickr-day.today:hover{border-color:var(--wood-500);background:#fbf2e5}.flatpickr-day.selected,.flatpickr-day.selected:hover{border-color:var(--forest-800);color:white;background:var(--forest-800);box-shadow:0 3px 10px rgba(29,82,66,.22)}.flatpickr-day.flatpickr-disabled,.flatpickr-day.flatpickr-disabled:hover{color:rgba(83,103,95,.3);background:transparent}
   body .flatpickr-calendar{padding:.75rem;border-color:var(--border);border-radius:12px;background:white;box-shadow:var(--shadow-medium)}body .flatpickr-calendar.arrowTop::before{border-bottom-color:var(--border)}body .flatpickr-calendar.arrowTop::after{border-bottom-color:white}body .flatpickr-months{margin-bottom:.3rem;border-radius:9px;background:var(--cream-100)}body .flatpickr-current-month{font-size:.96rem}body span.flatpickr-weekday{color:var(--forest-800);letter-spacing:.025em}body .flatpickr-day{border-radius:8px}body .flatpickr-day:hover,body .flatpickr-day:focus{border-color:var(--cream-200);background:var(--cream-100)}body .flatpickr-day.today{border-color:var(--wood-500);background:#fffaf2}body .flatpickr-day.selected,body .flatpickr-day.selected:hover{border-color:var(--forest-800);background:var(--forest-800);box-shadow:none}

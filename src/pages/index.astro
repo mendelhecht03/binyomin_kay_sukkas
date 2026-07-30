@@ -10,11 +10,15 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     <section class="home-hero">
       <div class="home-hero-grid shell">
         <div class="home-hero-copy">
-          <h1><span>Your sukkah,</span> <strong>handled.</strong></h1>
-          <p>Buying, renting, or preparing the sukkah you already own starts here.</p>
+          <h1><span>Enjoy your Sukkos,</span> <strong>hassle free.</strong></h1>
+          <p>From the first measurement to the final takedown, we make getting your sukkah ready feel simple.</p>
           <div class="home-hero-actions">
             <a class="button home-primary-action" href="#services">Choose a service</a>
-            <a class="home-phone-link" href="tel:+13474542282">Call (347) 454-2282</a>
+            <a class="home-phone-link" href="tel:+13474542282">
+              <span aria-hidden="true">Call</span>
+              <strong>(347) 454-2282</strong>
+              <small>Questions are welcome</small>
+            </a>
           </div>
         </div>
 
@@ -25,7 +29,6 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             loading="eager"
             fetchpriority="high"
           />
-          <figcaption>Decorated sukkah interior</figcaption>
         </figure>
       </div>
     </section>
@@ -33,24 +36,24 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     <section id="services" class="home-section home-services" aria-labelledby="services-heading">
       <div class="shell">
         <div class="home-section-heading">
-          <h2 id="services-heading">What do you need help with?</h2>
+          <h2 id="services-heading">How can we help?</h2>
         </div>
 
         <nav class="service-paths" aria-label="Sukkah services">
           <a class="service-path" href="/sukka-builder/">
-            <h3>Buy a sukkah</h3>
-            <p>Plan a new sukkah and its installation around your space.</p>
+            <h3>Buy</h3>
+            <p>Plan your new sukkah and its installation around your space.</p>
             <span>Start planning</span>
           </a>
-          <a class="service-path" href="/sukka-builder/">
-            <h3>I already have a sukkah</h3>
-            <p>Arrange storage, setup, takedown, or other seasonal work.</p>
-            <span>Request service</span>
-          </a>
           <a class="service-path" href="/sukkah-rentals/">
-            <h3>Rent a sukkah</h3>
-            <p>Share your dates, location, and the size you need.</p>
+            <h3>Rent</h3>
+            <p>Arrange initial setup, takedown, storage and other optional services.</p>
             <span>View rentals</span>
+          </a>
+          <a class="service-path" href="/sukka-builder/">
+            <h3>Service</h3>
+            <p>Share your dates, location, and the size you need.</p>
+            <span>Request service</span>
           </a>
         </nav>
       </div>
@@ -62,28 +65,40 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           <h2 id="testimonials-heading">What customers say</h2>
         </div>
 
-        <div class="testimonial-grid">
-          <article class="testimonial-card">
-            <div class="testimonial-photo-placeholder" role="img" aria-label="Customer photo placeholder">
-              <span>Customer photo</span>
-            </div>
+        <div class="testimonial-layout">
+          <article class="testimonial-card testimonial-card-featured">
             <div class="testimonial-copy">
               <blockquote>
-                <p>Approved customer testimonial will go here.</p>
+                <p>Approved customer testimonial will appear here.</p>
               </blockquote>
-              <p class="testimonial-name">Customer name</p>
+              <div class="testimonial-meta">
+                <img src="/assets/images/sample-sukka1.jpg" alt="Completed sukkah prepared for a customer" loading="lazy" />
+                <p class="testimonial-name">Customer name pending approval</p>
+              </div>
             </div>
           </article>
 
           <article class="testimonial-card">
-            <div class="testimonial-photo-placeholder" role="img" aria-label="Customer photo placeholder">
-              <span>Customer photo</span>
-            </div>
             <div class="testimonial-copy">
               <blockquote>
-                <p>Approved customer testimonial will go here.</p>
+                <p>Approved customer testimonial will appear here.</p>
               </blockquote>
-              <p class="testimonial-name">Customer name</p>
+              <div class="testimonial-meta">
+                <img src="/assets/images/sample-sukka2.jpg" alt="Sukkah installation completed at a family home" loading="lazy" />
+                <p class="testimonial-name">Customer name pending approval</p>
+              </div>
+            </div>
+          </article>
+
+          <article class="testimonial-card">
+            <div class="testimonial-copy">
+              <blockquote>
+                <p>Approved customer testimonial will appear here.</p>
+              </blockquote>
+              <div class="testimonial-meta">
+                <img src="/assets/images/sample-sukka3.jpg" alt="Finished sukkah service project" loading="lazy" />
+                <p class="testimonial-name">Customer name pending approval</p>
+              </div>
             </div>
           </article>
         </div>
@@ -98,7 +113,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         <div class="owner-copy">
           <h2 id="owner-heading">Meet Benyamin</h2>
           <p>
-            Benyamin Kay is the owner of Benyamin Kay Sukkas. His hands-on approach grew from helping families prepare their spaces for Sukkos.
+            Benyamin Kay is the owner of B.Kay Sukkahs. He knows that getting ready for Yom Tov already comes with a long list, so he tries to make the sukkah part straightforward. Benyamin works directly with each family, pays attention to the details of their space, and makes sure they know what to expect from setup through takedown.
           </p>
           <a class="owner-link" href="/about/">Read more about Benyamin</a>
         </div>
@@ -116,21 +131,14 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   .home-page h1,
   .home-page h2,
   .home-page h3 {
-    font-family: "Avenir Next", Avenir, "Segoe UI", sans-serif;
+    font-family: var(--font-heading);
   }
 
   .home-hero {
     position: relative;
     isolation: isolate;
     padding-block: clamp(3.5rem, 7vw, 6.5rem);
-    background:
-      linear-gradient(
-        104deg,
-        var(--cream-50) 0%,
-        var(--cream-50) 59%,
-        rgba(229, 238, 232, 0.72) 59%,
-        rgba(229, 238, 232, 0.72) 100%
-      );
+    background: var(--cream-100);
   }
 
   .home-hero-grid {
@@ -144,6 +152,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
   .home-hero-copy {
     max-width: 560px;
+    animation: hero-copy-enter 760ms cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
   .home-hero-copy::before {
@@ -157,12 +166,12 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   }
 
   .home-hero-copy h1 {
-    max-width: 11ch;
+    max-width: 13ch;
     margin-bottom: 1.5rem;
-    font-size: clamp(3.2rem, 6vw, 5rem);
-    font-weight: 620;
-    letter-spacing: -0.06em;
-    line-height: 0.96;
+    font-size: clamp(3rem, 6vw, 5.3rem);
+    font-weight: 700;
+    letter-spacing: -0.045em;
+    line-height: 1.02;
   }
 
   .home-hero-copy h1 span,
@@ -194,14 +203,17 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   }
 
   .home-primary-action {
-    min-width: 156px;
-    border-radius: 12px;
-    font-weight: 640;
-    box-shadow: 0 10px 24px rgba(16, 45, 37, 0.14);
+    min-width: 148px;
+    min-height: 40px;
+    padding: 0.55rem 1rem;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    font-weight: 800;
+    box-shadow: var(--shadow-small);
   }
 
   .home-primary-action:hover {
-    box-shadow: 0 14px 30px rgba(16, 45, 37, 0.18);
+    box-shadow: var(--shadow-medium);
     transform: translateY(-1px);
   }
 
@@ -210,15 +222,35 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   }
 
   .home-phone-link {
+    width: fit-content;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0 0.6rem;
     color: var(--forest-900);
-    font-size: 0.96rem;
-    font-weight: 650;
-    text-decoration-color: rgba(23, 63, 52, 0.32);
-    text-underline-offset: 0.3em;
+    text-decoration: none;
   }
 
-  .home-phone-link:hover {
-    text-decoration-color: currentColor;
+  .home-phone-link > span {
+    grid-row: 1 / 3;
+    align-self: center;
+    padding: 0.35rem 0.55rem;
+    border-radius: 6px;
+    color: var(--white);
+    background: var(--wood-600);
+    font-size: 0.72rem;
+    font-weight: 850;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .home-phone-link strong {
+    color: var(--forest-900);
+    line-height: 1.2;
+  }
+
+  .home-phone-link small {
+    color: var(--ink-500);
+    font-size: 0.78rem;
   }
 
   .home-hero-photo {
@@ -226,13 +258,14 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     z-index: 0;
     margin: 0;
     padding: 0 0 1.15rem 1.15rem;
+    animation: hero-photo-enter 900ms 120ms cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
   .home-hero-photo::before {
     position: absolute;
     z-index: -1;
     inset: 1.35rem -1.35rem 0 0;
-    border-radius: 16px;
+    border-radius: var(--radius-large);
     content: "";
     background: var(--forest-900);
   }
@@ -241,16 +274,33 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     width: 100%;
     aspect-ratio: 4 / 3;
     border: 1px solid rgba(16, 45, 37, 0.12);
-    border-radius: 16px;
-    box-shadow: 0 24px 60px rgba(16, 45, 37, 0.17);
+    border-radius: var(--radius-large);
+    box-shadow: var(--shadow-medium);
     object-fit: cover;
   }
 
-  .home-hero-photo figcaption {
-    margin: 0.65rem 0 0;
-    color: rgba(255, 255, 255, 0.76);
-    font-size: 0.78rem;
-    text-align: right;
+  @keyframes hero-copy-enter {
+    from {
+      opacity: 0;
+      transform: translateY(28px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes hero-photo-enter {
+    from {
+      opacity: 0;
+      transform: translateX(34px) scale(0.98);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateX(0) scale(1);
+    }
   }
 
   .home-section {
@@ -266,14 +316,14 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   .home-section-heading h2,
   .owner-copy h2 {
     margin: 0;
-    font-size: clamp(2.15rem, 4.5vw, 3.6rem);
-    font-weight: 620;
-    letter-spacing: -0.05em;
-    line-height: 1.05;
+    font-size: clamp(2rem, 4.5vw, 3.5rem);
+    font-weight: 700;
+    letter-spacing: -0.035em;
+    line-height: 1.12;
   }
 
   .home-services {
-    background: var(--white);
+    background: var(--cream-50);
   }
 
   .home-services > .shell {
@@ -315,7 +365,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
   .service-path h3 {
     font-size: clamp(1.35rem, 2.4vw, 1.85rem);
-    font-weight: 620;
+    font-weight: 700;
     transition: color 150ms ease;
   }
 
@@ -346,7 +396,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
   .service-path:hover,
   .service-path:focus-visible {
-    background: rgba(229, 238, 232, 0.52);
+    background: var(--forest-100);
     box-shadow: inset 4px 0 0 var(--wood-500);
     transform: translateX(4px);
   }
@@ -371,8 +421,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
   .testimonials-section {
     position: relative;
-    background:
-      linear-gradient(135deg, rgba(229, 238, 232, 0.72), rgba(248, 244, 234, 0.7));
+    background: var(--cream-100);
   }
 
   .testimonials-section::before {
@@ -385,72 +434,108 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     background: var(--wood-500);
   }
 
-  .testimonial-grid {
+  .testimonial-layout {
     display: grid;
-    grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
-    gap: clamp(1.25rem, 3vw, 2rem);
-    align-items: stretch;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
   }
 
   .testimonial-card {
     position: relative;
     overflow: hidden;
-    display: grid;
-    grid-template-columns: 142px minmax(0, 1fr);
-    gap: 1.5rem;
-    align-items: center;
-    min-height: 210px;
-    padding: 1.4rem;
+    min-width: 0;
     border: 1px solid var(--border);
-    border-radius: 16px;
+    border-radius: var(--radius);
     background: rgba(255, 255, 255, 0.9);
-    box-shadow: 0 18px 42px rgba(16, 45, 37, 0.08);
+    box-shadow: var(--shadow-small);
+  }
+
+  .testimonial-card-featured {
+    grid-column: 1 / -1;
+    background: var(--forest-100);
   }
 
   .testimonial-card::after {
     position: absolute;
     top: 0;
-    right: 0;
+    bottom: 0;
     left: 0;
-    height: 4px;
+    width: 5px;
     content: "";
     background: var(--wood-500);
   }
 
-  .testimonial-card:nth-child(2) {
-    grid-template-columns: 112px minmax(0, 1fr);
-    background: rgba(255, 253, 248, 0.92);
-  }
-
-  .testimonial-photo-placeholder {
-    position: relative;
+  .testimonial-copy {
+    height: 100%;
     display: grid;
-    width: 100%;
-    aspect-ratio: 1;
-    place-items: center;
-    padding: 0.75rem;
-    border: 1px solid rgba(23, 63, 52, 0.18);
-    border-radius: 12px;
-    color: var(--forest-800);
-    background:
-      linear-gradient(145deg, rgba(255, 255, 255, 0.55), transparent 48%),
-      var(--forest-100);
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    text-align: center;
-    text-transform: uppercase;
+    grid-template-rows: 1fr auto;
+    padding: clamp(1.35rem, 3vw, 2rem);
   }
 
   .testimonial-copy blockquote {
     margin: 0;
   }
 
+  .testimonial-copy blockquote::before {
+    display: block;
+    margin-bottom: 0.35rem;
+    content: "“";
+    color: var(--wood-500);
+    font-family: Georgia, serif;
+    font-size: 2.6rem;
+    line-height: 0.8;
+  }
+
   .testimonial-copy blockquote p {
-    margin-bottom: 1.15rem;
+    max-width: 34ch;
+    margin: 0;
     color: var(--ink-900);
-    font-size: clamp(1rem, 1.7vw, 1.1rem);
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: clamp(1rem, 1.6vw, 1.12rem);
     line-height: 1.55;
+  }
+
+  .testimonial-card-featured .testimonial-copy blockquote p {
+    max-width: 29ch;
+    font-size: clamp(1.22rem, 2.3vw, 1.6rem);
+    line-height: 1.45;
+  }
+
+  .testimonial-card-featured .testimonial-copy {
+    grid-template-columns: minmax(0, 1.2fr) minmax(250px, 0.8fr);
+    grid-template-rows: auto;
+    gap: clamp(1.5rem, 4vw, 3.5rem);
+    align-items: end;
+  }
+
+  .testimonial-meta {
+    display: flex;
+    gap: 0.85rem;
+    align-items: center;
+    margin-top: 1.35rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .testimonial-card-featured .testimonial-meta {
+    margin-top: 0;
+    padding: 0 0 0 clamp(1.5rem, 3vw, 2.5rem);
+    border-top: 0;
+    border-left: 1px solid var(--border);
+  }
+
+  .testimonial-meta img {
+    width: 78px;
+    height: 58px;
+    flex: 0 0 auto;
+    border-radius: var(--radius-small);
+    object-fit: cover;
+  }
+
+  .testimonial-card-featured .testimonial-meta img {
+    width: 110px;
+    height: 82px;
   }
 
   .testimonial-name {
@@ -476,9 +561,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     max-width: 980px;
     padding: clamp(1.5rem, 4vw, 2.5rem);
     border: 1px solid var(--border);
-    border-radius: 16px;
+    border-radius: var(--radius-large);
     background: var(--white);
-    box-shadow: 0 20px 50px rgba(16, 45, 37, 0.08);
+    box-shadow: var(--shadow-medium);
   }
 
   .about-owner-grid::after {
@@ -502,7 +587,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     position: absolute;
     z-index: -1;
     inset: 0.75rem 0 0 0.75rem;
-    border-radius: 16px;
+    border-radius: var(--radius-large);
     content: "";
     background: var(--forest-100);
   }
@@ -511,8 +596,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     width: 100%;
     aspect-ratio: 4 / 5;
     border: 1px solid rgba(16, 45, 37, 0.12);
-    border-radius: 16px;
-    box-shadow: 0 14px 34px rgba(16, 45, 37, 0.12);
+    border-radius: var(--radius-large);
+    box-shadow: var(--shadow-small);
     object-fit: cover;
     object-position: 45% center;
   }
@@ -550,17 +635,6 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   }
 
   @media (max-width: 900px) {
-    .home-hero {
-      background:
-        linear-gradient(
-          180deg,
-          var(--cream-50) 0%,
-          var(--cream-50) 57%,
-          rgba(229, 238, 232, 0.72) 57%,
-          rgba(229, 238, 232, 0.72) 100%
-        );
-    }
-
     .home-hero-grid {
       grid-template-columns: minmax(0, 1fr);
       gap: 2.75rem;
@@ -571,7 +645,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     }
 
     .home-hero-copy h1 {
-      max-width: 12ch;
+      max-width: 13ch;
     }
 
     .home-hero-photo {
@@ -592,9 +666,30 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       grid-template-columns: minmax(190px, 0.78fr) minmax(0, 1.22fr);
     }
 
-    .testimonial-card {
-      grid-template-columns: 108px minmax(0, 1fr);
+    .testimonial-layout {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto;
     }
+
+    .testimonial-card-featured {
+      grid-column: auto;
+      grid-row: auto;
+      min-height: 0;
+    }
+
+    .testimonial-card-featured .testimonial-copy {
+      grid-template-columns: 1fr;
+      grid-template-rows: 1fr auto;
+      gap: 0;
+    }
+
+    .testimonial-card-featured .testimonial-meta {
+      margin-top: 1.35rem;
+      padding: 1rem 0 0;
+      border-top: 1px solid var(--border);
+      border-left: 0;
+    }
+
   }
 
   @media (max-width: 700px) {
@@ -607,9 +702,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     }
 
     .home-hero-copy h1 {
-      max-width: 11ch;
+      max-width: 12ch;
       font-size: clamp(2.75rem, 13vw, 4rem);
-      line-height: 1;
+      line-height: 1.04;
     }
 
     .home-hero-actions {
@@ -636,18 +731,18 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       margin-top: 0.25rem;
     }
 
-    .testimonial-grid {
-      grid-template-columns: 1fr;
+    .testimonial-copy {
+      padding: 1.35rem;
     }
 
-    .testimonial-card {
-      grid-template-columns: 88px minmax(0, 1fr);
-      min-height: 0;
-      padding: 1rem;
+    .testimonial-card-featured .testimonial-copy blockquote p {
+      font-size: 1.18rem;
     }
 
-    .testimonial-card:nth-child(2) {
-      grid-template-columns: 88px minmax(0, 1fr);
+    .testimonial-meta img,
+    .testimonial-card-featured .testimonial-meta img {
+      width: 76px;
+      height: 58px;
     }
 
     .about-owner-grid {
@@ -663,15 +758,6 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   }
 
   @media (max-width: 460px) {
-    .testimonial-card {
-      grid-template-columns: 74px minmax(0, 1fr);
-      gap: 1rem;
-    }
-
-    .testimonial-photo-placeholder {
-      font-size: 0.62rem;
-    }
-
     .about-owner-grid {
       grid-template-columns: 1fr;
     }
@@ -687,6 +773,11 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   }
 
   @media (prefers-reduced-motion: reduce) {
+    .home-hero-copy,
+    .home-hero-photo {
+      animation: none;
+    }
+
     .home-primary-action,
     .service-path,
     .service-path h3,

@@ -115,9 +115,286 @@ function getFile(pathname) {
   return files.get(routePath);
 }
 
+const submissionTextFields = [
+  "sukkahPlan",
+  "fulfillmentMethod",
+  "firstName",
+  "lastName",
+  "phone",
+  "email",
+  "addressLine1",
+  "city",
+  "state",
+  "postalCode",
+  "neighborhood",
+  "neighborhoodOther",
+  "serviceOther",
+  "estimatedWidth",
+  "estimatedLength",
+  "sukkahType",
+  "sukkahTypeOther",
+  "schach",
+  "schachOther",
+  "addOnsOther",
+  "siteDescription",
+  "buildDate",
+  "preSukkosDate",
+  "customServiceDate",
+  "takeDownDate",
+  "customTakeDownDate",
+  "bringToStorageDate",
+  "customStorageDate",
+  "timingNotes",
+  "referral",
+  "comments",
+];
+
+const allowedPhotoTypes = new Set([
+  "image/jpeg",
+  "image/png",
+  "image/heic",
+  "image/heif",
+]);
+const allowedPhotoExtensions = new Set(["jpg", "jpeg", "png", "heic", "heif"]);
+const maximumPhotoSize = 10 * 1024 * 1024;
+const photoRoutePrefix = "/api/sukkah-submission-photos/";
+
+function jsonResponse(body, status = 200) {
+  return Response.json(body, {
+    status,
+    headers: {
+      "Cache-Control": "no-store",
+      "X-Content-Type-Options": "nosniff",
+    },
+  });
+}
+
+function cleanText(value, maximumLength = 4000) {
+  return String(value ?? "")
+    .replace(/\\u0000/g, "")
+    .trim()
+    .slice(0, maximumLength);
+}
+
+function safeFileName(name) {
+  const cleaned = cleanText(name, 120)
+    .replace(/[^a-zA-Z0-9._-]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+  return cleaned || "site-photo";
+}
+
+function getFileExtension(name) {
+  const segments = String(name).toLowerCase().split(".");
+  return segments.length > 1 ? segments.pop() : "";
+}
+
+function requiredFieldsFor(submission) {
+  const required = [
+    "sukkahPlan",
+    "firstName",
+    "lastName",
+    "phone",
+    "email",
+    "addressLine1",
+    "city",
+    "state",
+    "postalCode",
+    "neighborhood",
+    "sukkahType",
+    "schach",
+    "referral",
+  ];
+
+  if (submission.sukkahPlan === "I would like to buy") {
+    required.push("fulfillmentMethod", "buildDate");
+  }
+
+  return required;
+}
+
+async function deleteUploadedPhotos(bucket, keys) {
+  if (!bucket || keys.length === 0) return;
+  await Promise.allSettled(keys.map((key) => bucket.delete(key)));
+}
+
+async function handleSubmission(request, env, url) {
+  if (!env?.SUKKAH_SHEETS_WEBHOOK_URL || !env?.SUKKAH_SHEETS_WEBHOOK_SECRET) {
+    return jsonResponse(
+      {
+        ok: false,
+        message: "Online requests are temporarily unavailable. Please call (347) 454-2282.",
+      },
+      503,
+    );
+  }
+
+  if (!env?.SUBMISSION_PHOTOS) {
+    return jsonResponse(
+      {
+        ok: false,
+        message: "Photo storage is temporarily unavailable. Please call (347) 454-2282.",
+      },
+      503,
+    );
+  }
+
+  let formData;
+  try {
+    formData = await request.formData();
+  } catch {
+    return jsonResponse({ ok: false, message: "The submitted form could not be read." }, 400);
+  }
+
+  if (cleanText(formData.get("website"), 200)) {
+    return jsonResponse({ ok: true, message: "Thank you. Your request was received." });
+  }
+
+  const submission = {};
+  for (const fieldName of submissionTextFields) {
+    submission[fieldName] = cleanText(formData.get(fieldName));
+  }
+  submission.service = formData.getAll("service").map((value) => cleanText(value, 120));
+  submission.addOns = formData.getAll("addOns").map((value) => cleanText(value, 120));
+
+  const missingFields = requiredFieldsFor(submission).filter((fieldName) => !submission[fieldName]);
+  if (submission.sukkahPlan === "I already have a sukkah" && submission.service.length === 0) {
+    missingFields.push("service");
+  }
+
+  if (missingFields.length > 0) {
+    return jsonResponse(
+      {
+        ok: false,
+        message: "Please complete all required fields before submitting.",
+        missingFields,
+      },
+      400,
+    );
+  }
+
+  const photos = formData
+    .getAll("sitePhotos")
+    .filter((value) => typeof File !== "undefined" && value instanceof File && value.size > 0);
+
+  if (photos.length > 3) {
+    return jsonResponse({ ok: false, message: "Please choose no more than three photos." }, 400);
+  }
+
+  for (const photo of photos) {
+    const extension = getFileExtension(photo.name);
+    if (
+      photo.size > maximumPhotoSize ||
+      !allowedPhotoExtensions.has(extension) ||
+      (photo.type && !allowedPhotoTypes.has(photo.type.toLowerCase()))
+    ) {
+      return jsonResponse(
+        {
+          ok: false,
+          message: "Each photo must be a JPG, PNG, or HEIC file no larger than 10 MB.",
+        },
+        400,
+      );
+    }
+  }
+
+  const submissionId = crypto.randomUUID();
+  const uploadedPhotoKeys = [];
+  const photoLinks = [];
+
+  try {
+    for (let index = 0; index < photos.length; index += 1) {
+      const photo = photos[index];
+      const key = \`\${submissionId}/\${String(index + 1).padStart(2, "0")}-\${safeFileName(photo.name)}\`;
+      await env.SUBMISSION_PHOTOS.put(key, photo.stream(), {
+        httpMetadata: {
+          contentType: photo.type || "application/octet-stream",
+        },
+        customMetadata: {
+          originalName: cleanText(photo.name, 120),
+          submissionId,
+        },
+      });
+      uploadedPhotoKeys.push(key);
+      photoLinks.push(\`\${url.origin}\${photoRoutePrefix}\${key}\`);
+    }
+
+    submission.submittedAt = new Date().toISOString();
+    submission.submissionId = submissionId;
+    submission.status = "New";
+    submission.photoLinks = photoLinks;
+    submission.sourcePage = url.origin + "/sukka-builder/";
+
+    const webhookResponse = await fetch(env.SUKKAH_SHEETS_WEBHOOK_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+      },
+      body: JSON.stringify({
+        secret: env.SUKKAH_SHEETS_WEBHOOK_SECRET,
+        submission,
+      }),
+      redirect: "follow",
+    });
+
+    const webhookResult = await webhookResponse.json().catch(() => null);
+    if (!webhookResponse.ok || webhookResult?.ok !== true) {
+      throw new Error("The spreadsheet webhook rejected the submission.");
+    }
+
+    return jsonResponse({
+      ok: true,
+      submissionId,
+      message: "Thank you. Your request was sent to Benyamin.",
+    });
+  } catch (error) {
+    await deleteUploadedPhotos(env.SUBMISSION_PHOTOS, uploadedPhotoKeys);
+    console.error("Sukkah submission failed", error);
+    return jsonResponse(
+      {
+        ok: false,
+        message: "We could not send your request. Please try again or call (347) 454-2282.",
+      },
+      502,
+    );
+  }
+}
+
+async function handlePhotoRequest(env, pathname) {
+  if (!env?.SUBMISSION_PHOTOS) {
+    return new Response("Photo storage unavailable", { status: 503 });
+  }
+
+  const key = decodeURIComponent(pathname.slice(photoRoutePrefix.length));
+  if (!key || key.includes("..")) {
+    return new Response("Not found", { status: 404 });
+  }
+
+  const photo = await env.SUBMISSION_PHOTOS.get(key);
+  if (!photo) {
+    return new Response("Not found", { status: 404 });
+  }
+
+  return new Response(photo.body, {
+    headers: {
+      "Content-Type": photo.httpMetadata?.contentType || "application/octet-stream",
+      "Cache-Control": "private, no-store",
+      "Content-Disposition": \`inline; filename="\${safeFileName(photo.customMetadata?.originalName || "site-photo")}"\`,
+      "X-Content-Type-Options": "nosniff",
+    },
+  });
+}
+
 export default {
-  async fetch(request) {
+  async fetch(request, env) {
     const url = new URL(request.url);
+
+    if (request.method === "POST" && url.pathname === "/api/sukkah-submissions") {
+      return handleSubmission(request, env, url);
+    }
+
+    if (request.method === "GET" && url.pathname.startsWith(photoRoutePrefix)) {
+      return handlePhotoRequest(env, url.pathname);
+    }
 
     if (request.method === "POST" && url.pathname === "/api/sukkah-quote") {
       return Response.json({

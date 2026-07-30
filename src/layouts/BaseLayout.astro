@@ -27,6 +27,13 @@ const pageTitle = title === "Benyamin Kay Sukkas" ? title : `${title} | Benyamin
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link
+      rel="preload"
+      href="/assets/fonts/cabin-variable-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
     <slot name="head" />
     <title>{pageTitle}</title>
   </head>
