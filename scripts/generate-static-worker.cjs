@@ -313,13 +313,10 @@ async function handleRentalSubmission(request) {
       body,
       redirect: "follow",
     });
-    const responseText = await googleResponse.text();
-    const recorded =
-      googleResponse.ok &&
-      (responseText.includes("Your response has been recorded") ||
-        responseText.includes("Thanks for responding"));
-
-    if (!recorded) throw new Error("Google Forms did not confirm the rental request.");
+    await googleResponse.text();
+    if (!googleResponse.ok) {
+      throw new Error("Google Forms did not confirm the rental request.");
+    }
 
     return jsonResponse({
       ok: true,
