@@ -89,6 +89,13 @@ The form submits to the site's Worker, which validates the request, stores
 optional site photos, and sends the row data to a private Google Sheet through
 a small Google Apps Script webhook.
 
+`/sukkah-rentals/` contains a custom form that mirrors the questions in the
+client's existing rental Google Form. The browser posts to
+`/api/rental-submissions`; the Worker validates the values and forwards them to
+Google Forms from the server. Keeping Google Forms field IDs in the Worker
+avoids exposing the integration in page markup, but those IDs must be updated
+if a Google Form question is deleted and recreated.
+
 The builder's desktop date fields use Flatpickr 4.6.13 loaded from jsDelivr.
 Mobile browsers retain their native date picker. The original inputs continue
 to store dates in `YYYY-MM-DD` format for a future submission backend.

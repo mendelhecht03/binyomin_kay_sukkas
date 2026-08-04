@@ -1,12 +1,26 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import FormHeading from "../../components/FormHeading.astro";
+import Field from "../../components/Field.astro";
+import Choices from "../../components/Choices.astro";
+
+const neighborhoods = [
+  "Crown Heights",
+  "Flatbush",
+  "Boro Park",
+  "Williamsburg",
+  "East Flatbush",
+  "Remson Village",
+  "Monsey",
+];
+const serviceDays = ["Sunday", "Monday", "Tuesday"];
 ---
 
 <BaseLayout
   title="Sukkah Rentals"
-  description="Request a sukkah rental and share your dates, delivery, setup, takedown, and schach preferences."
+  description="Request a sukkah rental and share your location, size, setup, and takedown preferences."
 >
-  <section class="rental-hero">
+  <section class="rental-hero sukkah-hero-background">
     <div class="shell rental-hero-inner">
       <nav class="breadcrumb" aria-label="Breadcrumb">
         <a href="/">Home</a><span aria-hidden="true">/</span>
@@ -14,112 +28,198 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
       </nav>
       <p class="eyebrow">Sukkah rentals</p>
       <h1>Tell us what you need.</h1>
-      <p class="lead">
-        Share your dates and service preferences. We’ll follow up to confirm the
-        exact sukkah, availability, and price.
-      </p>
+      <p class="lead">Share your rental details and we’ll follow up to confirm availability and price.</p>
+      <p class="rental-notice">Your request will be sent securely to Benyamin.</p>
     </div>
   </section>
 
-  <section
-    id="rental-request"
-    class="section google-form-section"
-    aria-labelledby="rental-request-heading"
-  >
-    <div class="narrow-shell">
-      <div class="section-heading">
-        <p class="eyebrow">Rental request</p>
-        <h2 id="rental-request-heading">Complete the form below.</h2>
+  <section id="rental-request" class="form-section" aria-labelledby="rental-request-heading">
+    <div class="shell form-shell">
+      <div class="form-intro">
+        <div>
+          <p class="eyebrow">Rental request</p>
+          <h2 id="rental-request-heading">Plan your sukkah rental</h2>
+          <p>Complete the five short sections below. Required fields are marked with an asterisk.</p>
+        </div>
       </div>
 
-      <div class="google-form-frame">
-        <iframe
-          class="google-form"
-          src="https://docs.google.com/forms/d/e/1FAIpQLSdvF8UbJgSVrSy6ebK6j93vSfEVlkCXshEIHGj1HxFp1bRGBg/viewform?embedded=true"
-          title="Sukkah rental request form"
-          loading="lazy"
-        >
-          Loading…
-        </iframe>
+      <div class="form-layout">
+        <aside class="form-rail" aria-label="Form sections">
+          <p class="rail-title">Your progress</p>
+          <div class="progress-track" role="progressbar" aria-label="Form progress" aria-valuemin="1" aria-valuemax="5" aria-valuenow="1"><span data-progress-bar></span></div>
+          <p class="mobile-progress-label"><span data-current-step>1 of 5</span><strong data-current-label>Contact</strong></p>
+          <nav>
+            <a href="#rental-contact" data-step-link="1"><span>1</span> Contact</a>
+            <a href="#rental-location" data-step-link="2"><span>2</span> Location</a>
+            <a href="#rental-details" data-step-link="3"><span>3</span> Sukkah</a>
+            <a href="#rental-schedule" data-step-link="4"><span>4</span> Schedule</a>
+            <a href="#rental-final" data-step-link="5"><span>5</span> Final details</a>
+          </nav>
+          <p class="rail-help">Need help?<br /><a href="tel:+13474542282">Call (347) 454-2282</a></p>
+        </aside>
+
+        <form class="builder-form" data-rental-form>
+          <div class="form-honeypot" aria-hidden="true">
+            <label for="rental-website">Leave this field empty</label>
+            <input id="rental-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+          </div>
+
+          <section id="rental-contact" class="form-card form-group" aria-labelledby="rental-contact-heading" data-form-step="1">
+            <FormHeading icon="contact" eyebrow="Contact details" heading="How can we reach you?" id="rental-contact-heading" />
+            <div class="form-grid contact-grid">
+              <Field id="name" label="Name" autocomplete="name" required />
+              <Field id="phone" label="Phone number" type="tel" autocomplete="tel" required />
+              <Field id="email" label="Email address" type="email" autocomplete="email" />
+            </div>
+          </section>
+
+          <section id="rental-location" class="form-card form-group" aria-labelledby="rental-location-heading" data-form-step="2">
+            <FormHeading icon="location" eyebrow="Project location" heading="Where will the sukkah go?" id="rental-location-heading" />
+            <div class="field">
+              <label for="address">Address <span class="required-mark">*</span></label>
+              <textarea id="address" name="address" autocomplete="street-address" required></textarea>
+            </div>
+            <Choices legend="Name of neighborhood" name="neighborhood" options={neighborhoods} type="radio" required requiredHint otherLabel="Other neighborhood" />
+          </section>
+
+          <section id="rental-details" class="form-card form-group" aria-labelledby="rental-details-heading" data-form-step="3">
+            <FormHeading icon="sukkah" eyebrow="Sukkah details" heading="Tell us about the space" id="rental-details-heading" />
+            <Field id="estimatedSize" label="Estimated size" required />
+            <div class="field">
+              <label for="siteDescription">Please describe where the sukkah is going to be built</label>
+              <textarea id="siteDescription" name="siteDescription"></textarea>
+            </div>
+          </section>
+
+          <section id="rental-schedule" class="form-card form-group" aria-labelledby="rental-schedule-heading" data-form-step="4">
+            <FormHeading icon="timing" eyebrow="Scheduling" heading="When should we come?" id="rental-schedule-heading" />
+            <Choices legend="When do you want it built?" name="buildDay" options={serviceDays} type="radio" required requiredHint otherLabel="Other build day" />
+            <Choices legend="When do you want it taken down?" name="takeDownDay" options={serviceDays} type="radio" required requiredHint otherLabel="Other takedown day" />
+          </section>
+
+          <section id="rental-final" class="form-card form-group" aria-labelledby="rental-final-heading" data-form-step="5">
+            <FormHeading icon="final" eyebrow="Final details" heading="Anything else we should know?" id="rental-final-heading" />
+            <div class="field">
+              <label for="comments">Comments <span class="required-mark">*</span></label>
+              <input id="comments" name="comments" required />
+            </div>
+            <div class="field">
+              <label for="questions">Questions or concerns <span class="required-mark">*</span></label>
+              <p class="field-hint">Feel free to contact us at (347) 454-2282 with any other questions or concerns.</p>
+              <input id="questions" name="questions" required />
+            </div>
+          </section>
+
+          <div class="submit-row">
+            <button class="button" type="submit" data-submit-button>Submit rental request</button>
+            <p data-submit-status role="status" aria-live="polite">Your request will be sent to Benyamin.</p>
+          </div>
+        </form>
       </div>
     </div>
   </section>
 </BaseLayout>
 
-<style>
-  .rental-hero {
-    position: relative;
-    overflow: hidden;
-    padding-block: clamp(4rem, 9vw, 7.5rem);
-    background:
-      linear-gradient(90deg, rgba(248, 244, 234, 0.98) 0%, rgba(248, 244, 234, 0.94) 52%, rgba(248, 244, 234, 0.46) 100%),
-      url("/assets/images/sample-sukka5.jpg") center / cover;
+<script is:inline>
+  const rentalForm = document.querySelector("[data-rental-form]");
+  const steps = Array.from(document.querySelectorAll("[data-form-step]"));
+  const stepLinks = Array.from(document.querySelectorAll("[data-step-link]"));
+  const progressBar = document.querySelector("[data-progress-bar]");
+  const progressTrack = progressBar?.parentElement;
+  const currentStep = document.querySelector("[data-current-step]");
+  const currentLabel = document.querySelector("[data-current-label]");
+  const submitButton = document.querySelector("[data-submit-button]");
+  const submitStatus = document.querySelector("[data-submit-status]");
+  const stepNames = ["Contact", "Location", "Sukkah", "Schedule", "Final details"];
+
+  function setActiveStep(step) {
+    const stepNumber = Number(step);
+    stepLinks.forEach((link) => link.toggleAttribute("data-active", link.getAttribute("data-step-link") === step));
+    if (progressBar instanceof HTMLElement) progressBar.style.width = `${stepNumber * 20}%`;
+    if (progressTrack instanceof HTMLElement) progressTrack.setAttribute("aria-valuenow", step);
+    if (currentStep instanceof HTMLElement) currentStep.textContent = `${stepNumber} of 5`;
+    if (currentLabel instanceof HTMLElement) currentLabel.textContent = stepNames[stepNumber - 1] || stepNames[0];
   }
 
-  .rental-hero::after {
-    position: absolute;
-    inset: 0;
-    content: "";
-    background: linear-gradient(180deg, transparent 72%, rgba(16, 45, 37, 0.08));
-    pointer-events: none;
+  function updateOtherField(groupName) {
+    if (!(rentalForm instanceof HTMLFormElement)) return;
+    const otherChoice = rentalForm.querySelector(`input[name="${groupName}"][value="Other"]`);
+    const otherText = rentalForm.querySelector(`input[name="${groupName}Other"]`);
+    if (!(otherChoice instanceof HTMLInputElement) || !(otherText instanceof HTMLInputElement)) return;
+    otherText.required = otherChoice.checked;
+    otherText.disabled = !otherChoice.checked;
+    if (!otherChoice.checked) otherText.value = "";
   }
 
-  .rental-hero-inner {
-    position: relative;
-    z-index: 1;
-  }
+  ["neighborhood", "buildDay", "takeDownDay"].forEach((groupName) => {
+    rentalForm?.querySelectorAll(`input[name="${groupName}"]`).forEach((input) => {
+      input.addEventListener("change", () => updateOtherField(groupName));
+    });
+    updateOtherField(groupName);
+  });
 
-  .rental-hero h1 {
-    max-width: 760px;
-    font-size: clamp(3rem, 7vw, 5.6rem);
+  if ("IntersectionObserver" in window) {
+    const observer = new IntersectionObserver((entries) => {
+      const visible = entries.filter((entry) => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+      if (visible instanceof IntersectionObserverEntry && visible.target instanceof HTMLElement) setActiveStep(visible.target.dataset.formStep || "1");
+    }, { rootMargin: "-18% 0px -60%", threshold: [0.1, 0.35] });
+    steps.forEach((step) => observer.observe(step));
   }
+  setActiveStep("1");
 
-  .rental-hero .lead {
-    max-width: 680px;
-  }
+  rentalForm?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    if (!(rentalForm instanceof HTMLFormElement)) return;
+    if (!rentalForm.reportValidity()) return;
 
-  .google-form-section {
-    background: var(--cream-50);
-  }
-
-  .google-form-frame {
-    margin-top: 2rem;
-    overflow: hidden;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-large);
-    background: white;
-    box-shadow: var(--shadow-soft);
-  }
-
-  .google-form {
-    width: 100%;
-    height: 2609px;
-    display: block;
-    border: 0;
-  }
-
-  @media (max-width: 640px) {
-    .rental-hero {
-      padding-block: 3.5rem;
+    if (submitButton instanceof HTMLButtonElement) {
+      submitButton.disabled = true;
+      submitButton.textContent = "Sending...";
+    }
+    if (submitStatus instanceof HTMLElement) {
+      submitStatus.textContent = "Sending your rental request...";
+      submitStatus.dataset.state = "working";
     }
 
-    .google-form-section {
-      padding-inline: 0;
+    try {
+      const response = await fetch("/api/rental-submissions", {
+        method: "POST",
+        headers: { Accept: "application/json" },
+        body: new FormData(rentalForm),
+      });
+      const result = await response.json().catch(() => null);
+      if (!response.ok || result?.ok !== true) throw new Error(result?.message || "We could not send your request.");
+      rentalForm.reset();
+      ["neighborhood", "buildDay", "takeDownDay"].forEach(updateOtherField);
+      if (submitButton instanceof HTMLButtonElement) submitButton.textContent = "Request sent";
+      if (submitStatus instanceof HTMLElement) {
+        submitStatus.textContent = result.message || "Thank you. Your rental request was sent.";
+        submitStatus.dataset.state = "success";
+      }
+    } catch (error) {
+      if (submitButton instanceof HTMLButtonElement) {
+        submitButton.disabled = false;
+        submitButton.textContent = "Try again";
+      }
+      if (submitStatus instanceof HTMLElement) {
+        submitStatus.textContent = error instanceof Error ? error.message : "We could not send your request. Please try again or call (347) 454-2282.";
+        submitStatus.dataset.state = "error";
+      }
     }
+  });
+</script>
 
-    .google-form-section .narrow-shell {
-      width: 100%;
-    }
-
-    .google-form-section .section-heading {
-      width: min(100% - 32px, 720px);
-      margin-inline: auto;
-    }
-
-    .google-form-frame {
-      margin-top: 1.5rem;
-      border-inline: 0;
-      border-radius: 0;
-    }
-  }
+<style is:global>
+  @font-face{font-family:"Inter Variable";src:url("/assets/fonts/inter-variable.woff2") format("woff2");font-style:normal;font-weight:100 900;font-display:swap}
+  .rental-hero{padding-block:clamp(3rem,6vw,5rem)}.rental-hero-inner{position:relative;z-index:1}.rental-hero h1{max-width:760px;font-size:clamp(3rem,7vw,5.2rem)}.rental-hero .lead{max-width:650px}.rental-notice{display:inline-flex;margin:1.25rem 0 0;padding:.45rem .65rem;border-left:3px solid var(--wood-500);color:var(--ink-600);background:rgba(255,255,255,.45);font-size:.82rem}
+  .form-section{padding-block:clamp(3.5rem,7vw,6rem);background:#fdfbf6}.form-shell{max-width:1180px}.form-intro{display:grid;grid-template-columns:1fr;margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border)}.form-intro h2{margin-bottom:.5rem}.form-intro>div>p:last-child{max-width:620px;margin:0;color:var(--ink-500)}
+  .form-layout{display:grid;grid-template-columns:210px minmax(0,720px);gap:clamp(2rem,4vw,3.5rem);justify-content:start;align-items:start}.form-rail{position:sticky;top:5.5rem;padding:1.1rem 0}.rail-title{margin-bottom:.65rem;color:var(--forest-900);font-size:.78rem;font-weight:850;letter-spacing:.12em;text-transform:uppercase}.progress-track{height:4px;margin-bottom:1.1rem;overflow:hidden;border-radius:99px;background:var(--cream-200)}.progress-track span{display:block;width:20%;height:100%;border-radius:inherit;background:var(--wood-500);transition:width 240ms ease}.mobile-progress-label{display:none}.form-rail nav{display:grid;gap:.15rem}.form-rail nav a{display:flex;gap:.8rem;align-items:center;padding:.55rem 0;color:var(--ink-500);text-decoration:none;transition:color 160ms ease,transform 160ms ease}.form-rail nav a span{color:var(--wood-600);font-size:.72rem;font-weight:850;letter-spacing:.08em}.form-rail nav a[data-active]{color:var(--forest-900);font-weight:800;transform:translateX(4px)}.rail-help{margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid var(--border);color:var(--ink-500);font-size:.84rem}.rail-help a{color:var(--forest-800);font-weight:800}
+  .builder-form{display:grid;width:min(100%,720px);gap:1rem;min-width:0;justify-self:center}.form-honeypot{position:absolute!important;left:-10000px!important;width:1px!important;height:1px!important;overflow:hidden!important}.form-card{scroll-margin-top:7rem;padding:clamp(1.4rem,3.5vw,2.25rem);border:1px solid rgba(29,41,37,.14);border-radius:16px;background:white;box-shadow:0 8px 28px rgba(16,45,37,.045)}.form-group{display:grid;gap:1.55rem}.form-group-heading{display:grid;grid-template-columns:2.75rem 1fr;gap:.9rem;align-items:center;padding-bottom:1.15rem;border-bottom:1px solid var(--border)}.form-group-heading .eyebrow{display:none}.form-group-heading h3{margin:0;font-size:clamp(1.55rem,2.7vw,2.05rem)}.step-icon{display:grid;width:2.75rem;height:2.75rem;place-items:center;border:1px solid rgba(200,134,67,.38);border-radius:10px;color:var(--forest-900);background:#fbf2e5}.step-icon svg{width:1.45rem;height:1.45rem}
+  .builder-form [hidden]{display:none!important}.builder-form .form-card>*{width:100%;max-width:640px;margin-inline:auto}.builder-form .field{display:grid;gap:.3rem}.builder-form label,.builder-form legend{font-family:"Inter Variable",Inter,Arial,sans-serif;font-size:.9rem;font-weight:600;letter-spacing:-.005em}.builder-form input,.builder-form select,.builder-form textarea{width:100%;min-height:36px;padding:.35rem .65rem;border:1px solid rgba(29,41,37,.2);border-radius:9px;color:var(--ink-800);background:#fff;font-size:.88rem;line-height:1.25}.builder-form textarea{min-height:84px;resize:vertical}.builder-form input:not([type="radio"]):not([type="checkbox"]):focus,.builder-form select:focus,.builder-form textarea:focus{border-color:var(--forest-700);outline:0;box-shadow:0 0 0 4px rgba(45,104,85,.1)}.builder-form input::placeholder,.builder-form textarea::placeholder{color:#89938f;font-weight:400}.required-mark{color:#b23a2b;font-weight:700}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.75rem}.contact-grid{max-width:640px;grid-template-columns:1fr}.contact-grid .field{width:100%}
+  .builder-form fieldset{display:grid;gap:.65rem;min-width:0;margin:0;padding:0;border:0}.builder-form legend{margin-bottom:.15rem;font-size:.96rem}.choice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.5rem}.builder-form .choice-card{display:flex;gap:.6rem;align-items:center;min-height:40px;padding:.35rem .7rem;border:1px solid rgba(29,41,37,.16);border-radius:10px;background:#fff;cursor:pointer;font-family:"Inter Variable",Inter,Arial,sans-serif;font-weight:400;letter-spacing:-.01em;transition:border-color 160ms ease,background 160ms ease,box-shadow 160ms ease,transform 160ms ease}.choice-card:hover,.choice-card:has(input:focus-visible){border-color:rgba(45,104,85,.45);background:#f7faf7}.choice-card:has(input:checked){border-color:var(--forest-700);background:var(--forest-100);box-shadow:inset 0 0 0 1px var(--forest-700)}.choice-card:active{transform:scale(.99)}.choice-card input[type="radio"],.choice-card input[type="checkbox"]{flex:0 0 auto;width:1.05rem;min-height:1.05rem;height:1.05rem;margin:0;padding:0;border:0;background:transparent;box-shadow:none;outline:0;accent-color:var(--forest-700)}.choice-card input[type="radio"]:focus,.choice-card input[type="checkbox"]:focus{border:0;box-shadow:none;outline:0}.choice-card span{line-height:1.35}.builder-form .choice-other{flex-wrap:nowrap;padding-block:.25rem}.builder-form .choice-other>input.choice-other-text{flex:1 1 0;width:auto;min-width:0;min-height:30px;height:30px;padding:.2rem .5rem;background:white;font-family:"Inter Variable",Inter,Arial,sans-serif;font-size:.78rem;font-weight:400}.builder-form .choice-other>input.choice-other-text:disabled{opacity:.55;background:var(--cream-50)}.field-hint{font-size:.8rem}
+  .submit-row{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.55rem;padding:1rem 0 .25rem}.submit-row .button{min-width:170px;font-family:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;font-size:1.02rem;font-weight:600;letter-spacing:-.01em;box-shadow:none;transform:none;transition:background-color 100ms ease,border-color 100ms ease}.submit-row .button:hover{border-color:var(--forest-900);background:var(--forest-900);box-shadow:none;transform:none}.submit-row .button:active{border-color:var(--forest-950);background:var(--forest-950);box-shadow:none;transform:none}.submit-row .button:disabled{cursor:wait;opacity:.76}.submit-row p{margin:0;color:var(--ink-500);font-size:.84rem;text-align:center}.submit-row p[data-state="success"]{color:var(--forest-800);font-weight:700}.submit-row p[data-state="error"]{color:#9d2e22;font-weight:700}
+  @media(max-width:950px){.form-layout{grid-template-columns:1fr;gap:1rem}.form-rail{position:sticky;top:58px;z-index:20;margin-inline:-16px;padding:.75rem 16px;border-block:1px solid var(--border);background:rgba(253,251,246,.96);box-shadow:0 8px 20px rgba(16,45,37,.05);backdrop-filter:blur(10px)}.rail-title,.form-rail nav,.rail-help{display:none}.progress-track{margin-bottom:.45rem}.mobile-progress-label{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin:0;color:var(--ink-500);font-size:.78rem}.mobile-progress-label strong{color:var(--forest-900);font-size:.88rem}.choice-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.form-card{scroll-margin-top:9rem}}
+  @media(max-width:700px){.rental-hero{padding-block:2.5rem 3.75rem}.form-section{padding-block:3rem 4.5rem}.form-intro{gap:.6rem;margin-bottom:1rem;padding-bottom:1.25rem}.builder-form input:not([type="radio"]):not([type="checkbox"]):not(.choice-other-text),.builder-form textarea{font-size:16px}.builder-form input:not([type="radio"]):not([type="checkbox"]):not(.choice-other-text){min-height:40px}.builder-form textarea{min-height:92px}.choice-grid{grid-template-columns:1fr}.builder-form .choice-card{min-height:40px;padding:.35rem .7rem}.builder-form .choice-other{padding-block:.25rem}.form-group-heading{grid-template-columns:2.5rem 1fr;gap:.75rem}.step-icon{width:2.5rem;height:2.5rem}.form-group-heading h3{font-size:1.55rem}.submit-row{align-items:stretch;flex-direction:column}.submit-row .button{width:100%}.submit-row p{text-align:center}}
+  @media(max-width:480px){.builder-form input:not([type="radio"]):not([type="checkbox"]):not(.choice-other-text){min-height:44px}}
+  @media(prefers-reduced-motion:reduce){.progress-track span,.form-rail nav a,.choice-card{transition:none}}
 </style>

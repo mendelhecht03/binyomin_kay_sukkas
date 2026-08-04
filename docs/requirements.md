@@ -121,9 +121,17 @@ Stack every address control vertically at all screen widths. The controls
 should still reflect the expected answer length instead of filling the entire
 form card. Street address, city, and state share one width; ZIP remains compact.
 
-The `/sukkah-rentals` page embeds the client's published Google Form for rental
-requests. Google Forms owns the questions, validation, submission behavior, and
-response storage; those details are no longer implemented in the website code.
+The `/sukkah-rentals` page uses a custom, site-styled rental request form rather
+than an embedded Google Form. It preserves the questions, required fields, and
+choices from the client's published `BK Sukkah rentals` form. The site Worker
+validates each request and forwards it server-side to that Google Form so the
+client's existing response destination remains unchanged.
+
+The rental form is arranged into Contact, Location, Sukkah, Schedule, and Final
+details sections. It uses the same card, progress, choice, input, submit-status,
+mobile stacking, and accessible error-state patterns as the Sukka Builder form.
+The Google Form's final untitled required question is presented with the clear
+label `Questions or concerns` while keeping its original helper message.
 
 The `/gallery` route temporarily shows a branded under-construction page while
 the client prepares approved project photography. Replace it with the completed

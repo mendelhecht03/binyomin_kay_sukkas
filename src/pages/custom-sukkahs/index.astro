@@ -1,8 +1,346 @@
 ---
-import ServicePage from "../../components/ServicePage.astro";
-import { servicesBySlug } from "../../data/services.js";
+import BaseLayout from "../../layouts/BaseLayout.astro";
 
-const service = servicesBySlug["custom-sukkahs"];
+const customizationGroups = [
+  {
+    title: "Structure",
+    options: [
+      {
+        title: "Frame",
+        text: "Choose the type of frame you would like, ranging from metal to wood.",
+      },
+      {
+        title: "Size",
+        text: "Choose custom dimensions that fit your space.",
+      },
+    ],
+  },
+  {
+    title: "Exterior and roof",
+    options: [
+      {
+        title: "Siding",
+        text: "Choose the material you would like for the sukkah's siding.",
+      },
+      {
+        title: "Schach",
+        text: "Choose the type of schach you would like.",
+      },
+    ],
+  },
+  {
+    title: "Added features",
+    options: [
+      {
+        title: "Year-round structure",
+        text: "Choose a permanent, year-round structure with a retractable roof.",
+      },
+      {
+        title: "Lighting",
+        text: "Add custom lighting to the sukkah.",
+      },
+    ],
+  },
+];
 ---
 
-<ServicePage service={service} />
+<BaseLayout
+  title="Custom Sukkahs"
+  description="Choose the frame, size, siding, roof, lighting, and schach for a custom sukkah."
+>
+  <div class="custom-page">
+    <section class="custom-hero sukkah-hero-background" aria-labelledby="custom-sukkahs-heading">
+      <div class="custom-hero__inner shell">
+        <div class="custom-hero__copy">
+          <nav class="breadcrumb" aria-label="Breadcrumb">
+            <a href="/">Home</a>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page">Custom Sukkahs</span>
+          </nav>
+          <p class="eyebrow">Custom sukkahs</p>
+          <h1 id="custom-sukkahs-heading">Design your dream Sukkah.</h1>
+          <p class="custom-hero__lead">
+            Choose the structure, materials, and features that work for your
+            space and the way you want to use it.
+          </p>
+        </div>
+
+        <figure class="custom-photo">
+          <img
+            src="/assets/images/custom-sukkah-example.jpg"
+            alt="A custom wooden sukkah built beside a home"
+            width="576"
+            height="1024"
+            fetchpriority="high"
+          />
+        </figure>
+      </div>
+    </section>
+
+    <section class="custom-options" aria-labelledby="custom-options-heading">
+      <div class="shell">
+        <div class="custom-options__heading">
+          <p class="eyebrow">Made for you</p>
+          <h2 id="custom-options-heading">Shape every part of your sukkah.</h2>
+          <p>
+            Start with the basic structure, then choose the exterior, roof, and
+            added features that complete it.
+          </p>
+        </div>
+
+        <div class="option-groups">
+          {customizationGroups.map((group) => (
+            <section class="option-group" aria-labelledby={`group-${group.title.toLowerCase().replaceAll(" ", "-")}`}>
+              <h3 id={`group-${group.title.toLowerCase().replaceAll(" ", "-")}`}>{group.title}</h3>
+              <ul>
+                {group.options.map((option) => (
+                  <li>
+                    <h4>{option.title}</h4>
+                    <p>{option.text}</p>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="custom-contact shell" aria-labelledby="custom-contact-heading">
+      <div>
+        <p class="eyebrow">Your idea is the starting point</p>
+        <h2 id="custom-contact-heading">Ready to plan yours?</h2>
+        <p>
+          Share the space, approximate size, and the materials or features you
+          have in mind.
+        </p>
+      </div>
+      <a class="custom-action" href="/contact/">Discuss your sukkah</a>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .custom-page {
+    padding-bottom: clamp(4.5rem, 9vw, 7rem);
+  }
+
+  .custom-hero__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(25rem, 1.1fr);
+    gap: clamp(3rem, 7vw, 6rem);
+    align-items: center;
+    padding-block: clamp(3rem, 7vw, 5.5rem);
+  }
+
+  .custom-hero__copy {
+    min-width: 0;
+  }
+
+  .custom-hero h1 {
+    max-width: 10ch;
+    margin-bottom: 1.4rem;
+    font-size: clamp(3rem, 7vw, 5.35rem);
+  }
+
+  .custom-hero__lead {
+    max-width: 34rem;
+    margin-bottom: 0;
+    color: var(--ink-700);
+    font-size: clamp(1.08rem, 2vw, 1.25rem);
+    line-height: 1.65;
+  }
+
+  .custom-photo {
+    overflow: hidden;
+    width: min(100%, 34rem);
+    aspect-ratio: 4 / 3;
+    margin: 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--white);
+    box-shadow: var(--shadow-small);
+    align-self: center;
+    justify-self: end;
+  }
+
+  .custom-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 41%;
+  }
+
+  .custom-options {
+    padding-block: clamp(4.5rem, 9vw, 7rem);
+  }
+
+  .custom-options__heading {
+    max-width: 43rem;
+    margin-bottom: clamp(2.75rem, 6vw, 4.5rem);
+  }
+
+  .custom-options__heading h2 {
+    max-width: 15ch;
+  }
+
+  .custom-options__heading p:last-child {
+    max-width: 38rem;
+    margin-bottom: 0;
+    font-size: 1.06rem;
+  }
+
+  .option-groups {
+    border-bottom: 1px solid var(--border-strong);
+  }
+
+  .option-group {
+    display: grid;
+    grid-template-columns: minmax(11rem, 0.52fr) minmax(0, 1.48fr);
+    gap: clamp(2rem, 7vw, 6rem);
+    padding-block: clamp(1.8rem, 4vw, 2.6rem);
+    border-top: 1px solid var(--border-strong);
+  }
+
+  .option-group > h3 {
+    margin: 0;
+    font-family: var(--font-nav);
+    font-size: 1rem;
+    font-weight: 650;
+    letter-spacing: 0.015em;
+  }
+
+  .option-group ul {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(1.5rem, 5vw, 3.5rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .option-group li {
+    min-width: 0;
+    padding-left: 1rem;
+    border-left: 3px solid var(--wood-500);
+  }
+
+  .option-group h4 {
+    margin: 0 0 0.4rem;
+    color: var(--forest-950);
+    font-family: var(--font-nav);
+    font-size: 1.04rem;
+    font-weight: 650;
+  }
+
+  .option-group p {
+    max-width: 31ch;
+    margin: 0;
+  }
+
+  .custom-contact {
+    position: relative;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 2rem;
+    align-items: center;
+    padding: clamp(2rem, 5vw, 3.25rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-large);
+    background: var(--forest-100);
+  }
+
+  .custom-contact::before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 6px;
+    content: "";
+    background: var(--wood-500);
+  }
+
+  .custom-contact h2 {
+    max-width: 18ch;
+    margin-bottom: 0.55rem;
+  }
+
+  .custom-contact p:last-child {
+    max-width: 39rem;
+    margin-bottom: 0;
+  }
+
+  .custom-action {
+    min-height: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.7rem 1.15rem;
+    border: 1px solid var(--wood-600);
+    border-radius: 10px;
+    color: var(--forest-900);
+    background: var(--cream-50);
+    font-family: var(--font-nav);
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.2;
+    text-align: center;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background-color 160ms ease, border-color 160ms ease, transform 160ms ease;
+  }
+
+  .custom-action:hover {
+    border-color: var(--forest-800);
+    background: var(--white);
+    transform: translateY(-1px);
+  }
+
+  .custom-action:active {
+    transform: scale(0.98);
+  }
+
+  @media (max-width: 46rem) {
+    .custom-hero__inner {
+      grid-template-columns: 1fr;
+      gap: 2.75rem;
+      padding-block: 2.5rem 4rem;
+    }
+
+    .custom-hero h1 {
+      font-size: clamp(2.8rem, 13vw, 4rem);
+    }
+
+    .custom-photo {
+      width: min(78vw, 28rem);
+      justify-self: center;
+    }
+
+    .option-group {
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+    }
+
+    .custom-contact {
+      grid-template-columns: 1fr;
+    }
+
+    .custom-action {
+      justify-self: start;
+    }
+  }
+
+  @media (max-width: 36rem) {
+    .option-group ul {
+      grid-template-columns: 1fr;
+      gap: 1.35rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .custom-action {
+      transition: none;
+    }
+  }
+</style>

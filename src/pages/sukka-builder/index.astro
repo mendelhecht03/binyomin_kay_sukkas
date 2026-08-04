@@ -96,7 +96,7 @@ const projectPaths = [
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js@11.2.3/public/assets/styles/choices.min.css" />
   </Fragment>
-  <section class="builder-hero">
+  <section class="builder-hero sukkah-hero-background">
     <div class="shell">
       <nav class="breadcrumb" aria-label="Breadcrumb">
         <a href="/">Home</a><span aria-hidden="true">/</span>
@@ -817,8 +817,7 @@ const projectPaths = [
 
 <style is:global>
   @font-face{font-family:"Inter Variable";src:url("/assets/fonts/inter-variable.woff2") format("woff2");font-style:normal;font-weight:100 900;font-display:swap}
-  .builder-hero{position:relative;overflow:hidden;padding-block:clamp(2.75rem,5vw,4.75rem);background:linear-gradient(135deg,#f8f4ea 0%,#f3ecdd 55%,#e9efe9 100%)}
-  .builder-hero::after{position:absolute;right:-8rem;bottom:-18rem;width:32rem;height:32rem;border:1px solid rgba(23,63,52,.1);border-radius:50%;box-shadow:0 0 0 5rem rgba(255,255,255,.14),0 0 0 10rem rgba(255,255,255,.1);content:"";pointer-events:none}
+  .builder-hero{padding-block:clamp(2.75rem,5vw,4.75rem)}
   .hero-grid{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,780px);padding-top:clamp(1.5rem,3vw,2.75rem)}
   .hero-copy h1{max-width:780px;font-size:clamp(3rem,6vw,5rem)}.hero-copy .lead{max-width:620px;font-size:clamp(1.05rem,1.8vw,1.22rem)}
   .builder-notice{display:inline-flex;margin:1.35rem 0 0;padding:.45rem .65rem;border-left:3px solid var(--wood-500);color:var(--ink-600);background:rgba(255,255,255,.45);font-size:.82rem}

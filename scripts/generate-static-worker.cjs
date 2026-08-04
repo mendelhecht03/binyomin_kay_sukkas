@@ -158,6 +158,8 @@ const allowedPhotoTypes = new Set([
 const allowedPhotoExtensions = new Set(["jpg", "jpeg", "png", "heic", "heif"]);
 const maximumPhotoSize = 10 * 1024 * 1024;
 const photoRoutePrefix = "/api/sukkah-submission-photos/";
+const rentalGoogleFormUrl =
+  "https://docs.google.com/forms/d/e/1FAIpQLSdvF8UbJgSVrSy6ebK6j93vSfEVlkCXshEIHGj1HxFp1bRGBg/formResponse";
 
 function jsonResponse(body, status = 200) {
   return Response.json(body, {
@@ -215,6 +217,121 @@ function requiredFieldsFor(submission) {
 async function deleteUploadedPhotos(bucket, keys) {
   if (!bucket || keys.length === 0) return;
   await Promise.allSettled(keys.map((key) => bucket.delete(key)));
+}
+
+function appendGoogleFormChoice(body, entryId, value, otherValue, allowedValues) {
+  if (value === "Other") {
+    body.set(\`entry.\${entryId}\`, "__other_option__");
+    body.set(\`entry.\${entryId}.other_response\`, otherValue);
+    return;
+  }
+
+  if (!allowedValues.has(value)) {
+    throw new Error("The rental form included an unsupported choice.");
+  }
+
+  body.set(\`entry.\${entryId}\`, value);
+}
+
+async function handleRentalSubmission(request) {
+  let formData;
+  try {
+    formData = await request.formData();
+  } catch {
+    return jsonResponse({ ok: false, message: "The submitted form could not be read." }, 400);
+  }
+
+  if (cleanText(formData.get("website"), 200)) {
+    return jsonResponse({ ok: true, message: "Thank you. Your request was received." });
+  }
+
+  const rental = {
+    name: cleanText(formData.get("name"), 200),
+    phone: cleanText(formData.get("phone"), 100),
+    email: cleanText(formData.get("email"), 320),
+    address: cleanText(formData.get("address"), 1000),
+    neighborhood: cleanText(formData.get("neighborhood"), 120),
+    neighborhoodOther: cleanText(formData.get("neighborhoodOther"), 200),
+    estimatedSize: cleanText(formData.get("estimatedSize"), 200),
+    siteDescription: cleanText(formData.get("siteDescription"), 4000),
+    buildDay: cleanText(formData.get("buildDay"), 100),
+    buildDayOther: cleanText(formData.get("buildDayOther"), 200),
+    takeDownDay: cleanText(formData.get("takeDownDay"), 100),
+    takeDownDayOther: cleanText(formData.get("takeDownDayOther"), 200),
+    comments: cleanText(formData.get("comments"), 1000),
+    questions: cleanText(formData.get("questions"), 1000),
+  };
+
+  const requiredFields = [
+    "name",
+    "phone",
+    "address",
+    "neighborhood",
+    "estimatedSize",
+    "buildDay",
+    "takeDownDay",
+    "comments",
+    "questions",
+  ];
+  const missingFields = requiredFields.filter((fieldName) => !rental[fieldName]);
+  if (rental.neighborhood === "Other" && !rental.neighborhoodOther) missingFields.push("neighborhoodOther");
+  if (rental.buildDay === "Other" && !rental.buildDayOther) missingFields.push("buildDayOther");
+  if (rental.takeDownDay === "Other" && !rental.takeDownDayOther) missingFields.push("takeDownDayOther");
+
+  if (missingFields.length > 0) {
+    return jsonResponse(
+      { ok: false, message: "Please complete all required fields before submitting.", missingFields },
+      400,
+    );
+  }
+
+  const body = new URLSearchParams();
+  body.set("entry.312894946", rental.name);
+  body.set("entry.2077017403", rental.phone);
+  if (rental.email) body.set("entry.1426052874", rental.email);
+  body.set("entry.403817380", rental.address);
+  appendGoogleFormChoice(
+    body,
+    "70526594",
+    rental.neighborhood,
+    rental.neighborhoodOther,
+    new Set(["Crown Heights", "Flatbush", "Boro Park", "Williamsburg", "East Flatbush", "Remson Village", "Monsey"]),
+  );
+  body.set("entry.1130222480", rental.estimatedSize);
+  if (rental.siteDescription) body.set("entry.463838846", rental.siteDescription);
+  appendGoogleFormChoice(body, "1948310674", rental.buildDay, rental.buildDayOther, new Set(["Sunday", "Monday", "Tuesday"]));
+  appendGoogleFormChoice(body, "1550547913", rental.takeDownDay, rental.takeDownDayOther, new Set(["Sunday", "Monday", "Tuesday"]));
+  body.set("entry.1466499069", rental.comments);
+  body.set("entry.455384257", rental.questions);
+  body.set("fvv", "1");
+  body.set("pageHistory", "0");
+
+  try {
+    const googleResponse = await fetch(rentalGoogleFormUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
+      body,
+      redirect: "follow",
+    });
+    const responseText = await googleResponse.text();
+    const recorded =
+      googleResponse.ok &&
+      (responseText.includes("Your response has been recorded") ||
+        responseText.includes("Thanks for responding"));
+
+    if (!recorded) throw new Error("Google Forms did not confirm the rental request.");
+
+    return jsonResponse({
+      ok: true,
+      message: "Thank you. Your rental request was sent to Benyamin.",
+    });
+  } catch (error) {
+    console.error("Rental submission failed", error);
+    return jsonResponse(
+      { ok: false, message: "We could not send your request. Please try again or call (347) 454-2282." },
+      502,
+    );
+  }
 }
 
 async function handleSubmission(request, env, url) {
@@ -390,6 +507,10 @@ export default {
 
     if (request.method === "POST" && url.pathname === "/api/sukkah-submissions") {
       return handleSubmission(request, env, url);
+    }
+
+    if (request.method === "POST" && url.pathname === "/api/rental-submissions") {
+      return handleRentalSubmission(request);
     }
 
     if (request.method === "GET" && url.pathname.startsWith(photoRoutePrefix)) {

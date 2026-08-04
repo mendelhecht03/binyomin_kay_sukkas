@@ -44,7 +44,7 @@ const heroHeadingId = `${service.slug}-heading`;
 
 <BaseLayout title={service.metaTitle} description={service.description}>
   <div class="service-page">
-    <section class="service-hero" aria-labelledby={heroHeadingId}>
+    <section class="service-hero sukkah-hero-background" aria-labelledby={heroHeadingId}>
       <div class="service-hero__copy">
         <p class="eyebrow">{service.eyebrow}</p>
         <h1 id={heroHeadingId}>{service.title}</h1>
@@ -174,7 +174,6 @@ const heroHeadingId = `${service.slug}-heading`;
     padding: clamp(1.4rem, 4vw, 3.5rem);
     border: 1px solid rgba(23, 63, 50, 0.13);
     border-radius: 1.25rem;
-    background: linear-gradient(135deg, #fffdf8 0%, #f5ecdc 100%);
     box-shadow: 0 1.25rem 3.5rem rgba(35, 46, 40, 0.08);
   }
 
