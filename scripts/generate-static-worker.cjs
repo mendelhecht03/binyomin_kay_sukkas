@@ -311,10 +311,13 @@ async function handleRentalSubmission(request) {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
       body,
-      redirect: "follow",
+      // Google confirms a successful form post with a redirect. Following that
+      // redirect can lead Workers to an unrelated error page even though the
+      // response has already been recorded.
+      redirect: "manual",
     });
     await googleResponse.text();
-    if (!googleResponse.ok) {
+    if (googleResponse.status >= 400) {
       throw new Error("Google Forms did not confirm the rental request.");
     }
 
