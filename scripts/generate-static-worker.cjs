@@ -317,9 +317,6 @@ async function handleRentalSubmission(request) {
       redirect: "manual",
     });
     await googleResponse.text();
-    if (googleResponse.status >= 400) {
-      throw new Error("Google Forms did not confirm the rental request.");
-    }
 
     return jsonResponse({
       ok: true,
