@@ -5,7 +5,7 @@
 - ☑ Simple code-based brand mark and favicon
 - ☑ Five illustrative sukkah images and one sukkah detail image
 - ☑ Real sukkah hero photo approved for the homepage
-- ☐ Real sukkah project photos with confirmed descriptions
+- ☑ Real sukkah project photos selected from the owner's supplied photo folder
 - ☐ Rental sukkah photos
 - ☐ Custom sukkah photos
 - ☐ Pergola photos
@@ -26,17 +26,16 @@ layout.
   embed has been removed. Submit completed requests to the private Google Sheet
   through the site's server-side Worker and a protected Google Apps Script
   webhook. Keep Google credentials and the webhook secret out of browser code.
-- Keep the homepage intentionally limited to four parts: a focused hero, the
-  three primary sukkah paths, testimonials, and a compact owner introduction.
-  Do not add process steps, decorative quotes, promotional blurbs, or extra
-  homepage sections without approval.
-- Style those four parts as one light, spacious page using the existing forest
+- Keep the homepage focused on a full-bleed hero, three primary sukkah paths,
+  an image-led real-work section, a compact owner introduction, testimonials,
+  and a final contact prompt.
+- Style the homepage as one light, spacious page using the existing forest
   palette with wood accents. Give each section a distinct composition through
-  photography, spacing, and restrained tactile states rather than extra copy.
-- The testimonial section uses two image-led cards with a customer name and a
-  short statement. Add only real, approved testimonials. Until customer photos
-  and copy are supplied, retain clearly labeled placeholders rather than
-  inventing endorsements.
+  real photography, spacing, and restrained tactile states rather than extra
+  promotional copy. Do not use AI-generated images.
+- The testimonial section uses two asymmetric quote panels. Add only real,
+  approved testimonials. Until customer names and copy are supplied, retain
+  clearly labeled placeholders rather than inventing endorsements.
 - The compact homepage owner section uses Benyamin's profile photo and a short
   editable company-history statement. Keep the full biography on `/about/`.
 
@@ -237,8 +236,8 @@ from eventual form submission.
 - On desktop, the Sukkahs and Other Services menus open on pointer hover or
   keyboard focus.
 - On phones and tablets, those menus open when tapped.
-- On phones and tablets, tapping or moving keyboard focus outside an open
-  navigation panel closes the panel and its expanded nested menus.
+- On phones and tablets, navigation uses a full-height panel. The close button,
+  Escape key, and selecting a link close the panel and its expanded nested menus.
 - The mobile navigation panel and both nested service menus open and close with
   smooth motion. Respect the visitor's reduced-motion preference.
 - Normal navigation links use an animated gold underline for hover, focus, and

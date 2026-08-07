@@ -1,25 +1,55 @@
 ---
 const currentPath = Astro.url.pathname;
+const isHome = currentPath === "/";
 
 const sukkahLinks = [
-  { href: "/sukka-builder/", label: "Sukka Builder" },
-  { href: "/sukkah-rentals/", label: "Rentals" },
-  { href: "/custom-sukkahs/", label: "Custom Sukkahs" },
+  {
+    href: "/sukka-builder/",
+    label: "Sukka Builder",
+    description: "Plan a new sukkah for your space.",
+  },
+  {
+    href: "/sukkah-rentals/",
+    label: "Rentals",
+    description: "Arrange a seasonal sukkah and service.",
+  },
+  {
+    href: "/custom-sukkahs/",
+    label: "Custom Sukkahs",
+    description: "Build around an unusual space or need.",
+  },
 ];
 
 const serviceLinks = [
-  { href: "/pergolas/", label: "Pergolas" },
-  { href: "/tree-trimming/", label: "Tree Trimming" },
-  { href: "/eruv-work/", label: "Eruv Work" },
+  {
+    href: "/pergolas/",
+    label: "Pergolas",
+    description: "Create a practical outdoor structure.",
+  },
+  {
+    href: "/tree-trimming/",
+    label: "Tree Trimming",
+    description: "Careful cutting, cleanup and planning.",
+  },
+  {
+    href: "/eruv-work/",
+    label: "Eruv Work",
+    description: "Checking, repair and maintenance.",
+  },
 ];
 
 const isActive = (href: string) =>
   href === "/" ? currentPath === "/" : currentPath.startsWith(href);
+
+const groupIsActive = (links: typeof sukkahLinks) =>
+  links.some((link) => isActive(link.href));
 ---
 
-<header class="site-header" data-site-header>
+<div class="header-sentinel" data-header-sentinel aria-hidden="true"></div>
+
+<header class:list={["site-header", { "is-home-header": isHome }]} data-site-header>
   <div class="header-inner shell">
-    <a class="brand" href="/" aria-label="Benyamin Kay Sukkas home">
+    <a class="brand" href="/">
       <svg class="brand-mark" viewBox="0 0 44 44" aria-hidden="true">
         <path d="M7 15.5 22 7l15 8.5v20H7z" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round" />
         <path d="M10 16h24M13 12.2v5.2M19 8.7v8.7M25 8.7v8.7M31 12.2v5.2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
@@ -36,55 +66,102 @@ const isActive = (href: string) =>
       type="button"
       aria-expanded="false"
       aria-controls="site-navigation"
+      aria-label="Open menu"
       data-menu-toggle
     >
-      <span class="sr-only">Open menu</span>
-      <span aria-hidden="true"></span>
       <span aria-hidden="true"></span>
       <span aria-hidden="true"></span>
     </button>
 
     <nav class="site-navigation" id="site-navigation" aria-label="Main navigation" data-site-navigation>
-      <a class:list={["nav-link", { "is-active": isActive("/") }]} href="/"><span>Home</span></a>
+      <a
+        class:list={["nav-link", { "is-active": isActive("/") }]}
+        aria-current={isActive("/") ? "page" : undefined}
+        href="/"
+      ><span>Home</span></a>
 
-      <details class="nav-group">
-        <summary class="nav-link"><span>Sukkahs</span></summary>
+      <details class="nav-group" data-nav-group>
+        <summary class:list={["nav-link", { "is-active": groupIsActive(sukkahLinks) }]}>
+          <span>Sukkahs</span>
+        </summary>
         <div class="nav-dropdown">
-          <div class="nav-dropdown-inner">
-            {sukkahLinks.map((link) => (
-              <a class:list={["dropdown-link", { "is-active": isActive(link.href) }]} href={link.href}>
-                <span>{link.label}</span>
-              </a>
-            ))}
+          <div class="nav-dropdown-layout shell">
+            <div class="nav-dropdown-intro" aria-hidden="true">
+              <strong>Sukkah services</strong>
+              <span>From planning through takedown.</span>
+            </div>
+            <div class="nav-dropdown-inner">
+              {sukkahLinks.map((link) => (
+                <a
+                  class:list={["dropdown-link", { "is-active": isActive(link.href) }]}
+                  aria-current={isActive(link.href) ? "page" : undefined}
+                  href={link.href}
+                >
+                  <span>{link.label}</span>
+                  <small>{link.description}</small>
+                </a>
+              ))}
+            </div>
           </div>
         </div>
       </details>
 
-      <details class="nav-group">
-        <summary class="nav-link"><span>Other Services</span></summary>
+      <details class="nav-group" data-nav-group>
+        <summary class:list={["nav-link", { "is-active": groupIsActive(serviceLinks) }]}>
+          <span>Other Services</span>
+        </summary>
         <div class="nav-dropdown">
-          <div class="nav-dropdown-inner">
-            {serviceLinks.map((link) => (
-              <a class:list={["dropdown-link", { "is-active": isActive(link.href) }]} href={link.href}>
-                <span>{link.label}</span>
-              </a>
-            ))}
+          <div class="nav-dropdown-layout shell">
+            <div class="nav-dropdown-intro" aria-hidden="true">
+              <strong>Outdoor work</strong>
+              <span>Practical help beyond sukkah season.</span>
+            </div>
+            <div class="nav-dropdown-inner">
+              {serviceLinks.map((link) => (
+                <a
+                  class:list={["dropdown-link", { "is-active": isActive(link.href) }]}
+                  aria-current={isActive(link.href) ? "page" : undefined}
+                  href={link.href}
+                >
+                  <span>{link.label}</span>
+                  <small>{link.description}</small>
+                </a>
+              ))}
+            </div>
           </div>
         </div>
       </details>
 
-      <a class:list={["nav-link", { "is-active": isActive("/gallery/") }]} href="/gallery/"><span>Gallery</span></a>
-      <a class:list={["nav-link", { "is-active": isActive("/about/") }]} href="/about/"><span>About</span></a>
-      <a class:list={["button button-small nav-button", { "is-active": isActive("/contact/") }]} href="/contact/">Request a Quote</a>
+      <a
+        class:list={["nav-link", { "is-active": isActive("/gallery/") }]}
+        aria-current={isActive("/gallery/") ? "page" : undefined}
+        href="/gallery/"
+      ><span>Gallery</span></a>
+      <a
+        class:list={["nav-link", { "is-active": isActive("/about/") }]}
+        aria-current={isActive("/about/") ? "page" : undefined}
+        href="/about/"
+      ><span>About</span></a>
+      <a
+        class:list={["button button-small nav-button", { "is-active": isActive("/contact/") }]}
+        aria-current={isActive("/contact/") ? "page" : undefined}
+        href="/contact/"
+      >Request a Quote</a>
+
+      <div class="mobile-nav-contact">
+        <span>Prefer to speak directly?</span>
+        <a href="tel:+13474542282">Call (347) 454-2282</a>
+      </div>
     </nav>
   </div>
 </header>
 
 <script>
   const header = document.querySelector("[data-site-header]");
+  const headerSentinel = document.querySelector("[data-header-sentinel]");
   const menuButton = document.querySelector("[data-menu-toggle]");
   const navigation = document.querySelector("[data-site-navigation]");
-  const navGroups = document.querySelectorAll(".nav-group");
+  const navGroups = document.querySelectorAll("[data-nav-group]");
   const desktopNavigation = window.matchMedia("(min-width: 961px)");
   const closeTimers = new WeakMap();
 
@@ -97,69 +174,102 @@ const isActive = (href: string) =>
     }
   }
 
+  function syncSubmenuState() {
+    const hasOpenGroup = Array.from(navGroups).some(
+      (group) => group instanceof HTMLDetailsElement && group.open,
+    );
+    header?.toggleAttribute("data-submenu-open", hasOpenGroup);
+  }
+
+  function closeGroups(except) {
+    navGroups.forEach((group) => {
+      if (group !== except && group instanceof HTMLDetailsElement) {
+        cancelScheduledClose(group);
+        group.open = false;
+      }
+    });
+    syncSubmenuState();
+  }
+
   function scheduleClose(group) {
     cancelScheduledClose(group);
 
     const timer = window.setTimeout(() => {
-      if (desktopNavigation.matches && !group.matches(":focus-within")) {
+      if (
+        desktopNavigation.matches &&
+        group instanceof HTMLDetailsElement &&
+        !group.matches(":focus-within")
+      ) {
         group.open = false;
+        syncSubmenuState();
       }
 
       closeTimers.delete(group);
-    }, 350);
+    }, 240);
 
     closeTimers.set(group, timer);
   }
 
   function openGroup(activeGroup) {
-    navGroups.forEach((group) => {
-      if (group !== activeGroup) {
-        cancelScheduledClose(group);
-        group.removeAttribute("open");
-      }
-    });
-
-    activeGroup.open = true;
+    closeGroups(activeGroup);
+    if (activeGroup instanceof HTMLDetailsElement) activeGroup.open = true;
+    syncSubmenuState();
   }
 
-  function closeMenu() {
+  function setPageInert(isInert) {
+    document.querySelectorAll("main, footer").forEach((region) => {
+      region.toggleAttribute("inert", isInert);
+    });
+    document.body.classList.toggle("nav-open", isInert);
+  }
+
+  function closeMenu(restoreFocus = false) {
+    const wasOpen = header?.hasAttribute("data-menu-open");
     header?.removeAttribute("data-menu-open");
     menuButton?.setAttribute("aria-expanded", "false");
+    menuButton?.setAttribute("aria-label", "Open menu");
+    setPageInert(false);
 
-    if (!desktopNavigation.matches) {
-      navGroups.forEach((group) => {
-        cancelScheduledClose(group);
-        group.removeAttribute("open");
-      });
-    }
+    if (!desktopNavigation.matches) closeGroups();
+    if (restoreFocus && wasOpen && menuButton instanceof HTMLElement) menuButton.focus();
+  }
+
+  function openMenu() {
+    header?.setAttribute("data-menu-open", "");
+    menuButton?.setAttribute("aria-expanded", "true");
+    menuButton?.setAttribute("aria-label", "Close menu");
+    setPageInert(true);
+
+    window.requestAnimationFrame(() => {
+      navigation?.querySelector("a, summary")?.focus();
+    });
   }
 
   menuButton?.addEventListener("click", () => {
-    const willOpen = !header?.hasAttribute("data-menu-open");
-
-    if (willOpen) {
-      header?.setAttribute("data-menu-open", "");
-      menuButton.setAttribute("aria-expanded", "true");
-    } else {
-      closeMenu();
-    }
+    if (header?.hasAttribute("data-menu-open")) closeMenu(true);
+    else openMenu();
   });
 
   navigation?.addEventListener("click", (event) => {
-    const clickedLink =
-      event.target instanceof Element ? event.target.closest("a") : null;
-
-    if (clickedLink) {
-      navigation.querySelectorAll(".is-active").forEach((link) => {
-        link.classList.remove("is-active");
-      });
-      clickedLink.classList.add("is-active");
-      closeMenu();
-    }
+    const clickedLink = event.target instanceof Element ? event.target.closest("a") : null;
+    if (clickedLink && !desktopNavigation.matches) closeMenu();
   });
 
   navGroups.forEach((group) => {
     if (!(group instanceof HTMLDetailsElement)) return;
+
+    const summary = group.querySelector("summary");
+
+    summary?.addEventListener("click", (event) => {
+      if (!desktopNavigation.matches) return;
+      event.preventDefault();
+      openGroup(group);
+    });
+
+    group.addEventListener("toggle", () => {
+      if (group.open) closeGroups(group);
+      syncSubmenuState();
+    });
 
     group.addEventListener("mouseenter", () => {
       cancelScheduledClose(group);
@@ -178,45 +288,61 @@ const isActive = (href: string) =>
     group.addEventListener("focusout", (event) => {
       if (
         desktopNavigation.matches &&
-        (!(event.relatedTarget instanceof Node) ||
-          !group.contains(event.relatedTarget))
+        (!(event.relatedTarget instanceof Node) || !group.contains(event.relatedTarget))
       ) {
         scheduleClose(group);
       }
     });
   });
 
-  function isOutsideOpenMobileMenu(event) {
-    return (
-      !desktopNavigation.matches &&
-      header?.hasAttribute("data-menu-open") &&
-      event.target instanceof Node &&
-      !header.contains(event.target)
-    );
-  }
-
   document.addEventListener("pointerdown", (event) => {
-    if (isOutsideOpenMobileMenu(event)) closeMenu();
-  });
-
-  document.addEventListener("focusin", (event) => {
-    if (isOutsideOpenMobileMenu(event)) closeMenu();
+    if (
+      desktopNavigation.matches &&
+      event.target instanceof Node &&
+      !header?.contains(event.target)
+    ) {
+      closeGroups();
+    }
   });
 
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") {
-      closeMenu();
-      if (menuButton instanceof HTMLElement) menuButton.focus();
+      if (header?.hasAttribute("data-menu-open")) closeMenu(true);
+      else closeGroups();
+      return;
+    }
+
+    if (
+      event.key !== "Tab" ||
+      desktopNavigation.matches ||
+      !header?.hasAttribute("data-menu-open") ||
+      !navigation
+    ) return;
+
+    const focusable = Array.from(
+      navigation.querySelectorAll("a, summary, button, [tabindex]:not([tabindex='-1'])"),
+    ).filter((element) => element instanceof HTMLElement && element.offsetParent !== null);
+
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last?.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first?.focus();
     }
   });
 
-  window.addEventListener("resize", () => {
-    if (desktopNavigation.matches) {
-      closeMenu();
-      navGroups.forEach((group) => {
-        cancelScheduledClose(group);
-        group.removeAttribute("open");
-      });
-    }
-  });
+  desktopNavigation.addEventListener("change", () => closeMenu());
+
+  if (header && headerSentinel && "IntersectionObserver" in window) {
+    const observer = new IntersectionObserver(([entry]) => {
+      header.toggleAttribute("data-scrolled", !entry.isIntersecting);
+    });
+    observer.observe(headerSentinel);
+  } else {
+    header?.setAttribute("data-scrolled", "");
+  }
 </script>

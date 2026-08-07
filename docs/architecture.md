@@ -148,6 +148,13 @@ layouts. Changing a shared component updates every page that uses it during
 the next build. This replaces the old system where the same navbar HTML had to
 be copied into every page.
 
+`src/components/Header.astro` owns the shared service groups, active-page
+states, and responsive menu behavior. Desktop service groups open as a flat
+rail attached to the header. At tablet and phone sizes, the same links move
+into a full-height panel with expandable service groups. The page body becomes
+temporarily inert while that panel is open so keyboard focus stays inside the
+navigation.
+
 ## Worker Generation
 
 `scripts/generate-static-worker.cjs` reads only the completed static files in
