@@ -1158,14 +1158,14 @@ input[type="range"]:focus-visible {
   }
 
   .site-navigation {
-    position: absolute;
-    top: 100%;
+    position: fixed;
+    top: var(--header-height);
     bottom: auto;
-    left: 50%;
-    right: auto;
-    width: 100vw;
+    right: 0;
+    left: 0;
+    width: auto;
     height: calc(100dvh - var(--header-height));
-    margin-left: -50vw;
+    margin-left: 0;
     display: flex;
     flex-direction: column;
     overflow-y: auto;
@@ -1179,7 +1179,7 @@ input[type="range"]:focus-visible {
     box-shadow: none;
     opacity: 0;
     pointer-events: none;
-    transform: translateX(34px);
+    transform: translateY(-10px);
     visibility: hidden;
     transition:
       opacity 240ms ease,
@@ -1190,7 +1190,7 @@ input[type="range"]:focus-visible {
   .site-header[data-menu-open] .site-navigation {
     opacity: 1;
     pointer-events: auto;
-    transform: translateX(0);
+    transform: translateY(0);
     visibility: visible;
     transition-delay: 0s;
   }

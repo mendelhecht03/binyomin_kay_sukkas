@@ -77,6 +77,19 @@ built as directory-style files, so `/about` is represented by
 
 /eruv-work
 
+The `/custom-sukkahs` route presents made-to-order sukka projects for families,
+shuls, businesses, apartment buildings, and schools. It distinguishes custom
+work from preset-size standard metal sukkas, without promising that every
+request is feasible. The page may describe wood or metal frames, confirmed wall
+and schach choices, available features, the confirmed project services, and the
+current service-area list. Pricing remains quote-only. The primary action links
+to `/contact/`, with the business phone number as a secondary option.
+
+Use only approved real project photos on the Custom Sukkahs page. The confirmed
+photo labels currently cover blue tarp walls, white tarp walls, and soft fabric
+walls. Do not assign a more specific name to the soft fabric until
+Benyamin confirms it.
+
 The former `/sukkah-packages` route and its old buy/sample routes redirect to
 `/sukka-builder/` so saved links do not lead to a missing page.
 
