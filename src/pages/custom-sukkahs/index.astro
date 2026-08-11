@@ -12,7 +12,104 @@ const featureGroups = [
   },
   {
     title: "Available by special request",
-    items: ["Custom paint or stain", "Custom exterior colors", "Branding or printed walls"],
+    items: ["Custom paint or stain", "Custom exterior colors", "Branding or printed walls", "Custom flooring or floor coverings"],
+  },
+];
+
+const flexibleWallOptions = [
+  {
+    title: "White tarp walls",
+    description: "A clean wall option suited to custom builds of many sizes.",
+    src: "/assets/images/custom-large-white-tarp.jpg",
+    alt: "Large freestanding sukka with white tarp walls in a parking lot",
+    width: 1600,
+    height: 900,
+    className: "wall-option--white",
+  },
+  {
+    title: "Beige woven screen",
+    description: "A woven wall covering that allows filtered light. Exact specifications are confirmed during the quote.",
+    src: "/assets/images/custom-beige-woven-wall.jpg",
+    alt: "Beige woven screen walls surrounding a residential sukka",
+    width: 1200,
+    height: 900,
+    className: "wall-option--beige",
+  },
+  {
+    title: "Blue tarp walls",
+    description: "A practical wall option available in varying thicknesses.",
+    src: "/assets/images/custom-blue-tarp.jpg",
+    alt: "Custom sukka with blue tarp walls",
+    width: 567,
+    height: 1008,
+    className: "wall-option--blue",
+  },
+  {
+    title: "Soft fabric",
+    description: "Draped walls for a lighter appearance.",
+    src: "/assets/images/custom-soft-fabric.jpg",
+    alt: "Custom wood-frame sukka with soft white fabric walls",
+    width: 1600,
+    height: 900,
+    className: "wall-option--fabric",
+  },
+];
+
+const panelWallOptions = [
+  {
+    title: "Framed plywood walls",
+    description: "Plywood wall panels can include windows and planned lighting.",
+    src: "/assets/images/custom-plywood-walls.jpg",
+    alt: "Interior of a sukka with framed plywood walls, two windows, schach, and string lighting",
+    width: 1024,
+    height: 576,
+    className: "panel-option--plywood",
+  },
+  {
+    title: "Light framed panels",
+    description: "A light wood-look finish set inside a modular metal frame.",
+    src: "/assets/images/custom-light-infill-panels.jpg",
+    alt: "Light wood-look wall panels set inside a metal sukka frame",
+    width: 1200,
+    height: 900,
+    className: "panel-option--light",
+  },
+  {
+    title: "Dark framed panels",
+    description: "A deeper-toned panel finish set inside a modular metal frame.",
+    src: "/assets/images/custom-dark-infill-panels.jpg",
+    alt: "Dark custom wall panels set inside a metal sukka frame",
+    width: 1200,
+    height: 900,
+    className: "panel-option--dark",
+  },
+  {
+    title: "Lattice-top panels",
+    description: "Solid lower panels with a diamond-lattice strip for added airflow and light.",
+    src: "/assets/images/custom-lattice-top-rendering.jpg",
+    alt: "Illustrative rendering of white lattice-top panels used as sukka walls",
+    width: 1200,
+    height: 900,
+    className: "panel-option--lattice",
+    note: "Illustrative rendering",
+  },
+  {
+    title: "Horizontal rooftop paneling",
+    description: "Gray horizontal panels set within a dark frame for a rooftop build.",
+    src: "/assets/images/custom-rooftop-cladding.jpg",
+    alt: "Rooftop sukka with gray horizontal cladding in a dark structural frame",
+    width: 1600,
+    height: 900,
+    className: "panel-option--rooftop",
+  },
+  {
+    title: "Horizontal slat siding",
+    description: "Closely spaced horizontal slats create a modern wood-look wall treatment.",
+    src: "/assets/images/custom-horizontal-slat-siding.jpg",
+    alt: "Custom sukka wall under construction with reddish-brown horizontal slat siding",
+    width: 1200,
+    height: 900,
+    className: "panel-option--slats",
   },
 ];
 
@@ -60,7 +157,7 @@ const serviceAreas = [
         </p>
       </div>
       <div class="site-list" aria-label="Suitable project sites">
-        <p>Backyards</p><p>Patios and decks</p><p>Courtyards</p><p>Attached or freestanding</p><p>Some rooftops</p>
+        <p>Backyards</p><p>Porches, patios, and decks</p><p>Courtyards</p><p>Attached or freestanding</p><p>Some rooftops</p>
       </div>
       <p class="audience-note">For families, shuls, businesses, apartment buildings, and schools.</p>
     </section>
@@ -92,29 +189,57 @@ const serviceAreas = [
     <section class="walls-section" aria-labelledby="walls-heading">
       <div class="shell">
         <div class="walls-heading">
-          <h2 id="walls-heading">Choose how it feels.</h2>
-          <p>Material availability varies, so each choice is confirmed as part of the quote.</p>
+          <h2 id="walls-heading">Walls for every kind of build.</h2>
+          <p>Choose a flexible covering, a rigid panel system, or custom siding. Final materials and availability are confirmed during the quote.</p>
         </div>
-        <div class="wall-gallery">
-          <figure class="wall-option wall-option--blue">
-            <img src="/assets/images/custom-blue-tarp.jpg" alt="Custom sukka with blue tarp walls" width="567" height="1008" loading="lazy" />
-            <figcaption><strong>Blue tarps</strong><span>Available in varying thicknesses.</span></figcaption>
-          </figure>
-          <figure class="wall-option wall-option--white">
-            <img src="/assets/images/custom-white-tarp.jpg" alt="Interior of a custom metal-frame sukka with white tarp walls and lighting" width="1400" height="1865" loading="lazy" />
-            <figcaption><strong>White tarps</strong><span>A lighter wall option, also available in varying thicknesses.</span></figcaption>
-          </figure>
-          <figure class="wall-option wall-option--wood">
-            <img src="/assets/images/custom-sukkah-example.jpg" alt="Custom sukka with solid wood walls beside a home" width="576" height="1024" loading="lazy" />
-            <figcaption><strong>Wood walls</strong><span>Solid panels, lattice, or custom siding.</span></figcaption>
-          </figure>
-          <figure class="wall-option wall-option--fabric">
-            <div class="wall-image wall-image--fabric">
-              <img src="/assets/images/custom-soft-fabric.jpg" alt="Custom sukka with soft white fabric walls" width="1600" height="900" loading="lazy" />
-            </div>
-            <figcaption><strong>Soft fabric</strong><span>A draped wall option for a lighter look.</span></figcaption>
-          </figure>
-        </div>
+        <section class="wall-group" aria-labelledby="flexible-walls-heading">
+          <h3 id="flexible-walls-heading">Flexible wall coverings</h3>
+          <div class="covering-gallery">
+            {flexibleWallOptions.map((option) => (
+              <figure class={`wall-option ${option.className}`}>
+                <div class="wall-media">
+                  <img src={option.src} alt={option.alt} width={option.width} height={option.height} loading="lazy" />
+                </div>
+                <figcaption><strong>{option.title}</strong><span>{option.description}</span></figcaption>
+              </figure>
+            ))}
+          </div>
+        </section>
+
+        <section class="wall-group wall-group--panels" aria-labelledby="panel-walls-heading">
+          <h3 id="panel-walls-heading">Panels and custom siding</h3>
+          <div class="panel-gallery">
+            {panelWallOptions.map((option) => (
+              <figure class={`wall-option panel-option ${option.className}`}>
+                <div class="wall-media">
+                  <img src={option.src} alt={option.alt} width={option.width} height={option.height} loading="lazy" />
+                </div>
+                <figcaption>
+                  <strong>{option.title}</strong>
+                  <span>{option.description}</span>
+                  {option.note && <small>{option.note}</small>}
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <section class="site-options-section shell" aria-labelledby="site-options-heading">
+      <div class="site-options-heading">
+        <h2 id="site-options-heading">More than the walls.</h2>
+        <p>The site and finishing details can also shape the project.</p>
+      </div>
+      <div class="site-options-grid">
+        <figure class="site-option">
+          <img src="/assets/images/custom-porch-sukka.jpg" alt="Custom sukka structure built over an existing residential porch" width="1200" height="900" loading="lazy" />
+          <figcaption><strong>Porch and deck builds</strong><span>A roof frame can be planned around an existing porch or deck, subject to site conditions.</span></figcaption>
+        </figure>
+        <figure class="site-option">
+          <img src="/assets/images/custom-carpet-flooring.jpg" alt="Large custom sukka with patterned carpet flooring, gray walls, and string lighting" width="1200" height="900" loading="lazy" />
+          <figcaption><strong>Custom flooring</strong><span>Carpeted or covered floors can be planned for individual projects.</span></figcaption>
+        </figure>
       </div>
     </section>
 
@@ -209,17 +334,47 @@ const serviceAreas = [
   .walls-heading { max-width: 42rem; margin-bottom: clamp(2.5rem, 5vw, 4rem); }
   .walls-heading h2 { margin-bottom: .8rem; font-size: clamp(2.5rem, 5vw, 4.2rem); }
   .walls-heading p { max-width: 34rem; margin: 0; }
-  .wall-gallery { display: grid; grid-template-columns: .68fr .88fr .78fr 1.25fr; gap: clamp(.8rem, 1.8vw, 1.5rem); align-items: end; }
-  .wall-option { margin: 0; }
-  .wall-option img { width: 100%; height: auto; border-radius: 14px; object-fit: cover; background: var(--cream-200); }
-  .wall-option--blue img { aspect-ratio: .78 / 1; }
-  .wall-option--white img { aspect-ratio: .84 / 1; }
-  .wall-option--wood img { aspect-ratio: .9 / 1; }
-  .wall-image--fabric { overflow: hidden; aspect-ratio: 1.35 / 1; border-radius: 14px; background: var(--cream-200); }
-  .wall-image--fabric img { height: 100%; border-radius: 0; object-position: center; transform: scale(1.75); transform-origin: 42% 52%; }
+  .wall-group h3 { margin: 0 0 1.25rem; color: var(--forest-950); font-family: var(--font-nav); font-size: clamp(1.15rem, 2vw, 1.4rem); }
+  .wall-group--panels { margin-top: clamp(3.5rem, 7vw, 6rem); padding-top: clamp(2rem, 4vw, 3rem); border-top: 1px solid var(--border-strong); }
+  .covering-gallery, .panel-gallery { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: clamp(1.25rem, 2.5vw, 2rem); align-items: start; }
+  .wall-option { min-width: 0; margin: 0; }
+  .wall-media { overflow: hidden; width: 100%; aspect-ratio: 4 / 3; border-radius: 14px; background: var(--cream-200); }
+  .wall-media img { width: 100%; height: 100%; object-fit: cover; }
+  .wall-option--white { grid-column: span 7; }
+  .wall-option--white .wall-media { aspect-ratio: 16 / 9; }
+  .wall-option--beige { grid-column: span 5; }
+  .wall-option--blue { grid-column: span 4; }
+  .wall-option--blue .wall-media img { object-position: center 45%; }
+  .wall-option--fabric { grid-column: span 8; }
+  .wall-option--fabric .wall-media { aspect-ratio: 16 / 9; }
+  .wall-option--fabric .wall-media img { object-position: center; transform: scale(1.75); transform-origin: 42% 52%; }
+  .panel-option--plywood { grid-column: span 7; }
+  .panel-option--plywood .wall-media { aspect-ratio: 16 / 9; }
+  .panel-option--light { grid-column: span 5; }
+  .panel-option--dark { grid-column: span 4; }
+  .panel-option--lattice { grid-column: span 4; }
+  .panel-option--rooftop { grid-column: span 4; }
+  .panel-option--rooftop .wall-media img { object-position: 44% center; }
+  .panel-option--slats { grid-column: span 12; display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(15rem, .55fr); gap: clamp(1.25rem, 3vw, 2.5rem); align-items: end; padding-top: .5rem; }
+  .panel-option--slats .wall-media { aspect-ratio: 16 / 7; }
+  .panel-option--slats .wall-media img { object-position: center 42%; }
   .wall-option figcaption { display: grid; gap: .25rem; padding-top: .9rem; }
   .wall-option strong { color: var(--forest-950); font-family: var(--font-nav); font-size: 1.02rem; }
-  .wall-option span { color: var(--ink-600); font-size: .9rem; line-height: 1.45; }
+  .wall-option span { color: var(--ink-600); font-size: .94rem; line-height: 1.5; }
+  .wall-option small { margin-top: .3rem; color: var(--wood-600); font-family: var(--font-nav); font-size: .74rem; font-weight: 750; letter-spacing: .07em; text-transform: uppercase; }
+  .panel-option--slats figcaption { align-self: end; padding: 0 0 .25rem; }
+
+  .site-options-section { padding-block: clamp(5rem, 10vw, 9rem); }
+  .site-options-heading { max-width: 44rem; margin-bottom: clamp(2.25rem, 5vw, 4rem); }
+  .site-options-heading h2 { margin-bottom: .8rem; font-size: clamp(2.5rem, 5vw, 4.2rem); }
+  .site-options-heading p { margin: 0; }
+  .site-options-grid { display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(0, .88fr); gap: clamp(1.25rem, 3vw, 2.5rem); align-items: start; }
+  .site-option { margin: 0; }
+  .site-option img { width: 100%; aspect-ratio: 4 / 3; border-radius: 14px; object-fit: cover; background: var(--cream-200); }
+  .site-option:first-child img { object-position: center 30%; }
+  .site-option figcaption { display: grid; gap: .3rem; padding-top: .95rem; }
+  .site-option strong { color: var(--forest-950); font-family: var(--font-nav); font-size: 1.06rem; }
+  .site-option span { max-width: 34rem; color: var(--ink-600); font-size: .94rem; line-height: 1.5; }
 
   .details-section { display: grid; grid-template-columns: minmax(0, .82fr) minmax(25rem, 1.18fr); gap: clamp(3rem, 9vw, 8rem); padding-block: clamp(5rem, 10vw, 9rem); }
   .details-copy h2 { max-width: 12ch; margin-bottom: 1rem; font-size: clamp(2.5rem, 5vw, 4.2rem); }
@@ -261,7 +416,11 @@ const serviceAreas = [
     .frame-story, .details-section, .planning-section, .quote-section { grid-template-columns: 1fr; }
     .frame-photo { width: min(100%, 32rem); aspect-ratio: 4 / 3; }
     .frame-photo img { object-position: center 44%; }
-    .wall-gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+    .wall-option--white, .wall-option--fabric, .panel-option--plywood, .panel-option--slats { grid-column: span 12; }
+    .wall-option--beige, .wall-option--blue, .panel-option--light, .panel-option--dark, .panel-option--lattice, .panel-option--rooftop { grid-column: span 6; }
+    .panel-option--slats { grid-template-columns: 1fr; gap: 0; }
+    .panel-option--slats figcaption { padding-top: .9rem; }
+    .site-options-grid { grid-template-columns: 1fr; }
     .details-section { gap: 2.5rem; }
     .quote-actions { justify-content: flex-start; }
   }
@@ -276,8 +435,9 @@ const serviceAreas = [
     .site-list { grid-template-columns: 1fr; }
     .site-list p:last-child { grid-column: auto; }
     .frame-choice { grid-template-columns: 1fr; gap: .55rem; }
-    .wall-gallery { grid-template-columns: 1fr; gap: 2rem; }
-    .wall-option img, .wall-image--fabric { aspect-ratio: 4 / 3; }
+    .covering-gallery, .panel-gallery { gap: 2rem; }
+    .wall-option--white, .wall-option--beige, .wall-option--blue, .wall-option--fabric, .panel-option--plywood, .panel-option--light, .panel-option--dark, .panel-option--lattice, .panel-option--rooftop, .panel-option--slats { grid-column: span 12; }
+    .wall-media, .wall-option--white .wall-media, .wall-option--fabric .wall-media, .panel-option--plywood .wall-media, .panel-option--slats .wall-media { aspect-ratio: 4 / 3; }
     .feature-group ul { grid-template-columns: 1fr; }
     .planning-section, .quote-section { padding: 2rem 1.25rem; }
     .quote-actions { align-items: stretch; flex-direction: column; }

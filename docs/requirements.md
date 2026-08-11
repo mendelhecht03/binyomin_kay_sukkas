@@ -85,10 +85,21 @@ and schach choices, available features, the confirmed project services, and the
 current service-area list. Pricing remains quote-only. The primary action links
 to `/contact/`, with the business phone number as a secondary option.
 
-Use only approved real project photos on the Custom Sukkahs page. The confirmed
-photo labels currently cover blue tarp walls, white tarp walls, and soft fabric
-walls. Do not assign a more specific name to the soft fabric until
-Benyamin confirms it.
+Use approved real project photos on the Custom Sukkahs page by default. The
+confirmed photo subjects currently cover blue and white tarp walls, a beige
+woven screen, soft fabric walls, framed plywood walls, two framed infill-panel
+finishes, rooftop horizontal paneling, horizontal slat siding, a porch build,
+and a carpeted floor covering. Keep material names general wherever the exact
+product is not confirmed by Benyamin.
+
+The one approved exception is a user-requested illustrative rendering of white
+lattice-top panels. Label it clearly as an illustrative rendering and never
+present it as a photograph of a completed B. Kay project.
+
+Treat porch and deck builds as site configurations rather than wall materials.
+The Custom Sukkahs page may also offer custom flooring or floor coverings, but
+it must not promise a raised platform or structural floor until Benyamin
+confirms the scope of that service.
 
 The former `/sukkah-packages` route and its old buy/sample routes redirect to
 `/sukka-builder/` so saved links do not lead to a missing page.

@@ -109,10 +109,25 @@ No implementation task is currently in progress.
 ## Waiting
 
 - [ ] Receive and label real custom-sukkah project photos
-  - Received: Confirmed examples of blue tarp, white tarp, and soft fabric
-    drapes or sheers are now used on the Custom Sukkahs page.
-  - Waiting for: Benyamin to confirm the exact soft-fabric material name and
-    identify any additional project photos approved for future use.
+  - Received: Examples of blue and white tarp walls, a beige woven screen,
+    soft fabric, framed plywood walls, light and dark framed infill panels,
+    rooftop horizontal paneling, horizontal slat siding, a porch build, and a
+    carpeted floor covering are now used on the Custom Sukkahs page.
+  - Waiting for: Benyamin to confirm the exact names and materials listed in
+    the terminology task below, and identify any additional project photos
+    approved for future use.
+
+- [ ] Confirm custom wall, siding, and flooring terminology
+  - Ask Benyamin for: the exact soft-fabric name; the beige screen material,
+    thickness, and weather rating; the product names and substrates of the
+    light and dark framed infill panels; the material used for the rooftop
+    horizontal paneling; and the material used for the reddish-brown
+    horizontal slat siding.
+  - Also confirm: whether the lattice-top visualization matches an option B.
+    Kay offers, and whether custom flooring means floor coverings only or can
+    include a raised platform or structural floor.
+  - Until confirmed: Keep all public labels visual and descriptive rather than
+    claiming a specific material or product line.
 
 - [ ] Receive tarp examples and product details
   - Waiting for: Photos or screenshots of available tarp styles, plus their
@@ -156,8 +171,14 @@ No implementation task is currently in progress.
 - [x] Expand and redesign the Custom Sukkahs page
   - Added a photo-led custom-service page with approved structure, wall,
     schach, feature, project-service, service-area, and quote information.
-  - Used only real supplied project photos and linked the main action to the
-    Contact page, with phone as the secondary option.
+  - Used supplied project photos for completed work. The user-requested
+    lattice-top image is clearly labeled as an illustrative rendering.
+  - Expanded the wall gallery with flexible coverings, framed panels, rooftop
+    paneling, and horizontal slat siding. Added porch builds and custom floor
+    coverings as separate project options.
+  - Linked the main action to the Contact page, with phone as the secondary
+    option.
+  - Updated: 2026-08-10
   - Completed: 2026-08-07
 
 - [x] Simplify the custom sukkah frame description
