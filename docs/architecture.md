@@ -85,8 +85,8 @@ redirect pages that send visitors to `/sukka-builder/`.
 `/sukka-builder/` uses the custom, site-styled form. The former Google Form
 embed and temporary `/sukka-builder-alt/` comparison route have been removed.
 The form submits to the site's Worker, which validates the request, stores
-optional site photos, and sends the row data to a private Google Sheet through
-a small Google Apps Script webhook.
+optional site photos, and forwards every answer to the dedicated `BKAY builds`
+Google Form from the server.
 
 `/sukkah-rentals/` contains a custom form that mirrors the questions in the
 client's existing rental Google Form. The browser posts to
@@ -143,13 +143,13 @@ Browser form
 Sites Worker
     |-- validates required fields and photo limits
     |-- stores photo files in the SUBMISSION_PHOTOS R2 binding
-    `-- sends text fields and photo links to Google Apps Script
+    `-- sends text fields and photo links to BKAY builds Google Form
                                       |
                                       v
-                         Private Google Sheet row
+                         Dedicated Builds response
 ```
 
-The Google Sheet stores answers and private, unlisted links to the uploaded
+The dedicated Google Form stores answers and private, unlisted links to the uploaded
 photos. Photo bytes do not go inside spreadsheet cells.
 
 Homepage testimonial submissions use the same protected Apps Script webhook
@@ -164,14 +164,15 @@ reaches the current rental response sheet without requiring new Google Form
 field IDs. Neighborhoods that are not native choices in the older Google Form
 are forwarded through that question's `Other` response.
 
-Two production environment values are required:
+Two production environment values remain required for testimonial submissions:
 
 ```text
 SUKKAH_SHEETS_WEBHOOK_URL
 SUKKAH_SHEETS_WEBHOOK_SECRET
 ```
 
-The `SUBMISSION_PHOTOS` R2 binding is also required for Builds submissions and
+Builds submissions no longer depend on the Apps Script webhook. The
+`SUBMISSION_PHOTOS` R2 binding is required for Builds submissions and
 for Rentals submissions that include photos.
 
 The webhook secret is stored only in the Sites environment and Google Apps

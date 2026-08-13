@@ -24,9 +24,9 @@ layout.
   whether "Benyamin" or "Binyomin" is the intended spelling before launch.
 - The Builds page uses the website's custom form for sukkahs the customer
   already owns. The former Google Form embed has been removed. Submit completed
-  requests to the private Google Sheet
-  through the site's server-side Worker and a protected Google Apps Script
-  webhook. Keep Google credentials and the webhook secret out of browser code.
+  requests through the site's server-side Worker to the dedicated `BKAY builds`
+  Google Form. Keep the Google Form response URL and entry IDs out of browser
+  markup.
 - Keep the homepage focused on a full-bleed hero, three primary sukkah paths,
   an image-led real-work section, a compact owner introduction, testimonials,
   and a final contact prompt.
@@ -151,9 +151,9 @@ The former `/sukkah-packages` route and its old buy/sample routes redirect to
 
 The `/sukka-builder` route is labeled `Builds` and contains the website's
 custom, native-styled form for work on a sukkah the customer already owns.
-Its Submit button sends every enabled answer to the private Builds
-Submissions Google Sheet. Optional site photos are stored in the site's upload
-storage, and the matching Sheet row receives unlisted links to those files.
+Its Submit button sends every enabled answer to the dedicated `BKAY builds`
+Google Form. Optional site photos are stored in the site's upload storage, and
+the matching Google Form response receives unlisted links to those files.
 Show a clear sending, animated success, or retry message beneath the button,
 and disable nonessential motion for visitors who prefer reduced motion.
 

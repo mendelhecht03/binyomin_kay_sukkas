@@ -164,6 +164,8 @@ const maximumPhotoSize = 10 * 1024 * 1024;
 const photoRoutePrefix = "/api/sukkah-submission-photos/";
 const rentalGoogleFormUrl =
   "https://docs.google.com/forms/d/e/1FAIpQLSdvF8UbJgSVrSy6ebK6j93vSfEVlkCXshEIHGj1HxFp1bRGBg/formResponse";
+const buildsGoogleFormUrl =
+  "https://docs.google.com/forms/d/e/1FAIpQLSeG57s-Ttt59d4H6vpRagSjMZvzkqR3OVTm-pnJJNIgjruBGA/formResponse";
 
 function jsonResponse(body, status = 200) {
   return Response.json(body, {
@@ -567,16 +569,6 @@ async function handleTestimonialSubmission(request, env, url) {
 }
 
 async function handleSubmission(request, env, url) {
-  if (!env?.SUKKAH_SHEETS_WEBHOOK_URL || !env?.SUKKAH_SHEETS_WEBHOOK_SECRET) {
-    return jsonResponse(
-      {
-        ok: false,
-        message: "Online requests are temporarily unavailable. Please call (347) 454-2282.",
-      },
-      503,
-    );
-  }
-
   if (!env?.SUBMISSION_PHOTOS) {
     return jsonResponse(
       {
@@ -713,21 +705,53 @@ async function handleSubmission(request, env, url) {
     submission.photoLinks = photoLinks;
     submission.sourcePage = url.origin + "/sukka-builder/";
 
-    const webhookResponse = await fetch(env.SUKKAH_SHEETS_WEBHOOK_URL, {
+    const buildsFormBody = new URLSearchParams();
+    buildsFormBody.set("entry.1459645135", submission.name);
+    buildsFormBody.set("entry.88578913", submission.phone);
+    buildsFormBody.set("entry.2032952346", submission.email);
+    buildsFormBody.set("entry.1702547426", submission.addressLine1);
+    buildsFormBody.set("entry.1843122157", submission.city);
+    buildsFormBody.set("entry.1885630262", submission.state);
+    buildsFormBody.set("entry.1633468001", submission.postalCode);
+    buildsFormBody.set("entry.235283559", submission.neighborhood);
+    buildsFormBody.set("entry.288053173", submission.neighborhoodOther);
+    buildsFormBody.set("entry.102030242", submission.estimatedSize);
+    buildsFormBody.set("entry.1183330893", submission.siteDescription);
+    buildsFormBody.set("entry.935662014", photoLinks.join("\n"));
+    buildsFormBody.set("entry.1046853169", submission.buildDate);
+    buildsFormBody.set("entry.1121106129", submission.takeDownDate);
+    buildsFormBody.set("entry.571101021", submission.timingNotes);
+    buildsFormBody.set("entry.2084089472", submission.service.join(", "));
+    buildsFormBody.set("entry.541886835", submission.serviceOther);
+    buildsFormBody.set("entry.880396791", submission.bringToStorageDate);
+    buildsFormBody.set("entry.1499157179", submission.extraServiceRequired);
+    buildsFormBody.set("entry.740183059", submission.extraServiceDetails);
+    buildsFormBody.set("entry.646890311", submission.sukkahType);
+    buildsFormBody.set("entry.417298100", submission.sukkahTypeOther);
+    buildsFormBody.set("entry.1823327486", submission.schach);
+    buildsFormBody.set("entry.145570292", submission.schachOther);
+    buildsFormBody.set("entry.110336263", submission.addOns.join(", "));
+    buildsFormBody.set("entry.1850093219", submission.addOnsOther);
+    buildsFormBody.set("entry.1318520419", submission.referral);
+    buildsFormBody.set("entry.651494436", submission.comments);
+    buildsFormBody.set("entry.443309138", submission.submissionId);
+    buildsFormBody.set("entry.1059985494", submission.submittedAt);
+    buildsFormBody.set("entry.1308618501", submission.status);
+    buildsFormBody.set("entry.2039676450", submission.sourcePage);
+    buildsFormBody.set("fvv", "1");
+    buildsFormBody.set("pageHistory", "0");
+
+    const googleResponse = await fetch(buildsGoogleFormUrl, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json; charset=utf-8",
+        "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
       },
-      body: JSON.stringify({
-        secret: env.SUKKAH_SHEETS_WEBHOOK_SECRET,
-        submission,
-      }),
+      body: buildsFormBody.toString(),
       redirect: "follow",
     });
 
-    const webhookResult = await webhookResponse.json().catch(() => null);
-    if (!webhookResponse.ok || webhookResult?.ok !== true) {
-      throw new Error("The spreadsheet webhook rejected the submission.");
+    if (!googleResponse.ok) {
+      throw new Error("Google Forms rejected the Builds request with status " + googleResponse.status + ".");
     }
 
     return jsonResponse({

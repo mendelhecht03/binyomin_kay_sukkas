@@ -45,7 +45,12 @@ When adding a task, use this format:
 
 ## Now
 
-_No active task._
+- [ ] Connect Builds to a new dedicated Google Form
+  - Why: Builds responses must be kept separate from Rentals and from the
+    legacy spreadsheet webhook.
+  - Done when: The new `BKAY builds` form contains every Builds field, the
+    Worker submits to it, a live test response appears in that form, and the
+    updated site is deployed.
 
 ## Next
 
