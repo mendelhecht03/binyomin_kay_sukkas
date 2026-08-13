@@ -22,8 +22,9 @@ layout.
 
 - The existing public name, "Benyamin Kay Sukkas," is kept for now. Confirm
   whether "Benyamin" or "Binyomin" is the intended spelling before launch.
-- The Sukka Builder uses the website's custom form. The former Google Form
-  embed has been removed. Submit completed requests to the private Google Sheet
+- The Builds page uses the website's custom form for sukkahs the customer
+  already owns. The former Google Form embed has been removed. Submit completed
+  requests to the private Google Sheet
   through the site's server-side Worker and a protected Google Apps Script
   webhook. Keep Google credentials and the webhook secret out of browser code.
 - Keep the homepage focused on a full-bleed hero, three primary sukkah paths,
@@ -33,9 +34,15 @@ layout.
   palette with wood accents. Give each section a distinct composition through
   real photography, spacing, and restrained tactile states rather than extra
   promotional copy. Do not use AI-generated images.
-- The testimonial section uses two asymmetric quote panels. Add only real,
-  approved testimonials. Until customer names and copy are supplied, retain
-  clearly labeled placeholders rather than inventing endorsements.
+- The testimonial section shows only genuine, approved testimonials. It also
+  includes a compact submission form that collects the reviewer's name,
+  organization, private verification contact, testimonial, and publication
+  consent. New submissions are stored privately with `Pending review` status
+  and never appear on the website automatically.
+- Testimonial cards use an arrow-controlled carousel with a clipped viewport,
+  no visible internal scrollbars, and keyboard/reduced-motion support. Until
+  additional reviews are approved, any test card must be clearly labeled as a
+  preview and must not read as a customer endorsement.
 - The compact homepage owner section uses Benyamin's profile photo and a short
   editable company-history statement. Keep the full biography on `/about/`.
 
@@ -63,8 +70,6 @@ built as directory-style files, so `/about` is represented by
 
 /contact
 
-/gallery
-
 /sukka-builder
 
 /sukkah-rentals
@@ -85,64 +90,90 @@ and schach choices, available features, the confirmed project services, and the
 current service-area list. Pricing remains quote-only. The primary action links
 to `/contact/`, with the business phone number as a secondary option.
 
-Use approved real project photos on the Custom Sukkahs page by default. The
-confirmed photo subjects currently cover blue and white tarp walls, a beige
-woven screen, soft fabric walls, framed plywood walls, two framed infill-panel
-finishes, rooftop horizontal paneling, horizontal slat siding, a porch build,
-and a carpeted floor covering. Keep material names general wherever the exact
-product is not confirmed by Benyamin.
+The Sukkahs navigation group contains Builds, Rentals, Custom Sukkahs, and
+Pergolas. The footer uses the same grouping. Public route paths remain
+unchanged for saved links and search engines.
 
-The one approved exception is a user-requested illustrative rendering of white
-lattice-top panels. Label it clearly as an illustrative rendering and never
-present it as a photograph of a completed B. Kay project.
+Use approved real project photos on the Custom Sukkahs page by default. The
+confirmed photo subjects currently cover blue, white, and beige tarp walls,
+soft fabric walls, framed plywood walls, a light framed infill-panel
+finishes, rooftop horizontal paneling, horizontal slat siding, a porch build,
+and a carpeted floor covering, plus supplied bamboo sticks, bamboo mats, and
+evergreen schach photos. Keep material names general wherever the exact product
+is not confirmed by Benyamin.
+
+Show one supplied tarp example in the unified wall and siding gallery, labeled
+"Tarp walls". Keep the fabric, panel, and custom siding examples in the same
+gallery rather than dividing them into separate subcategory sections. State
+beneath the full gallery: "Tarp walls come in varying thicknesses and colors.
+Exact options and pricing are confirmed during the quote." On mobile, turn the
+gallery into a horizontal scroll-snap slider with compact, uniform cards so
+visitors can swipe through every option without seeing oversized images.
+
+Keep the siding section titled "Siding." with the short note, "Contact us for
+current availability." Style both the Siding and Schach sections as contained
+editorial chapters that match the frame section: dark serif headings, the
+light page background, real photography, restrained dividers, and consistent
+spacing. Do not use large gold headings or separate full-width tinted bands for
+these sections. Use the supplied real photo for the wood lattice panel option
+and do not label it as an illustrative rendering. Reframe the horizontal slat
+siding photo with a right-anchored crop so the worker is not centered in the
+card.
+
+Add a Schach section using the same equal-card gallery and mobile swipe behavior
+as the siding section. Show three supplied examples in this order: "Bamboo
+sticks", "Bamboo mats", and "Evergreen". Keep the heading "Schach." and use a
+short availability note rather than promising specific materials or pricing.
+
+Do not show the redundant horizontal rooftop paneling card or a separate
+"More than the walls" project-options section. Keep porch and flooring details
+in the concise details list instead.
 
 Treat porch and deck builds as site configurations rather than wall materials.
-The Custom Sukkahs page may also offer custom flooring or floor coverings, but
-it must not promise a raised platform or structural floor until Benyamin
-confirms the scope of that service.
+List porches, backyards, courtyards, and rooftops as the current site settings.
+Offer flooring as an available furnishing or decor addition, but do not promise
+a raised platform or structural floor until Benyamin confirms the scope of that
+service.
+
+Keep the details section limited to two groups: "Available additions" and
+"Furnishings and decor". Do not show a separate special-request group. Instead,
+include a short link inviting visitors to contact the business about other
+customization options.
 
 The former `/sukkah-packages` route and its old buy/sample routes redirect to
 `/sukka-builder/` so saved links do not lead to a missing page.
 
-The `/sukka-builder` route contains the website's custom, native-styled form.
-Its Submit button sends every enabled answer to the private Sukkah Builder
+The `/sukka-builder` route is labeled `Builds` and contains the website's
+custom, native-styled form for work on a sukkah the customer already owns.
+Its Submit button sends every enabled answer to the private Builds
 Submissions Google Sheet. Optional site photos are stored in the site's upload
 storage, and the matching Sheet row receives unlisted links to those files.
-Show a clear sending, success, or retry message beneath the button.
+Show a clear sending, animated success, or retry message beneath the button,
+and disable nonessential motion for visitors who prefer reduced motion.
 
-The builder keeps a compact section-progress indicator visible while visitors
-move through the form. On desktop it uses a left-side section list; on smaller
-screens it becomes a narrow sticky status row so it does not crowd the fields.
-Form sections use one consistent card, input, and selected-choice style.
-On wide screens, all seven form-section cards use the same centered 720-pixel
-maximum width, with their content arranged inside a centered 640-pixel column.
-Labels and form text remain left-aligned for easy scanning. Multi-column
-choices, dates, sliders, and uploads must reflow before they can overflow.
+Builds uses the same guided-request design system as Rentals. Its six steps are
+Contact, Location, Your sukkah, The site, Timing, and Review and send. Only one
+step is visible at a time on mobile and desktop. The form uses the shared
+centered 850-pixel maximum width, progress bar, card, controls, Back and
+Continue buttons, review rows, inline errors, and success treatment. The old
+desktop process sidebar and redundant form introduction are not shown.
+Entered values and selected photos remain attached to the same form controls
+while visitors move Back, Continue, or Edit a review row.
+
+The progress row becomes sticky on phone-sized screens. Multi-column choices,
+dates, sliders, and uploads must reflow before they can overflow. Labels and
+form text remain left-aligned for easy scanning.
 Use the same slim slider treatment for both estimated dimensions: a four-pixel
 track, forest-colored progress, and a white circular thumb with a forest border.
 Show each current measurement in a compact cream readout using the site's
 old-style serif numerals and a small sans-serif unit. When the value changes,
 use a brief directional pop for feedback and disable that motion when the
-visitor prefers reduced motion. Place each readout centered beneath its slider
-on desktop. At 700 pixels and below, place the readout beside its Width or
-Length label with the slider on the following row.
-Use a medium-weight system monospace font for the builder's Submit button. The
-button must not move or scale on hover or press; pressing it should only darken
-its green background slightly. Center the button within the form and place its
-temporary submission-status note directly underneath it.
-Keep standard text fields compact: approximately 36 pixels high on desktop,
-40 pixels on small tablets, and 44 pixels on phone-sized screens. Use slightly
-smaller field labels and input text on desktop. At 700 pixels and below, use
-16-pixel text for editable controls so iPhone Safari does not zoom the page
-when a visitor focuses a field. Radio and checkbox option cards use a 40-pixel
-height in a two-column desktop grid and a one-column small-screen grid. Date
-controls, uploads, and sliders retain their specialized touch-friendly sizes.
-Hide the Timing notes placeholder at 700 pixels and below so the compact field
-does not show clipped instructional text; keep its visible label.
-
-Stack every address control vertically at all screen widths. The controls
-should still reflect the expected answer length instead of filling the entire
-form card. Street address, city, and state share one width; ZIP remains compact.
+visitor prefers reduced motion. Display each current measurement in the same
+compact control as its label and slider. Standard editable controls and action
+targets remain at least 44 pixels tall on phones, and phone text inputs use
+16-pixel text so iPhone Safari does not zoom when a visitor focuses a field.
+The final forest-colored action reads `Request a quote`, with a short
+no-payment reassurance directly below it.
 
 The `/sukkah-rentals` page uses a custom, site-styled rental request form rather
 than an embedded Google Form. It preserves the questions, required fields, and
@@ -150,15 +181,24 @@ choices from the client's published `BK Sukkah rentals` form. The site Worker
 validates each request and forwards it server-side to that Google Form so the
 client's existing response destination remains unchanged.
 
-The rental form is arranged into Contact, Location, Sukkah, Schedule, and Final
-details sections. It uses the same card, progress, choice, input, submit-status,
-mobile stacking, and accessible error-state patterns as the Sukka Builder form.
-The Google Form's final untitled required question is presented with the clear
-label `Questions or concerns` while keeping its original helper message.
+The rental form is a five-step guided request flow: Contact, Location, Timing,
+Extras, and Review and send. Only one step is visible at a time on mobile and
+desktop. A clear progress label and bar update with each step, Back and
+Continue preserve entered values, and inline validation identifies the first
+field that needs attention without using alert dialogs.
 
-The `/gallery` route temporarily shows a branded under-construction page while
-the client prepares approved project photography. Replace it with the completed
-gallery later without changing the public route.
+Before the guided steps, the Rentals page shows a compact product summary with
+a fixed-aspect-ratio image placeholder. Its approved description is: "Comes
+with a basic metal frame with a variety of canvas tarps to choose from." The
+step progress fill uses the site's solid gold accent.
+
+Neighborhood and timing questions use compact native selects with conditional
+Other fields. Optional services are grouped separately from the required
+rental details. The final step shows a compact review with Edit actions before
+the `Request availability` button. The browser preserves the original rental
+field names and posts the same data contract to the Worker; when the visitor
+does not enter a separate question, the browser supplies a neutral value for
+the legacy required Google Form question.
 
 The Site Details section accepts up to three optional area photos. Each photo
 may be a JPG, PNG, or HEIC file and must be no larger than 10 MB. Enforce these
@@ -173,67 +213,50 @@ required, mutually exclusive radio-button group.
 The visitor must also choose exactly one schach type using a required,
 mutually exclusive radio-button group.
 
-The contact section collects first name and last name in separate required
-fields, followed by the visitor's phone number and email address. Stack all
-four fields vertically in that order and give them the same width.
+The Contact step collects first name and last name in separate required fields,
+followed by the visitor's phone number and email address. Pair the fields on
+desktop and stack them vertically on phones.
 
-For visitors who already own a sukkah, requested work choices appear as Bring
-out of storage, Build, Take down, Bring to storage, and Other. Visitors may
-choose more than one. Hide and disable this group on the purchase path.
+Requested work choices appear as Bring out of storage, Build, Take down, Bring
+to storage, and Other. Visitors may choose more than one.
 
-In the custom form, collect the project address under Location and Service
-instead of Contact Details. The address uses separate fields for street
-address, city, state, and ZIP code. State is a required dropdown containing the
-50 U.S. states and Washington, D.C. Street address, city, and state use the
-same full field width, while ZIP remains compact. The visitor must then
-separately choose one required neighborhood from the mutually exclusive
-radio-button list. Keep an Other option for neighborhoods outside the listed
-service areas. Place the instruction "Enter the address where the sukkah will
-be used." directly above the address fields without a visible address
-subheading.
+In the custom form, collect the project address in the Location step. The
+address uses separate fields for street address, city, state, and ZIP code.
+State is a required dropdown containing the 50 U.S. states and Washington,
+D.C. Neighborhood uses the same compact select pattern as Rentals, with a
+conditional required text field when Other is selected. Requested work is a
+multi-select checkbox-card group in this same step.
 
 Size the ZIP Code field for the longest supported U.S. format, `12345-6789`.
 Accept no more than 10 characters while continuing to support both five-digit
 and ZIP+4 entries.
 
-The first form card asks the visitor to choose one required project path:
-I would like to buy or I already have a sukkah. Present the paths with the
-reusable, accessible project-path selector. Each option includes a short
-explanation, a visible radio indicator, and a warm selected state that uses the
-site's forest and wood colors. Rental requests belong on the dedicated
-`/sukkah-rentals` route and should not appear as a builder choice.
+The Builds form assumes the visitor already owns a sukkah. It does not include
+a purchase path or project-path selector. Visitors who need a new made-to-order
+sukkah are directed to `/custom-sukkahs/`, while rental requests remain on
+`/sukkah-rentals/`.
 
-The selected path tailors later questions. The purchase path uses new-sukkah
-wording, hides and disables Requested work, and asks for one preferred
-installation date. The existing-sukkah path uses current-sukkah wording and
-shows Requested work. Contact, location, site, and final-detail questions
-remain common to both paths. Switching paths should preserve previously
-entered values while excluding hidden controls from eventual form submission.
+The Builds form always asks `When would you like it installed?` and uses a
+required date picker. Its submitted field remains `buildDate` for backend
+compatibility.
 
-For an existing sukkah, selecting either Bring out of storage or Build reveals
-one shared Timing card titled "When should we come?" If both are checked, show
-only one card. Populate its Preferred day dropdown automatically from the
-browser's Hebrew calendar with every civil date from Motzei Yom Kippur through
-Erev Sukkos for the next upcoming Sukkos. Label the first and last options with
-those holiday names and show weekday plus Gregorian date for every option.
-Include an Other date option that reveals a required date field. Limit that
-field to the inclusive range from 30 days before Sukkos through Erev Sukkos.
-Use the device's native date picker on mobile and the site's themed flatpickr
-calendar on desktop.
+Both forms list Los Angeles among the neighborhood choices. Both include the
+same add-on choices and an optional `Extra service` checkbox with this helper
+text: `Check this if additional labor beyond the standard scope is required
+(for example, a rooftop sukkah).` When the visitor checks it, the form asks
+for required details.
 
-Selecting Take down or Bring to storage reveals the same Timing card with that
-service's own required dropdown. If both are checked, keep one card and show
+Selecting Take down or Bring to storage reveals that service's own required
+dropdown within the Timing card. If both are checked, show
 two clearly labeled dropdowns. List the same holiday-window dates in reverse
 order, from Erev Sukkos back through Motzei Yom Kippur. Each dropdown includes
 its own Other date option and date field with the same 30-day limit. Use the
 Choices.js CDN component for these holiday-window dropdowns. Hide and disable
-the Timing card when no triggering Requested work option is selected.
+the service-specific dropdowns when the matching work is not selected.
 
-When the purchase path is selected, show a required question titled "How would
-you like to receive your sukkah?" immediately below the project-path selector.
-Present two radio options: "I’ll pick it up" and "Deliver it to me." Hide
-and disable this question on the existing-sukkah path so its value is excluded
-from eventual form submission.
+The footer shows office hours as Sunday-Friday, 7:00 AM-7:00 PM, and states
+that the business is closed on Erev Yom Kippur, Motzei Yom Kippur, and Erev
+Sukkos.
 
 **Build requirements**
 
@@ -257,12 +280,12 @@ from eventual form submission.
 - Keep the Request a Quote label medium-weight rather than bold. Use a small
   northeast arrow that moves slightly on pointer hover and keyboard focus as
   directional feedback. Respect reduced-motion preferences.
-- On desktop, the Sukkahs and Other Services menus open on pointer hover or
-  keyboard focus.
-- On phones and tablets, those menus open when tapped.
+- On desktop, the Sukkahs menu opens on pointer hover or keyboard focus. Tree
+  Trimming and Eruv Work remain direct links in the primary navigation.
+- On phones and tablets, the Sukkahs menu opens when tapped.
 - On phones and tablets, navigation uses a full-height panel. The close button,
   Escape key, and selecting a link close the panel and its expanded nested menus.
-- The mobile navigation panel and both nested service menus open and close with
+- The mobile navigation panel and the nested Sukkahs menu open and close with
   smooth motion. Respect the visitor's reduced-motion preference.
 - Normal navigation links use an animated gold underline for hover, focus, and
   the active page. Do not place them on filled green backgrounds; keep the

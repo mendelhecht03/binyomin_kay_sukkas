@@ -5,8 +5,8 @@ const isHome = currentPath === "/";
 const sukkahLinks = [
   {
     href: "/sukka-builder/",
-    label: "Sukka Builder",
-    description: "Plan a new sukkah for your space.",
+    label: "Builds",
+    description: "Arrange installation for a sukkah you own.",
   },
   {
     href: "/sukkah-rentals/",
@@ -18,23 +18,10 @@ const sukkahLinks = [
     label: "Custom Sukkahs",
     description: "Build around an unusual space or need.",
   },
-];
-
-const serviceLinks = [
   {
     href: "/pergolas/",
     label: "Pergolas",
     description: "Create a practical outdoor structure.",
-  },
-  {
-    href: "/tree-trimming/",
-    label: "Tree Trimming",
-    description: "Careful cutting, cleanup and planning.",
-  },
-  {
-    href: "/eruv-work/",
-    label: "Eruv Work",
-    description: "Checking, repair and maintenance.",
   },
 ];
 
@@ -90,7 +77,7 @@ const groupIsActive = (links: typeof sukkahLinks) =>
               <strong>Sukkah services</strong>
               <span>From planning through takedown.</span>
             </div>
-            <div class="nav-dropdown-inner">
+            <div class="nav-dropdown-inner nav-dropdown-inner-sukkahs">
               {sukkahLinks.map((link) => (
                 <a
                   class:list={["dropdown-link", { "is-active": isActive(link.href) }]}
@@ -106,37 +93,17 @@ const groupIsActive = (links: typeof sukkahLinks) =>
         </div>
       </details>
 
-      <details class="nav-group" data-nav-group>
-        <summary class:list={["nav-link", { "is-active": groupIsActive(serviceLinks) }]}>
-          <span>Other Services</span>
-        </summary>
-        <div class="nav-dropdown">
-          <div class="nav-dropdown-layout shell">
-            <div class="nav-dropdown-intro" aria-hidden="true">
-              <strong>Outdoor work</strong>
-              <span>Practical help beyond sukkah season.</span>
-            </div>
-            <div class="nav-dropdown-inner">
-              {serviceLinks.map((link) => (
-                <a
-                  class:list={["dropdown-link", { "is-active": isActive(link.href) }]}
-                  aria-current={isActive(link.href) ? "page" : undefined}
-                  href={link.href}
-                >
-                  <span>{link.label}</span>
-                  <small>{link.description}</small>
-                </a>
-              ))}
-            </div>
-          </div>
-        </div>
-      </details>
-
       <a
-        class:list={["nav-link", { "is-active": isActive("/gallery/") }]}
-        aria-current={isActive("/gallery/") ? "page" : undefined}
-        href="/gallery/"
-      ><span>Gallery</span></a>
+        class:list={["nav-link", { "is-active": isActive("/tree-trimming/") }]}
+        aria-current={isActive("/tree-trimming/") ? "page" : undefined}
+        href="/tree-trimming/"
+      ><span>Tree Trimming</span></a>
+      <a
+        class:list={["nav-link", { "is-active": isActive("/eruv-work/") }]}
+        aria-current={isActive("/eruv-work/") ? "page" : undefined}
+        href="/eruv-work/"
+      ><span>Eruv Work</span></a>
+
       <a
         class:list={["nav-link", { "is-active": isActive("/about/") }]}
         aria-current={isActive("/about/") ? "page" : undefined}

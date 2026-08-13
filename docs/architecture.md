@@ -67,7 +67,6 @@ Astro builds these routes as directory-style HTML files. For example,
 /
 /about/
 /contact/
-/gallery/
 /sukka-builder/
 /sukkah-rentals/
 /custom-sukkahs/
@@ -94,22 +93,37 @@ client's existing rental Google Form. The browser posts to
 `/api/rental-submissions`; the Worker validates the values and forwards them to
 Google Forms from the server. Keeping Google Forms field IDs in the Worker
 avoids exposing the integration in page markup, but those IDs must be updated
-if a Google Form question is deleted and recreated.
+if a Google Form question is deleted and recreated. The page presents those
+fields as a client-side five-step flow with local step navigation, inline
+validation, conditional Other inputs, and a final review. Step changes do not
+send requests or replace form controls, so entered values remain in the form
+until the final submission.
 
 The builder's desktop date fields use Flatpickr 4.6.13 loaded from jsDelivr.
 Mobile browsers retain their native date picker. The original inputs continue
-to store dates in `YYYY-MM-DD` format for a future submission backend.
+to store dates in `YYYY-MM-DD` format for the existing Worker submission
+contract. Conditional holiday-window selects use Choices.js 11.2.3.
 
-The custom builder places the project address in its location and service
-section. The address is a normal required text input that the visitor fills in
-manually. A separate required radio group records exactly one neighborhood,
-with an Other option for locations outside the listed service areas. The page
-does not load a third-party address service.
+The custom builder places the project address and requested work in its
+Location step. Visitors fill the address manually. A compact required select
+records one neighborhood, with a conditional Other text field for locations
+outside the list. The page does not load a third-party address service.
 
-## Sukka Builder
+## Builds
 
-The `/sukka-builder/` page contains the custom form directly. Visitors can
-select up to three optional area photos, with a 10 MB limit for each photo.
+The `/sukka-builder/` route keeps its existing URL but is labeled `Builds` in
+the interface. It is intended for sukkahs the customer already owns and no
+longer has a purchase-path selector. The page contains the custom form
+directly. Visitors can select up to three optional area photos, with a 10 MB
+limit for each photo.
+
+Builds and Rentals import `src/styles/guided-request-form.css` for the shared
+progress, card, fields, choice controls, navigation, review, validation, and
+success presentation. Builds adds only the controls unique to its request,
+including dimension sliders, the photo picker, and conditional service dates.
+The Builds form is a client-side six-step flow. Step navigation changes which
+existing form section is visible without replacing controls or submitting, so
+values and selected files remain in place until the final request.
 
 The form uses this flow:
 
@@ -130,6 +144,18 @@ Sites Worker
 The Google Sheet stores answers and private, unlisted links to the uploaded
 photos. Photo bytes do not go inside spreadsheet cells.
 
+Homepage testimonial submissions use the same protected Apps Script webhook
+but include `type: testimonialSubmission`. Apps Script writes them to a
+separate `Testimonials` tab, creates that tab and its header on first use, and
+stores every new entry with `Pending review` status. The browser posts to
+`/api/testimonial-submissions`; there is no automatic publication path.
+
+Rental add-ons and extra-service details are appended to the existing Google
+Form comments answer so the data reaches the current rental response sheet
+without requiring new Google Form field IDs. Los Angeles is forwarded through
+that Google Form question's `Other` response because it is not yet a native
+choice in the older Google Form.
+
 Two production environment values are required:
 
 ```text
@@ -148,10 +174,10 @@ layouts. Changing a shared component updates every page that uses it during
 the next build. This replaces the old system where the same navbar HTML had to
 be copied into every page.
 
-`src/components/Header.astro` owns the shared service groups, active-page
-states, and responsive menu behavior. Desktop service groups open as a flat
-rail attached to the header. At tablet and phone sizes, the same links move
-into a full-height panel with expandable service groups. The page body becomes
+`src/components/Header.astro` owns the shared Sukkahs menu, direct Tree
+Trimming and Eruv Work links, active-page states, and responsive menu behavior.
+The desktop Sukkahs menu opens as a flat rail attached to the header. At tablet
+and phone sizes, its links move into a full-height panel. The page body becomes
 temporarily inert while that panel is open so keyboard focus stays inside the
 navigation.
 
@@ -166,6 +192,8 @@ The Worker handles the live builder endpoint:
 
 ```text
 POST /api/sukkah-submissions
+POST /api/rental-submissions
+POST /api/testimonial-submissions
 GET  /api/sukkah-submission-photos/<unlisted-photo-key>
 ```
 

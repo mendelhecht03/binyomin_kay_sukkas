@@ -45,7 +45,7 @@ When adding a task, use this format:
 
 ## Now
 
-No implementation task is currently in progress.
+No task is currently in progress.
 
 ## Next
 
@@ -56,11 +56,11 @@ No implementation task is currently in progress.
     accurate explanation has been added to the Custom Sukkahs page.
 
 - [ ] Replace testimonial placeholders with genuine customer reviews
-  - Why: The homepage now has a testimonials section, but it still needs real
-    customer wording and approved names.
+  - Why: The homepage now shows one approved review from Friendship Circle
+    Brooklyn and still needs at least one more approved customer story.
   - Done when: At least two genuine reviews have written publication approval
-    and replace the homepage placeholders. Do not write or publish fabricated
-    or AI-generated customer reviews.
+    and appear on the homepage. Do not write or publish fabricated or
+    AI-generated customer reviews.
 
 - [ ] Update the service-area list
   - Why: The requested location list has changed.
@@ -85,18 +85,6 @@ No implementation task is currently in progress.
   - Done when: Visitors can understand the available rental package before
     reaching a clearly separated rental-request form.
 
-- [ ] Add a customer review submission process
-  - Why: Customers need a simple way to send genuine feedback for possible
-    publication.
-  - Done when: A review form or trusted external review link is available, new
-    submissions require moderation, and nothing is published automatically.
-
-- [ ] Review add-ons across the regular sukkah pages
-  - Why: One recording mentions regular sukkahs and add-ons, but the intended
-    change is unclear.
-  - Done when: Benyamin confirms which add-ons belong on each regular sukkah
-    page and the approved choices are displayed consistently.
-
 - [ ] Strengthen the About page with approved business history
   - Why: The requested About copy includes customer-volume, worldwide-service,
     and company-relationship claims that could build trust if they are accurate.
@@ -109,8 +97,8 @@ No implementation task is currently in progress.
 ## Waiting
 
 - [ ] Receive and label real custom-sukkah project photos
-  - Received: Examples of blue and white tarp walls, a beige woven screen,
-    soft fabric, framed plywood walls, light and dark framed infill panels,
+  - Received: Examples of blue, white, and beige tarp walls,
+    soft fabric, framed plywood walls, a light framed infill panel,
     rooftop horizontal paneling, horizontal slat siding, a porch build, and a
     carpeted floor covering are now used on the Custom Sukkahs page.
   - Waiting for: Benyamin to confirm the exact names and materials listed in
@@ -118,13 +106,13 @@ No implementation task is currently in progress.
     approved for future use.
 
 - [ ] Confirm custom wall, siding, and flooring terminology
-  - Ask Benyamin for: the exact soft-fabric name; the beige screen material,
-    thickness, and weather rating; the product names and substrates of the
-    light and dark framed infill panels; the material used for the rooftop
+  - Ask Benyamin for: the exact soft-fabric name; the beige tarp material,
+    thickness, and weather rating; the product name and substrate of the light
+    framed infill panel; the material used for the rooftop
     horizontal paneling; and the material used for the reddish-brown
     horizontal slat siding.
-  - Also confirm: whether the lattice-top visualization matches an option B.
-    Kay offers, and whether custom flooring means floor coverings only or can
+  - Also confirm: whether the lattice-panel photo matches an option B. Kay
+    offers, and whether custom flooring means floor coverings only or can
     include a raised platform or structural floor.
   - Until confirmed: Keep all public labels visual and descriptive rather than
     claiming a specific material or product line.
@@ -161,21 +149,114 @@ No implementation task is currently in progress.
     projects only.
   - Unblocks: The service-area update.
 
-- [ ] Clarify the regular-sukkah add-ons voice note
-  - Waiting for: Confirmation of whether the recording meant add-ons should or
-    should not appear with regular sukkahs.
-  - Unblocks: The add-on review across regular sukkah pages.
+- [ ] Receive additional approved testimonials
+  - Waiting for: The exact public wording and attribution for at least two more
+    genuine customer testimonials.
+  - Unblocks: Publishing multiple testimonial cards in the homepage scroller.
 
 ## Completed
+
+- [x] Convert the Builds request into the shared guided-form system
+  - Replaced the sidebar and full-page form stack with Contact, Location, Your
+    sukkah, The site, Timing, and Review and send steps. Reused the Rentals
+    progress, card, controls, validation, navigation, review, and success styles
+    through a shared stylesheet while preserving the Builds field names,
+    service logic, sliders, conditional dates, photo limits, and Worker route.
+  - Verified Back/Edit state retention, conditional fields, review output, and
+    responsive layouts at phone, tablet, and desktop widths. The production
+    build passed, and direct Worker tests accepted and stored a valid mock JPEG
+    while rejecting incomplete conditional answers.
+  - Completed: 2026-08-13
+
+- [x] Add the confirmed rental summary and refine the request page
+  - Removed the hero trust card, changed the guided-form progress fill to the
+    solid gold site accent, and added a compact metal-frame and canvas-tarp
+    summary with a fixed 4:3 photo placeholder.
+  - Verified the production build and the updated composition at 927-pixel
+    desktop and 390-pixel phone widths with no horizontal page overflow.
+  - Completed: 2026-08-12
+
+- [x] Convert the Sukkah Rentals request into a guided five-step form
+  - Reorganized the existing fields into Contact, Location, Timing, Extras,
+    and Review and send. Added clear progress, Back and Continue controls,
+    compact selectors, conditional fields, inline validation, a review summary,
+    a request-focused final CTA, and Rentals-specific mobile footer spacing.
+    Preserved the Worker endpoint and original server field names.
+  - Completed: 2026-08-12
+
+- [x] Remove the Sukkah Rentals trust card
+  - Removed the optional trust notice from the Rentals hero and cleaned up its
+    unused styles so the hero ends naturally after the supporting copy.
+  - History: A later guided-form brief temporarily restored a smaller trust
+    cue; current browser feedback confirmed that it should remain removed.
+  - Completed: 2026-08-12
+
+- [x] Redesign the Sukkah Rentals hero
+  - Centered the hero content below the left-aligned breadcrumb, refined the
+    heading scale and spacing, and replaced the alert-like security notice with
+    a compact trust card for direct, secure delivery.
+  - Completed: 2026-08-12
+
+- [x] Refine the homepage testimonial carousel
+  - Replaced the native scrolling box with an arrow-controlled, clipped slide
+    track. Removed fixed card heights, tightened quote and attribution spacing,
+    balanced the two-column layout, and added keyboard, focus, and reduced-motion
+    handling.
+  - Completed: 2026-08-12
+
+- [x] Refine shared navigation, forms, and testimonial scrolling
+  - Moved Tree Trimming and Eruv Work into the primary navigation as direct
+    links, centered the matching form-page hero content, restyled the secure
+    notices and both submit buttons, and changed Extra service to an optional
+    checkbox on Builds and Rentals. Added a clearly labeled temporary preview
+    testimonial card with an animated More stories cue for scroller testing.
+  - Completed: 2026-08-12
+
+- [x] Remove the former photo route and prepare testimonial scrolling
+  - Removed the public photo page, navigation/footer/about links, service
+    action references, and route documentation. Added an accessible horizontal
+    testimonial scroller with previous/next controls that activates when the
+    approved story set contains more than one card.
+  - Completed: 2026-08-12
+
+- [x] Apply the August 12 homepage browser annotations
+  - Updated the hero, service, and process copy requested in the browser
+    comments.
+  - Added optimized local photos for rentals, planning, and the finished
+    sukkah, and adjusted the service photo focal point to center the worker.
+  - Verified the production build and checked the homepage at the annotated
+    desktop width and at phone width with no horizontal page overflow.
+  - Completed: 2026-08-12
+
+- [x] Apply the August 12 website content and form updates
+  - Moved Pergolas into the Sukkahs navigation and footer group; renamed the
+    public `Sukka Builder` label to `Builds` while preserving its route; and
+    added the confirmed office hours and holiday closures.
+  - Added Los Angeles to both form neighborhood lists and the Custom Sukkahs
+    service-area section.
+  - Simplified Builds for customer-owned sukkahs, added its required
+    installation date, synchronized add-ons across Builds and Rentals, added
+    the required extra-service question, and gave both forms matching submit
+    buttons with reduced-motion-safe success feedback.
+  - Added the approved Friendship Circle Brooklyn testimonial and a compact
+    private testimonial-submission process. New submissions are saved with
+    `Pending review` status and never publish automatically.
+  - Verified the production build, simulated all three server submission
+    routes, ran browser checks at desktop and phone widths, and completed WCAG
+    2 A/AA automated checks with no reported violations.
+  - Completed: 2026-08-12
 
 - [x] Expand and redesign the Custom Sukkahs page
   - Added a photo-led custom-service page with approved structure, wall,
     schach, feature, project-service, service-area, and quote information.
-  - Used supplied project photos for completed work. The user-requested
-    lattice-top image is clearly labeled as an illustrative rendering.
-  - Expanded the wall gallery with flexible coverings, framed panels, rooftop
-    paneling, and horizontal slat siding. Added porch builds and custom floor
-    coverings as separate project options.
+  - Used supplied project photos for completed work, including the supplied
+    wood lattice panel photo.
+  - Expanded the wall gallery with flexible coverings, framed panels, and
+    horizontal slat siding. Unified every wall and siding option in one
+    equal-sized gallery, with the tarp thickness and color note below it.
+    Added a matching Schach gallery for bamboo sticks, bamboo mats, and
+    evergreen, while keeping porch and flooring details in the concise details
+    list instead of a separate project-options section.
   - Linked the main action to the Contact page, with phone as the secondary
     option.
   - Updated: 2026-08-10

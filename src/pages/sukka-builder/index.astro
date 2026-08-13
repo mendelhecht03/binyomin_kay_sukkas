@@ -1,9 +1,7 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import FormHeading from "../../components/FormHeading.astro";
-import Field from "../../components/Field.astro";
-import Choices from "../../components/Choices.astro";
-import ProjectPathSelector from "../../components/ProjectPathSelector.astro";
+import "../../styles/guided-request-form.css";
 
 const services = ["Bring out of storage", "Build", "Take down", "Bring to storage"];
 const neighborhoods = [
@@ -19,266 +17,293 @@ const neighborhoods = [
   "Monsey",
   "New Haven",
   "South Florida",
+  "Los Angeles",
 ];
 const states = [
-  { code: "AL", name: "Alabama" },
-  { code: "AK", name: "Alaska" },
-  { code: "AZ", name: "Arizona" },
-  { code: "AR", name: "Arkansas" },
-  { code: "CA", name: "California" },
-  { code: "CO", name: "Colorado" },
-  { code: "CT", name: "Connecticut" },
-  { code: "DE", name: "Delaware" },
-  { code: "DC", name: "District of Columbia" },
-  { code: "FL", name: "Florida" },
-  { code: "GA", name: "Georgia" },
-  { code: "HI", name: "Hawaii" },
-  { code: "ID", name: "Idaho" },
-  { code: "IL", name: "Illinois" },
-  { code: "IN", name: "Indiana" },
-  { code: "IA", name: "Iowa" },
-  { code: "KS", name: "Kansas" },
-  { code: "KY", name: "Kentucky" },
-  { code: "LA", name: "Louisiana" },
-  { code: "ME", name: "Maine" },
-  { code: "MD", name: "Maryland" },
-  { code: "MA", name: "Massachusetts" },
-  { code: "MI", name: "Michigan" },
-  { code: "MN", name: "Minnesota" },
-  { code: "MS", name: "Mississippi" },
-  { code: "MO", name: "Missouri" },
-  { code: "MT", name: "Montana" },
-  { code: "NE", name: "Nebraska" },
-  { code: "NV", name: "Nevada" },
-  { code: "NH", name: "New Hampshire" },
-  { code: "NJ", name: "New Jersey" },
-  { code: "NM", name: "New Mexico" },
-  { code: "NY", name: "New York" },
-  { code: "NC", name: "North Carolina" },
-  { code: "ND", name: "North Dakota" },
-  { code: "OH", name: "Ohio" },
-  { code: "OK", name: "Oklahoma" },
-  { code: "OR", name: "Oregon" },
-  { code: "PA", name: "Pennsylvania" },
-  { code: "RI", name: "Rhode Island" },
-  { code: "SC", name: "South Carolina" },
-  { code: "SD", name: "South Dakota" },
-  { code: "TN", name: "Tennessee" },
-  { code: "TX", name: "Texas" },
-  { code: "UT", name: "Utah" },
-  { code: "VT", name: "Vermont" },
-  { code: "VA", name: "Virginia" },
-  { code: "WA", name: "Washington" },
-  { code: "WV", name: "West Virginia" },
-  { code: "WI", name: "Wisconsin" },
-  { code: "WY", name: "Wyoming" },
+  ["AL", "Alabama"], ["AK", "Alaska"], ["AZ", "Arizona"], ["AR", "Arkansas"],
+  ["CA", "California"], ["CO", "Colorado"], ["CT", "Connecticut"], ["DE", "Delaware"],
+  ["DC", "District of Columbia"], ["FL", "Florida"], ["GA", "Georgia"], ["HI", "Hawaii"],
+  ["ID", "Idaho"], ["IL", "Illinois"], ["IN", "Indiana"], ["IA", "Iowa"],
+  ["KS", "Kansas"], ["KY", "Kentucky"], ["LA", "Louisiana"], ["ME", "Maine"],
+  ["MD", "Maryland"], ["MA", "Massachusetts"], ["MI", "Michigan"], ["MN", "Minnesota"],
+  ["MS", "Mississippi"], ["MO", "Missouri"], ["MT", "Montana"], ["NE", "Nebraska"],
+  ["NV", "Nevada"], ["NH", "New Hampshire"], ["NJ", "New Jersey"], ["NM", "New Mexico"],
+  ["NY", "New York"], ["NC", "North Carolina"], ["ND", "North Dakota"], ["OH", "Ohio"],
+  ["OK", "Oklahoma"], ["OR", "Oregon"], ["PA", "Pennsylvania"], ["RI", "Rhode Island"],
+  ["SC", "South Carolina"], ["SD", "South Dakota"], ["TN", "Tennessee"], ["TX", "Texas"],
+  ["UT", "Utah"], ["VT", "Vermont"], ["VA", "Virginia"], ["WA", "Washington"],
+  ["WV", "West Virginia"], ["WI", "Wisconsin"], ["WY", "Wyoming"],
 ];
 const sukkahTypes = ["Canvas", "Canvas Bingo", "Snap / panel", "Wood boards with bolts", "Schach and beams only"];
 const schachTypes = ["Bamboo mat", "Bamboo sticks", "Evergreen"];
 const addOns = ["Put up lights", "Pressure wash area day before", "Bamboo mat", "Evergreen"];
-const fulfillmentMethods = ["I’ll pick it up", "Deliver it to me"];
-const projectPaths = [
-  {
-    value: "I would like to buy",
-    title: "I would like to buy",
-    description: "Help me choose a new sukkah and plan the installation.",
-  },
-  {
-    value: "I already have a sukkah",
-    title: "I already have a sukkah",
-    description: "Help me store, build, take down, or service my existing sukkah.",
-  },
-];
 ---
 
-<BaseLayout title="Sukka Builder" description="Share your sukkah setup, location, timing, and site details with Benyamin Kay Sukkas.">
+<BaseLayout
+  title="Builds"
+  description="Share your sukkah setup, location, timing, and site details with Benyamin Kay Sukkas."
+  bodyClass="builds-page request-form-page"
+>
   <Fragment slot="head">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js@11.2.3/public/assets/styles/choices.min.css" />
   </Fragment>
+
   <section class="builder-hero sukkah-hero-background">
-    <div class="shell">
+    <div class="shell builder-hero-inner">
       <nav class="breadcrumb" aria-label="Breadcrumb">
         <a href="/">Home</a><span aria-hidden="true">/</span>
-        <span aria-current="page">Sukka Builder</span>
+        <span aria-current="page">Builds</span>
       </nav>
-
-      <div class="hero-grid">
-        <div class="hero-copy">
-          <p class="eyebrow">Sukka Builder</p>
-          <h1>Your sukkah starts with a good plan.</h1>
-          <p class="lead">Share the details below and we’ll follow up with a custom quote.</p>
-          <p class="builder-notice">Your request will be sent securely to Benyamin.</p>
-        </div>
+      <div class="builder-hero-copy">
+        <p class="eyebrow">BUILDS</p>
+        <h1>Your sukkah starts with a good plan.</h1>
+        <p class="lead">Share a few details and we’ll follow up with a custom quote.</p>
       </div>
     </div>
   </section>
 
-  <section class="form-section" aria-labelledby="form-heading">
+  <section class="form-section" aria-labelledby="build-request-heading">
     <div class="shell form-shell">
-      <div class="form-intro">
-        <div>
-          <p class="eyebrow">Project details</p>
-          <h2 id="form-heading">Tell us about your sukkah</h2>
-          <p>Choose a project path, then complete the six short sections. Required fields are marked with an asterisk.</p>
+      <h2 id="build-request-heading" class="sr-only">Build request</h2>
+
+      <form class="builder-wizard guided-request-form" data-builder-form enctype="multipart/form-data" novalidate>
+        <div class="form-honeypot" aria-hidden="true">
+          <label for="website">Leave this field empty</label>
+          <input id="website" name="website" type="text" tabindex="-1" autocomplete="off" />
         </div>
-      </div>
+        <input name="sukkahPlan" type="hidden" value="I already have a sukkah" />
 
-      <div class="form-layout">
-        <aside class="form-rail" aria-label="Form sections">
-          <p class="rail-title">Your progress</p>
-          <div class="progress-track" role="progressbar" aria-label="Form progress" aria-valuemin="1" aria-valuemax="7" aria-valuenow="1"><span data-progress-bar></span></div>
-          <p class="mobile-progress-label"><span data-current-step>1 of 7</span><strong data-current-label>Start</strong></p>
-          <nav>
-            <a href="#project-path" data-step-link="1"><span>1</span> Start</a>
-            <a href="#contact-details" data-step-link="2"><span>2</span> Contact</a>
-            <a href="#service-details" data-step-link="3"><span>3</span> Location</a>
-            <a href="#sukkah-details" data-step-link="4"><span>4</span> Sukkah</a>
-            <a href="#site-details" data-step-link="5"><span>5</span> Site</a>
-            <a href="#timing-details" data-step-link="6"><span>6</span> Timing</a>
-            <a href="#final-details" data-step-link="7"><span>7</span> Final details</a>
-          </nav>
-          <p class="rail-help">Need help?<br /><a href="tel:+13474542282">Call (347) 454-2282</a></p>
-        </aside>
-
-        <form class="builder-form" data-builder-form enctype="multipart/form-data">
-          <div class="form-honeypot" aria-hidden="true">
-            <label for="website">Leave this field empty</label>
-            <input id="website" name="website" type="text" tabindex="-1" autocomplete="off" />
+        <div class="wizard-progress" data-progress-region aria-live="polite">
+          <p>
+            <span>Step <strong data-current-step>1</strong> of 6</span>
+            <span class="progress-separator" aria-hidden="true">·</span>
+            <strong data-current-label>Contact</strong>
+          </p>
+          <div class="progress-track" role="progressbar" aria-label="Build request progress" aria-valuemin="1" aria-valuemax="6" aria-valuenow="1" aria-valuetext="Step 1 of 6: Contact">
+            <span data-progress-bar></span>
           </div>
-          <section id="project-path" class="form-card form-group path-card" aria-labelledby="path-heading" data-form-step="1">
-            <FormHeading icon="sukkah" eyebrow="Start here" heading="How can we help?" id="path-heading" />
-            <ProjectPathSelector
-              name="sukkahPlan"
-              legend="Choose your project path"
-              hint="We’ll tailor the remaining questions to your choice."
-              hintId="branch-help"
-              options={projectPaths}
-              required
-            />
-            <div class="fulfillment-card" data-buy-only hidden>
-              <Choices
-                legend="How would you like to receive your sukkah?"
-                name="fulfillmentMethod"
-                options={fulfillmentMethods}
-                type="radio"
-                required
-                requiredHint
-              />
-            </div>
-          </section>
+        </div>
 
-          <section id="contact-details" class="form-card form-group" aria-labelledby="contact-heading" data-form-step="2">
-            <FormHeading icon="contact" eyebrow="Contact details" heading="How can we reach you?" id="contact-heading" />
-            <p class="section-copy">We’ll only use these details to follow up about your sukkah.</p>
+        <div class="wizard-card">
+          <section id="contact-details" class="form-step" aria-labelledby="contact-heading" data-form-step="1">
+            <FormHeading icon="contact" eyebrow="Contact" heading="How can we reach you?" id="contact-heading" />
             <div class="form-grid contact-grid">
-              <Field id="firstName" label="First name" autocomplete="given-name" required />
-              <Field id="lastName" label="Last name" autocomplete="family-name" required />
-              <Field id="phone" label="Phone number" type="tel" autocomplete="tel" required />
-              <Field id="email" label="Email address" type="email" autocomplete="email" required />
-            </div>
-          </section>
-
-          <section id="service-details" class="form-card form-group" aria-labelledby="service-heading" data-form-step="3">
-            <FormHeading icon="location" eyebrow="Project location" heading="Where will the project be?" id="service-heading" />
-            <div class="address-field" role="group" aria-label="Project address" aria-describedby="project-address-instruction">
-              <p id="project-address-instruction" class="field-hint address-instruction">Enter the address where the sukkah will be used.</p>
-              <div class="address-grid">
-                <div class="field address-street">
-                  <label for="address-line-1">Street address <span class="required-mark">*</span></label>
-                  <input id="address-line-1" name="addressLine1" autocomplete="address-line1" required />
-                </div>
-                <div class="field address-city">
-                  <label for="address-city">City <span class="required-mark">*</span></label>
-                  <input id="address-city" name="city" autocomplete="address-level2" required />
-                </div>
-                <div class="field address-state">
-                  <label for="address-state">State <span class="required-mark">*</span></label>
-                  <select id="address-state" name="state" autocomplete="address-level1" required>
-                    <option value="">Select state</option>
-                    {states.map((state) => <option value={state.code}>{state.name}</option>)}
-                  </select>
-                </div>
-                <div class="field address-postal">
-                  <label for="address-postal">Zip Code <span class="required-mark">*</span></label>
-                  <input id="address-postal" name="postalCode" inputmode="numeric" autocomplete="postal-code" pattern="[0-9]{5}(-[0-9]{4})?" size="10" maxlength="10" required />
-                </div>
+              <div class="field">
+                <label for="firstName">First name <span class="required-mark">*</span></label>
+                <input id="firstName" name="firstName" autocomplete="given-name" maxlength="200" required />
+                <p class="field-error" id="firstName-error" data-error-for="firstName"></p>
+              </div>
+              <div class="field">
+                <label for="lastName">Last name <span class="required-mark">*</span></label>
+                <input id="lastName" name="lastName" autocomplete="family-name" maxlength="200" required />
+                <p class="field-error" id="lastName-error" data-error-for="lastName"></p>
+              </div>
+              <div class="field">
+                <label for="phone">Phone number <span class="required-mark">*</span></label>
+                <input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="100" required />
+                <p class="field-error" id="phone-error" data-error-for="phone"></p>
+              </div>
+              <div class="field">
+                <label for="email">Email address <span class="required-mark">*</span></label>
+                <input id="email" name="email" type="email" autocomplete="email" inputmode="email" maxlength="320" required />
+                <p class="field-error" id="email-error" data-error-for="email"></p>
               </div>
             </div>
-            <Choices legend="Neighborhood" name="neighborhood" options={neighborhoods} type="radio" required requiredHint otherLabel="Other neighborhood" />
-            <div data-existing-only hidden>
-              <Choices legend="Requested work" name="service" options={services} type="checkbox" required requiredHint otherLabel="Other requested service" />
+          </section>
+
+          <section id="service-details" class="form-step" aria-labelledby="service-heading" data-form-step="2" hidden>
+            <FormHeading icon="location" eyebrow="Location" heading="Where will the project be?" id="service-heading" />
+            <p class="step-intro">Enter the address where the sukkah will be used.</p>
+            <div class="address-grid">
+              <div class="field address-street">
+                <label for="address-line-1">Street address <span class="required-mark">*</span></label>
+                <input id="address-line-1" name="addressLine1" autocomplete="address-line1" maxlength="1000" required />
+                <p class="field-error" id="address-line-1-error" data-error-for="address-line-1"></p>
+              </div>
+              <div class="field">
+                <label for="address-city">City <span class="required-mark">*</span></label>
+                <input id="address-city" name="city" autocomplete="address-level2" maxlength="200" required />
+                <p class="field-error" id="address-city-error" data-error-for="address-city"></p>
+              </div>
+              <div class="field">
+                <label for="address-state">State <span class="required-mark">*</span></label>
+                <select id="address-state" name="state" autocomplete="address-level1" required>
+                  <option value="">Select state</option>
+                  {states.map(([code, name]) => <option value={code}>{name}</option>)}
+                </select>
+                <p class="field-error" id="address-state-error" data-error-for="address-state"></p>
+              </div>
+              <div class="field address-postal">
+                <label for="address-postal">ZIP code <span class="required-mark">*</span></label>
+                <input id="address-postal" name="postalCode" inputmode="numeric" autocomplete="postal-code" pattern="[0-9]{5}(-[0-9]{4})?" maxlength="10" required />
+                <p class="field-error" id="address-postal-error" data-error-for="address-postal"></p>
+              </div>
+            </div>
+            <div class="field">
+              <label for="neighborhood">Neighborhood <span class="required-mark">*</span></label>
+              <select id="neighborhood" name="neighborhood" aria-controls="neighborhood-other-field" aria-expanded="false" required data-neighborhood-select>
+                <option value="">Choose a neighborhood</option>
+                {neighborhoods.map((neighborhood) => <option value={neighborhood}>{neighborhood}</option>)}
+                <option value="Other">Other</option>
+              </select>
+              <p class="field-error" id="neighborhood-error" data-error-for="neighborhood"></p>
+            </div>
+            <div id="neighborhood-other-field" class="field conditional-field" data-neighborhood-other hidden>
+              <label for="neighborhoodOther">Other neighborhood <span class="required-mark">*</span></label>
+              <input id="neighborhoodOther" name="neighborhoodOther" maxlength="200" disabled />
+              <p class="field-error" id="neighborhoodOther-error" data-error-for="neighborhoodOther"></p>
+            </div>
+            <fieldset data-required-group="service">
+              <legend>What do you need help with? <span class="required-mark">*</span></legend>
+              <p class="field-hint">Select everything that applies.</p>
+              <div class="choice-grid service-grid">
+                {services.map((service) => (
+                  <label class="choice-card">
+                    <input type="checkbox" name="service" value={service} />
+                    <span>{service}</span>
+                  </label>
+                ))}
+                <label class="choice-card">
+                  <input type="checkbox" name="service" value="Other" aria-controls="service-other-field" aria-expanded="false" data-service-other-toggle />
+                  <span>Other</span>
+                </label>
+              </div>
+              <p class="group-error" id="service-group-error" data-group-error-for="service"></p>
+            </fieldset>
+            <div id="service-other-field" class="field conditional-field" data-service-other hidden>
+              <label for="serviceOther">Other requested work <span class="required-mark">*</span></label>
+              <input id="serviceOther" name="serviceOther" maxlength="500" disabled />
+              <p class="field-error" id="serviceOther-error" data-error-for="serviceOther"></p>
             </div>
           </section>
 
-          <section id="sukkah-details" class="form-card form-group" aria-labelledby="details-heading" data-form-step="4">
-            <FormHeading icon="sukkah" eyebrow="Sukkah details" heading="Tell us about your sukkah" id="details-heading" />
+          <section id="sukkah-details" class="form-step" aria-labelledby="details-heading" data-form-step="3" hidden>
+            <FormHeading icon="sukkah" eyebrow="Your sukkah" heading="Tell us about your sukkah" id="details-heading" />
             <fieldset class="size-field">
-              <legend>Estimated size <span class="required-mark">*</span></legend>
-              <p id="size-hint" class="field-hint">An estimate is fine. Adjust both sliders from 0 to 30 feet.</p>
+              <legend>Approximate size <span class="required-mark">*</span></legend>
+              <p class="field-hint">An estimate is fine. Adjust each measurement from 0 to 30 feet.</p>
               <div class="size-grid">
                 <div class="size-control">
-                  <div class="size-label-row">
-                    <label for="estimated-width">Width</label>
-                  </div>
-                  <input id="estimated-width" name="estimatedWidth" type="range" min="0" max="30" step="1" value="10" aria-describedby="size-hint" data-size-slider />
+                  <div class="size-label-row"><label for="estimated-width">Width</label></div>
+                  <input id="estimated-width" name="estimatedWidth" type="range" min="0" max="30" step="1" value="10" data-size-slider />
                   <output for="estimated-width" aria-label="10 feet" data-size-output="estimated-width"><span data-size-number>10</span><span class="size-unit">ft</span></output>
                 </div>
                 <div class="size-control">
-                  <div class="size-label-row">
-                    <label for="estimated-length">Length</label>
-                  </div>
-                  <input id="estimated-length" name="estimatedLength" type="range" min="0" max="30" step="1" value="10" aria-describedby="size-hint" data-size-slider />
+                  <div class="size-label-row"><label for="estimated-length">Length</label></div>
+                  <input id="estimated-length" name="estimatedLength" type="range" min="0" max="30" step="1" value="10" data-size-slider />
                   <output for="estimated-length" aria-label="10 feet" data-size-output="estimated-length"><span data-size-number>10</span><span class="size-unit">ft</span></output>
                 </div>
               </div>
             </fieldset>
-            <Choices legend="Sukkah type" name="sukkahType" options={sukkahTypes} type="radio" required requiredHint otherLabel="Other sukkah type" />
-            <Choices legend="Schach type" name="schach" options={schachTypes} type="radio" required requiredHint otherLabel="Other schach type" />
-            <Choices legend="Add-ons" name="addOns" options={addOns} type="checkbox" otherLabel="Other add-on" />
+
+            <fieldset data-required-group="sukkahType">
+              <legend>Sukkah type <span class="required-mark">*</span></legend>
+              <div class="choice-grid configuration-grid">
+                {sukkahTypes.map((type) => (
+                  <label class="choice-card"><input type="radio" name="sukkahType" value={type} /><span>{type}</span></label>
+                ))}
+                <label class="choice-card">
+                  <input type="radio" name="sukkahType" value="Other" aria-controls="sukkah-type-other-field" aria-expanded="false" />
+                  <span>Other</span>
+                </label>
+              </div>
+              <p class="group-error" id="sukkahType-group-error" data-group-error-for="sukkahType"></p>
+            </fieldset>
+            <div id="sukkah-type-other-field" class="field conditional-field" data-radio-other-field="sukkahType" hidden>
+              <label for="sukkahTypeOther">Other sukkah type <span class="required-mark">*</span></label>
+              <input id="sukkahTypeOther" name="sukkahTypeOther" maxlength="500" disabled />
+              <p class="field-error" id="sukkahTypeOther-error" data-error-for="sukkahTypeOther"></p>
+            </div>
+
+            <fieldset data-required-group="schach">
+              <legend>Schach type <span class="required-mark">*</span></legend>
+              <div class="choice-grid configuration-grid">
+                {schachTypes.map((type) => (
+                  <label class="choice-card"><input type="radio" name="schach" value={type} /><span>{type}</span></label>
+                ))}
+                <label class="choice-card">
+                  <input type="radio" name="schach" value="Other" aria-controls="schach-other-field" aria-expanded="false" />
+                  <span>Other</span>
+                </label>
+              </div>
+              <p class="group-error" id="schach-group-error" data-group-error-for="schach"></p>
+            </fieldset>
+            <div id="schach-other-field" class="field conditional-field" data-radio-other-field="schach" hidden>
+              <label for="schachOther">Other schach type <span class="required-mark">*</span></label>
+              <input id="schachOther" name="schachOther" maxlength="500" disabled />
+              <p class="field-error" id="schachOther-error" data-error-for="schachOther"></p>
+            </div>
+
+            <fieldset>
+              <legend>Optional add-ons</legend>
+              <p class="field-hint">Choose anything else you’d like help with.</p>
+              <div class="choice-grid add-on-grid">
+                {addOns.map((addOn) => (
+                  <label class="choice-card"><input type="checkbox" name="addOns" value={addOn} /><span>{addOn}</span></label>
+                ))}
+                <label class="choice-card">
+                  <input type="checkbox" name="addOns" value="Other" aria-controls="add-ons-other-field" aria-expanded="false" data-addon-other-toggle />
+                  <span>Other</span>
+                </label>
+              </div>
+            </fieldset>
+            <div id="add-ons-other-field" class="field conditional-field" data-addon-other hidden>
+              <label for="addOnsOther">Other add-on <span class="required-mark">*</span></label>
+              <input id="addOnsOther" name="addOnsOther" maxlength="500" disabled />
+              <p class="field-error" id="addOnsOther-error" data-error-for="addOnsOther"></p>
+            </div>
+
+            <div class="extra-labor-group">
+              <input type="hidden" name="extraServiceRequired" value="No" data-extra-service-required />
+              <label class="choice-card extra-service-check">
+                <input type="checkbox" aria-controls="extra-service-details-field" aria-expanded="false" data-extra-service-toggle />
+                <span>
+                  <strong>Special access or extra labor</strong>
+                  <small>For example, a rooftop sukkah or unusual access.</small>
+                </span>
+              </label>
+              <div id="extra-service-details-field" class="field conditional-field" data-extra-service-details hidden>
+                <label for="extra-service-details">What extra help is needed? <span class="required-mark">*</span></label>
+                <textarea id="extra-service-details" name="extraServiceDetails" rows="3" maxlength="2000" disabled></textarea>
+                <p class="field-error" id="extra-service-details-error" data-error-for="extra-service-details"></p>
+              </div>
+            </div>
           </section>
 
-          <section id="site-details" class="form-card form-group" aria-labelledby="site-heading" data-form-step="5">
-            <FormHeading icon="site" eyebrow="Site details" heading="Help us understand the space" id="site-heading" />
+          <section id="site-details" class="form-step" aria-labelledby="site-heading" data-form-step="4" hidden>
+            <FormHeading icon="site" eyebrow="The site" heading="Help us understand the space" id="site-heading" />
             <div class="field">
               <label for="site-description">Where will the sukkah be built?</label>
-              <textarea id="site-description" name="siteDescription"></textarea>
+              <textarea id="site-description" name="siteDescription" rows="4" maxlength="4000" placeholder="Backyard, patio, driveway, rooftop, balcony, etc."></textarea>
+              <p class="field-error" id="site-description-error" data-error-for="site-description"></p>
             </div>
-            <div class="upload-field">
-              <div class="upload-icon" aria-hidden="true">↑</div>
-              <div><label for="site-photos">Add up to 3 photos of the area</label><p>Optional. JPG, PNG, or HEIC. 10 MB per photo.</p></div>
-              <input id="site-photos" name="sitePhotos" type="file" accept=".jpg,.jpeg,.png,.heic,.heif,image/jpeg,image/png,image/heic,image/heif" multiple />
+            <div class="photo-upload-card">
+              <div class="upload-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="5" width="17" height="14" rx="2"></rect><circle cx="9" cy="10" r="1.5"></circle><path d="m5.5 17 4-4 3 3 2-2 4 3"></path></svg>
+              </div>
+              <div class="upload-copy">
+                <strong>Add photos of the space</strong>
+                <p>Photos help Benyamin understand the area before following up. Up to 3 JPG, PNG, or HEIC files, 10 MB each.</p>
+              </div>
+              <label class="upload-button" for="site-photos">Choose photos</label>
+              <input class="sr-only-file" id="site-photos" name="sitePhotos" type="file" accept=".jpg,.jpeg,.png,.heic,.heif,image/jpeg,image/png,image/heic,image/heif" multiple />
+              <div class="selected-photos" data-selected-photos aria-live="polite"></div>
+              <p class="field-error" id="site-photos-error" data-error-for="site-photos"></p>
             </div>
           </section>
 
-          <section id="timing-details" class="form-card form-group" aria-labelledby="timing-heading" data-form-step="6">
-            <FormHeading icon="timing" eyebrow="Timing" heading="When should we come?" id="timing-heading" />
-            <div data-purchase-timing>
-              <p class="section-copy" data-timing-copy>Choose your preferred installation date. We’ll confirm availability when we follow up.</p>
-              <div class="date-grid" data-date-grid data-single-date>
-                <div class="field"><label for="build-date"><span data-build-date-label>Preferred installation date</span> <span class="required-mark">*</span></label><div class="date-control"><input id="build-date" name="buildDate" type="date" required /></div></div>
-              </div>
-            </div>
-            <div class="conditional-schedule" data-pre-sukkos-schedule hidden>
-              <p class="section-copy">Choose a preferred time from Motzei Yom Kippur through Erev Sukkos.</p>
-              <div class="schedule-window">
-                <div class="field">
-                  <label for="pre-sukkos-date">Preferred day <span class="required-mark">*</span></label>
-                  <select id="pre-sukkos-date" name="preSukkosDate" required data-holiday-date-select data-date-order="forward">
-                    <option value="">Choose a date</option>
-                    <option value="other" data-other-date-option>Other date</option>
-                  </select>
-                </div>
-                <div class="field" data-other-date-field hidden>
-                  <label for="custom-service-date">Choose another date <span class="required-mark">*</span></label>
-                  <p id="custom-service-date-hint" class="field-hint" data-custom-date-range>Choose a date within the 30 days before Sukkos.</p>
-                  <div class="date-control"><input id="custom-service-date" name="customServiceDate" type="date" aria-describedby="custom-service-date-hint" /></div>
-                </div>
-              </div>
+          <section id="timing-details" class="form-step" aria-labelledby="timing-heading" data-form-step="5" hidden>
+            <FormHeading icon="timing" eyebrow="Timing" heading="When would you like it installed?" id="timing-heading" />
+            <p class="step-intro">Choose your preferred installation date. We’ll confirm availability when we follow up.</p>
+            <div class="field">
+              <label for="build-date">Preferred installation date <span class="required-mark">*</span></label>
+              <div class="date-control"><input id="build-date" name="buildDate" type="date" required /></div>
+              <p class="field-error" id="build-date-error" data-error-for="build-date"></p>
             </div>
             <div class="conditional-schedule" data-reverse-sukkos-schedule hidden>
-              <p class="section-copy">Choose each service day, starting with Erev Sukkos and working back toward Motzei Yom Kippur.</p>
-              <div class="schedule-window schedule-window-grid">
+              <p class="step-intro">Choose the service dates that apply to your request.</p>
+              <div class="schedule-grid">
                 <div class="service-schedule" data-service-schedule="Take down" hidden>
                   <div class="field">
                     <label for="take-down-date">Take-down day <span class="required-mark">*</span></label>
@@ -286,11 +311,13 @@ const projectPaths = [
                       <option value="">Choose a date</option>
                       <option value="other" data-other-date-option>Other date</option>
                     </select>
+                    <p class="field-error" id="take-down-date-error" data-error-for="take-down-date"></p>
                   </div>
-                  <div class="field" data-other-date-field hidden>
+                  <div class="field conditional-field" data-other-date-field hidden>
                     <label for="custom-take-down-date">Choose another take-down date <span class="required-mark">*</span></label>
-                    <p id="custom-take-down-date-hint" class="field-hint" data-custom-date-range>Choose a date within the 30 days before Sukkos.</p>
-                    <div class="date-control"><input id="custom-take-down-date" name="customTakeDownDate" type="date" aria-describedby="custom-take-down-date-hint" /></div>
+                    <p class="field-hint" data-custom-date-range>Choose a date within the 30 days before Sukkos.</p>
+                    <div class="date-control"><input id="custom-take-down-date" name="customTakeDownDate" type="date" /></div>
+                    <p class="field-error" id="custom-take-down-date-error" data-error-for="custom-take-down-date"></p>
                   </div>
                 </div>
                 <div class="service-schedule" data-service-schedule="Bring to storage" hidden>
@@ -300,41 +327,524 @@ const projectPaths = [
                       <option value="">Choose a date</option>
                       <option value="other" data-other-date-option>Other date</option>
                     </select>
+                    <p class="field-error" id="bring-to-storage-date-error" data-error-for="bring-to-storage-date"></p>
                   </div>
-                  <div class="field" data-other-date-field hidden>
+                  <div class="field conditional-field" data-other-date-field hidden>
                     <label for="custom-storage-date">Choose another storage date <span class="required-mark">*</span></label>
-                    <p id="custom-storage-date-hint" class="field-hint" data-custom-date-range>Choose a date within the 30 days before Sukkos.</p>
-                    <div class="date-control"><input id="custom-storage-date" name="customStorageDate" type="date" aria-describedby="custom-storage-date-hint" /></div>
+                    <p class="field-hint" data-custom-date-range>Choose a date within the 30 days before Sukkos.</p>
+                    <div class="date-control"><input id="custom-storage-date" name="customStorageDate" type="date" /></div>
+                    <p class="field-error" id="custom-storage-date-error" data-error-for="custom-storage-date"></p>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="field"><label for="timing-notes">Timing notes</label><input id="timing-notes" name="timingNotes" placeholder="Add any timing preferences or scheduling details" /></div>
+            <div class="field">
+              <label for="timing-notes">Timing notes <span class="optional-text">Optional</span></label>
+              <input id="timing-notes" name="timingNotes" maxlength="1000" placeholder="Any timing preferences or scheduling details" />
+              <p class="field-error" id="timing-notes-error" data-error-for="timing-notes"></p>
+            </div>
           </section>
 
-          <section id="final-details" class="form-card form-group" aria-labelledby="final-heading" data-form-step="7">
-            <FormHeading icon="final" eyebrow="Final details" heading="Anything else we should know?" id="final-heading" />
-            <div class="field"><label for="referral">How did you hear about us? <span class="required-mark">*</span></label><p class="field-hint">This helps us understand which advertising is useful.</p><input id="referral" name="referral" required /></div>
-            <div class="field"><label for="comments">Comments or questions</label><textarea id="comments" name="comments" placeholder="Add any details that did not fit above."></textarea></div>
+          <section id="final-details" class="form-step" aria-labelledby="final-heading" data-form-step="6" hidden>
+            <FormHeading icon="final" eyebrow="Review" heading="Review and send" id="final-heading" />
+            <div class="request-review" aria-labelledby="request-review-heading">
+              <div class="review-heading">
+                <h4 id="request-review-heading">Your request</h4>
+                <p>Check the key details before sending.</p>
+              </div>
+              <dl class="review-list">
+                <div><dt>Contact</dt><dd data-review-contact>Not added yet</dd><button type="button" data-edit-step="1">Edit<span class="sr-only"> contact details</span></button></div>
+                <div><dt>Location</dt><dd data-review-location>Not added yet</dd><button type="button" data-edit-step="2">Edit<span class="sr-only"> location and requested work</span></button></div>
+                <div><dt>Your sukkah</dt><dd data-review-sukkah>Not added yet</dd><button type="button" data-edit-step="3">Edit<span class="sr-only"> sukkah details</span></button></div>
+                <div><dt>The site</dt><dd data-review-site>Not added yet</dd><button type="button" data-edit-step="4">Edit<span class="sr-only"> site details</span></button></div>
+                <div><dt>Timing</dt><dd data-review-timing>Not added yet</dd><button type="button" data-edit-step="5">Edit<span class="sr-only"> timing details</span></button></div>
+              </dl>
+            </div>
+            <div class="field">
+              <label for="referral">How did you hear about us? <span class="required-mark">*</span></label>
+              <input id="referral" name="referral" maxlength="1000" required />
+              <p class="field-error" id="referral-error" data-error-for="referral"></p>
+            </div>
+            <div class="field">
+              <label for="comments">Comments or questions <span class="optional-text">Optional</span></label>
+              <textarea id="comments" name="comments" rows="3" maxlength="4000" placeholder="Add any details that did not fit above."></textarea>
+              <p class="field-error" id="comments-error" data-error-for="comments"></p>
+            </div>
           </section>
 
-          <div class="submit-row">
-            <button class="button" type="submit" data-submit-button>Submit</button>
-            <p data-submit-status role="status" aria-live="polite">Your information will be added to our private request sheet.</p>
+          <div class="wizard-actions">
+            <button class="wizard-back" type="button" data-step-back hidden>Back</button>
+            <button class="button wizard-continue" type="button" data-step-next>Continue</button>
+            <button class="button form-submit-button" type="submit" data-submit-button hidden>
+              <span data-submit-label>Request a quote</span>
+            </button>
           </div>
-        </form>
-      </div>
+          <p class="submit-reassurance" data-submit-status role="status" aria-live="polite" hidden>No payment required. Benyamin will review the details and follow up with you.</p>
+        </div>
+
+        <div class="request-success" data-success-panel hidden tabindex="-1">
+          <p class="eyebrow">Request sent</p>
+          <h3>Thank you.</h3>
+          <p data-success-message>Benyamin received your build request and will follow up with you.</p>
+          <a class="button" href="/">Return home</a>
+        </div>
+      </form>
+      <noscript>
+        <p class="noscript-note">JavaScript is needed to use this guided form. Please call <a href="tel:+13474542282">(347) 454-2282</a> or email <a href="mailto:bkaysukkahbuilders@gmail.com">bkaysukkahbuilders@gmail.com</a>.</p>
+      </noscript>
     </div>
   </section>
 </BaseLayout>
 
 <script is:inline src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js"></script>
 <script is:inline src="https://cdn.jsdelivr.net/npm/choices.js@11.2.3/public/assets/scripts/choices.min.js"></script>
-<script is:inline>
-  const buildDateInput = document.querySelector("#build-date");
 
-  if (window.flatpickr && buildDateInput) {
-    const sharedOptions = {
+<script is:inline>
+  const builderForm = document.querySelector("[data-builder-form]");
+  const steps = Array.from(document.querySelectorAll("[data-form-step]"));
+  const progressRegion = document.querySelector("[data-progress-region]");
+  const progressBar = document.querySelector("[data-progress-bar]");
+  const progressTrack = progressBar?.parentElement;
+  const currentStep = document.querySelector("[data-current-step]");
+  const currentLabel = document.querySelector("[data-current-label]");
+  const backButton = document.querySelector("[data-step-back]");
+  const nextButton = document.querySelector("[data-step-next]");
+  const submitButton = document.querySelector("[data-submit-button]");
+  const submitLabel = document.querySelector("[data-submit-label]");
+  const submitStatus = document.querySelector("[data-submit-status]");
+  const wizardCard = document.querySelector(".wizard-card");
+  const successPanel = document.querySelector("[data-success-panel]");
+  const successMessage = document.querySelector("[data-success-message]");
+  const editButtons = Array.from(document.querySelectorAll("[data-edit-step]"));
+  const sizeSliders = Array.from(document.querySelectorAll("[data-size-slider]"));
+  const serviceInputs = Array.from(document.querySelectorAll('input[name="service"]'));
+  const neighborhoodSelect = document.querySelector("[data-neighborhood-select]");
+  const neighborhoodOther = document.querySelector("[data-neighborhood-other]");
+  const neighborhoodOtherInput = document.querySelector("#neighborhoodOther");
+  const serviceOtherToggle = document.querySelector("[data-service-other-toggle]");
+  const serviceOtherField = document.querySelector("[data-service-other]");
+  const serviceOtherInput = document.querySelector("#serviceOther");
+  const addOnOtherToggle = document.querySelector("[data-addon-other-toggle]");
+  const addOnOtherField = document.querySelector("[data-addon-other]");
+  const addOnOtherInput = document.querySelector("#addOnsOther");
+  const extraServiceToggle = document.querySelector("[data-extra-service-toggle]");
+  const extraServiceRequired = document.querySelector("[data-extra-service-required]");
+  const extraServiceDetails = document.querySelector("[data-extra-service-details]");
+  const extraServiceDetailsInput = document.querySelector("#extra-service-details");
+  const reverseSukkosSchedule = document.querySelector("[data-reverse-sukkos-schedule]");
+  const sitePhotos = document.querySelector("#site-photos");
+  const selectedPhotos = document.querySelector("[data-selected-photos]");
+  const buildDateInput = document.querySelector("#build-date");
+  const stepNames = ["Contact", "Location", "Your sukkah", "The site", "Timing", "Review and send"];
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const enhancedSelects = new WeakMap();
+  let activeStep = 1;
+
+  const scheduleConfigs = Array.from(document.querySelectorAll("[data-service-schedule]")).map((container) => ({
+    service: container.getAttribute("data-service-schedule") || "",
+    container,
+    select: container.querySelector("[data-holiday-date-select]"),
+    otherDateField: container.querySelector("[data-other-date-field]"),
+    customDateInput: container.querySelector('input[type="date"]'),
+    customDateRange: container.querySelector("[data-custom-date-range]"),
+  }));
+
+  function setContainerVisible(container, visible) {
+    if (!(container instanceof HTMLElement)) return;
+    container.hidden = !visible;
+    container.querySelectorAll("input, select, textarea").forEach((control) => {
+      if (control instanceof HTMLInputElement || control instanceof HTMLSelectElement || control instanceof HTMLTextAreaElement) {
+        control.disabled = !visible;
+      }
+    });
+  }
+
+  function fieldErrorElement(field) {
+    return builderForm?.querySelector(`[data-error-for="${field.id}"]`);
+  }
+
+  function clearFieldError(field) {
+    if (!(field instanceof HTMLInputElement || field instanceof HTMLSelectElement || field instanceof HTMLTextAreaElement)) return;
+    field.removeAttribute("aria-invalid");
+    field.removeAttribute("aria-describedby");
+    const error = fieldErrorElement(field);
+    if (error instanceof HTMLElement) error.textContent = "";
+  }
+
+  function fieldErrorMessage(field) {
+    if (field.validity.valueMissing) return "Please complete this field.";
+    if (field.validity.typeMismatch && field.type === "email") return "Enter a valid email address.";
+    if (field.validity.patternMismatch) return "Enter a valid ZIP code.";
+    return "Check this field and try again.";
+  }
+
+  function showFieldError(field, message = "") {
+    if (!(field instanceof HTMLInputElement || field instanceof HTMLSelectElement || field instanceof HTMLTextAreaElement)) return;
+    const error = fieldErrorElement(field);
+    field.setAttribute("aria-invalid", "true");
+    if (error instanceof HTMLElement) {
+      error.textContent = message || fieldErrorMessage(field);
+      if (error.id) field.setAttribute("aria-describedby", error.id);
+    }
+  }
+
+  function setGroupError(name, message = "") {
+    const fieldset = builderForm?.querySelector(`[data-required-group="${name}"]`);
+    const error = builderForm?.querySelector(`[data-group-error-for="${name}"]`);
+    fieldset?.toggleAttribute("aria-invalid", Boolean(message));
+    if (error instanceof HTMLElement) error.textContent = message;
+  }
+
+  function checkedValues(name) {
+    if (!(builderForm instanceof HTMLFormElement)) return [];
+    return Array.from(builderForm.querySelectorAll(`input[name="${name}"]:checked`))
+      .filter((input) => input instanceof HTMLInputElement)
+      .map((input) => input.value);
+  }
+
+  function displayValue(name, fallback = "Not added yet") {
+    if (!(builderForm instanceof HTMLFormElement)) return fallback;
+    const field = builderForm.elements.namedItem(name);
+    if (field instanceof HTMLInputElement || field instanceof HTMLSelectElement || field instanceof HTMLTextAreaElement) {
+      return field.value.trim() || fallback;
+    }
+    if (field instanceof RadioNodeList) {
+      return String(field.value || "").trim() || fallback;
+    }
+    return fallback;
+  }
+
+  function selectedOrOther(name) {
+    const value = displayValue(name, "");
+    return value === "Other" ? displayValue(`${name}Other`) : value;
+  }
+
+  function formatDate(value) {
+    if (!value) return "";
+    const parsed = new Date(`${value}T12:00:00`);
+    return Number.isNaN(parsed.getTime())
+      ? value
+      : new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric" }).format(parsed);
+  }
+
+  function selectedScheduleDate(name, customName) {
+    const value = displayValue(name, "");
+    const chosen = value === "other" ? displayValue(customName, "") : value;
+    return formatDate(chosen) || chosen;
+  }
+
+  function updateReview() {
+    const contact = document.querySelector("[data-review-contact]");
+    const location = document.querySelector("[data-review-location]");
+    const sukkah = document.querySelector("[data-review-sukkah]");
+    const site = document.querySelector("[data-review-site]");
+    const timing = document.querySelector("[data-review-timing]");
+    if (contact instanceof HTMLElement) {
+      contact.textContent = [`${displayValue("firstName", "")} ${displayValue("lastName", "")}`.trim(), displayValue("phone", ""), displayValue("email", "")].filter(Boolean).join(" · ");
+    }
+    if (location instanceof HTMLElement) {
+      const address = [displayValue("addressLine1", ""), displayValue("city", ""), displayValue("state", ""), displayValue("postalCode", "")].filter(Boolean).join(", ");
+      const work = checkedValues("service").map((value) => value === "Other" ? displayValue("serviceOther", "Other") : value).join(", ");
+      location.textContent = [address, selectedOrOther("neighborhood"), work ? `Work: ${work}` : ""].filter(Boolean).join(" · ");
+    }
+    if (sukkah instanceof HTMLElement) {
+      const addOns = checkedValues("addOns").map((value) => value === "Other" ? displayValue("addOnsOther", "Other") : value);
+      const parts = [
+        `${displayValue("estimatedWidth", "10")} × ${displayValue("estimatedLength", "10")} ft`,
+        selectedOrOther("sukkahType"),
+        `Schach: ${selectedOrOther("schach")}`,
+        addOns.length ? `Add-ons: ${addOns.join(", ")}` : "",
+      ];
+      if (extraServiceToggle instanceof HTMLInputElement && extraServiceToggle.checked) parts.push("Special access or extra labor");
+      sukkah.textContent = parts.filter(Boolean).join(" · ");
+    }
+    if (site instanceof HTMLElement) {
+      const photoCount = sitePhotos instanceof HTMLInputElement && sitePhotos.files ? sitePhotos.files.length : 0;
+      site.textContent = [displayValue("siteDescription", "No site description"), photoCount ? `${photoCount} photo${photoCount === 1 ? "" : "s"} selected` : "No photos selected"].join(" · ");
+    }
+    if (timing instanceof HTMLElement) {
+      const parts = [`Install: ${formatDate(displayValue("buildDate", "")) || "Not selected"}`];
+      if (checkedValues("service").includes("Take down")) parts.push(`Take down: ${selectedScheduleDate("takeDownDate", "customTakeDownDate")}`);
+      if (checkedValues("service").includes("Bring to storage")) parts.push(`Storage: ${selectedScheduleDate("bringToStorageDate", "customStorageDate")}`);
+      timing.textContent = parts.join(" · ");
+    }
+  }
+
+  function updateConditionalField(trigger, field, input) {
+    const show = trigger instanceof HTMLInputElement && trigger.checked;
+    if (trigger instanceof HTMLInputElement) trigger.setAttribute("aria-expanded", String(show));
+    if (field instanceof HTMLElement) field.hidden = !show;
+    if (input instanceof HTMLInputElement) {
+      input.disabled = !show;
+      input.required = show;
+      if (!show) clearFieldError(input);
+    }
+  }
+
+  function updateNeighborhoodOther() {
+    const show = neighborhoodSelect instanceof HTMLSelectElement && neighborhoodSelect.value === "Other";
+    if (neighborhoodSelect instanceof HTMLSelectElement) neighborhoodSelect.setAttribute("aria-expanded", String(show));
+    if (neighborhoodOther instanceof HTMLElement) neighborhoodOther.hidden = !show;
+    if (neighborhoodOtherInput instanceof HTMLInputElement) {
+      neighborhoodOtherInput.disabled = !show;
+      neighborhoodOtherInput.required = show;
+      if (!show) clearFieldError(neighborhoodOtherInput);
+    }
+  }
+
+  function updateRadioOther(name) {
+    const selected = builderForm?.querySelector(`input[name="${name}"]:checked`);
+    const field = builderForm?.querySelector(`[data-radio-other-field="${name}"]`);
+    const input = builderForm?.querySelector(`#${name}Other`);
+    const show = selected instanceof HTMLInputElement && selected.value === "Other";
+    builderForm?.querySelectorAll(`input[name="${name}"]`).forEach((radio) => {
+      if (radio instanceof HTMLInputElement && radio.value === "Other") radio.setAttribute("aria-expanded", String(show));
+    });
+    if (field instanceof HTMLElement) field.hidden = !show;
+    if (input instanceof HTMLInputElement) {
+      input.disabled = !show;
+      input.required = show;
+      if (!show) clearFieldError(input);
+    }
+  }
+
+  function updateExtraService() {
+    const show = extraServiceToggle instanceof HTMLInputElement && extraServiceToggle.checked;
+    if (extraServiceToggle instanceof HTMLInputElement) extraServiceToggle.setAttribute("aria-expanded", String(show));
+    if (extraServiceRequired instanceof HTMLInputElement) extraServiceRequired.value = show ? "Yes" : "No";
+    if (extraServiceDetails instanceof HTMLElement) extraServiceDetails.hidden = !show;
+    if (extraServiceDetailsInput instanceof HTMLTextAreaElement) {
+      extraServiceDetailsInput.disabled = !show;
+      extraServiceDetailsInput.required = show;
+      if (!show) clearFieldError(extraServiceDetailsInput);
+    }
+  }
+
+  function syncEnhancedSelect(select) {
+    if (!(select instanceof HTMLSelectElement)) return;
+    const enhanced = enhancedSelects.get(select);
+    if (!enhanced) return;
+    if (select.disabled) enhanced.disable();
+    else enhanced.enable();
+  }
+
+  function updateOtherDateField(config) {
+    const show = config.container instanceof HTMLElement && !config.container.hidden && config.select instanceof HTMLSelectElement && config.select.value === "other";
+    setContainerVisible(config.otherDateField, show);
+    if (config.customDateInput instanceof HTMLInputElement) config.customDateInput.required = show;
+  }
+
+  function updateTimingSchedule() {
+    const selectedServices = new Set(checkedValues("service"));
+    const activeSchedules = scheduleConfigs.filter((config) => selectedServices.has(config.service));
+    if (reverseSukkosSchedule instanceof HTMLElement) reverseSukkosSchedule.hidden = activeSchedules.length === 0;
+    scheduleConfigs.forEach((config) => {
+      const visible = activeSchedules.includes(config);
+      setContainerVisible(config.container, visible);
+      if (config.select instanceof HTMLSelectElement) {
+        config.select.required = visible;
+        syncEnhancedSelect(config.select);
+      }
+      updateOtherDateField(config);
+    });
+  }
+
+  function renderSelectedPhotos() {
+    if (!(selectedPhotos instanceof HTMLElement) || !(sitePhotos instanceof HTMLInputElement)) return;
+    selectedPhotos.replaceChildren();
+    const files = sitePhotos.files ? Array.from(sitePhotos.files) : [];
+    files.forEach((file, index) => {
+      const row = document.createElement("div");
+      row.className = "selected-photo";
+      const name = document.createElement("span");
+      name.textContent = file.name;
+      const remove = document.createElement("button");
+      remove.type = "button";
+      remove.textContent = "Remove";
+      remove.setAttribute("aria-label", `Remove ${file.name}`);
+      remove.addEventListener("click", () => {
+        const transfer = new DataTransfer();
+        files.forEach((item, itemIndex) => {
+          if (itemIndex !== index) transfer.items.add(item);
+        });
+        sitePhotos.files = transfer.files;
+        renderSelectedPhotos();
+      });
+      row.append(name, remove);
+      selectedPhotos.append(row);
+    });
+  }
+
+  function validatePhotos() {
+    if (!(sitePhotos instanceof HTMLInputElement)) return true;
+    clearFieldError(sitePhotos);
+    const photos = sitePhotos.files ? Array.from(sitePhotos.files) : [];
+    if (photos.length > 3) {
+      showFieldError(sitePhotos, "Choose no more than three photos.");
+      return false;
+    }
+    if (photos.some((photo) => photo.size > 10 * 1024 * 1024)) {
+      showFieldError(sitePhotos, "Each photo must be no larger than 10 MB.");
+      return false;
+    }
+    return true;
+  }
+
+  function controlsForStep(stepNumber) {
+    const step = steps[stepNumber - 1];
+    if (!(step instanceof HTMLElement)) return [];
+    return Array.from(step.querySelectorAll("input, select, textarea")).filter(
+      (control) => control instanceof HTMLInputElement || control instanceof HTMLSelectElement || control instanceof HTMLTextAreaElement,
+    );
+  }
+
+  function validateStep(stepNumber, focusFirst = true) {
+    const invalid = [];
+    controlsForStep(stepNumber).forEach((control) => {
+      if (control.disabled || control.type === "hidden" || control.type === "radio" || control.type === "checkbox" || control.type === "file") return;
+      clearFieldError(control);
+      if (!control.checkValidity()) {
+        showFieldError(control);
+        invalid.push(control);
+      }
+    });
+
+    ["service", "sukkahType", "schach"].forEach((name) => {
+      const fieldset = steps[stepNumber - 1]?.querySelector(`[data-required-group="${name}"]`);
+      if (!fieldset) return;
+      const missing = checkedValues(name).length === 0;
+      setGroupError(name, missing ? (name === "service" ? "Select at least one service." : "Choose one option.") : "");
+      if (missing) {
+        const first = fieldset.querySelector("input");
+        if (first instanceof HTMLInputElement) invalid.push(first);
+      }
+    });
+
+    if (stepNumber === 4 && !validatePhotos() && sitePhotos instanceof HTMLInputElement) invalid.push(sitePhotos);
+    if (stepNumber === 5 && buildDateInput instanceof HTMLInputElement && !buildDateInput.value) {
+      showFieldError(buildDateInput, "Choose an installation date.");
+      invalid.push(buildDateInput._flatpickr?.altInput || buildDateInput);
+    }
+
+    if (invalid.length > 0 && focusFirst) {
+      const first = invalid[0];
+      if (first instanceof HTMLElement) {
+        first.focus({ preventScroll: true });
+        first.scrollIntoView({ behavior: reducedMotion.matches ? "auto" : "smooth", block: "center" });
+      }
+    }
+    return invalid.length === 0;
+  }
+
+  function setActiveStep(stepNumber, options = {}) {
+    activeStep = Math.min(Math.max(Number(stepNumber) || 1, 1), steps.length);
+    steps.forEach((step, index) => {
+      if (step instanceof HTMLElement) {
+        step.hidden = index + 1 !== activeStep;
+        step.toggleAttribute("aria-current", index + 1 === activeStep);
+      }
+    });
+    const step = steps[activeStep - 1];
+    if (activeStep === steps.length) updateReview();
+    if (progressBar instanceof HTMLElement) progressBar.style.width = `${(activeStep / steps.length) * 100}%`;
+    if (progressTrack instanceof HTMLElement) {
+      progressTrack.setAttribute("aria-valuenow", String(activeStep));
+      progressTrack.setAttribute("aria-valuetext", `Step ${activeStep} of 6: ${stepNames[activeStep - 1]}`);
+    }
+    if (currentStep instanceof HTMLElement) currentStep.textContent = String(activeStep);
+    if (currentLabel instanceof HTMLElement) currentLabel.textContent = stepNames[activeStep - 1];
+    if (backButton instanceof HTMLButtonElement) backButton.hidden = activeStep === 1;
+    if (nextButton instanceof HTMLButtonElement) nextButton.hidden = activeStep === steps.length;
+    if (submitButton instanceof HTMLButtonElement) submitButton.hidden = activeStep !== steps.length;
+    if (submitStatus instanceof HTMLElement && !["success", "error"].includes(submitStatus.dataset.state || "")) {
+      submitStatus.hidden = activeStep !== steps.length;
+    }
+    if (options.scroll) step?.scrollIntoView({ behavior: reducedMotion.matches ? "auto" : "smooth", block: "start" });
+    if (options.focusHeading) {
+      const heading = step?.querySelector("h3");
+      if (heading instanceof HTMLElement) {
+        heading.tabIndex = -1;
+        heading.focus({ preventScroll: true });
+      }
+    }
+  }
+
+  const atLocalNoon = (date) => new Date(date.getFullYear(), date.getMonth(), date.getDate(), 12);
+  const addCalendarDays = (date, days) => {
+    const result = atLocalNoon(date);
+    result.setDate(result.getDate() + days);
+    return result;
+  };
+  const toIsoDate = (date) => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+  const hebrewDateFormatter = new Intl.DateTimeFormat("en-US-u-ca-hebrew", { day: "numeric", month: "long", year: "numeric" });
+  const fullDateFormatter = new Intl.DateTimeFormat("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" });
+  const shortDateFormatter = new Intl.DateTimeFormat("en-US", { month: "long", day: "numeric", year: "numeric" });
+
+  function findNextSukkos() {
+    const today = atLocalNoon(new Date());
+    for (let offset = 0; offset <= 500; offset += 1) {
+      const candidate = addCalendarDays(today, offset);
+      const parts = hebrewDateFormatter.formatToParts(candidate);
+      const day = Number(parts.find((part) => part.type === "day")?.value || 0);
+      const month = parts.find((part) => part.type === "month")?.value || "";
+      if (day === 15 && /^Tishr/i.test(month)) return candidate;
+    }
+    return null;
+  }
+
+  function initializeHolidayDates() {
+    const sukkosDate = findNextSukkos();
+    if (!(sukkosDate instanceof Date)) return;
+    const motzeiYomKippur = addCalendarDays(sukkosDate, -5);
+    const erevSukkos = addCalendarDays(sukkosDate, -1);
+    const customMinimum = addCalendarDays(sukkosDate, -30);
+    const availableDates = [];
+    for (let date = motzeiYomKippur; date <= erevSukkos; date = addCalendarDays(date, 1)) availableDates.push(date);
+
+    scheduleConfigs.forEach((config) => {
+      if (!(config.select instanceof HTMLSelectElement) || !(config.customDateInput instanceof HTMLInputElement)) return;
+      const otherOption = config.select.querySelector("[data-other-date-option]");
+      [...availableDates].reverse().forEach((date) => {
+        const option = document.createElement("option");
+        option.value = toIsoDate(date);
+        option.textContent = date.getTime() === erevSukkos.getTime()
+          ? `Erev Sukkos - ${fullDateFormatter.format(date)}`
+          : date.getTime() === motzeiYomKippur.getTime()
+            ? `Motzei Yom Kippur - ${fullDateFormatter.format(date).replace(",", " evening,")}`
+            : fullDateFormatter.format(date);
+        config.select.insertBefore(option, otherOption);
+      });
+      config.customDateInput.min = toIsoDate(customMinimum);
+      config.customDateInput.max = toIsoDate(erevSukkos);
+      if (config.customDateRange instanceof HTMLElement) {
+        config.customDateRange.textContent = `Choose a date from ${shortDateFormatter.format(customMinimum)} through ${shortDateFormatter.format(erevSukkos)}.`;
+      }
+      if (typeof window.flatpickr === "function") {
+        window.flatpickr(config.customDateInput, {
+          altInput: true,
+          altInputClass: "builder-date-input",
+          altFormat: "F j, Y",
+          dateFormat: "Y-m-d",
+          minDate: config.customDateInput.min,
+          maxDate: config.customDateInput.max,
+          disableMobile: false,
+          monthSelectorType: "static",
+          position: "below left",
+        });
+      }
+      if (typeof window.Choices === "function") {
+        enhancedSelects.set(config.select, new window.Choices(config.select, {
+          allowHTML: false,
+          itemSelectText: "",
+          searchEnabled: false,
+          shouldSort: false,
+        }));
+      }
+    });
+  }
+
+  if (typeof window.flatpickr === "function" && buildDateInput instanceof HTMLInputElement) {
+    const picker = window.flatpickr(buildDateInput, {
       altInput: true,
       altInputClass: "builder-date-input",
       altFormat: "F j, Y",
@@ -343,504 +853,573 @@ const projectPaths = [
       disableMobile: false,
       monthSelectorType: "static",
       position: "below left",
-    };
-
-    const buildPicker = window.flatpickr(buildDateInput, sharedOptions);
-    buildPicker.altInput?.setAttribute("aria-label", "Preferred installation date");
-    buildPicker.altInput?.setAttribute("placeholder", "Select a date");
+    });
+    picker.altInput?.setAttribute("aria-label", "Preferred installation date");
+    picker.altInput?.setAttribute("placeholder", "Select a date");
   }
-</script>
-
-<script>
-  const progressBar = document.querySelector("[data-progress-bar]");
-  const progressTrack = document.querySelector(".progress-track");
-  const currentStep = document.querySelector("[data-current-step]");
-  const currentLabel = document.querySelector("[data-current-label]");
-  const stepLinks = Array.from(document.querySelectorAll("[data-step-link]"));
-  const steps = Array.from(document.querySelectorAll("[data-form-step]"));
-  const sizeSliders = Array.from(document.querySelectorAll("[data-size-slider]"));
-  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-  const sizeAnimations = new WeakMap();
-  const branchInputs = Array.from(document.querySelectorAll("[data-branch-input]"));
-  const branchSummary = document.querySelector("[data-branch-summary]");
-  const buyOnly = document.querySelector("[data-buy-only]");
-  const existingOnly = document.querySelector("[data-existing-only]");
-  const timingDetails = document.querySelector("#timing-details");
-  const purchaseTiming = document.querySelector("[data-purchase-timing]");
-  const preSukkosSchedule = document.querySelector("[data-pre-sukkos-schedule]");
-  const reverseSukkosSchedule = document.querySelector("[data-reverse-sukkos-schedule]");
-  const serviceInputs = Array.from(document.querySelectorAll('input[name="service"]'));
-  const forwardSchedule = {
-    service: "forward",
-    container: preSukkosSchedule,
-    select: document.querySelector("#pre-sukkos-date"),
-    otherDateField: preSukkosSchedule?.querySelector("[data-other-date-field]"),
-    customDateInput: document.querySelector("#custom-service-date"),
-    customDateRange: preSukkosSchedule?.querySelector("[data-custom-date-range]"),
-    customDateLabel: "Choose another date",
-  };
-  const reverseSchedules = Array.from(document.querySelectorAll("[data-service-schedule]")).map((container) => ({
-    service: container.getAttribute("data-service-schedule") ?? "",
-    container,
-    select: container.querySelector("[data-holiday-date-select]"),
-    otherDateField: container.querySelector("[data-other-date-field]"),
-    customDateInput: container.querySelector('input[type="date"]'),
-    customDateRange: container.querySelector("[data-custom-date-range]"),
-    customDateLabel: container.getAttribute("data-service-schedule") === "Take down"
-      ? "Choose another take-down date"
-      : "Choose another storage date",
-  }));
-  const scheduleConfigs = [forwardSchedule, ...reverseSchedules];
-  const enhancedSelects = new WeakMap();
-  const detailsHeading = document.querySelector("#details-heading");
-  const timingHeading = document.querySelector("#timing-heading");
-  const timingCopy = document.querySelector("[data-timing-copy]");
-  const buildDateLabel = document.querySelector("[data-build-date-label]");
-  const buildDateInput = document.querySelector("#build-date");
-  const builderForm = document.querySelector("[data-builder-form]");
-  const submitButton = document.querySelector("[data-submit-button]");
-  const submitStatus = document.querySelector("[data-submit-status]");
-  const sitePhotos = document.querySelector("#site-photos");
-  let activeBranch = "";
-
-  const setInputsDisabled = (container, disabled) => {
-    if (!(container instanceof HTMLElement)) return;
-    container.querySelectorAll("input, select, textarea").forEach((control) => {
-      if (
-        control instanceof HTMLInputElement ||
-        control instanceof HTMLSelectElement ||
-        control instanceof HTMLTextAreaElement
-      ) {
-        control.disabled = disabled;
-      }
-    });
-  };
-
-  const setContainerVisible = (container, visible) => {
-    if (!(container instanceof HTMLElement)) return;
-    container.hidden = !visible;
-    setInputsDisabled(container, !visible);
-  };
-
-  const syncEnhancedSelect = (select) => {
-    if (!(select instanceof HTMLSelectElement)) return;
-    const enhancedSelect = enhancedSelects.get(select);
-    if (!enhancedSelect) return;
-    if (select.disabled) enhancedSelect.disable();
-    else enhancedSelect.enable();
-  };
-
-  const updateOtherDateField = (config) => {
-    const { container, select, otherDateField, customDateInput } = config;
-    const showOtherDate =
-      container instanceof HTMLElement &&
-      !container.hidden &&
-      select instanceof HTMLSelectElement &&
-      select.value === "other";
-
-    setContainerVisible(otherDateField, showOtherDate);
-    if (customDateInput instanceof HTMLInputElement) {
-      customDateInput.required = showOtherDate;
-    }
-  };
-
-  const setScheduleVisible = (config, visible) => {
-    setContainerVisible(config.container, visible);
-    if (config.select instanceof HTMLSelectElement) {
-      config.select.required = visible;
-      syncEnhancedSelect(config.select);
-    }
-    updateOtherDateField(config);
-  };
-
-  const updateTimingSchedule = () => {
-    const isBuy = activeBranch === "I would like to buy";
-    const isExisting = activeBranch === "I already have a sukkah";
-    const selectedServices = new Set(
-      serviceInputs
-        .filter((input) => input instanceof HTMLInputElement && input.checked)
-        .map((input) => input.value),
-    );
-    const needsPreSukkosSchedule =
-      isExisting &&
-      (selectedServices.has("Bring out of storage") || selectedServices.has("Build"));
-    const activeReverseSchedules = reverseSchedules.filter(
-      (config) => isExisting && selectedServices.has(config.service),
-    );
-    const needsReverseSukkosSchedule = activeReverseSchedules.length > 0;
-    const showTimingCard = isBuy || needsPreSukkosSchedule || needsReverseSukkosSchedule;
-
-    setContainerVisible(timingDetails, showTimingCard);
-    setContainerVisible(purchaseTiming, isBuy);
-    setScheduleVisible(forwardSchedule, needsPreSukkosSchedule);
-    setContainerVisible(reverseSukkosSchedule, needsReverseSukkosSchedule);
-    reverseSchedules.forEach((config) => {
-      setScheduleVisible(config, activeReverseSchedules.includes(config));
-    });
-
-    if (buildDateInput instanceof HTMLInputElement) buildDateInput.required = isBuy;
-  };
-
-  const setBranch = (branch) => {
-    const isBuy = branch === "I would like to buy";
-    const isExisting = branch === "I already have a sukkah";
-    activeBranch = branch;
-
-    if (buyOnly instanceof HTMLElement) {
-      buyOnly.hidden = !isBuy;
-      setInputsDisabled(buyOnly, !isBuy);
-    }
-
-    if (existingOnly instanceof HTMLElement) {
-      existingOnly.hidden = !isExisting;
-      setInputsDisabled(existingOnly, !isExisting);
-    }
-
-    if (detailsHeading instanceof HTMLElement) {
-      detailsHeading.textContent = isBuy ? "Plan your new sukkah" : isExisting ? "Tell us what you have" : "Tell us about your sukkah";
-    }
-    if (timingHeading instanceof HTMLElement) {
-      timingHeading.textContent = isBuy ? "When would you like it installed?" : "When should we come?";
-    }
-    if (timingCopy instanceof HTMLElement) {
-      timingCopy.textContent = "Choose your preferred installation date. We’ll confirm availability when we follow up.";
-    }
-    if (buildDateLabel instanceof HTMLElement) {
-      buildDateLabel.textContent = "Preferred installation date";
-    }
-    if (buildDateInput instanceof HTMLInputElement) {
-      buildDateInput.setAttribute("aria-label", "Preferred installation date");
-      const alternateInput = buildDateInput.parentElement?.querySelector(".builder-date-input");
-      alternateInput?.setAttribute("aria-label", "Preferred installation date");
-    }
-    if (branchSummary instanceof HTMLElement) {
-      branchSummary.textContent = isBuy
-        ? "We’ll show questions for purchasing and installing a new sukkah."
-        : isExisting
-          ? "We’ll show questions for working with the sukkah you already own."
-          : "Choose an option to personalize the form.";
-    }
-    updateTimingSchedule();
-  };
-
-  const atLocalNoon = (date) =>
-    new Date(date.getFullYear(), date.getMonth(), date.getDate(), 12);
-
-  const addCalendarDays = (date, days) => {
-    const result = atLocalNoon(date);
-    result.setDate(result.getDate() + days);
-    return result;
-  };
-
-  const toIsoDate = (date) => {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  };
-
-  const hebrewDateFormatter = new Intl.DateTimeFormat("en-US-u-ca-hebrew", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
-  const fullDateFormatter = new Intl.DateTimeFormat("en-US", {
-    weekday: "long",
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  });
-  const shortDateFormatter = new Intl.DateTimeFormat("en-US", {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  });
-
-  const getHebrewDate = (date) => {
-    const parts = hebrewDateFormatter.formatToParts(date);
-    return {
-      day: Number(parts.find((part) => part.type === "day")?.value ?? 0),
-      month: parts.find((part) => part.type === "month")?.value ?? "",
-    };
-  };
-
-  const findNextSukkos = () => {
-    const today = atLocalNoon(new Date());
-    for (let offset = 0; offset <= 500; offset += 1) {
-      const candidate = addCalendarDays(today, offset);
-      const hebrewDate = getHebrewDate(candidate);
-      if (hebrewDate.day === 15 && /^Tishr/i.test(hebrewDate.month)) {
-        return candidate;
-      }
-    }
-    return null;
-  };
-
-  const initializeHolidayDates = () => {
-    const sukkosDate = findNextSukkos();
-    if (!(sukkosDate instanceof Date)) return;
-
-    const motzeiYomKippur = addCalendarDays(sukkosDate, -5);
-    const erevSukkos = addCalendarDays(sukkosDate, -1);
-    const customMinimum = addCalendarDays(sukkosDate, -30);
-    const availableDates = [];
-    for (let date = motzeiYomKippur; date <= erevSukkos; date = addCalendarDays(date, 1)) {
-      availableDates.push(date);
-    }
-
-    const getDateLabel = (date) => {
-      if (date.getTime() === motzeiYomKippur.getTime()) {
-        return `Motzei Yom Kippur — ${fullDateFormatter.format(date).replace(",", " evening,")}`;
-      }
-      if (date.getTime() === erevSukkos.getTime()) {
-        return `Erev Sukkos — ${fullDateFormatter.format(date)}`;
-      }
-      return fullDateFormatter.format(date);
-    };
-
-    const minimumDate = toIsoDate(customMinimum);
-    const maximumDate = toIsoDate(erevSukkos);
-
-    scheduleConfigs.forEach((config) => {
-      const { select, customDateInput, customDateRange, customDateLabel } = config;
-      if (!(select instanceof HTMLSelectElement) || !(customDateInput instanceof HTMLInputElement)) {
-        return;
-      }
-
-      const dates =
-        select.dataset.dateOrder === "reverse"
-          ? [...availableDates].reverse()
-          : availableDates;
-      const otherOption = select.querySelector("[data-other-date-option]");
-
-      dates.forEach((date) => {
-        const option = document.createElement("option");
-        option.value = toIsoDate(date);
-        option.textContent = getDateLabel(date);
-        select.insertBefore(option, otherOption);
-      });
-
-      customDateInput.min = minimumDate;
-      customDateInput.max = maximumDate;
-
-      if (customDateRange instanceof HTMLElement) {
-        customDateRange.textContent = `Choose a date from ${shortDateFormatter.format(customMinimum)} through ${shortDateFormatter.format(erevSukkos)}.`;
-      }
-
-      if (typeof window.flatpickr === "function") {
-        const customDatePicker = window.flatpickr(customDateInput, {
-          altInput: true,
-          altInputClass: "builder-date-input",
-          altFormat: "F j, Y",
-          dateFormat: "Y-m-d",
-          minDate: minimumDate,
-          maxDate: maximumDate,
-          disableMobile: false,
-          monthSelectorType: "static",
-          position: "below left",
-        });
-        customDatePicker.altInput?.setAttribute("aria-label", customDateLabel);
-        customDatePicker.altInput?.setAttribute("placeholder", "Select a date");
-      }
-
-      if (typeof window.Choices === "function") {
-        const enhancedSelect = new window.Choices(select, {
-          allowHTML: false,
-          itemSelectText: "",
-          searchEnabled: false,
-          shouldSort: false,
-        });
-        enhancedSelects.set(select, enhancedSelect);
-      }
-    });
-  };
 
   initializeHolidayDates();
 
-  const updateSizeValue = (slider) => {
-    if (!(slider instanceof HTMLInputElement)) return;
-    const output = document.querySelector(`[data-size-output="${slider.id}"]`);
-    const minimum = Number(slider.min || 0);
-    const maximum = Number(slider.max || 100);
-    const value = Number(slider.value);
-    if (output instanceof HTMLOutputElement) {
-      const number = output.querySelector("[data-size-number]");
-      const previousValue = Number(output.dataset.value ?? value);
-      if (number instanceof HTMLElement) number.textContent = slider.value;
-      output.setAttribute("aria-label", `${slider.value} feet`);
-
-      if (
-        previousValue !== value &&
-        number instanceof HTMLElement &&
-        !prefersReducedMotion.matches &&
-        typeof number.animate === "function" &&
-        typeof output.animate === "function"
-      ) {
-        sizeAnimations.get(number)?.cancel();
-        sizeAnimations.get(output)?.cancel();
-        const entryOffset = value > previousValue ? 5 : -5;
-
-        sizeAnimations.set(number, number.animate(
-          [
-            { opacity: 0.45, transform: `translateY(${entryOffset}px) scale(.92)` },
-            { opacity: 1, transform: "translateY(-1px) scale(1.08)", offset: 0.68 },
-            { opacity: 1, transform: "translateY(0) scale(1)" },
-          ],
-          { duration: 220, easing: "cubic-bezier(.16,1,.3,1)" },
-        ));
-        sizeAnimations.set(output, output.animate(
-          [
-            { transform: "scale(.97)" },
-            { transform: "scale(1.025)", offset: 0.65 },
-            { transform: "scale(1)" },
-          ],
-          { duration: 220, easing: "cubic-bezier(.16,1,.3,1)" },
-        ));
-      }
-      output.dataset.value = slider.value;
-    }
-    const progress = ((value - minimum) / (maximum - minimum)) * 100;
-    slider.style.setProperty("--slider-progress", `${progress}%`);
-  };
-
   sizeSliders.forEach((slider) => {
-    updateSizeValue(slider);
-    slider.addEventListener("input", () => updateSizeValue(slider));
+    const update = () => {
+      if (!(slider instanceof HTMLInputElement)) return;
+      const output = document.querySelector(`[data-size-output="${slider.id}"]`);
+      const number = output?.querySelector("[data-size-number]");
+      if (number instanceof HTMLElement) number.textContent = slider.value;
+      if (output instanceof HTMLOutputElement) output.setAttribute("aria-label", `${slider.value} feet`);
+      const progress = ((Number(slider.value) - Number(slider.min)) / (Number(slider.max) - Number(slider.min))) * 100;
+      slider.style.setProperty("--slider-progress", `${progress}%`);
+    };
+    slider.addEventListener("input", update);
+    update();
   });
 
-  serviceInputs.forEach((input) => {
-    input.addEventListener("change", updateTimingSchedule);
+  neighborhoodSelect?.addEventListener("change", updateNeighborhoodOther);
+  serviceOtherToggle?.addEventListener("change", () => updateConditionalField(serviceOtherToggle, serviceOtherField, serviceOtherInput));
+  addOnOtherToggle?.addEventListener("change", () => updateConditionalField(addOnOtherToggle, addOnOtherField, addOnOtherInput));
+  ["sukkahType", "schach"].forEach((name) => {
+    builderForm?.querySelectorAll(`input[name="${name}"]`).forEach((input) => input.addEventListener("change", () => updateRadioOther(name)));
+    updateRadioOther(name);
   });
-  scheduleConfigs.forEach((config) => {
-    config.select?.addEventListener("change", () => updateOtherDateField(config));
+  extraServiceToggle?.addEventListener("change", updateExtraService);
+  serviceInputs.forEach((input) => input.addEventListener("change", updateTimingSchedule));
+  scheduleConfigs.forEach((config) => config.select?.addEventListener("change", () => updateOtherDateField(config)));
+  sitePhotos?.addEventListener("change", () => {
+    validatePhotos();
+    renderSelectedPhotos();
   });
 
-  branchInputs.forEach((input) => {
-    input.addEventListener("change", () => {
-      if (input instanceof HTMLInputElement && input.checked) setBranch(input.value);
+  updateNeighborhoodOther();
+  updateConditionalField(serviceOtherToggle, serviceOtherField, serviceOtherInput);
+  updateConditionalField(addOnOtherToggle, addOnOtherField, addOnOtherInput);
+  updateExtraService();
+  updateTimingSchedule();
+  renderSelectedPhotos();
+
+  builderForm?.querySelectorAll("input, select, textarea").forEach((field) => {
+    field.addEventListener("input", () => clearFieldError(field));
+    field.addEventListener("change", () => {
+      clearFieldError(field);
+      if (field instanceof HTMLInputElement && ["service", "sukkahType", "schach"].includes(field.name)) setGroupError(field.name, "");
     });
   });
-  const selectedBranch = branchInputs.find((input) => input instanceof HTMLInputElement && input.checked);
-  setBranch(selectedBranch instanceof HTMLInputElement ? selectedBranch.value : "");
 
-  const setActiveStep = (stepNumber) => {
-    stepLinks.forEach((link) => link.toggleAttribute("data-active", link.getAttribute("data-step-link") === stepNumber));
-    if (progressBar instanceof HTMLElement) progressBar.style.width = `${(Number(stepNumber) / steps.length) * 100}%`;
-    if (progressTrack instanceof HTMLElement) progressTrack.setAttribute("aria-valuenow", stepNumber);
-    if (currentStep instanceof HTMLElement) currentStep.textContent = `${stepNumber} of ${steps.length}`;
-    const activeLink = stepLinks.find((link) => link.getAttribute("data-step-link") === stepNumber);
-    if (currentLabel instanceof HTMLElement && activeLink instanceof HTMLElement) {
-      currentLabel.textContent = activeLink.textContent?.replace(stepNumber, "").trim() || "";
+  nextButton?.addEventListener("click", () => {
+    if (!validateStep(activeStep)) return;
+    setActiveStep(activeStep + 1, { scroll: true, focusHeading: true });
+  });
+  backButton?.addEventListener("click", () => setActiveStep(activeStep - 1, { scroll: true, focusHeading: true }));
+  editButtons.forEach((button) => button.addEventListener("click", () => {
+    if (button instanceof HTMLButtonElement) setActiveStep(Number(button.dataset.editStep), { scroll: true, focusHeading: true });
+  }));
+  setActiveStep(1);
+
+  builderForm?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    if (!(builderForm instanceof HTMLFormElement)) return;
+    const invalidStep = steps.findIndex((_, index) => !validateStep(index + 1, false));
+    if (invalidStep >= 0) {
+      setActiveStep(invalidStep + 1, { scroll: true });
+      validateStep(invalidStep + 1);
+      return;
     }
-  };
 
-  if ("IntersectionObserver" in window) {
-    const observer = new IntersectionObserver((entries) => {
-      const visible = entries.filter((entry) => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-      if (visible instanceof IntersectionObserverEntry && visible.target instanceof HTMLElement) setActiveStep(visible.target.dataset.formStep ?? "1");
-    }, { rootMargin: "-18% 0px -60%", threshold: [0.1, 0.35] });
-    steps.forEach((step) => observer.observe(step));
-  }
-  setActiveStep("1");
+    if (submitButton instanceof HTMLButtonElement) {
+      submitButton.disabled = true;
+      submitButton.setAttribute("aria-busy", "true");
+    }
+    if (submitLabel instanceof HTMLElement) submitLabel.textContent = "Sending request...";
+    builderForm.setAttribute("aria-busy", "true");
+    if (submitStatus instanceof HTMLElement) {
+      submitStatus.hidden = false;
+      submitStatus.textContent = sitePhotos instanceof HTMLInputElement && sitePhotos.files?.length
+        ? "Uploading your photos and sending your request..."
+        : "Sending your request...";
+      submitStatus.dataset.state = "working";
+    }
 
-  if (builderForm instanceof HTMLFormElement) {
-    builderForm.addEventListener("submit", async (event) => {
-      event.preventDefault();
+    try {
+      const response = await fetch("/api/sukkah-submissions", {
+        method: "POST",
+        headers: { Accept: "application/json" },
+        body: new FormData(builderForm),
+      });
+      const result = await response.json().catch(() => null);
+      if (!response.ok || result?.ok !== true) throw new Error(result?.message || "We could not send your request.");
 
-      const photos =
-        sitePhotos instanceof HTMLInputElement && sitePhotos.files
-          ? Array.from(sitePhotos.files)
-          : [];
-      const invalidPhoto = photos.find((photo) => photo.size > 10 * 1024 * 1024);
-
-      if (photos.length > 3 || invalidPhoto) {
-        if (submitStatus instanceof HTMLElement) {
-          submitStatus.textContent =
-            photos.length > 3
-              ? "Please choose no more than three photos."
-              : "Each photo must be no larger than 10 MB.";
-          submitStatus.dataset.state = "error";
-        }
-        if (sitePhotos instanceof HTMLInputElement) sitePhotos.focus();
-        return;
+      builderForm.removeAttribute("aria-busy");
+      if (progressRegion instanceof HTMLElement) progressRegion.hidden = true;
+      if (wizardCard instanceof HTMLElement) wizardCard.hidden = true;
+      if (successMessage instanceof HTMLElement && result?.message) successMessage.textContent = result.message;
+      if (successPanel instanceof HTMLElement) {
+        successPanel.hidden = false;
+        successPanel.focus({ preventScroll: true });
+        successPanel.scrollIntoView({ behavior: reducedMotion.matches ? "auto" : "smooth", block: "center" });
       }
-
+    } catch (error) {
       if (submitButton instanceof HTMLButtonElement) {
-        submitButton.disabled = true;
-        submitButton.textContent = "Sending...";
+        submitButton.disabled = false;
+        submitButton.removeAttribute("aria-busy");
       }
+      if (submitLabel instanceof HTMLElement) submitLabel.textContent = "Try again";
+      builderForm.removeAttribute("aria-busy");
       if (submitStatus instanceof HTMLElement) {
-        submitStatus.textContent =
-          photos.length > 0
-            ? "Uploading your photos and sending your request..."
-            : "Sending your request...";
-        submitStatus.dataset.state = "working";
+        submitStatus.hidden = false;
+        submitStatus.textContent = error instanceof Error ? error.message : "We could not send your request. Please try again or call (347) 454-2282.";
+        submitStatus.dataset.state = "error";
       }
-
-      try {
-        const response = await fetch("/api/sukkah-submissions", {
-          method: "POST",
-          headers: { Accept: "application/json" },
-          body: new FormData(builderForm),
-        });
-        const result = await response.json().catch(() => null);
-
-        if (!response.ok || result?.ok !== true) {
-          throw new Error(result?.message || "We could not send your request.");
-        }
-
-        if (submitButton instanceof HTMLButtonElement) {
-          submitButton.textContent = "Request sent";
-        }
-        if (submitStatus instanceof HTMLElement) {
-          submitStatus.textContent =
-            result.message || "Thank you. Your request was sent to Benyamin.";
-          submitStatus.dataset.state = "success";
-        }
-      } catch (error) {
-        if (submitButton instanceof HTMLButtonElement) {
-          submitButton.disabled = false;
-          submitButton.textContent = "Try again";
-        }
-        if (submitStatus instanceof HTMLElement) {
-          submitStatus.textContent =
-            error instanceof Error
-              ? error.message
-              : "We could not send your request. Please try again or call (347) 454-2282.";
-          submitStatus.dataset.state = "error";
-        }
-      }
-    });
-  }
-
+    }
+  });
 </script>
 
 <style is:global>
-  @font-face{font-family:"Inter Variable";src:url("/assets/fonts/inter-variable.woff2") format("woff2");font-style:normal;font-weight:100 900;font-display:swap}
-  .builder-hero{padding-block:clamp(2.75rem,5vw,4.75rem)}
-  .hero-grid{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,780px);padding-top:clamp(1.5rem,3vw,2.75rem)}
-  .hero-copy h1{max-width:780px;font-size:clamp(3rem,6vw,5rem)}.hero-copy .lead{max-width:620px;font-size:clamp(1.05rem,1.8vw,1.22rem)}
-  .builder-notice{display:inline-flex;margin:1.35rem 0 0;padding:.45rem .65rem;border-left:3px solid var(--wood-500);color:var(--ink-600);background:rgba(255,255,255,.45);font-size:.82rem}
-  .form-section{padding-block:clamp(3.5rem,7vw,6rem);background:#fdfbf6}.form-shell{max-width:1180px}.form-intro{display:grid;grid-template-columns:1fr;margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border)}.form-intro h2{margin-bottom:.5rem}.form-intro>div>p:last-child{max-width:620px;margin:0;color:var(--ink-500)}
-  .form-layout{display:grid;grid-template-columns:210px minmax(0,720px);gap:clamp(2rem,4vw,3.5rem);justify-content:start;align-items:start}.form-rail{position:sticky;top:5.5rem;padding:1.1rem 0}.rail-title{margin-bottom:.65rem;color:var(--forest-900);font-size:.78rem;font-weight:850;letter-spacing:.12em;text-transform:uppercase}.progress-track{height:4px;margin-bottom:1.1rem;overflow:hidden;border-radius:99px;background:var(--cream-200)}.progress-track span{display:block;width:14.285%;height:100%;border-radius:inherit;background:var(--wood-500);transition:width 240ms ease}.mobile-progress-label{display:none}.form-rail nav{display:grid;gap:.15rem}.form-rail nav a{display:flex;gap:.8rem;align-items:center;padding:.55rem 0;color:var(--ink-500);text-decoration:none;transition:color 160ms ease,transform 160ms ease}.form-rail nav a span{color:var(--wood-600);font-size:.72rem;font-weight:850;letter-spacing:.08em}.form-rail nav a[data-active]{color:var(--forest-900);font-weight:800;transform:translateX(4px)}.rail-help{margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid var(--border);color:var(--ink-500);font-size:.84rem}.rail-help a{color:var(--forest-800);font-weight:800}
-  .builder-form{display:grid;width:min(100%,720px);gap:1rem;min-width:0;justify-self:center}.form-honeypot{position:absolute!important;left:-10000px!important;width:1px!important;height:1px!important;overflow:hidden!important}.form-card{scroll-margin-top:7rem;padding:clamp(1.4rem,3.5vw,2.25rem);border:1px solid rgba(29,41,37,.14);border-radius:16px;background:white;box-shadow:0 8px 28px rgba(16,45,37,.045)}.form-group{display:grid;gap:1.55rem}.form-group-heading{display:grid;grid-template-columns:2.75rem 1fr;gap:.9rem;align-items:center;padding-bottom:1.15rem;border-bottom:1px solid var(--border)}.form-group-heading .eyebrow{display:none}.form-group-heading h3{margin:0;font-size:clamp(1.55rem,2.7vw,2.05rem)}.step-icon{display:grid;width:2.75rem;height:2.75rem;place-items:center;border:1px solid rgba(200,134,67,.38);border-radius:10px;color:var(--forest-900);background:#fbf2e5}.step-icon svg{width:1.45rem;height:1.45rem}.section-copy{margin:-.55rem 0 0 3.65rem;color:var(--ink-500);font-size:.9rem}
-  .builder-form [hidden]{display:none!important}
-  .builder-form .field{gap:.3rem}.builder-form label,.builder-form legend{font-family:"Inter Variable",Inter,Arial,sans-serif;font-size:.9rem;font-weight:600;letter-spacing:-.005em}.builder-form input,.builder-form select,.builder-form textarea{min-height:36px;padding:.35rem .65rem;border-color:rgba(29,41,37,.2);border-radius:9px;background:#fff;font-size:.88rem;line-height:1.25}.builder-form textarea{min-height:84px}.builder-form input:not([type="radio"]):not([type="checkbox"]):focus,.builder-form select:focus,.builder-form textarea:focus{border-color:var(--forest-700);box-shadow:0 0 0 4px rgba(45,104,85,.1)}.builder-form input::placeholder,.builder-form textarea::placeholder{color:#89938f;font-weight:400}.required-mark{color:#b23a2b;font-weight:700}
-  .fulfillment-card{padding:1rem;border:1px solid rgba(200,134,67,.28);border-radius:12px;background:#fffaf2;animation:fulfillment-reveal 180ms cubic-bezier(.16,1,.3,1)}.fulfillment-card .choice-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.fulfillment-card .choice-card{background:rgba(255,255,255,.82)}.fulfillment-card .choice-card:has(input:checked){background:var(--forest-100)}@keyframes fulfillment-reveal{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
-  [data-purchase-timing],.conditional-schedule{display:grid;gap:1rem}.conditional-schedule{animation:fulfillment-reveal 180ms cubic-bezier(.16,1,.3,1)}[data-purchase-timing] .section-copy,.conditional-schedule .section-copy{margin-left:0}.schedule-window{display:grid;max-width:640px;gap:1rem}.schedule-window-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));align-items:start}.service-schedule{display:grid;gap:1rem;min-width:0}.schedule-window select{width:100%}.schedule-window .choices{width:100%;margin-bottom:0;font-family:"Inter Variable",Inter,Arial,sans-serif}.schedule-window .choices__inner{min-height:40px}.schedule-window .choices__list--single{padding-block:.2rem}
-  .address-field{display:grid;max-width:640px;gap:.85rem}.address-instruction{margin:0}.address-grid{display:grid;grid-template-columns:1fr;gap:.85rem}.address-grid .field{grid-column:1}.address-street,.address-city,.address-state{width:100%}.address-postal{width:min(100%,calc(10ch + 1.4rem + 2px))}
-  .form-grid,.date-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.75rem}.contact-grid{max-width:640px;grid-template-columns:1fr}.contact-grid .field{width:100%}.date-grid,.date-grid .field{min-width:0}.date-grid[data-single-date]{grid-template-columns:1fr}.date-control{display:flex;width:100%;min-width:0;min-height:40px;align-items:center;padding-inline:.7rem;border:1px solid rgba(29,41,37,.2);border-radius:10px;background:#fff}.date-control:focus-within{border-color:var(--forest-700);box-shadow:0 0 0 4px rgba(45,104,85,.1)}.date-grid .date-control input[type="date"],.schedule-window .date-control input[type="date"],.schedule-window .date-control input.builder-date-input{display:block;width:100%;min-width:0;max-width:100%;min-height:38px;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;outline:0}.short-field{max-width:520px}.builder-form fieldset{display:grid;gap:.65rem;min-width:0;margin:0;padding:0;border:0}.builder-form legend{margin-bottom:.15rem;font-size:.96rem}.choice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.5rem}.choice-stack{display:grid;gap:.5rem}.builder-form .choice-card{display:flex;gap:.6rem;align-items:center;min-height:40px;padding:.35rem .7rem;border:1px solid rgba(29,41,37,.16);border-radius:10px;background:#fff;cursor:pointer;font-family:"Inter Variable",Inter,Arial,sans-serif;font-weight:400;letter-spacing:-.01em;transition:border-color 160ms ease,background 160ms ease,box-shadow 160ms ease,transform 160ms ease}.choice-card:hover,.choice-card:has(input:focus-visible){border-color:rgba(45,104,85,.45);background:#f7faf7}.choice-card:has(input:checked){border-color:var(--forest-700);background:var(--forest-100);box-shadow:inset 0 0 0 1px var(--forest-700)}.choice-card:active{transform:scale(.99)}.choice-card input[type="radio"],.choice-card input[type="checkbox"]{flex:0 0 auto;width:1.05rem;min-height:1.05rem;height:1.05rem;margin:0;padding:0;border:0;background:transparent;box-shadow:none;outline:0;accent-color:var(--forest-700)}.choice-card input[type="radio"]:focus,.choice-card input[type="checkbox"]:focus{border:0;box-shadow:none;outline:0}.choice-card span{line-height:1.35}.builder-form .choice-other{flex-wrap:nowrap;padding-block:.25rem}.builder-form .choice-other>input.choice-other-text{flex:1 1 0;width:auto;min-width:0;min-height:30px;height:30px;padding:.2rem .5rem;background:white;font-family:"Inter Variable",Inter,Arial,sans-serif;font-size:.78rem;font-weight:400}.field-hint{font-size:.8rem}
-  .size-field{max-width:760px}.size-field>.field-hint{margin:-.2rem 0 .35rem}.size-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(1.5rem,4vw,3rem)}.size-control{display:grid;gap:.45rem;padding:.15rem 0 .25rem}.size-label-row{display:flex;align-items:center;gap:1rem}.size-control output{display:inline-flex;min-width:3.8rem;min-height:2.25rem;align-items:center;justify-content:center;justify-self:center;gap:.22rem;margin-top:.05rem;padding:.25rem .55rem;border:1px solid rgba(200,134,67,.32);border-radius:10px;color:var(--forest-900);background:#fbf2e5;box-shadow:0 3px 10px rgba(93,65,30,.08),inset 0 1px 0 rgba(255,255,255,.72);font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;font-size:1.15rem;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1;text-align:center;transform-origin:center}.size-control output [data-size-number]{display:inline-block}.size-control output .size-unit{font-family:"Inter Variable",Inter,Arial,sans-serif;font-size:.62rem;font-weight:750;letter-spacing:.08em;line-height:1;text-transform:uppercase}.builder-form .size-control input[type="range"]{--slider-progress:33.333%;--slider-track:#dfe5e1;--slider-fill:var(--forest-700);width:100%;min-height:30px;height:30px;margin:0;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;outline:0;cursor:pointer;appearance:none;-webkit-appearance:none}.builder-form .size-control input[type="range"]::-webkit-slider-runnable-track{height:4px;border:0;border-radius:999px;background:linear-gradient(to right,var(--slider-fill) 0 var(--slider-progress),var(--slider-track) var(--slider-progress) 100%)}.builder-form .size-control input[type="range"]::-moz-range-track{height:4px;border:0;border-radius:999px;background:var(--slider-track)}.builder-form .size-control input[type="range"]::-moz-range-progress{height:4px;border-radius:999px;background:var(--slider-fill)}.builder-form .size-control input[type="range"]::-webkit-slider-thumb{width:18px;height:18px;margin-top:-7px;border:2px solid var(--forest-700);border-radius:50%;background:white;box-shadow:0 1px 4px rgba(16,45,37,.16);transition:box-shadow 160ms ease,transform 160ms ease;appearance:none;-webkit-appearance:none}.builder-form .size-control input[type="range"]::-moz-range-thumb{width:14px;height:14px;border:2px solid var(--forest-700);border-radius:50%;background:white;box-shadow:0 1px 4px rgba(16,45,37,.16);transition:box-shadow 160ms ease,transform 160ms ease}.builder-form .size-control input[type="range"]:hover::-webkit-slider-thumb{transform:scale(1.06)}.builder-form .size-control input[type="range"]:hover::-moz-range-thumb{transform:scale(1.06)}.builder-form .size-control input[type="range"]:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 4px rgba(45,104,85,.16),0 1px 4px rgba(16,45,37,.18)}.builder-form .size-control input[type="range"]:focus-visible::-moz-range-thumb{box-shadow:0 0 0 4px rgba(45,104,85,.16),0 1px 4px rgba(16,45,37,.18)}.builder-form .size-control input[type="range"]:focus,.builder-form .size-control input[type="range"]:focus-visible{border:0;outline:0;box-shadow:none}
-  .upload-field{display:grid;grid-template-columns:auto 1fr minmax(190px,auto);gap:1rem;align-items:center;padding:1.15rem;border:1px dashed rgba(45,104,85,.38);border-radius:12px;background:#f7faf7}.upload-icon{display:grid;width:2.65rem;height:2.65rem;place-items:center;border-radius:10px;color:var(--forest-800);background:var(--forest-100);font-size:1.25rem;font-weight:900}.upload-field label{display:block;margin-bottom:.15rem}.upload-field p{margin:0;color:var(--ink-500);font-size:.8rem}.upload-field input[type="file"]{min-height:46px;padding:.3rem;border:1px solid rgba(29,41,37,.2);border-radius:10px;color:var(--ink-500);font-family:"Inter Variable",Inter,Arial,sans-serif;font-size:.82rem;background:white;cursor:pointer}.upload-field input[type="file"]::file-selector-button{min-height:36px;margin-right:.65rem;padding:.5rem .8rem;border:0;border-radius:7px;color:white;background:var(--forest-800);font-family:inherit;font-weight:800;cursor:pointer;transition:background 160ms ease}.upload-field input[type="file"]::file-selector-button:hover{background:var(--forest-950)}
-  .builder-form .form-card>*{width:100%;max-width:640px;margin-inline:auto}.builder-form .form-card>.section-copy{padding-inline-start:3.65rem}
-  .submit-row{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.55rem;padding:1rem 0 .25rem}.submit-row .button{min-width:170px;font-family:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;font-size:1.02rem;font-weight:600;letter-spacing:-.01em;box-shadow:none;transform:none;transition:background-color 100ms ease,border-color 100ms ease}.submit-row .button:hover{border-color:var(--forest-900);background:var(--forest-900);box-shadow:none;transform:none}.submit-row .button:active{border-color:var(--forest-950);background:var(--forest-950);box-shadow:none;transform:none}.submit-row .button:disabled{cursor:wait;opacity:.76}.submit-row p{margin:0;color:var(--ink-500);font-size:.84rem;text-align:center}.submit-row p[data-state="success"]{color:var(--forest-800);font-weight:700}.submit-row p[data-state="error"]{color:#9d2e22;font-weight:700}
-  .date-grid .date-control input.builder-date-input,.schedule-window .date-control input.builder-date-input{min-height:38px;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;outline:0}.date-grid .date-control input.builder-date-input:focus,.date-grid .date-control input.builder-date-input:focus-visible,.schedule-window .date-control input.builder-date-input:focus,.schedule-window .date-control input.builder-date-input:focus-visible{border:0;box-shadow:none;outline:0}
-  .flatpickr-calendar{width:340px;padding:.65rem;border:1px solid rgba(29,41,37,.14);border-radius:16px;background:#fffdf8;box-shadow:0 22px 60px rgba(16,45,37,.2);font-family:"Inter Variable",Inter,Arial,sans-serif}.flatpickr-calendar.arrowTop::before{border-bottom-color:rgba(29,41,37,.14)}.flatpickr-calendar.arrowTop::after{border-bottom-color:#fffdf8}.flatpickr-months{height:48px;align-items:center}.flatpickr-months .flatpickr-month{height:48px;color:var(--forest-950);background:transparent}.flatpickr-current-month{top:0;left:18%;width:64%;height:48px;display:flex;align-items:center;justify-content:center;gap:.25rem;padding:0;font-size:1rem;font-weight:800}.flatpickr-current-month span.cur-month{margin-left:0;font-weight:800}.flatpickr-current-month .numInputWrapper{width:4.2rem}.flatpickr-current-month input.cur-year{width:100%;min-height:0;height:32px;padding:0 .2rem;border:0;border-radius:6px;color:var(--forest-950);font:inherit;font-weight:800;background:transparent;box-shadow:none;outline:0}.flatpickr-current-month input.cur-year:focus,.flatpickr-current-month input.cur-year:focus-visible{border:0;background:var(--cream-100);box-shadow:none;outline:0}.flatpickr-current-month .numInputWrapper span{border-color:transparent}.flatpickr-calendar .flatpickr-months .flatpickr-prev-month,.flatpickr-calendar .flatpickr-months .flatpickr-next-month{top:.65rem;width:36px;height:36px;display:grid;place-items:center;padding:0;border-radius:9px;color:var(--forest-800);fill:var(--forest-800)}.flatpickr-calendar .flatpickr-months .flatpickr-prev-month{left:.65rem}.flatpickr-calendar .flatpickr-months .flatpickr-next-month{right:.65rem}.flatpickr-calendar .flatpickr-months .flatpickr-prev-month:hover,.flatpickr-calendar .flatpickr-months .flatpickr-next-month:hover{background:var(--forest-100)}.flatpickr-calendar .flatpickr-months .flatpickr-prev-month:hover svg,.flatpickr-calendar .flatpickr-months .flatpickr-next-month:hover svg{fill:var(--forest-950)}.flatpickr-innerContainer,.flatpickr-rContainer,.flatpickr-weekdays,.flatpickr-days,.dayContainer{width:100%;max-width:100%}.flatpickr-weekdays{height:34px}.flatpickr-weekdaycontainer{display:grid;grid-template-columns:repeat(7,1fr)}span.flatpickr-weekday{color:var(--ink-500);font-size:.72rem;font-weight:850}.flatpickr-day{max-width:none;height:40px;line-height:40px;border-radius:9px;color:var(--ink-800);font-size:.84rem;font-weight:650}.flatpickr-day:hover,.flatpickr-day:focus{border-color:var(--forest-100);background:var(--forest-100)}.flatpickr-day.today{border-color:var(--wood-500);color:var(--forest-950)}.flatpickr-day.today:hover{border-color:var(--wood-500);background:#fbf2e5}.flatpickr-day.selected,.flatpickr-day.selected:hover{border-color:var(--forest-800);color:white;background:var(--forest-800);box-shadow:0 3px 10px rgba(29,82,66,.22)}.flatpickr-day.flatpickr-disabled,.flatpickr-day.flatpickr-disabled:hover{color:rgba(83,103,95,.3);background:transparent}
-  body .flatpickr-calendar{padding:.75rem;border-color:var(--border);border-radius:12px;background:white;box-shadow:var(--shadow-medium)}body .flatpickr-calendar.arrowTop::before{border-bottom-color:var(--border)}body .flatpickr-calendar.arrowTop::after{border-bottom-color:white}body .flatpickr-months{margin-bottom:.3rem;border-radius:9px;background:var(--cream-100)}body .flatpickr-current-month{font-size:.96rem}body span.flatpickr-weekday{color:var(--forest-800);letter-spacing:.025em}body .flatpickr-day{border-radius:8px}body .flatpickr-day:hover,body .flatpickr-day:focus{border-color:var(--cream-200);background:var(--cream-100)}body .flatpickr-day.today{border-color:var(--wood-500);background:#fffaf2}body .flatpickr-day.selected,body .flatpickr-day.selected:hover{border-color:var(--forest-800);background:var(--forest-800);box-shadow:none}
-  @media(max-width:380px){.flatpickr-calendar{width:calc(100vw - 24px);padding:.45rem}.flatpickr-day{height:38px;line-height:38px}}
-  @media(max-width:950px){.form-layout{grid-template-columns:1fr;gap:1rem}.form-rail{position:sticky;top:58px;z-index:20;margin-inline:-16px;padding:.75rem 16px;border-block:1px solid var(--border);background:rgba(253,251,246,.96);box-shadow:0 8px 20px rgba(16,45,37,.05);backdrop-filter:blur(10px)}.rail-title,.form-rail nav,.rail-help{display:none}.progress-track{margin-bottom:.45rem}.mobile-progress-label{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin:0;color:var(--ink-500);font-size:.78rem}.mobile-progress-label strong{color:var(--forest-900);font-size:.88rem}.choice-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.form-card{scroll-margin-top:9rem}}
-  @media(max-width:700px){.builder-hero{padding-block:2.25rem 3.5rem}.hero-grid{padding-top:1.25rem}.hero-copy h1{font-size:clamp(2.65rem,13vw,4rem)}.form-section{padding-block:3rem 4.5rem}.form-intro,.form-grid,.date-grid,.size-grid,.address-grid{grid-template-columns:1fr}.form-intro{gap:.6rem;margin-bottom:1rem;padding-bottom:1.25rem}.address-grid .field{grid-column:1}.builder-form input:not([type="radio"]):not([type="checkbox"]):not([type="range"]),.builder-form select,.builder-form textarea{font-size:16px}.builder-form input:not([type="radio"]):not([type="checkbox"]):not([type="range"]):not([type="file"]):not([type="date"]):not(.choice-other-text),.builder-form select{min-height:40px}.builder-form textarea{min-height:92px}#timing-notes::placeholder{color:transparent}.date-control{min-height:50px}.date-grid .date-control input[type="date"],.date-grid .date-control input.builder-date-input,.schedule-window .date-control input[type="date"],.schedule-window .date-control input.builder-date-input{min-height:48px}.choice-grid,.fulfillment-card .choice-grid{grid-template-columns:1fr}.builder-form .choice-card{min-height:40px;padding:.35rem .7rem}.builder-form .choice-other{padding-block:.25rem}.fulfillment-card{padding:.85rem}.form-group-heading{grid-template-columns:2.5rem 1fr;gap:.75rem}.step-icon{width:2.5rem;height:2.5rem}.form-group-heading h3{font-size:1.55rem}.section-copy{margin-left:0}.builder-form .form-card>.section-copy{padding-inline-start:0}.upload-field{grid-template-columns:auto 1fr}.upload-field input{grid-column:1/-1;width:100%}.submit-row{align-items:stretch;flex-direction:column}.submit-row .button{width:100%}.submit-row p{text-align:center}}
-  @media(max-width:700px){.size-control{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"size-label size-output" "size-slider size-slider";column-gap:1rem;align-items:center}.size-label-row{grid-area:size-label}.builder-form .size-control input[type="range"]{grid-area:size-slider}.size-control output{grid-area:size-output;justify-self:end;margin-top:0}}
-  @media(max-width:480px){.builder-form input:not([type="radio"]):not([type="checkbox"]):not([type="range"]):not([type="file"]):not([type="date"]):not(.choice-other-text),.builder-form select{min-height:44px}}
-  @media(prefers-reduced-motion:reduce){.progress-track span,.form-rail nav a,.choice-card{transition:none}.fulfillment-card,.conditional-schedule{animation:none}}
+  body.builds-page .builder-hero {
+    padding-block: clamp(1.75rem, 3vw, 2.5rem) clamp(3rem, 5vw, 4.25rem);
+  }
+
+  body.builds-page .builder-hero-inner {
+    position: relative;
+    z-index: 1;
+  }
+
+  body.builds-page .builder-hero-copy {
+    width: min(100%, 760px);
+    margin: clamp(2.5rem, 5vw, 4rem) auto 0;
+    text-align: center;
+  }
+
+  body.builds-page .builder-hero-copy .eyebrow {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 0.8rem;
+  }
+
+  body.builds-page .builder-hero h1 {
+    max-width: 760px;
+    margin: 0 auto 1rem;
+    font-size: clamp(3.15rem, 6vw, 5rem);
+    line-height: 1;
+  }
+
+  body.builds-page .builder-hero .lead {
+    max-width: 650px;
+    margin: 0 auto;
+    color: var(--ink-700);
+    font-size: clamp(1.05rem, 1.7vw, 1.2rem);
+    line-height: 1.5;
+  }
+
+  body.builds-page .form-section {
+    padding-block: clamp(2.5rem, 5vw, 4.5rem);
+    background: #fdfbf6;
+  }
+
+  body.builds-page .form-shell {
+    max-width: 850px;
+  }
+
+  .builder-wizard .address-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) 8rem;
+    gap: 0.9rem;
+  }
+
+  .builder-wizard .address-street {
+    grid-column: 1 / -1;
+  }
+
+  .builder-wizard .service-grid,
+  .builder-wizard .add-on-grid {
+    margin-top: 0.55rem;
+  }
+
+  .builder-wizard .extra-labor-group,
+  .builder-wizard .service-schedule {
+    display: grid;
+    gap: 0.7rem;
+  }
+
+  .builder-wizard .extra-service-check span {
+    display: grid;
+    gap: 0.1rem;
+  }
+
+  .builder-wizard .extra-service-check strong {
+    font-size: 0.9rem;
+  }
+
+  .builder-wizard .extra-service-check small {
+    color: var(--ink-500);
+    font-size: 0.78rem;
+    font-weight: 500;
+    line-height: 1.35;
+  }
+
+  .builder-wizard .size-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.4rem;
+    margin-top: 0.75rem;
+  }
+
+  .builder-wizard .size-control {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: "label output" "slider slider";
+    gap: 0.45rem 0.8rem;
+    align-items: center;
+    padding: 0.8rem;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--cream-50);
+  }
+
+  .builder-wizard .size-label-row {
+    grid-area: label;
+  }
+
+  .builder-wizard .size-control output {
+    grid-area: output;
+    display: inline-flex;
+    min-width: 3.7rem;
+    min-height: 2.2rem;
+    align-items: center;
+    justify-content: center;
+    gap: 0.2rem;
+    padding: 0.25rem 0.5rem;
+    border: 1px solid rgba(200, 134, 67, 0.32);
+    border-radius: 9px;
+    color: var(--forest-900);
+    background: #fbf2e5;
+    font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .builder-wizard .size-unit {
+    font-family: "Inter Variable", Inter, Arial, sans-serif;
+    font-size: 0.62rem;
+    font-weight: 750;
+    letter-spacing: 0;
+    text-transform: uppercase;
+  }
+
+  .builder-wizard .size-control input[type="range"] {
+    --slider-progress: 33.333%;
+    grid-area: slider;
+    width: 100%;
+    height: 30px;
+    min-height: 30px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+    cursor: pointer;
+    appearance: none;
+  }
+
+  .builder-wizard .size-control input[type="range"]::-webkit-slider-runnable-track {
+    height: 4px;
+    border-radius: 999px;
+    background: linear-gradient(to right, var(--forest-700) 0 var(--slider-progress), #dfe5e1 var(--slider-progress) 100%);
+  }
+
+  .builder-wizard .size-control input[type="range"]::-moz-range-track {
+    height: 4px;
+    border-radius: 999px;
+    background: #dfe5e1;
+  }
+
+  .builder-wizard .size-control input[type="range"]::-moz-range-progress {
+    height: 4px;
+    border-radius: 999px;
+    background: var(--forest-700);
+  }
+
+  .builder-wizard .size-control input[type="range"]::-webkit-slider-thumb {
+    width: 18px;
+    height: 18px;
+    margin-top: -7px;
+    border: 2px solid var(--forest-700);
+    border-radius: 50%;
+    background: white;
+    box-shadow: 0 1px 4px rgba(16, 45, 37, 0.16);
+    appearance: none;
+  }
+
+  .builder-wizard .size-control input[type="range"]::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    border: 2px solid var(--forest-700);
+    border-radius: 50%;
+    background: white;
+    box-shadow: 0 1px 4px rgba(16, 45, 37, 0.16);
+  }
+
+  .photo-upload-card {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 0.9rem;
+    align-items: center;
+    padding: 1rem;
+    border: 1px dashed rgba(45, 104, 85, 0.36);
+    border-radius: 12px;
+    background: #f7faf7;
+  }
+
+  .photo-upload-card .upload-icon {
+    display: grid;
+    width: 2.55rem;
+    height: 2.55rem;
+    place-items: center;
+    border-radius: 9px;
+    color: var(--forest-800);
+    background: var(--forest-100);
+  }
+
+  .photo-upload-card .upload-icon svg {
+    width: 1.4rem;
+    height: 1.4rem;
+  }
+
+  .upload-copy strong {
+    display: block;
+    margin-bottom: 0.12rem;
+    font-size: 0.9rem;
+  }
+
+  .upload-copy p {
+    margin: 0;
+    color: var(--ink-500);
+    font-size: 0.78rem;
+    line-height: 1.4;
+  }
+
+  .upload-button {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+    justify-content: center;
+    padding: 0.6rem 0.85rem;
+    border: 1px solid var(--forest-800);
+    border-radius: 9px;
+    color: var(--forest-900);
+    background: white;
+    cursor: pointer;
+    font-size: 0.82rem;
+    font-weight: 800;
+  }
+
+  .sr-only-file {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+
+  .selected-photos,
+  .photo-upload-card > .field-error {
+    grid-column: 1 / -1;
+  }
+
+  .selected-photos {
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .selected-photo {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.45rem 0.55rem;
+    border-radius: 8px;
+    background: white;
+    font-size: 0.78rem;
+  }
+
+  .selected-photo span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .selected-photo button {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0.35rem;
+    border: 0;
+    color: var(--forest-800);
+    background: transparent;
+    font-size: 0.76rem;
+    font-weight: 800;
+    text-decoration: underline;
+  }
+
+  .builder-wizard .schedule-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.9rem;
+    margin-top: 0.75rem;
+  }
+
+  .builder-wizard .date-control {
+    min-width: 0;
+  }
+
+  .builder-wizard .date-control input.builder-date-input {
+    width: 100%;
+    min-height: 46px;
+    padding: 0.68rem 0.78rem;
+    border: 1px solid rgba(29, 41, 37, 0.22);
+    border-radius: 9px;
+    color: var(--ink-900);
+    background: white;
+    font-size: 0.98rem;
+  }
+
+  .builder-wizard .choices {
+    width: 100%;
+    margin: 0;
+  }
+
+  .builder-wizard .choices__inner {
+    min-height: 46px;
+    padding: 0.62rem 2.4rem 0.62rem 0.78rem;
+    border: 1px solid rgba(29, 41, 37, 0.22);
+    border-radius: 9px;
+    color: var(--ink-900);
+    background: white;
+    font-size: 0.92rem;
+  }
+
+  .builder-wizard .choices.is-focused .choices__inner {
+    border-color: var(--forest-700);
+    box-shadow: 0 0 0 4px rgba(45, 104, 85, 0.1);
+  }
+
+  .builder-wizard .choices__list--dropdown {
+    border-color: var(--border);
+    border-radius: 9px;
+    box-shadow: var(--shadow-medium);
+  }
+
+  .noscript-note {
+    margin: 1rem 0 0;
+    padding: 1rem;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: white;
+    font-size: 0.9rem;
+  }
+
+  @media (max-width: 960px) {
+    body.builds-page .site-footer {
+      padding-top: 2.75rem;
+    }
+
+    body.builds-page .footer-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.5rem 1.75rem;
+      padding-bottom: 2.25rem;
+    }
+
+    body.builds-page .footer-intro,
+    body.builds-page .footer-grid > :last-child {
+      grid-column: 1 / -1;
+    }
+
+    body.builds-page .footer-hours {
+      margin-top: 0.9rem;
+      padding-top: 0.8rem;
+    }
+
+    body.builds-page .footer-links {
+      gap: 0.35rem;
+    }
+
+    body.builds-page .contact-list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.35rem 1rem;
+    }
+
+    body.builds-page .contact-list li:nth-child(2) {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (max-width: 700px) {
+    body.builds-page .builder-hero {
+      padding-block: 1.35rem 2.5rem;
+    }
+
+    body.builds-page .builder-hero-copy {
+      margin-top: 2rem;
+    }
+
+    body.builds-page .builder-hero h1 {
+      margin-bottom: 0.75rem;
+      font-size: clamp(2.55rem, 12vw, 3.7rem);
+    }
+
+    body.builds-page .builder-hero .lead {
+      font-size: 1rem;
+    }
+
+    body.builds-page .form-section {
+      padding-block: 1.5rem 3.25rem;
+    }
+
+    .builder-wizard .address-grid,
+    .builder-wizard .size-grid,
+    .builder-wizard .schedule-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .builder-wizard .address-street {
+      grid-column: auto;
+    }
+
+    .builder-wizard .service-grid,
+    .builder-wizard .add-on-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .photo-upload-card {
+      grid-template-columns: auto minmax(0, 1fr);
+    }
+
+    .photo-upload-card .upload-button {
+      grid-column: 1 / -1;
+      width: 100%;
+    }
+
+    body.builds-page .footer-grid {
+      gap: 1.25rem;
+      padding-bottom: 1.8rem;
+    }
+  }
+
+  @media (max-width: 560px) {
+    body.builds-page .footer-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    body.builds-page .footer-intro,
+    body.builds-page .footer-grid > :last-child {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .builder-wizard .size-control input[type="range"] {
+      scroll-behavior: auto;
+    }
+  }
 </style>

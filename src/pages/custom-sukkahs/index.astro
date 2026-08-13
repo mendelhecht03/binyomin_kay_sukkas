@@ -4,45 +4,23 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 const featureGroups = [
   {
     title: "Available additions",
-    items: ["Basic or decorative lighting", "Doors and gates", "Zippered tarp openings", "Windows or clear panels"],
+    items: ["Custom lighting", "Doors and gates", "Windows or clear panels"],
   },
   {
     title: "Furnishings and decor",
-    items: ["Tables and chairs", "Greenery and decor"],
-  },
-  {
-    title: "Available by special request",
-    items: ["Custom paint or stain", "Custom exterior colors", "Branding or printed walls", "Custom flooring or floor coverings"],
+    items: ["Tables and chairs", "Greenery and decor", "Flooring"],
   },
 ];
 
-const flexibleWallOptions = [
+const wallOptions = [
   {
-    title: "White tarp walls",
+    title: "Tarp walls",
     description: "A clean wall option suited to custom builds of many sizes.",
     src: "/assets/images/custom-large-white-tarp.jpg",
-    alt: "Large freestanding sukka with white tarp walls in a parking lot",
+    alt: "Large freestanding sukka with tarp walls in a parking lot",
     width: 1600,
     height: 900,
     className: "wall-option--white",
-  },
-  {
-    title: "Beige woven screen",
-    description: "A woven wall covering that allows filtered light. Exact specifications are confirmed during the quote.",
-    src: "/assets/images/custom-beige-woven-wall.jpg",
-    alt: "Beige woven screen walls surrounding a residential sukka",
-    width: 1200,
-    height: 900,
-    className: "wall-option--beige",
-  },
-  {
-    title: "Blue tarp walls",
-    description: "A practical wall option available in varying thicknesses.",
-    src: "/assets/images/custom-blue-tarp.jpg",
-    alt: "Custom sukka with blue tarp walls",
-    width: 567,
-    height: 1008,
-    className: "wall-option--blue",
   },
   {
     title: "Soft fabric",
@@ -53,9 +31,6 @@ const flexibleWallOptions = [
     height: 900,
     className: "wall-option--fabric",
   },
-];
-
-const panelWallOptions = [
   {
     title: "Framed plywood walls",
     description: "Plywood wall panels can include windows and planned lighting.",
@@ -75,32 +50,13 @@ const panelWallOptions = [
     className: "panel-option--light",
   },
   {
-    title: "Dark framed panels",
-    description: "A deeper-toned panel finish set inside a modular metal frame.",
-    src: "/assets/images/custom-dark-infill-panels.jpg",
-    alt: "Dark custom wall panels set inside a metal sukka frame",
-    width: 1200,
-    height: 900,
-    className: "panel-option--dark",
-  },
-  {
-    title: "Lattice-top panels",
-    description: "Solid lower panels with a diamond-lattice strip for added airflow and light.",
+    title: "Wood lattice panels",
+    description: "Open lattice panels create a bright, airy wall treatment.",
     src: "/assets/images/custom-lattice-top-rendering.jpg",
-    alt: "Illustrative rendering of white lattice-top panels used as sukka walls",
-    width: 1200,
-    height: 900,
-    className: "panel-option--lattice",
-    note: "Illustrative rendering",
-  },
-  {
-    title: "Horizontal rooftop paneling",
-    description: "Gray horizontal panels set within a dark frame for a rooftop build.",
-    src: "/assets/images/custom-rooftop-cladding.jpg",
-    alt: "Rooftop sukka with gray horizontal cladding in a dark structural frame",
+    alt: "Wood lattice panels used as sukka walls in daylight",
     width: 1600,
     height: 900,
-    className: "panel-option--rooftop",
+    className: "panel-option--lattice",
   },
   {
     title: "Horizontal slat siding",
@@ -113,9 +69,39 @@ const panelWallOptions = [
   },
 ];
 
+const schachOptions = [
+  {
+    title: "Bamboo sticks",
+    description: "Individual bamboo poles arranged across the roof as a natural schach option.",
+    src: "/assets/images/custom-schach-bamboo-sticks.jpg",
+    alt: "Bundles of bamboo sticks prepared for a custom sukka",
+    width: 1600,
+    height: 900,
+    className: "schach-option--sticks",
+  },
+  {
+    title: "Bamboo mats",
+    description: "Bamboo matting laid across the roof for an even, natural finish.",
+    src: "/assets/images/custom-schach-bamboo-mats.jpg",
+    alt: "Close view of bamboo matting over a custom sukka roof",
+    width: 1600,
+    height: 1200,
+    className: "schach-option--mats",
+  },
+  {
+    title: "Evergreen",
+    description: "Evergreen branches layered over bamboo for a natural finishing look.",
+    src: "/assets/images/custom-schach-evergreen.jpg",
+    alt: "Evergreen branches layered over bamboo schach on a rooftop sukka",
+    width: 900,
+    height: 1600,
+    className: "schach-option--evergreen",
+  },
+];
+
 const serviceAreas = [
   "Crown Heights", "East Flatbush", "Remsen Village", "Flatbush", "Boro Park",
-  "Williamsburg", "Park Slope", "Manhattan", "Queens", "Monsey", "South Florida", "California",
+  "Williamsburg", "Park Slope", "Manhattan", "Queens", "Monsey", "South Florida", "Los Angeles", "California",
 ];
 ---
 
@@ -128,8 +114,8 @@ const serviceAreas = [
       <div class="custom-hero__inner shell">
         <div class="custom-hero__copy">
           <p class="custom-kicker">Custom sukkas</p>
-          <h1 id="custom-sukkahs-heading">Made to fit your space.</h1>
-          <p class="custom-hero__lead">A sukka planned around your site, preferred materials, and the way you want to use it.</p>
+          <h1 id="custom-sukkahs-heading">Built for your space.</h1>
+          <p class="custom-hero__lead">A custom sukka planned around your property, preferred materials, and the way you want to use it.</p>
           <div class="hero-actions">
             <a class="primary-action" href="/contact/">Request a custom quote</a>
             <a class="secondary-action" href="tel:+13474542282">Call (347) 454-2282</a>
@@ -157,7 +143,7 @@ const serviceAreas = [
         </p>
       </div>
       <div class="site-list" aria-label="Suitable project sites">
-        <p>Backyards</p><p>Porches, patios, and decks</p><p>Courtyards</p><p>Attached or freestanding</p><p>Some rooftops</p>
+        <p>Backyards</p><p>Porches</p><p>Courtyards</p><p>Rooftops</p>
       </div>
       <p class="audience-note">For families, shuls, businesses, apartment buildings, and schools.</p>
     </section>
@@ -186,67 +172,59 @@ const serviceAreas = [
       </div>
     </section>
 
-    <section class="walls-section" aria-labelledby="walls-heading">
-      <div class="shell">
-        <div class="walls-heading">
-          <h2 id="walls-heading">Walls for every kind of build.</h2>
-          <p>Choose a flexible covering, a rigid panel system, or custom siding. Final materials and availability are confirmed during the quote.</p>
+    <section class="materials-section shell" aria-labelledby="walls-heading">
+      <div class="walls-heading">
+        <h2 id="walls-heading">Siding.</h2>
+        <p>Contact us for current availability.</p>
+      </div>
+      <div class="materials-content">
+        <p class="walls-swipe-hint" aria-hidden="true">Swipe to see more <span>→</span></p>
+        <div class="wall-gallery" role="region" aria-label="Wall and siding examples" tabindex="0">
+          {wallOptions.map((option) => (
+            <figure class={`wall-option ${option.className}`}>
+              <div class="wall-media">
+                <img src={option.src} alt={option.alt} width={option.width} height={option.height} loading="lazy" />
+              </div>
+              <figcaption>
+                <h3>{option.title}</h3>
+                <span>{option.description}</span>
+              </figcaption>
+            </figure>
+          ))}
         </div>
-        <section class="wall-group" aria-labelledby="flexible-walls-heading">
-          <h3 id="flexible-walls-heading">Flexible wall coverings</h3>
-          <div class="covering-gallery">
-            {flexibleWallOptions.map((option) => (
-              <figure class={`wall-option ${option.className}`}>
-                <div class="wall-media">
-                  <img src={option.src} alt={option.alt} width={option.width} height={option.height} loading="lazy" />
-                </div>
-                <figcaption><strong>{option.title}</strong><span>{option.description}</span></figcaption>
-              </figure>
-            ))}
-          </div>
-        </section>
-
-        <section class="wall-group wall-group--panels" aria-labelledby="panel-walls-heading">
-          <h3 id="panel-walls-heading">Panels and custom siding</h3>
-          <div class="panel-gallery">
-            {panelWallOptions.map((option) => (
-              <figure class={`wall-option panel-option ${option.className}`}>
-                <div class="wall-media">
-                  <img src={option.src} alt={option.alt} width={option.width} height={option.height} loading="lazy" />
-                </div>
-                <figcaption>
-                  <strong>{option.title}</strong>
-                  <span>{option.description}</span>
-                  {option.note && <small>{option.note}</small>}
-                </figcaption>
-              </figure>
-            ))}
-          </div>
-        </section>
+        <p class="tarp-note">Tarp walls come in varying thicknesses and colors. Exact options and pricing are confirmed during the quote.</p>
       </div>
     </section>
 
-    <section class="site-options-section shell" aria-labelledby="site-options-heading">
-      <div class="site-options-heading">
-        <h2 id="site-options-heading">More than the walls.</h2>
-        <p>The site and finishing details can also shape the project.</p>
+    <section class="materials-section schach-section shell" aria-labelledby="schach-gallery-heading">
+      <div class="walls-heading">
+        <h2 id="schach-gallery-heading">Schach.</h2>
+        <p>Contact us for current availability.</p>
       </div>
-      <div class="site-options-grid">
-        <figure class="site-option">
-          <img src="/assets/images/custom-porch-sukka.jpg" alt="Custom sukka structure built over an existing residential porch" width="1200" height="900" loading="lazy" />
-          <figcaption><strong>Porch and deck builds</strong><span>A roof frame can be planned around an existing porch or deck, subject to site conditions.</span></figcaption>
-        </figure>
-        <figure class="site-option">
-          <img src="/assets/images/custom-carpet-flooring.jpg" alt="Large custom sukka with patterned carpet flooring, gray walls, and string lighting" width="1200" height="900" loading="lazy" />
-          <figcaption><strong>Custom flooring</strong><span>Carpeted or covered floors can be planned for individual projects.</span></figcaption>
-        </figure>
+      <div class="materials-content">
+        <p class="walls-swipe-hint" aria-hidden="true">Swipe to see more <span>→</span></p>
+        <div class="wall-gallery" role="region" aria-label="Schach material examples" tabindex="0">
+          {schachOptions.map((option) => (
+            <figure class={`wall-option ${option.className}`}>
+              <div class="wall-media">
+                <img src={option.src} alt={option.alt} width={option.width} height={option.height} loading="lazy" />
+              </div>
+              <figcaption>
+                <h3>{option.title}</h3>
+                <span>{option.description}</span>
+              </figcaption>
+            </figure>
+          ))}
+        </div>
       </div>
     </section>
 
     <section class="details-section shell" aria-labelledby="details-heading">
       <div class="details-copy">
         <h2 id="details-heading">The details can be personal.</h2>
-        <p>Choose useful additions or ask about a special finish. Every request is reviewed for feasibility.</p>
+        <p>
+          Choose from our most common additions. <a href="/contact/">Contact us</a> to discuss other customization options.
+        </p>
       </div>
       <div class="feature-groups">
         {featureGroups.map((group) => (
@@ -266,11 +244,10 @@ const serviceAreas = [
           Benyamin Kay Sukkas can handle measuring, planning, material choices, fabrication,
           delivery, installation, schach installation, and on-request takedown and storage after Sukkos.
         </p>
-        <p>You choose a preferred installation date, and B. Kay confirms availability.</p>
       </div>
-      <div class="schach-panel">
-        <h3>Schach choices</h3>
-        <p>Bamboo mats, bamboo sticks, or evergreen can be included and priced within the full project quote.</p>
+      <div class="planning-note">
+        <h3>Timing and availability</h3>
+        <p>You choose a preferred installation date, and B. Kay confirms availability.</p>
       </div>
     </section>
 
@@ -312,11 +289,11 @@ const serviceAreas = [
   .hero-photo img { width: 100%; height: 100%; object-fit: cover; object-position: center; transform: scale(1.75); transform-origin: 42% 52%; }
   @media (prefers-reduced-motion: no-preference) { .custom-hero__copy { animation: rise-in 650ms cubic-bezier(.16,1,.3,1) both; } .hero-photo { animation: rise-in 750ms 90ms cubic-bezier(.16,1,.3,1) both; } @keyframes rise-in { from { opacity: 0; transform: translateY(18px); } } }
 
-  .made-to-fit { padding-block: clamp(5rem, 10vw, 8.5rem); }
+  .made-to-fit { padding-block: clamp(4.5rem, 8vw, 7rem); }
   .made-to-fit__intro { max-width: 48rem; }
   .made-to-fit__intro h2 { max-width: 11ch; margin-bottom: 1.1rem; font-size: clamp(2.6rem, 5vw, 4.3rem); }
   .made-to-fit__intro p { max-width: 44rem; margin-bottom: 0; font-size: clamp(1.08rem, 2vw, 1.28rem); line-height: 1.65; }
-  .site-list { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 1px; margin-top: clamp(2.5rem, 6vw, 4.5rem); background: var(--border-strong); }
+  .site-list { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1px; margin-top: clamp(2.5rem, 6vw, 4.5rem); background: var(--border-strong); }
   .site-list p { min-width: 0; margin: 0; padding: 1.25rem 1rem; color: var(--forest-900); background: var(--cream-50); font-family: var(--font-nav); font-weight: 650; text-align: center; }
   .audience-note { margin: 1.15rem 0 0; color: var(--ink-500); font-size: .94rem; }
 
@@ -330,74 +307,47 @@ const serviceAreas = [
   .frame-choice h3 { color: var(--forest-900); font-family: var(--font-nav); font-size: 1.08rem; }
   .frame-choice p { max-width: 38rem; }
 
-  .walls-section { padding-block: clamp(4.5rem, 9vw, 8rem); background: var(--cream-100); }
-  .walls-heading { max-width: 42rem; margin-bottom: clamp(2.5rem, 5vw, 4rem); }
-  .walls-heading h2 { margin-bottom: .8rem; font-size: clamp(2.5rem, 5vw, 4.2rem); }
-  .walls-heading p { max-width: 34rem; margin: 0; }
-  .wall-group h3 { margin: 0 0 1.25rem; color: var(--forest-950); font-family: var(--font-nav); font-size: clamp(1.15rem, 2vw, 1.4rem); }
-  .wall-group--panels { margin-top: clamp(3.5rem, 7vw, 6rem); padding-top: clamp(2rem, 4vw, 3rem); border-top: 1px solid var(--border-strong); }
-  .covering-gallery, .panel-gallery { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: clamp(1.25rem, 2.5vw, 2rem); align-items: start; }
-  .wall-option { min-width: 0; margin: 0; }
+  .materials-section { display: grid; grid-template-columns: minmax(13rem, .38fr) minmax(0, 1.62fr); gap: clamp(3rem, 7vw, 6.5rem); align-items: start; padding-block: clamp(4.5rem, 8vw, 7rem); border-top: 1px solid var(--border-strong); }
+  .walls-heading { max-width: 18rem; padding-top: .2rem; }
+  .walls-heading h2 { margin-bottom: .8rem; color: var(--forest-950); font-size: clamp(2.5rem, 5vw, 4.2rem); }
+  .walls-heading p { max-width: 16rem; margin: 0; color: var(--ink-500); }
+  .materials-content { min-width: 0; }
+  .walls-swipe-hint { display: none; }
+  .wall-gallery { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(1.25rem, 2.5vw, 2rem); align-items: stretch; }
+  .wall-option { display: flex; min-width: 0; margin: 0; flex-direction: column; }
   .wall-media { overflow: hidden; width: 100%; aspect-ratio: 4 / 3; border-radius: 14px; background: var(--cream-200); }
   .wall-media img { width: 100%; height: 100%; object-fit: cover; }
-  .wall-option--white { grid-column: span 7; }
-  .wall-option--white .wall-media { aspect-ratio: 16 / 9; }
-  .wall-option--beige { grid-column: span 5; }
-  .wall-option--blue { grid-column: span 4; }
-  .wall-option--blue .wall-media img { object-position: center 45%; }
-  .wall-option--fabric { grid-column: span 8; }
-  .wall-option--fabric .wall-media { aspect-ratio: 16 / 9; }
+  .tarp-note { max-width: 42rem; margin: 2rem 0 0; padding: 1.4rem 0 0; border-top: 1px solid var(--border-strong); color: var(--ink-700); font-size: .94rem; line-height: 1.55; }
   .wall-option--fabric .wall-media img { object-position: center; transform: scale(1.75); transform-origin: 42% 52%; }
-  .panel-option--plywood { grid-column: span 7; }
-  .panel-option--plywood .wall-media { aspect-ratio: 16 / 9; }
-  .panel-option--light { grid-column: span 5; }
-  .panel-option--dark { grid-column: span 4; }
-  .panel-option--lattice { grid-column: span 4; }
-  .panel-option--rooftop { grid-column: span 4; }
-  .panel-option--rooftop .wall-media img { object-position: 44% center; }
-  .panel-option--slats { grid-column: span 12; display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(15rem, .55fr); gap: clamp(1.25rem, 3vw, 2.5rem); align-items: end; padding-top: .5rem; }
-  .panel-option--slats .wall-media { aspect-ratio: 16 / 7; }
-  .panel-option--slats .wall-media img { object-position: center 42%; }
-  .wall-option figcaption { display: grid; gap: .25rem; padding-top: .9rem; }
-  .wall-option strong { color: var(--forest-950); font-family: var(--font-nav); font-size: 1.02rem; }
+  .panel-option--slats .wall-media img { object-position: center 42%; transform: scale(1.35); transform-origin: right center; }
+  .wall-option figcaption { display: grid; flex: 1; gap: .25rem; padding-top: .9rem; }
+  .wall-option h3 { margin: 0; color: var(--forest-950); font-family: var(--font-nav); font-size: 1.02rem; }
   .wall-option span { color: var(--ink-600); font-size: .94rem; line-height: 1.5; }
-  .wall-option small { margin-top: .3rem; color: var(--wood-600); font-family: var(--font-nav); font-size: .74rem; font-weight: 750; letter-spacing: .07em; text-transform: uppercase; }
-  .panel-option--slats figcaption { align-self: end; padding: 0 0 .25rem; }
 
-  .site-options-section { padding-block: clamp(5rem, 10vw, 9rem); }
-  .site-options-heading { max-width: 44rem; margin-bottom: clamp(2.25rem, 5vw, 4rem); }
-  .site-options-heading h2 { margin-bottom: .8rem; font-size: clamp(2.5rem, 5vw, 4.2rem); }
-  .site-options-heading p { margin: 0; }
-  .site-options-grid { display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(0, .88fr); gap: clamp(1.25rem, 3vw, 2.5rem); align-items: start; }
-  .site-option { margin: 0; }
-  .site-option img { width: 100%; aspect-ratio: 4 / 3; border-radius: 14px; object-fit: cover; background: var(--cream-200); }
-  .site-option:first-child img { object-position: center 30%; }
-  .site-option figcaption { display: grid; gap: .3rem; padding-top: .95rem; }
-  .site-option strong { color: var(--forest-950); font-family: var(--font-nav); font-size: 1.06rem; }
-  .site-option span { max-width: 34rem; color: var(--ink-600); font-size: .94rem; line-height: 1.5; }
-
-  .details-section { display: grid; grid-template-columns: minmax(0, .82fr) minmax(25rem, 1.18fr); gap: clamp(3rem, 9vw, 8rem); padding-block: clamp(5rem, 10vw, 9rem); }
+  .details-section { display: grid; grid-template-columns: minmax(0, .82fr) minmax(25rem, 1.18fr); gap: clamp(3rem, 9vw, 8rem); padding-block: clamp(4.5rem, 8vw, 7.5rem); border-top: 1px solid var(--border-strong); }
   .details-copy h2 { max-width: 12ch; margin-bottom: 1rem; font-size: clamp(2.5rem, 5vw, 4.2rem); }
   .details-copy p { max-width: 32rem; margin: 0; }
-  .feature-groups { display: grid; gap: 2.5rem; }
+  .details-copy a { color: var(--forest-950); font-weight: 700; text-decoration-color: var(--wood-500); text-underline-offset: .18em; }
+  .feature-groups { display: grid; gap: 2.15rem; }
   .feature-group h3 { margin: 0 0 1rem; color: var(--wood-600); font-family: var(--font-nav); font-size: .92rem; letter-spacing: .04em; }
   .feature-group ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .7rem 2rem; margin: 0; padding: 0; list-style: none; }
   .feature-group li { position: relative; padding-left: 1.2rem; color: var(--forest-950); }
   .feature-group li::before { position: absolute; top: .67em; left: 0; width: .45rem; height: 2px; content: ""; background: var(--wood-500); }
 
-  .planning-section { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(18rem, .75fr); gap: clamp(2rem, 8vw, 7rem); align-items: end; padding: clamp(2.5rem, 6vw, 5rem); border-radius: 14px; background: var(--forest-100); }
+  .planning-section { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(18rem, .75fr); gap: clamp(2rem, 8vw, 7rem); align-items: center; padding: clamp(2.5rem, 6vw, 5rem); border-radius: 14px; background: var(--forest-100); }
   .planning-copy h2 { max-width: 13ch; margin-bottom: 1rem; font-size: clamp(2.4rem, 4.7vw, 4rem); }
   .planning-copy p { max-width: 42rem; }
-  .planning-copy p:last-child { margin-bottom: 0; color: var(--forest-800); font-weight: 650; }
-  .schach-panel { padding-left: 1.5rem; border-left: 3px solid var(--wood-500); }
-  .schach-panel h3 { margin: 0 0 .55rem; color: var(--forest-950); font-family: var(--font-nav); font-size: 1.15rem; }
-  .schach-panel p { margin: 0; }
+  .planning-copy p:last-child { margin-bottom: 0; }
+  .planning-note { padding-left: 1.5rem; border-left: 3px solid var(--wood-500); }
+  .planning-note h3 { margin: 0 0 .55rem; color: var(--forest-950); font-family: var(--font-nav); font-size: 1.15rem; }
+  .planning-note p { margin: 0; color: var(--forest-800); font-weight: 650; }
 
   .service-section { padding-block: clamp(5rem, 10vw, 8.5rem); }
   .service-section h2 { margin-bottom: .8rem; font-size: clamp(2.5rem, 5vw, 4.2rem); }
   .service-intro { max-width: 39rem; margin-bottom: 2rem; }
-  .service-list { display: flex; flex-wrap: wrap; gap: .65rem; margin: 0; padding: 0; list-style: none; }
-  .service-list li { padding: .6rem .8rem; border: 1px solid var(--border-strong); border-radius: 10px; color: var(--forest-900); background: var(--cream-100); font-family: var(--font-nav); font-size: .91rem; }
+  .service-list { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .55rem 2rem; margin: 0; padding: 0; list-style: none; }
+  .service-list li { position: relative; padding: .35rem 0 .35rem 1rem; color: var(--forest-900); font-family: var(--font-nav); font-size: .91rem; }
+  .service-list li::before { position: absolute; top: .95rem; left: 0; width: .45rem; height: 2px; content: ""; background: var(--wood-500); }
 
   .quote-section { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2.5rem; align-items: center; padding: clamp(2.5rem, 6vw, 4.5rem); border-radius: 14px; color: var(--cream-50); background: var(--forest-900); }
   .quote-section h2 { max-width: 18ch; margin-bottom: .7rem; color: inherit; font-size: clamp(2.2rem, 4vw, 3.5rem); }
@@ -407,21 +357,25 @@ const serviceAreas = [
   .quote-section .primary-action:hover { background: var(--cream-100); }
   .quote-phone { color: var(--cream-50); font-family: var(--font-nav); font-weight: 650; text-underline-offset: .22em; white-space: nowrap; }
 
+  @media (max-width: 68rem) {
+    .materials-section { grid-template-columns: 1fr; gap: 2.25rem; }
+    .walls-heading { max-width: 36rem; padding-top: 0; }
+    .walls-heading p { max-width: 28rem; }
+  }
+
   @media (max-width: 56rem) {
     .custom-hero__inner { grid-template-columns: 1fr; min-height: auto; padding-block: 3rem 4.5rem; }
     .custom-hero h1 { font-size: clamp(3.2rem, 11vw, 5rem); }
     .hero-photo { width: 100%; aspect-ratio: 16 / 10; }
     .site-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .site-list p:last-child { grid-column: 1 / -1; }
     .frame-story, .details-section, .planning-section, .quote-section { grid-template-columns: 1fr; }
     .frame-photo { width: min(100%, 32rem); aspect-ratio: 4 / 3; }
     .frame-photo img { object-position: center 44%; }
-    .wall-option--white, .wall-option--fabric, .panel-option--plywood, .panel-option--slats { grid-column: span 12; }
-    .wall-option--beige, .wall-option--blue, .panel-option--light, .panel-option--dark, .panel-option--lattice, .panel-option--rooftop { grid-column: span 6; }
-    .panel-option--slats { grid-template-columns: 1fr; gap: 0; }
-    .panel-option--slats figcaption { padding-top: .9rem; }
-    .site-options-grid { grid-template-columns: 1fr; }
+    .wall-gallery { width: calc(100% + 16px); grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: min(76vw, 20rem); gap: 1rem; overflow-x: auto; padding: 0 16px 1.2rem 0; scroll-snap-type: x mandatory; scrollbar-width: thin; scrollbar-color: var(--wood-500) var(--cream-200); }
+    .walls-swipe-hint { display: flex; align-items: center; gap: .35rem; margin: -1.5rem 0 1rem; color: var(--ink-700); font-size: .8rem; font-weight: 700; }
+    .wall-option { grid-column: auto; scroll-snap-align: start; }
     .details-section { gap: 2.5rem; }
+    .service-list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .quote-actions { justify-content: flex-start; }
   }
 
@@ -432,17 +386,19 @@ const serviceAreas = [
     .custom-hero h1 { font-size: clamp(3rem, 15vw, 4.3rem); }
     .hero-actions { align-items: stretch; flex-direction: column; }
     .hero-actions a { width: 100%; }
-    .site-list { grid-template-columns: 1fr; }
-    .site-list p:last-child { grid-column: auto; }
+    .site-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .frame-choice { grid-template-columns: 1fr; gap: .55rem; }
-    .covering-gallery, .panel-gallery { gap: 2rem; }
-    .wall-option--white, .wall-option--beige, .wall-option--blue, .wall-option--fabric, .panel-option--plywood, .panel-option--light, .panel-option--dark, .panel-option--lattice, .panel-option--rooftop, .panel-option--slats { grid-column: span 12; }
-    .wall-media, .wall-option--white .wall-media, .wall-option--fabric .wall-media, .panel-option--plywood .wall-media, .panel-option--slats .wall-media { aspect-ratio: 4 / 3; }
+    .wall-gallery { grid-auto-columns: min(82vw, 19rem); }
     .feature-group ul { grid-template-columns: 1fr; }
+    .service-list { grid-template-columns: repeat(2, minmax(0, 1fr)); gap-column: 1rem; }
     .planning-section, .quote-section { padding: 2rem 1.25rem; }
     .quote-actions { align-items: stretch; flex-direction: column; }
     .quote-actions .primary-action { width: 100%; }
     .quote-phone { text-align: center; }
+  }
+
+  @media (max-width: 24rem) {
+    .site-list { grid-template-columns: 1fr; }
   }
 
   @media (prefers-reduced-motion: reduce) {

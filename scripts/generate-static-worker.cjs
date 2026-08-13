@@ -136,6 +136,8 @@ const submissionTextFields = [
   "schach",
   "schachOther",
   "addOnsOther",
+  "extraServiceRequired",
+  "extraServiceDetails",
   "siteDescription",
   "buildDate",
   "preSukkosDate",
@@ -204,12 +206,16 @@ function requiredFieldsFor(submission) {
     "neighborhood",
     "sukkahType",
     "schach",
+    "buildDate",
+    "extraServiceRequired",
     "referral",
   ];
 
   if (submission.sukkahPlan === "I would like to buy") {
-    required.push("fulfillmentMethod", "buildDate");
+    required.push("fulfillmentMethod");
   }
+
+  if (submission.extraServiceRequired === "Yes") required.push("extraServiceDetails");
 
   return required;
 }
@@ -258,6 +264,10 @@ async function handleRentalSubmission(request) {
     buildDayOther: cleanText(formData.get("buildDayOther"), 200),
     takeDownDay: cleanText(formData.get("takeDownDay"), 100),
     takeDownDayOther: cleanText(formData.get("takeDownDayOther"), 200),
+    addOns: formData.getAll("addOns").map((value) => cleanText(value, 120)),
+    addOnsOther: cleanText(formData.get("addOnsOther"), 500),
+    extraServiceRequired: cleanText(formData.get("extraServiceRequired"), 20),
+    extraServiceDetails: cleanText(formData.get("extraServiceDetails"), 2000),
     comments: cleanText(formData.get("comments"), 1000),
     questions: cleanText(formData.get("questions"), 1000),
   };
@@ -270,13 +280,17 @@ async function handleRentalSubmission(request) {
     "estimatedSize",
     "buildDay",
     "takeDownDay",
+    "extraServiceRequired",
     "comments",
-    "questions",
   ];
   const missingFields = requiredFields.filter((fieldName) => !rental[fieldName]);
   if (rental.neighborhood === "Other" && !rental.neighborhoodOther) missingFields.push("neighborhoodOther");
   if (rental.buildDay === "Other" && !rental.buildDayOther) missingFields.push("buildDayOther");
   if (rental.takeDownDay === "Other" && !rental.takeDownDayOther) missingFields.push("takeDownDayOther");
+  if (rental.addOns.includes("Other") && !rental.addOnsOther) missingFields.push("addOnsOther");
+  if (rental.extraServiceRequired === "Yes" && !rental.extraServiceDetails) {
+    missingFields.push("extraServiceDetails");
+  }
 
   if (missingFields.length > 0) {
     return jsonResponse(
@@ -290,19 +304,30 @@ async function handleRentalSubmission(request) {
   body.set("entry.2077017403", rental.phone);
   if (rental.email) body.set("entry.1426052874", rental.email);
   body.set("entry.403817380", rental.address);
+  const rentalNeighborhood = rental.neighborhood === "Remsen Village"
+    ? "Remson Village"
+    : rental.neighborhood;
   appendGoogleFormChoice(
     body,
     "70526594",
-    rental.neighborhood,
-    rental.neighborhoodOther,
+    rentalNeighborhood === "Los Angeles" ? "Other" : rentalNeighborhood,
+    rental.neighborhood === "Los Angeles" ? "Los Angeles" : rental.neighborhoodOther,
     new Set(["Crown Heights", "Flatbush", "Boro Park", "Williamsburg", "East Flatbush", "Remson Village", "Monsey"]),
   );
   body.set("entry.1130222480", rental.estimatedSize);
   if (rental.siteDescription) body.set("entry.463838846", rental.siteDescription);
   appendGoogleFormChoice(body, "1948310674", rental.buildDay, rental.buildDayOther, new Set(["Sunday", "Monday", "Tuesday"]));
   appendGoogleFormChoice(body, "1550547913", rental.takeDownDay, rental.takeDownDayOther, new Set(["Sunday", "Monday", "Tuesday"]));
-  body.set("entry.1466499069", rental.comments);
-  body.set("entry.455384257", rental.questions);
+  const rentalAddOns = rental.addOns.filter((addOn) => addOn !== "Other");
+  if (rental.addOnsOther) rentalAddOns.push(rental.addOnsOther);
+  const commentsWithServiceDetails = [
+    rental.comments,
+    \`Add-ons: \${rentalAddOns.length > 0 ? rentalAddOns.join(", ") : "None selected"}\`,
+    \`Extra service required: \${rental.extraServiceRequired}\`,
+    rental.extraServiceDetails ? \`Extra service details: \${rental.extraServiceDetails}\` : "",
+  ].filter(Boolean).join("\\n\\n");
+  body.set("entry.1466499069", commentsWithServiceDetails);
+  body.set("entry.455384257", rental.questions || "No questions submitted.");
   body.set("fvv", "1");
   body.set("pageHistory", "0");
 
@@ -318,6 +343,10 @@ async function handleRentalSubmission(request) {
     });
     await googleResponse.text();
 
+    if (googleResponse.status < 200 || googleResponse.status >= 400) {
+      throw new Error("Google Forms rejected the rental request with status " + googleResponse.status + ".");
+    }
+
     return jsonResponse({
       ok: true,
       message: "Thank you. Your rental request was sent to Benyamin.",
@@ -326,6 +355,90 @@ async function handleRentalSubmission(request) {
     console.error("Rental submission failed", error);
     return jsonResponse(
       { ok: false, message: "We could not send your request. Please try again or call (347) 454-2282." },
+      502,
+    );
+  }
+}
+
+async function handleTestimonialSubmission(request, env, url) {
+  if (!env?.SUKKAH_SHEETS_WEBHOOK_URL || !env?.SUKKAH_SHEETS_WEBHOOK_SECRET) {
+    return jsonResponse(
+      {
+        ok: false,
+        message: "Online testimonial submissions are temporarily unavailable. Please try again later.",
+      },
+      503,
+    );
+  }
+
+  let formData;
+  try {
+    formData = await request.formData();
+  } catch {
+    return jsonResponse({ ok: false, message: "The submitted form could not be read." }, 400);
+  }
+
+  if (cleanText(formData.get("website"), 200)) {
+    return jsonResponse({ ok: true, message: "Thank you. Your testimonial was received for review." });
+  }
+
+  const testimonialSubmission = {
+    submittedAt: new Date().toISOString(),
+    submissionId: crypto.randomUUID(),
+    status: "Pending review",
+    reviewerName: cleanText(formData.get("reviewerName"), 200),
+    reviewerOrganization: cleanText(formData.get("reviewerOrganization"), 200),
+    reviewerContact: cleanText(formData.get("reviewerContact"), 320),
+    testimonial: cleanText(formData.get("testimonial"), 4000),
+    publicationConsent: cleanText(formData.get("publicationConsent"), 20),
+    sourcePage: url.origin + "/",
+  };
+
+  const missingFields = ["reviewerName", "reviewerContact", "testimonial", "publicationConsent"]
+    .filter((fieldName) => !testimonialSubmission[fieldName]);
+  if (testimonialSubmission.testimonial.length < 20) missingFields.push("testimonial");
+  if (testimonialSubmission.publicationConsent !== "yes") missingFields.push("publicationConsent");
+
+  if (missingFields.length > 0) {
+    return jsonResponse(
+      {
+        ok: false,
+        message: "Please complete the required fields and confirm publication permission.",
+        missingFields: [...new Set(missingFields)],
+      },
+      400,
+    );
+  }
+
+  try {
+    const webhookResponse = await fetch(env.SUKKAH_SHEETS_WEBHOOK_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json; charset=utf-8" },
+      body: JSON.stringify({
+        secret: env.SUKKAH_SHEETS_WEBHOOK_SECRET,
+        type: "testimonialSubmission",
+        testimonialSubmission,
+      }),
+      redirect: "follow",
+    });
+
+    const webhookResult = await webhookResponse.json().catch(() => null);
+    if (!webhookResponse.ok || webhookResult?.ok !== true) {
+      throw new Error("The spreadsheet webhook rejected the testimonial.");
+    }
+
+    return jsonResponse({
+      ok: true,
+      submissionId: testimonialSubmission.submissionId,
+      message: "Thank you. Your testimonial was received and will be reviewed before publication.",
+    });
+  } catch (error) {
+    console.error("Testimonial submission failed", error);
+    return jsonResponse(
+      {
+        ok: false,
+        message: "We could not send your testimonial. Please try again later.",
+      },
       502,
     );
   }
@@ -373,6 +486,33 @@ async function handleSubmission(request, env, url) {
   const missingFields = requiredFieldsFor(submission).filter((fieldName) => !submission[fieldName]);
   if (submission.sukkahPlan === "I already have a sukkah" && submission.service.length === 0) {
     missingFields.push("service");
+  }
+  if (submission.neighborhood === "Other" && !submission.neighborhoodOther) {
+    missingFields.push("neighborhoodOther");
+  }
+  if (submission.service.includes("Other") && !submission.serviceOther) {
+    missingFields.push("serviceOther");
+  }
+  if (submission.sukkahType === "Other" && !submission.sukkahTypeOther) {
+    missingFields.push("sukkahTypeOther");
+  }
+  if (submission.schach === "Other" && !submission.schachOther) {
+    missingFields.push("schachOther");
+  }
+  if (submission.addOns.includes("Other") && !submission.addOnsOther) {
+    missingFields.push("addOnsOther");
+  }
+  if (submission.service.includes("Take down")) {
+    if (!submission.takeDownDate) missingFields.push("takeDownDate");
+    if (submission.takeDownDate === "other" && !submission.customTakeDownDate) {
+      missingFields.push("customTakeDownDate");
+    }
+  }
+  if (submission.service.includes("Bring to storage")) {
+    if (!submission.bringToStorageDate) missingFields.push("bringToStorageDate");
+    if (submission.bringToStorageDate === "other" && !submission.customStorageDate) {
+      missingFields.push("customStorageDate");
+    }
   }
 
   if (missingFields.length > 0) {
@@ -508,6 +648,10 @@ export default {
 
     if (request.method === "POST" && url.pathname === "/api/rental-submissions") {
       return handleRentalSubmission(request);
+    }
+
+    if (request.method === "POST" && url.pathname === "/api/testimonial-submissions") {
+      return handleTestimonialSubmission(request, env, url);
     }
 
     if (request.method === "GET" && url.pathname.startsWith(photoRoutePrefix)) {

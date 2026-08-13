@@ -2,6 +2,35 @@
 
 These instructions apply whenever Codex works in this project.
 
+## Default Task Workflow
+
+Use `docs/todo.md` as the default work queue for this project.
+
+- At the beginning of a project task, read `docs/todo.md` before choosing or
+  proposing work.
+- A specific request from the user always takes priority over the queue. Use
+  the queue as the default when the user asks to continue, start the next task,
+  work on the website generally, or does not name a specific task.
+- If `Now` contains a task, continue that task first. Keep no more than one task
+  in `Now` at a time.
+- If `Now` is empty, choose the first actionable task in `Next`.
+- Do not start tasks in `Waiting` until the listed information, approval, asset,
+  or decision has been supplied.
+- Treat `Later` as lower priority. Work from it only when `Next` has no
+  actionable task or the user specifically selects a Later task.
+- Before implementing a queue item, move it to `Now`. When implementation and
+  proportional verification are complete, move it to `Completed` and record
+  the completion date plus a short result.
+- If work becomes blocked, move the task to `Waiting` and state exactly what is
+  needed to continue. Do not invent missing prices, testimonials, business
+  claims, partnerships, service areas, product details, or client approvals.
+- When the user supplies new feedback or changes priority, update
+  `docs/todo.md` so the queue remains accurate and remove obsolete or duplicate
+  entries.
+- The todo list controls task order, not product truth. Confirmed behavior and
+  website requirements remain documented in `docs/requirements.md`, while
+  structure and hosting decisions remain documented in `docs/architecture.md`.
+
 ## User Skill Level
 
 The project owner is a beginner-level programmer.
@@ -90,6 +119,9 @@ If these design requirements do not mention a detail, make a simple, conservativ
 ## Documentation
 
 When a decision affects the website's design, structure, or requirements, suggest updating the matching file in `docs/`.
+
+Keep `docs/todo.md` synchronized whenever a tracked task starts, finishes,
+becomes blocked, changes priority, or is superseded.
 
 ## Route and Architecture Changes
 

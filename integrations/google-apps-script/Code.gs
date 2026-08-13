@@ -1,5 +1,6 @@
 const SPREADSHEET_ID = "12ptjlhjooYzWt8dZjKsd-qOET-dnktn7qbDgr5SCRTg";
 const SHEET_NAME = "Submissions";
+const TESTIMONIAL_SHEET_NAME = "Testimonials";
 
 function doPost(event) {
   const lock = LockService.getScriptLock();
@@ -17,11 +18,22 @@ function doPost(event) {
       return jsonResponse_({ ok: false, message: "Unauthorized." });
     }
 
+    if (request.type === "testimonialSubmission") {
+      return appendTestimonial_(request.testimonialSubmission || {});
+    }
+
     const submission = request.submission || {};
     const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(SHEET_NAME);
 
     if (!sheet) {
       throw new Error(`Sheet tab "${SHEET_NAME}" was not found.`);
+    }
+
+    if (!sheet.getRange(1, 39).getValue()) {
+      sheet.getRange(1, 39).setValue("Extra service required");
+    }
+    if (!sheet.getRange(1, 40).getValue()) {
+      sheet.getRange(1, 40).setValue("Extra service details");
     }
 
     sheet.appendRow([
@@ -63,6 +75,8 @@ function doPost(event) {
       asSheetText_(submission.referral),
       asSheetText_(submission.comments),
       asSheetText_(submission.sourcePage),
+      asSheetText_(submission.extraServiceRequired),
+      asSheetText_(submission.extraServiceDetails),
     ]);
 
     return jsonResponse_({
@@ -75,6 +89,47 @@ function doPost(event) {
   } finally {
     if (lock.hasLock()) lock.releaseLock();
   }
+}
+
+function appendTestimonial_(submission) {
+  const spreadsheet = SpreadsheetApp.openById(SPREADSHEET_ID);
+  let sheet = spreadsheet.getSheetByName(TESTIMONIAL_SHEET_NAME);
+
+  if (!sheet) {
+    sheet = spreadsheet.insertSheet(TESTIMONIAL_SHEET_NAME);
+  }
+
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow([
+      "Submitted at",
+      "Submission ID",
+      "Status",
+      "Name",
+      "Organization",
+      "Verification contact",
+      "Testimonial",
+      "Publication consent",
+      "Source page",
+    ]);
+    sheet.setFrozenRows(1);
+  }
+
+  sheet.appendRow([
+    asSheetText_(submission.submittedAt),
+    asSheetText_(submission.submissionId),
+    asSheetText_(submission.status),
+    asSheetText_(submission.reviewerName),
+    asSheetText_(submission.reviewerOrganization),
+    asSheetText_(submission.reviewerContact),
+    asSheetText_(submission.testimonial),
+    asSheetText_(submission.publicationConsent),
+    asSheetText_(submission.sourcePage),
+  ]);
+
+  return jsonResponse_({
+    ok: true,
+    submissionId: submission.submissionId,
+  });
 }
 
 function setWebhookSecret() {

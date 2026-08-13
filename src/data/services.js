@@ -25,7 +25,7 @@ export const servicesBySlug = {
       "Ask about seasonal rental options, available sizes, delivery, setup, and takedown. Exact choices and pricing are confirmed directly before scheduling.",
     heroPlaceholder: "Rental sukkah photo coming soon",
     primaryAction: { label: "Ask about rentals", href: "/contact/" },
-    secondaryAction: { label: "Open the Sukka Builder", href: "/sukka-builder/" },
+    secondaryAction: { label: "Builds", href: "/sukka-builder/" },
     highlights: [
       {
         title: "Check availability first",
@@ -64,7 +64,6 @@ export const servicesBySlug = {
       "Custom requests can account for unusual dimensions, rooflines, access, and other site conditions. Start by sharing the space and what you hope to build.",
     heroPlaceholder: "Custom sukkah photo coming soon",
     primaryAction: { label: "Discuss a custom sukkah", href: "/contact/" },
-    secondaryAction: { label: "View the gallery", href: "/gallery/" },
     highlights: [
       {
         title: "Start with the space",
@@ -103,7 +102,6 @@ export const servicesBySlug = {
       "Share whether you are considering a new pergola, a repair, or another improvement to an outdoor shade structure. Photos and measurements make the request easier to review.",
     heroPlaceholder: "Pergola project photo coming soon",
     primaryAction: { label: "Ask about pergola work", href: "/contact/" },
-    secondaryAction: { label: "View the gallery", href: "/gallery/" },
     highlights: [
       {
         title: "New work or repair",
@@ -142,7 +140,6 @@ export const servicesBySlug = {
       "Describe the branches or area that need attention, how the tree can be reached, and what cleanup you are asking about. Clear photos are especially helpful for an initial review.",
     heroPlaceholder: "Tree-trimming photo coming soon",
     primaryAction: { label: "Ask about tree trimming", href: "/contact/" },
-    secondaryAction: { label: "View the gallery", href: "/gallery/" },
     highlights: [
       {
         title: "Begin with clear photos",
@@ -181,7 +178,6 @@ export const servicesBySlug = {
       "Requests may include checking, setup, repair, or maintenance. Share the exact location, the condition you have noticed, and any instructions or requirements relevant to the work.",
     heroPlaceholder: "Eruv work photo coming soon",
     primaryAction: { label: "Ask about eruv work", href: "/contact/" },
-    secondaryAction: { label: "View the gallery", href: "/gallery/" },
     highlights: [
       {
         title: "Describe the exact need",

@@ -282,6 +282,20 @@ strong {
   transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
 }
 
+.secure-notice-icon {
+  display: grid;
+  width: 1.45rem;
+  height: 1.45rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--cream-50);
+  background: var(--forest-800);
+  font-size: 0.76rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
 .button:hover {
   border-color: var(--forest-950);
   background: var(--forest-950);
@@ -612,6 +626,10 @@ strong {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   align-items: stretch;
+}
+
+.nav-dropdown-inner-sukkahs {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 .nav-group[open] > .nav-dropdown {
@@ -1071,6 +1089,44 @@ input[type="range"]:focus-visible {
   max-width: 340px;
   margin-bottom: 0;
   color: rgba(255, 255, 255, 0.68);
+}
+
+.footer-hours {
+  max-width: 340px;
+  margin-top: 1.6rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.footer-hours h2 {
+  margin-bottom: 0.55rem;
+}
+
+.footer-intro .footer-hours p {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 0.7rem;
+  align-items: baseline;
+  margin: 0;
+}
+
+.footer-hours strong {
+  color: white;
+  font-family: var(--font-nav);
+  font-size: 0.92rem;
+}
+
+.footer-hours span {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.9rem;
+}
+
+.footer-hours small {
+  display: block;
+  margin-top: 0.5rem;
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 0.78rem;
+  line-height: 1.55;
 }
 
 .site-footer h2 {
