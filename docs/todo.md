@@ -45,14 +45,7 @@ When adding a task, use this format:
 
 ## Now
 
-- [ ] Finish the dedicated Builds form and publish the new site logo
-  - Why: Builds responses must be kept separate from Rentals and from the
-    legacy spreadsheet webhook, and the supplied BK Sukkah Builder artwork
-    should replace the old code-drawn brand mark.
-  - Done when: The new `BKAY builds` form contains every Builds field, the
-    Worker submits to it, a live test response appears in that form, the new
-    logo appears in the shared header, footer, and browser icon, and the
-    updated site is deployed.
+_No active task._
 
 ## Next
 
@@ -151,6 +144,14 @@ When adding a task, use this format:
   - Unblocks: Publishing multiple testimonial cards in the homepage scroller.
 
 ## Completed
+
+- [x] Connect Builds to a separate Google Form and publish the new logo (2026-08-13)
+  - Result: Created and published a brand-new `BKAY builds` Google Form without
+    changing the earlier form. The live Builds Worker now sends every form
+    answer and photo link to the new form, and a clearly labeled integration
+    test appeared there successfully. Replaced the old code-drawn logo with
+    the supplied optimized artwork in the shared header, footer, and favicon,
+    verified desktop and mobile layouts, and deployed the combined update.
 
 - [x] Align Builds and Rentals request-form sections (2026-08-13)
   - Result: Builds and Rentals now share the same Contact, Location, native-date
