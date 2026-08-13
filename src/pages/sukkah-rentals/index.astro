@@ -1,26 +1,14 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import FormHeading from "../../components/FormHeading.astro";
+import PaymentMethods from "../../components/PaymentMethods.astro";
+import SitePhotoUpload from "../../components/SitePhotoUpload.astro";
+import { neighborhoods, states } from "../../data/form-options.js";
 import "../../styles/guided-request-form.css";
 
-const neighborhoods = [
-  "Crown Heights",
-  "Flatbush",
-  "Boro Park",
-  "Williamsburg",
-  "East Flatbush",
-  "Remsen Village",
-  "Monsey",
-  "Los Angeles",
-];
-const serviceDays = ["Sunday", "Monday", "Tuesday"];
 const addOns = [
   { label: "Lighting", value: "Put up lights" },
   { label: "Furniture", value: "Furniture" },
-  { label: "Bamboo mat", value: "Bamboo mat" },
-  { label: "Evergreen", value: "Evergreen" },
-  { label: "Takedown", value: "Takedown" },
-  { label: "Storage", value: "Storage" },
   { label: "Pressure washing", value: "Pressure wash area day before" },
 ];
 ---
@@ -99,73 +87,77 @@ const addOns = [
           </section>
 
           <section id="rental-location" class="form-step" aria-labelledby="rental-location-heading" data-form-step="2" hidden>
-            <FormHeading icon="location" eyebrow="Location" heading="Where is the sukkah going?" id="rental-location-heading" />
-            <div class="field">
-              <label for="address">Address <span class="required-mark">*</span></label>
-              <input id="address" name="address" autocomplete="street-address" maxlength="1000" required />
-              <p class="field-error" id="address-error" data-error-for="address"></p>
-            </div>
-            <div class="form-grid">
+            <FormHeading icon="location" eyebrow="Location" heading="Where will the sukkah be?" id="rental-location-heading" />
+            <div class="address-grid">
+              <div class="field address-street">
+                <label for="address-line-1">Street address <span class="required-mark">*</span></label>
+                <input id="address-line-1" name="addressLine1" autocomplete="address-line1" maxlength="1000" required />
+                <p class="field-error" id="address-line-1-error" data-error-for="address-line-1"></p>
+              </div>
               <div class="field">
-                <label for="neighborhood">Neighborhood <span class="required-mark">*</span></label>
-                <select id="neighborhood" name="neighborhood" aria-controls="neighborhood-other-field" aria-expanded="false" required data-other-select>
-                  <option value="">Choose a neighborhood</option>
-                  {neighborhoods.map((neighborhood) => <option value={neighborhood}>{neighborhood}</option>)}
-                  <option value="Other">Other</option>
+                <label for="address-city">City <span class="required-mark">*</span></label>
+                <input id="address-city" name="city" autocomplete="address-level2" maxlength="200" required />
+                <p class="field-error" id="address-city-error" data-error-for="address-city"></p>
+              </div>
+              <div class="field">
+                <label for="address-state">State <span class="required-mark">*</span></label>
+                <select id="address-state" name="state" autocomplete="address-level1" required>
+                  <option value="">Select state</option>
+                  {states.map(([code, name]) => <option value={code}>{name}</option>)}
                 </select>
-                <p class="field-error" id="neighborhood-error" data-error-for="neighborhood"></p>
+                <p class="field-error" id="address-state-error" data-error-for="address-state"></p>
               </div>
-              <div class="field">
-                <label for="estimatedSize">Approximate sukkah size <span class="required-mark">*</span></label>
-                <input id="estimatedSize" name="estimatedSize" maxlength="200" placeholder="For example, 10 × 12 ft" required />
-                <p class="field-error" id="estimatedSize-error" data-error-for="estimatedSize"></p>
+              <div class="field address-postal">
+                <label for="address-postal">Zip code <span class="required-mark">*</span></label>
+                <input id="address-postal" name="postalCode" inputmode="numeric" autocomplete="postal-code" pattern="[0-9]{5}(-[0-9]{4})?" maxlength="10" required />
+                <p class="field-error" id="address-postal-error" data-error-for="address-postal"></p>
               </div>
             </div>
-            <div id="neighborhood-other-field" class="field conditional-field" data-conditional-field="neighborhood" hidden>
+            <div class="field">
+              <label for="neighborhood">Neighborhood <span class="required-mark">*</span></label>
+              <select id="neighborhood" name="neighborhood" aria-controls="neighborhood-other-field" aria-expanded="false" required data-neighborhood-select>
+                <option value="">Choose a neighborhood</option>
+                {neighborhoods.map((neighborhood) => <option value={neighborhood}>{neighborhood}</option>)}
+                <option value="Other">Other</option>
+              </select>
+              <p class="field-error" id="neighborhood-error" data-error-for="neighborhood"></p>
+            </div>
+            <div id="neighborhood-other-field" class="field conditional-field" data-neighborhood-other hidden>
               <label for="neighborhoodOther">Other neighborhood <span class="required-mark">*</span></label>
-              <input id="neighborhoodOther" name="neighborhoodOther" autocomplete="address-level2" maxlength="200" disabled />
+              <input id="neighborhoodOther" name="neighborhoodOther" maxlength="200" disabled />
               <p class="field-error" id="neighborhoodOther-error" data-error-for="neighborhoodOther"></p>
             </div>
             <div class="field">
-              <label for="siteDescription">Where will the sukkah be set up?</label>
-              <textarea id="siteDescription" name="siteDescription" rows="3" maxlength="4000" placeholder="Backyard, patio, driveway, rooftop, etc."></textarea>
-              <p class="field-error" id="siteDescription-error" data-error-for="siteDescription"></p>
+              <label for="estimated-size">Approximate sukkah size <span class="required-mark">*</span></label>
+              <input id="estimated-size" name="estimatedSize" maxlength="200" placeholder="For example, 10 × 12 ft" required />
+              <p class="field-error" id="estimated-size-error" data-error-for="estimated-size"></p>
             </div>
+            <div class="field">
+              <label for="site-description">Where will the sukkah be built?</label>
+              <textarea id="site-description" name="siteDescription" rows="4" maxlength="4000" placeholder="Backyard, patio, driveway, rooftop, balcony, etc."></textarea>
+              <p class="field-error" id="site-description-error" data-error-for="site-description"></p>
+            </div>
+            <SitePhotoUpload />
           </section>
 
           <section id="rental-timing" class="form-step" aria-labelledby="rental-timing-heading" data-form-step="3" hidden>
             <FormHeading icon="timing" eyebrow="Timing" heading="When do you need it?" id="rental-timing-heading" />
             <div class="form-grid timing-grid">
               <div class="field">
-                <label for="buildDay">Preferred setup day or date <span class="required-mark">*</span></label>
-                <select id="buildDay" name="buildDay" aria-controls="build-day-other-field" aria-expanded="false" required data-other-select>
-                  <option value="">Choose a day</option>
-                  {serviceDays.map((day) => <option value={day}>{day}</option>)}
-                  <option value="Other">Another day or date</option>
-                </select>
+                <label for="buildDay">Preferred setup date <span class="required-mark">*</span></label>
+                <input id="buildDay" name="buildDay" type="date" required />
                 <p class="field-error" id="buildDay-error" data-error-for="buildDay"></p>
               </div>
               <div class="field">
-                <label for="takeDownDay">Preferred takedown day or date <span class="required-mark">*</span></label>
-                <select id="takeDownDay" name="takeDownDay" aria-controls="takedown-day-other-field" aria-expanded="false" required data-other-select>
-                  <option value="">Choose a day</option>
-                  {serviceDays.map((day) => <option value={day}>{day}</option>)}
-                  <option value="Other">Another day or date</option>
-                </select>
+                <label for="takeDownDay">Preferred takedown date <span class="required-mark">*</span></label>
+                <input id="takeDownDay" name="takeDownDay" type="date" required />
                 <p class="field-error" id="takeDownDay-error" data-error-for="takeDownDay"></p>
               </div>
             </div>
-            <div class="form-grid conditional-grid">
-              <div id="build-day-other-field" class="field conditional-field" data-conditional-field="buildDay" hidden>
-                <label for="buildDayOther">Preferred setup date <span class="required-mark">*</span></label>
-                <input id="buildDayOther" name="buildDayOther" maxlength="200" placeholder="Enter a day or date" disabled />
-                <p class="field-error" id="buildDayOther-error" data-error-for="buildDayOther"></p>
-              </div>
-              <div id="takedown-day-other-field" class="field conditional-field" data-conditional-field="takeDownDay" hidden>
-                <label for="takeDownDayOther">Preferred takedown date <span class="required-mark">*</span></label>
-                <input id="takeDownDayOther" name="takeDownDayOther" maxlength="200" placeholder="Enter a day or date" disabled />
-                <p class="field-error" id="takeDownDayOther-error" data-error-for="takeDownDayOther"></p>
-              </div>
+            <div class="field">
+              <label for="timing-notes">Timing notes <span class="optional-text">Optional</span></label>
+              <input id="timing-notes" name="timingNotes" maxlength="1000" placeholder="Any timing preferences or scheduling details" />
+              <p class="field-error" id="timing-notes-error" data-error-for="timing-notes"></p>
             </div>
           </section>
 
@@ -177,7 +169,15 @@ const addOns = [
               <div class="choice-grid extras-grid">
                 {addOns.map((addOn) => (
                   <label class="choice-card">
-                    <input type="checkbox" name="addOns" value={addOn.value} data-review-label={addOn.label} />
+                    <input
+                      type="checkbox"
+                      name="addOns"
+                      value={addOn.value}
+                      data-review-label={addOn.label}
+                      aria-controls={addOn.value === "Furniture" ? "furniture-details-field" : undefined}
+                      aria-expanded={addOn.value === "Furniture" ? "false" : undefined}
+                      data-furniture-toggle={addOn.value === "Furniture" ? "true" : undefined}
+                    />
                     <span>{addOn.label}</span>
                   </label>
                 ))}
@@ -187,6 +187,11 @@ const addOns = [
                 </label>
               </div>
             </fieldset>
+            <div id="furniture-details-field" class="field conditional-field" data-furniture-details hidden>
+              <label for="furniture-details">What furniture is required? <span class="required-mark">*</span></label>
+              <textarea id="furniture-details" name="furnitureDetails" rows="3" maxlength="1000" placeholder="For example, tables and chairs for 12 guests." disabled></textarea>
+              <p class="field-error" id="furniture-details-error" data-error-for="furniture-details"></p>
+            </div>
             <div id="other-addon-field" class="field conditional-field" data-other-addon-field hidden>
               <label for="addOnsOther">Other service</label>
               <input id="addOnsOther" name="addOnsOther" maxlength="500" placeholder="Tell us what you need" disabled />
@@ -239,6 +244,7 @@ const addOns = [
                 <p class="field-error" id="questions-error" data-error-for="questions"></p>
               </div>
             </div>
+            <PaymentMethods />
           </section>
 
           <div class="wizard-actions">
@@ -276,10 +282,15 @@ const addOns = [
   const submitButton = document.querySelector("[data-submit-button]");
   const submitLabel = document.querySelector("[data-submit-label]");
   const submitStatus = document.querySelector("[data-submit-status]");
-  const otherSelects = Array.from(document.querySelectorAll("[data-other-select]"));
+  const neighborhoodSelect = document.querySelector("[data-neighborhood-select]");
+  const neighborhoodOther = document.querySelector("[data-neighborhood-other]");
+  const neighborhoodOtherInput = document.querySelector("#neighborhoodOther");
   const otherAddOn = document.querySelector("[data-other-addon]");
   const otherAddOnField = document.querySelector("[data-other-addon-field]");
   const otherAddOnInput = document.querySelector("#addOnsOther");
+  const furnitureToggle = document.querySelector("[data-furniture-toggle]");
+  const furnitureDetails = document.querySelector("[data-furniture-details]");
+  const furnitureDetailsInput = document.querySelector("#furniture-details");
   const extraServiceToggle = document.querySelector("[data-extra-service-toggle]");
   const extraServiceRequired = document.querySelector("[data-extra-service-required]");
   const extraServiceDetails = document.querySelector("[data-extra-service-details]");
@@ -291,6 +302,8 @@ const addOns = [
   const wizardCard = document.querySelector(".wizard-card");
   const successPanel = document.querySelector("[data-success-panel]");
   const successMessage = document.querySelector("[data-success-message]");
+  const sitePhotos = document.querySelector("#site-photos");
+  const selectedPhotos = document.querySelector("[data-selected-photos]");
   const editButtons = Array.from(document.querySelectorAll("[data-edit-step]"));
   const stepNames = ["Contact", "Location", "Timing", "Extras", "Review and send"];
   let activeStep = 1;
@@ -331,6 +344,51 @@ const addOns = [
     );
   }
 
+  function validatePhotos() {
+    if (!(sitePhotos instanceof HTMLInputElement)) return true;
+    clearFieldError(sitePhotos);
+    const photos = sitePhotos.files ? Array.from(sitePhotos.files) : [];
+    if (photos.length > 3) {
+      showFieldError(sitePhotos);
+      const error = fieldErrorElement(sitePhotos);
+      if (error instanceof HTMLElement) error.textContent = "Choose no more than three photos.";
+      return false;
+    }
+    if (photos.some((photo) => photo.size > 10 * 1024 * 1024)) {
+      showFieldError(sitePhotos);
+      const error = fieldErrorElement(sitePhotos);
+      if (error instanceof HTMLElement) error.textContent = "Each photo must be no larger than 10 MB.";
+      return false;
+    }
+    return true;
+  }
+
+  function renderSelectedPhotos() {
+    if (!(selectedPhotos instanceof HTMLElement) || !(sitePhotos instanceof HTMLInputElement)) return;
+    selectedPhotos.replaceChildren();
+    const files = sitePhotos.files ? Array.from(sitePhotos.files) : [];
+    files.forEach((file, index) => {
+      const row = document.createElement("div");
+      row.className = "selected-photo";
+      const name = document.createElement("span");
+      name.textContent = file.name;
+      const remove = document.createElement("button");
+      remove.type = "button";
+      remove.textContent = "Remove";
+      remove.setAttribute("aria-label", `Remove ${file.name}`);
+      remove.addEventListener("click", () => {
+        const transfer = new DataTransfer();
+        files.forEach((item, itemIndex) => {
+          if (itemIndex !== index) transfer.items.add(item);
+        });
+        sitePhotos.files = transfer.files;
+        renderSelectedPhotos();
+      });
+      row.append(name, remove);
+      selectedPhotos.append(row);
+    });
+  }
+
   function validateStep(stepNumber, focusFirst = true) {
     const invalid = controlsForStep(stepNumber).filter((control) => {
       if (control.disabled || control.type === "hidden") return false;
@@ -339,6 +397,7 @@ const addOns = [
       showFieldError(control);
       return true;
     });
+    if (stepNumber === 2 && !validatePhotos() && sitePhotos instanceof HTMLInputElement) invalid.push(sitePhotos);
     if (invalid.length > 0 && focusFirst) {
       invalid[0].focus({ preventScroll: true });
       const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -361,6 +420,13 @@ const addOns = [
     return value === "Other" ? displayValue(`${name}Other`) : value;
   }
 
+  function formattedDate(name) {
+    const value = displayValue(name, "");
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return selectedOrOther(name);
+    const date = new Date(`${value}T00:00:00`);
+    return new Intl.DateTimeFormat(undefined, { month: "short", day: "numeric", year: "numeric" }).format(date);
+  }
+
   function updateReview() {
     const reviewContact = document.querySelector("[data-review-contact]");
     const reviewLocation = document.querySelector("[data-review-location]");
@@ -371,15 +437,18 @@ const addOns = [
       reviewContact.textContent = [displayValue("name"), displayValue("phone"), email].filter(Boolean).join(" · ");
     }
     if (reviewLocation instanceof HTMLElement) {
-      reviewLocation.textContent = [displayValue("address"), selectedOrOther("neighborhood"), displayValue("estimatedSize")].filter(Boolean).join(" · ");
+      const address = [displayValue("addressLine1", ""), displayValue("city", ""), displayValue("state", ""), displayValue("postalCode", "")].filter(Boolean).join(", ");
+      const photoCount = sitePhotos instanceof HTMLInputElement && sitePhotos.files ? sitePhotos.files.length : 0;
+      reviewLocation.textContent = [address, selectedOrOther("neighborhood"), displayValue("estimatedSize", ""), displayValue("siteDescription", ""), photoCount ? `${photoCount} photo${photoCount === 1 ? "" : "s"} selected` : ""].filter(Boolean).join(" · ");
     }
     if (reviewTiming instanceof HTMLElement) {
-      reviewTiming.textContent = `Setup: ${selectedOrOther("buildDay")} · Takedown: ${selectedOrOther("takeDownDay")}`;
+      reviewTiming.textContent = [`Setup: ${formattedDate("buildDay")}`, `Takedown: ${formattedDate("takeDownDay")}`, displayValue("timingNotes", "")].filter(Boolean).join(" · ");
     }
     if (reviewExtras instanceof HTMLElement && rentalForm instanceof HTMLFormElement) {
       const extras = Array.from(rentalForm.querySelectorAll('input[name="addOns"]:checked')).map((input) => {
         if (!(input instanceof HTMLInputElement)) return "";
         if (input.value === "Other") return displayValue("addOnsOther", "Other");
+        if (input.value === "Furniture") return `Furniture: ${displayValue("furnitureDetails", "details not added")}`;
         return input.dataset.reviewLabel || input.value;
       }).filter(Boolean);
       if (extraServiceToggle instanceof HTMLInputElement && extraServiceToggle.checked) extras.push("Special access or extra labor");
@@ -424,26 +493,27 @@ const addOns = [
     }
   }
 
-  function updateSelectOther(select) {
-    if (!(select instanceof HTMLSelectElement)) return;
-    const field = document.querySelector(`[data-conditional-field="${select.name}"]`);
-    const input = document.querySelector(`#${select.name}Other`);
-    const show = select.value === "Other";
-    select.setAttribute("aria-expanded", String(show));
-    if (field instanceof HTMLElement) field.hidden = !show;
-    if (input instanceof HTMLInputElement) {
-      input.disabled = !show;
-      input.required = show;
+  function updateNeighborhoodOther() {
+    if (!(neighborhoodSelect instanceof HTMLSelectElement)) return;
+    const show = neighborhoodSelect.value === "Other";
+    neighborhoodSelect.setAttribute("aria-expanded", String(show));
+    if (neighborhoodOther instanceof HTMLElement) neighborhoodOther.hidden = !show;
+    if (neighborhoodOtherInput instanceof HTMLInputElement) {
+      neighborhoodOtherInput.disabled = !show;
+      neighborhoodOtherInput.required = show;
       if (!show) {
-        input.value = "";
-        clearFieldError(input);
+        neighborhoodOtherInput.value = "";
+        clearFieldError(neighborhoodOtherInput);
       }
     }
   }
 
-  otherSelects.forEach((select) => {
-    select.addEventListener("change", () => updateSelectOther(select));
-    updateSelectOther(select);
+  neighborhoodSelect?.addEventListener("change", updateNeighborhoodOther);
+  updateNeighborhoodOther();
+
+  sitePhotos?.addEventListener("change", () => {
+    validatePhotos();
+    renderSelectedPhotos();
   });
 
   function updateOtherAddOn() {
@@ -462,6 +532,23 @@ const addOns = [
 
   otherAddOn?.addEventListener("change", updateOtherAddOn);
   updateOtherAddOn();
+
+  function updateFurnitureDetails() {
+    const needsDetails = furnitureToggle instanceof HTMLInputElement && furnitureToggle.checked;
+    if (furnitureToggle instanceof HTMLInputElement) furnitureToggle.setAttribute("aria-expanded", String(needsDetails));
+    if (furnitureDetails instanceof HTMLElement) furnitureDetails.hidden = !needsDetails;
+    if (furnitureDetailsInput instanceof HTMLTextAreaElement) {
+      furnitureDetailsInput.disabled = !needsDetails;
+      furnitureDetailsInput.required = needsDetails;
+      if (!needsDetails) {
+        furnitureDetailsInput.value = "";
+        clearFieldError(furnitureDetailsInput);
+      }
+    }
+  }
+
+  furnitureToggle?.addEventListener("change", updateFurnitureDetails);
+  updateFurnitureDetails();
 
   function updateExtraServiceDetails() {
     const needsDetails = extraServiceToggle instanceof HTMLInputElement && extraServiceToggle.checked;
@@ -550,10 +637,12 @@ const addOns = [
       const result = await response.json().catch(() => null);
       if (!response.ok || result?.ok !== true) throw new Error(result?.message || "We could not send your request.");
       rentalForm.reset();
-      otherSelects.forEach(updateSelectOther);
+      updateNeighborhoodOther();
       updateOtherAddOn();
+      updateFurnitureDetails();
       updateExtraServiceDetails();
       updateQuestionField();
+      renderSelectedPhotos();
       if (submitButton instanceof HTMLButtonElement) submitButton.removeAttribute("aria-busy");
       if (submitLabel instanceof HTMLElement) submitLabel.textContent = "Request sent";
       rentalForm.removeAttribute("aria-busy");

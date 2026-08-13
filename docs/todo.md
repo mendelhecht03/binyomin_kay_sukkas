@@ -45,7 +45,7 @@ When adding a task, use this format:
 
 ## Now
 
-No task is currently in progress.
+_No active task._
 
 ## Next
 
@@ -64,15 +64,10 @@ No task is currently in progress.
 
 - [ ] Update the service-area list
   - Why: The requested location list has changed.
-  - Include: Add California, remove New Haven, and make the list easy to edit
+  - Include: Remove New Haven and make the list easy to edit
     when the service area changes again.
   - Done when: Benyamin approves the complete list and every location shown on
     the website matches it.
-
-- [ ] Add accepted payment methods
-  - Why: Visitors should know how they can pay before arranging service.
-  - Done when: Benyamin confirms the accepted payment methods and they appear
-    in a compact, easy-to-find section without displaying unsupported options.
 
 ## Later
 
@@ -133,20 +128,14 @@ No task is currently in progress.
     promoted now or remain on the back burner while the service is revised.
   - Unblocks: Final rental-page structure and navigation emphasis.
 
-- [ ] Confirm accepted payment methods
-  - Waiting for: The exact list of payment types and whether deposits, payment
-    schedules, or processing fees should be mentioned.
-  - Unblocks: The payment-method section.
-
 - [ ] Verify About-page claims and company-name permissions
   - Waiting for: Confirmation of customer counts, worldwide work, and whether
     each named company can be publicly described as a partner or collaborator.
   - Unblocks: The expanded About-page credibility section.
 
 - [ ] Confirm the complete service-area list
-  - Waiting for: A final location list after adding California and removing New
-    Haven, including whether locations mean permanent service areas or selected
-    projects only.
+  - Waiting for: A final location list after removing New Haven, including
+    whether locations mean permanent service areas or selected projects only.
   - Unblocks: The service-area update.
 
 - [ ] Receive additional approved testimonials
@@ -155,6 +144,81 @@ No task is currently in progress.
   - Unblocks: Publishing multiple testimonial cards in the homepage scroller.
 
 ## Completed
+
+- [x] Align Builds and Rentals request-form sections (2026-08-13)
+  - Result: Builds and Rentals now share the same Contact, Location, native-date
+    Timing, neighborhood, site-description, photo-upload, and timing-notes
+    patterns. Builds keeps Requested work separate and its site details live in
+    Location. The Worker accepts the shared fields and keeps Google Forms/photo
+    submission handling intact. Production build and browser checks passed.
+
+- [x] Match email input sizing across request forms (2026-08-13)
+  - Result: Both Contact sections now use the same 640px email-field width on
+    desktop and the same responsive grid behavior on smaller screens.
+    Production build and browser checks passed.
+
+- [x] Match the Builds timing form to Rentals
+  - Matched the Builds timing step to the Rentals date-field grid, with
+    installation, take-down, and bring-to-storage dates sharing the same clear
+    presentation and responsive behavior.
+  - Kept conditional dates hidden and disabled unless their service is chosen,
+    preserved the existing submission names, and retained the approved
+    holiday-window limits.
+  - Completed: 2026-08-13
+
+- [x] Apply the August 13 Rentals and Builds form annotations
+  - Updated the WhatsApp number, removed California from service-area choices,
+    removed the requested add-ons, simplified Builds sizing, changed Sukkah type
+    to a dropdown, changed Schach to multi-select checkboxes, and replaced the
+    conditional date dropdowns with readable date pickers.
+  - Kept California in the address state dropdown, updated the submission
+    mapping and project documentation, and verified the forms at desktop and
+    mobile widths.
+  - Completed: 2026-08-13
+
+- [x] Ask what furniture is needed when Furniture is selected on Rentals
+  - Added a conditional required details field, included the answer in the
+    existing Google Form comments response, and documented the behavior.
+  - Verified the prompt, validation, review summary, clearing behavior, and
+    Worker payload with the local rental form at desktop width.
+  - Completed: 2026-08-13
+
+- [x] Apply the Custom Sukkahs hero and siding annotations
+  - Removed both hero actions, changed the heading to "Choose your siding.",
+    applied the requested supporting copy, and removed the Tarp walls
+    description without rendering an empty paragraph.
+  - Verified equal card heights, desktop and phone hero spacing, zero page
+    overflow, and the complete production build. Added a retry for transient
+    Windows locks when the build rewrites generated Worker files.
+  - Completed: 2026-08-13
+
+- [x] Align the Custom Sukkahs page with the shared service design system
+  - Rebuilt the page with the shared service shell, centered image-free hero,
+    section spacing, typography, buttons, warm surfaces, green process panel,
+    compact chips, and dark quote CTA used across Builds and Rentals.
+  - Added one reusable image-option card for the responsive Siding and Schach
+    grids while preserving the existing project information and photography.
+  - Verified all images, mobile and desktop layouts, 50-pixel action targets,
+    zero page overflow, and the complete production site and Worker build.
+  - Completed: 2026-08-13
+
+- [x] Use rental date pickers and correct the default-package add-ons
+  - Replaced both timing dropdowns with required calendar date inputs while
+    preserving their existing submission field names. Removed Takedown and
+    Storage from optional add-ons because they are included by default.
+  - Verified responsive layout, inline date validation, readable review dates,
+    Google Form Other-response mapping, invalid-date rejection, and the full
+    production site and Worker build.
+  - Completed: 2026-08-13
+
+- [x] Add the confirmed payment methods to both request forms
+  - Added one reusable informational panel to the final Rentals and Builds
+    steps. It lists Cash App, PayPal, Venmo, Zelle, Cash, Check, and Credit Card
+    with a visible processing-fee note, without asking visitors to select a
+    method or changing either form submission.
+  - Verified the shared panel at phone and desktop widths with no horizontal
+    overflow and confirmed the production site and Worker build successfully.
+  - Completed: 2026-08-13
 
 - [x] Convert the Builds request into the shared guided-form system
   - Replaced the sidebar and full-page form stack with Contact, Location, Your

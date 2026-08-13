@@ -95,19 +95,25 @@ Google Forms from the server. Keeping Google Forms field IDs in the Worker
 avoids exposing the integration in page markup, but those IDs must be updated
 if a Google Form question is deleted and recreated. The page presents those
 fields as a client-side five-step flow with local step navigation, inline
-validation, conditional Other inputs, and a final review. Step changes do not
-send requests or replace form controls, so entered values remain in the form
-until the final submission.
+validation, conditional Other inputs, optional site photos, timing notes, and a
+final review. Step changes do not send requests or replace form controls, so
+entered values remain in the form until the final submission.
 
-The builder's desktop date fields use Flatpickr 4.6.13 loaded from jsDelivr.
-Mobile browsers retain their native date picker. The original inputs continue
-to store dates in `YYYY-MM-DD` format for the existing Worker submission
-contract. Conditional holiday-window selects use Choices.js 11.2.3.
+The rental UI collects setup and takedown with native date inputs under the
+legacy `buildDay` and `takeDownDay` names. Because the existing Google Form
+questions contain weekday choices plus Other, the Worker validates each ISO
+date and sends it as that question's Other response. This preserves the current
+Google response destination without exposing or replacing its field IDs.
 
-The custom builder places the project address and requested work in its
-Location step. Visitors fill the address manually. A compact required select
-records one neighborhood, with a conditional Other text field for locations
-outside the list. The page does not load a third-party address service.
+Both forms use the same native date controls and timing presentation. Dates are
+stored in `YYYY-MM-DD` format, and the Builds form keeps its optional timing
+notes. The Builds-only Bring-to-storage date remains in Requested work and is
+limited to the approved holiday window.
+
+Builds and Rentals share one Location layout: street address, city, state, ZIP,
+neighborhood, approximate size, a site description, and an optional photo card.
+The two pages import the same neighborhood and state option data. Visitors fill
+the address manually; the page does not load a third-party address service.
 
 ## Builds
 
@@ -120,10 +126,12 @@ limit for each photo.
 Builds and Rentals import `src/styles/guided-request-form.css` for the shared
 progress, card, fields, choice controls, navigation, review, validation, and
 success presentation. Builds adds only the controls unique to its request,
-including dimension sliders, the photo picker, and conditional service dates.
-The Builds form is a client-side six-step flow. Step navigation changes which
-existing form section is visible without replacing controls or submitting, so
-values and selected files remain in place until the final request.
+including the sukkah-type and schach choices, the photo picker, and the
+Bring-to-storage date. The Builds form is a client-side six-step flow:
+Contact, Location, Timing, Requested work, Your sukkah, and Review and send.
+Step navigation changes which existing form section is visible without
+replacing controls or submitting, so values and selected files remain in place
+until the final request.
 
 The form uses this flow:
 
@@ -150,11 +158,11 @@ separate `Testimonials` tab, creates that tab and its header on first use, and
 stores every new entry with `Pending review` status. The browser posts to
 `/api/testimonial-submissions`; there is no automatic publication path.
 
-Rental add-ons and extra-service details are appended to the existing Google
-Form comments answer so the data reaches the current rental response sheet
-without requiring new Google Form field IDs. Los Angeles is forwarded through
-that Google Form question's `Other` response because it is not yet a native
-choice in the older Google Form.
+Rental add-ons, furniture details, timing notes, photo links, and extra-service
+details are appended to the existing Google Form comments answer so the data
+reaches the current rental response sheet without requiring new Google Form
+field IDs. Neighborhoods that are not native choices in the older Google Form
+are forwarded through that question's `Other` response.
 
 Two production environment values are required:
 
@@ -162,6 +170,9 @@ Two production environment values are required:
 SUKKAH_SHEETS_WEBHOOK_URL
 SUKKAH_SHEETS_WEBHOOK_SECRET
 ```
+
+The `SUBMISSION_PHOTOS` R2 binding is also required for Builds submissions and
+for Rentals submissions that include photos.
 
 The webhook secret is stored only in the Sites environment and Google Apps
 Script properties. Do not place it in source control. The Apps Script source
@@ -181,6 +192,11 @@ and phone sizes, its links move into a full-height panel. The page body becomes
 temporarily inert while that panel is open so keyboard focus stays inside the
 navigation.
 
+`src/components/VisualOptionCard.astro` owns the repeated photo, heading, and
+description surface used by the Custom Sukkahs Siding and Schach grids. Both
+sections pass content into the same component so their image ratio, borders,
+radius, and spacing stay synchronized across breakpoints.
+
 ## Worker Generation
 
 `scripts/generate-static-worker.cjs` reads only the completed static files in
@@ -197,11 +213,11 @@ POST /api/testimonial-submissions
 GET  /api/sukkah-submission-photos/<unlisted-photo-key>
 ```
 
-The POST endpoint accepts the custom builder's form data. It validates required
-fields and photo limits, stores photos in R2, and forwards a normalized JSON
-record to the Google Sheet webhook. If the Sheet write fails, newly uploaded
-photos from that request are removed so partial submissions are not left
-behind.
+The POST endpoints accept the builder and rental form data. They validate
+required fields and photo limits, store selected photos in R2, and forward the
+builder row to the Google Sheet webhook or the rental answers to Google Forms.
+If the downstream write fails, newly uploaded photos from that request are
+removed so partial submissions are not left behind.
 
 The Worker also preserves the existing placeholder endpoint:
 

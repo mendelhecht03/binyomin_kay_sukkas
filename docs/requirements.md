@@ -50,7 +50,7 @@ layout.
 - Email: bkaysukkahbuilders@gmail.com
 - Phone: (347) 454-2282
 - Instagram: @bkaysukkahbuilders
-- WhatsApp: +1 (669) 290-9004
+- WhatsApp: +1 (347) 454-2282
 
 See `docs/client-information.md` for the confirmed client-information reference
 and the remaining details that need confirmation.
@@ -102,28 +102,34 @@ and a carpeted floor covering, plus supplied bamboo sticks, bamboo mats, and
 evergreen schach photos. Keep material names general wherever the exact product
 is not confirmed by Benyamin.
 
-Show one supplied tarp example in the unified wall and siding gallery, labeled
+Show one supplied tarp example in the unified wall and siding card grid, labeled
 "Tarp walls". Keep the fabric, panel, and custom siding examples in the same
-gallery rather than dividing them into separate subcategory sections. State
-beneath the full gallery: "Tarp walls come in varying thicknesses and colors.
-Exact options and pricing are confirmed during the quote." On mobile, turn the
-gallery into a horizontal scroll-snap slider with compact, uniform cards so
-visitors can swipe through every option without seeing oversized images.
+grid rather than dividing them into separate subcategory sections. State beneath
+the full grid: "Tarp walls come in varying thicknesses and colors. Exact options
+and pricing are confirmed during the quote."
 
-Keep the siding section titled "Siding." with the short note, "Contact us for
-current availability." Style both the Siding and Schach sections as contained
-editorial chapters that match the frame section: dark serif headings, the
-light page background, real photography, restrained dividers, and consistent
-spacing. Do not use large gold headings or separate full-width tinted bands for
-these sections. Use the supplied real photo for the wood lattice panel option
-and do not label it as an illustrative rendering. Reframe the horizontal slat
-siding photo with a right-anchored crop so the worker is not centered in the
-card.
+Keep the siding section titled "Choose your siding." with the supporting copy,
+"Check below for custom siding used in our recent work, contact for
+availability". The Tarp walls card has no description. Siding and Schach use the same reusable
+image-card component with a consistent 4:3 image crop, border, radius, internal
+spacing, and restrained shadow. Use three columns on desktop, two on tablet and
+normal phone widths, and one only on very narrow screens. Do not use internal
+scrollbars or horizontal swipe containers. Use the supplied real photo for the
+wood lattice panel option and do not label it as an illustrative rendering.
+Reframe the horizontal slat siding photo with a right-anchored crop so the
+worker is not centered in the card.
 
-Add a Schach section using the same equal-card gallery and mobile swipe behavior
-as the siding section. Show three supplied examples in this order: "Bamboo
-sticks", "Bamboo mats", and "Evergreen". Keep the heading "Schach." and use a
-short availability note rather than promising specific materials or pricing.
+The Schach grid shows three supplied examples in this order: "Bamboo sticks",
+"Bamboo mats", and "Evergreen". Keep the heading "Schach." and use a short
+availability note rather than promising specific materials or pricing.
+
+The Custom Sukkahs hero uses the same centered, image-free service composition
+as Builds and Rentals: left-aligned breadcrumb with a centered eyebrow, heading,
+and supporting copy on the shared warm sukkah background. It has no hero actions;
+the quote and phone actions remain in the closing CTA. Project
+photography begins below the hero. The rest of the page may remain more visual
+than the forms, but it uses the same shell, section spacing, typography, button,
+surface, border, radius, accent, CTA, and responsive systems.
 
 Do not show the redundant horizontal rooftop paneling card or a separate
 "More than the walls" project-options section. Keep porch and flooring details
@@ -152,7 +158,7 @@ Show a clear sending, animated success, or retry message beneath the button,
 and disable nonessential motion for visitors who prefer reduced motion.
 
 Builds uses the same guided-request design system as Rentals. Its six steps are
-Contact, Location, Your sukkah, The site, Timing, and Review and send. Only one
+Contact, Location, Timing, Requested work, Your sukkah, and Review and send. Only one
 step is visible at a time on mobile and desktop. The form uses the shared
 centered 850-pixel maximum width, progress bar, card, controls, Back and
 Continue buttons, review rows, inline errors, and success treatment. The old
@@ -161,19 +167,21 @@ Entered values and selected photos remain attached to the same form controls
 while visitors move Back, Continue, or Edit a review row.
 
 The progress row becomes sticky on phone-sized screens. Multi-column choices,
-dates, sliders, and uploads must reflow before they can overflow. Labels and
-form text remain left-aligned for easy scanning.
-Use the same slim slider treatment for both estimated dimensions: a four-pixel
-track, forest-colored progress, and a white circular thumb with a forest border.
-Show each current measurement in a compact cream readout using the site's
-old-style serif numerals and a small sans-serif unit. When the value changes,
-use a brief directional pop for feedback and disable that motion when the
-visitor prefers reduced motion. Display each current measurement in the same
-compact control as its label and slider. Standard editable controls and action
-targets remain at least 44 pixels tall on phones, and phone text inputs use
+dates, and uploads must reflow before they can overflow. Labels and form text
+remain left-aligned for easy scanning. The approximate size uses one required
+text input in the same format as Rentals, for example `10 × 12 ft`. Standard
+editable controls and action targets remain at least 44 pixels tall on phones,
+and phone text inputs use
 16-pixel text so iPhone Safari does not zoom when a visitor focuses a field.
 The final forest-colored action reads `Request a quote`, with a short
 no-payment reassurance directly below it.
+
+Both request forms show the same informational `Payment options` panel on the
+final review step before the primary submit action. It lists Cash App, PayPal,
+Venmo, Zelle, Cash, Check, and Credit Card. Credit Card clearly states that a
+processing fee applies. The panel does not contain selectable form controls and
+does not change either submission contract. The reassurance below each submit
+button continues to state that no payment is required when sending a request.
 
 The `/sukkah-rentals` page uses a custom, site-styled rental request form rather
 than an embedded Google Form. It preserves the questions, required fields, and
@@ -192,40 +200,45 @@ a fixed-aspect-ratio image placeholder. Its approved description is: "Comes
 with a basic metal frame with a variety of canvas tarps to choose from." The
 step progress fill uses the site's solid gold accent.
 
-Neighborhood and timing questions use compact native selects with conditional
-Other fields. Optional services are grouped separately from the required
-rental details. The final step shows a compact review with Edit actions before
-the `Request availability` button. The browser preserves the original rental
-field names and posts the same data contract to the Worker; when the visitor
-does not enter a separate question, the browser supplies a neutral value for
-the legacy required Google Form question.
+Neighborhood uses a compact native select with a conditional Other field.
+Rental setup and takedown timing use required native date pickers while keeping
+the legacy `buildDay` and `takeDownDay` field names. The Worker forwards those
+calendar dates through the existing Google Form questions' Other response.
+Optional services are grouped separately from the required rental details;
+Takedown and Storage are not optional add-ons because they are included in the
+default rental package. The final step shows a compact review with Edit actions
+before the `Request availability` button. Selecting Furniture reveals a
+conditional required details field so the request identifies what furniture is
+needed. When the visitor does not enter a
+separate question, the browser supplies a neutral value for the legacy required
+Google Form question.
 
-The Site Details section accepts up to three optional area photos. Each photo
-may be a JPG, PNG, or HEIC file and must be no larger than 10 MB. Enforce these
-limits in both the browser and the server-side Worker.
+The shared Location section accepts a site description and up to three optional
+area photos on both forms. Each photo may be a JPG, PNG, or HEIC file and must
+be no larger than 10 MB. Enforce these limits in both the browser and the
+server-side Worker.
 
-The custom form collects estimated sukkah width and length with separate
-sliders. Each slider ranges from 0 to 30 feet and shows its current value.
+The shared Location section collects the approximate sukkah size in one text
+field, using a format such as `10 × 12 ft`.
 
-The visitor must choose exactly one sukkah type. Sukkah-type choices use a
-required, mutually exclusive radio-button group.
+The visitor must choose exactly one sukkah type from a required dropdown.
 
-The visitor must also choose exactly one schach type using a required,
-mutually exclusive radio-button group.
+The visitor may choose one or more schach types using a required checkbox
+group.
 
-The Contact step collects first name and last name in separate required fields,
-followed by the visitor's phone number and email address. Pair the fields on
-desktop and stack them vertically on phones.
+The Contact step collects one required Name field and a required phone number,
+followed by an optional email address. Pair the fields on desktop and stack them
+vertically on phones.
 
 Requested work choices appear as Bring out of storage, Build, Take down, Bring
 to storage, and Other. Visitors may choose more than one.
 
-In the custom form, collect the project address in the Location step. The
-address uses separate fields for street address, city, state, and ZIP code.
-State is a required dropdown containing the 50 U.S. states and Washington,
-D.C. Neighborhood uses the same compact select pattern as Rentals, with a
-conditional required text field when Other is selected. Requested work is a
-multi-select checkbox-card group in this same step.
+Both forms use a Location step titled `Where will the sukkah be?` with separate
+fields for street address, city, state, and Zip code. State is a required
+dropdown containing the 50 U.S. states and Washington, D.C. Neighborhood uses
+the same compact select and shared option list on both forms, with a
+conditional required text field when Other is selected. Requested work is kept
+in its own Builds step instead of being mixed into Location.
 
 Size the ZIP Code field for the longest supported U.S. format, `12345-6789`.
 Accept no more than 10 characters while continuing to support both five-digit
@@ -236,23 +249,24 @@ a purchase path or project-path selector. Visitors who need a new made-to-order
 sukkah are directed to `/custom-sukkahs/`, while rental requests remain on
 `/sukkah-rentals/`.
 
-The Builds form always asks `When would you like it installed?` and uses a
-required date picker. Its submitted field remains `buildDate` for backend
-compatibility.
+Both forms use the same `When do you need it?` Timing step with required native
+setup and takedown date inputs. Builds keeps an optional Timing notes field, and
+Rentals includes the same field. Builds' submitted setup date remains
+`buildDate` for backend compatibility.
 
-Both forms list Los Angeles among the neighborhood choices. Both include the
-same add-on choices and an optional `Extra service` checkbox with this helper
-text: `Check this if additional labor beyond the standard scope is required
-(for example, a rooftop sukkah).` When the visitor checks it, the form asks
-for required details.
+Both forms use the same neighborhood choices: Crown Heights, East Flatbush,
+Remsen Village, Flatbush, Boro Park, Williamsburg, Park Slope, Manhattan,
+Queens, Monsey, South Florida, and Los Angeles; New Haven is not listed.
+Rentals offer lighting, furniture, and pressure washing; Builds offer lighting
+and pressure washing. Both include an optional
+`Extra service` checkbox with this helper text: `Check this if additional labor
+beyond the standard scope is required (for example, a rooftop sukkah).` When
+the visitor checks it, the form asks for required details.
 
-Selecting Take down or Bring to storage reveals that service's own required
-dropdown within the Timing card. If both are checked, show
-two clearly labeled dropdowns. List the same holiday-window dates in reverse
-order, from Erev Sukkos back through Motzei Yom Kippur. Each dropdown includes
-its own Other date option and date field with the same 30-day limit. Use the
-Choices.js CDN component for these holiday-window dropdowns. Hide and disable
-the service-specific dropdowns when the matching work is not selected.
+Selecting Bring to storage in Builds' Requested work step reveals its required
+date field. Limit that picker to the approved 30-day holiday window before
+Sukkos, and hide and disable it when the service is not selected. The shared
+Timing step always owns the setup and takedown dates.
 
 The footer shows office hours as Sunday-Friday, 7:00 AM-7:00 PM, and states
 that the business is closed on Erev Yom Kippur, Motzei Yom Kippur, and Erev

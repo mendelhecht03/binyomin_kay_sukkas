@@ -23,7 +23,7 @@ confirmed them in this document.
 | --- | --- | --- |
 | Business display name | Benyamin Kay Sukkas | Confirm the preferred spelling of Benyamin or Binyomin. |
 | Instagram | @bkaysukkahbuilders | Confirm that this is the account customers should use. |
-| WhatsApp | +1 (669) 290-9004 | Confirm that this is the correct public WhatsApp number. |
+| WhatsApp | +1 (347) 454-2282 | Confirmed by August 13, 2026 browser feedback. |
 
 ## Information Still Needed
 

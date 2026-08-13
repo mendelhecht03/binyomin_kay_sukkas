@@ -107,6 +107,21 @@
   gap: 0.9rem;
 }
 
+.guided-request-form .contact-grid {
+  max-width: 640px;
+}
+
+/* The Location step uses this same address layout on Rentals and Builds. */
+.guided-request-form .address-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) 8rem;
+  gap: 0.9rem;
+}
+
+.guided-request-form .address-street {
+  grid-column: 1 / -1;
+}
+
 .guided-request-form .field {
   display: grid;
   min-width: 0;
@@ -250,8 +265,178 @@
   accent-color: var(--forest-700);
 }
 
+.guided-request-form .photo-upload-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 0.9rem;
+  align-items: center;
+  padding: 1rem;
+  border: 1px dashed rgba(45, 104, 85, 0.36);
+  border-radius: 12px;
+  background: #f7faf7;
+}
+
+.guided-request-form .photo-upload-card .upload-icon {
+  display: grid;
+  width: 2.55rem;
+  height: 2.55rem;
+  place-items: center;
+  border-radius: 9px;
+  color: var(--forest-800);
+  background: var(--forest-100);
+}
+
+.guided-request-form .photo-upload-card .upload-icon svg {
+  width: 1.4rem;
+  height: 1.4rem;
+}
+
+.guided-request-form .upload-copy strong {
+  display: block;
+  margin-bottom: 0.12rem;
+  font-size: 0.9rem;
+}
+
+.guided-request-form .upload-copy p {
+  margin: 0;
+  color: var(--ink-500);
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+.guided-request-form .upload-button {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  padding: 0.6rem 0.85rem;
+  border: 1px solid var(--forest-800);
+  border-radius: 9px;
+  color: var(--forest-900);
+  background: var(--white);
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.guided-request-form .sr-only-file {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+.guided-request-form .selected-photos,
+.guided-request-form .photo-upload-card > .field-error {
+  grid-column: 1 / -1;
+}
+
+.guided-request-form .selected-photos {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.guided-request-form .selected-photo {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.45rem 0.55rem;
+  border-radius: 8px;
+  background: var(--white);
+  font-size: 0.78rem;
+}
+
+.guided-request-form .selected-photo span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.guided-request-form .selected-photo button {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0.35rem;
+  border: 0;
+  color: var(--forest-800);
+  background: transparent;
+  font-size: 0.76rem;
+  font-weight: 800;
+  text-decoration: underline;
+}
+
 .guided-request-form .request-review {
   border-block: 1px solid var(--border);
+}
+
+.guided-request-form .payment-methods {
+  display: grid;
+  gap: 0.9rem;
+  padding: 1rem;
+  border: 1px solid rgba(23, 63, 52, 0.14);
+  border-radius: 12px;
+  background: #f9f7ef;
+}
+
+.guided-request-form .payment-methods-heading .eyebrow {
+  margin: 0 0 0.15rem;
+  color: var(--wood-600);
+  font-size: 0.68rem;
+}
+
+.guided-request-form .payment-methods-heading h4 {
+  margin: 0 0 0.2rem;
+  font-size: 1.12rem;
+  line-height: 1.2;
+}
+
+.guided-request-form .payment-methods-heading > p:last-child {
+  margin: 0;
+  color: var(--ink-500);
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.guided-request-form .payment-method-list {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.45rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.guided-request-form .payment-method-list li {
+  display: flex;
+  min-width: 0;
+  min-height: 38px;
+  align-items: center;
+  padding: 0.48rem 0.62rem;
+  border-left: 2px solid rgba(200, 134, 67, 0.62);
+  border-radius: 4px;
+  color: var(--forest-900);
+  background: rgba(255, 255, 255, 0.76);
+  font-size: 0.8rem;
+  font-weight: 750;
+  line-height: 1.25;
+}
+
+.guided-request-form .payment-method-list .payment-method-card {
+  grid-column: span 2;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.05rem;
+}
+
+.guided-request-form .payment-method-card small {
+  color: var(--ink-500);
+  font-size: 0.74rem;
+  font-weight: 650;
 }
 
 .guided-request-form .review-heading {
@@ -450,6 +635,23 @@
     grid-template-columns: 1fr;
   }
 
+  .guided-request-form .address-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .guided-request-form .address-street {
+    grid-column: auto;
+  }
+
+  .guided-request-form .photo-upload-card {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .guided-request-form .photo-upload-card .upload-button {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+
   .guided-request-form input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]):not([type="range"]):not([type="file"]),
   .guided-request-form select,
   .guided-request-form textarea {
@@ -470,6 +672,24 @@
   .guided-request-form .review-list button {
     grid-column: 2;
     grid-row: 1 / span 2;
+  }
+
+  .guided-request-form .payment-methods {
+    gap: 0.75rem;
+    padding: 0.85rem;
+  }
+
+  .guided-request-form .payment-method-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .guided-request-form .payment-method-list li {
+    min-height: 42px;
+    font-size: 0.84rem;
+  }
+
+  .guided-request-form .payment-method-card small {
+    font-size: 0.76rem;
   }
 
   .guided-request-form .wizard-actions {

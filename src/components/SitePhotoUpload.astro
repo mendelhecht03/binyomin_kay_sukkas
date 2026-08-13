@@ -1,0 +1,17 @@
+<div class="photo-upload-card">
+  <div class="upload-icon" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+      <rect x="3.5" y="5" width="17" height="14" rx="2"></rect>
+      <circle cx="9" cy="10" r="1.5"></circle>
+      <path d="m5.5 17 4-4 3 3 2-2 4 3"></path>
+    </svg>
+  </div>
+  <div class="upload-copy">
+    <strong>Add photos of the space</strong>
+    <p>Photos help Benyamin understand the area before following up. Up to 3 JPG, PNG, or HEIC files, 10 MB each.</p>
+  </div>
+  <label class="upload-button" for="site-photos">Choose photos</label>
+  <input class="sr-only-file" id="site-photos" name="sitePhotos" type="file" accept=".jpg,.jpeg,.png,.heic,.heif,image/jpeg,image/png,image/heic,image/heif" multiple />
+  <div class="selected-photos" data-selected-photos aria-live="polite"></div>
+  <p class="field-error" id="site-photos-error" data-error-for="site-photos"></p>
+</div>

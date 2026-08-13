@@ -1,42 +1,15 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import FormHeading from "../../components/FormHeading.astro";
+import PaymentMethods from "../../components/PaymentMethods.astro";
+import SitePhotoUpload from "../../components/SitePhotoUpload.astro";
+import { neighborhoods, states } from "../../data/form-options.js";
 import "../../styles/guided-request-form.css";
 
 const services = ["Bring out of storage", "Build", "Take down", "Bring to storage"];
-const neighborhoods = [
-  "Crown Heights",
-  "East Flatbush",
-  "Remsen Village",
-  "Flatbush",
-  "Boro Park",
-  "Williamsburg",
-  "Park Slope",
-  "Manhattan",
-  "Queens",
-  "Monsey",
-  "New Haven",
-  "South Florida",
-  "Los Angeles",
-];
-const states = [
-  ["AL", "Alabama"], ["AK", "Alaska"], ["AZ", "Arizona"], ["AR", "Arkansas"],
-  ["CA", "California"], ["CO", "Colorado"], ["CT", "Connecticut"], ["DE", "Delaware"],
-  ["DC", "District of Columbia"], ["FL", "Florida"], ["GA", "Georgia"], ["HI", "Hawaii"],
-  ["ID", "Idaho"], ["IL", "Illinois"], ["IN", "Indiana"], ["IA", "Iowa"],
-  ["KS", "Kansas"], ["KY", "Kentucky"], ["LA", "Louisiana"], ["ME", "Maine"],
-  ["MD", "Maryland"], ["MA", "Massachusetts"], ["MI", "Michigan"], ["MN", "Minnesota"],
-  ["MS", "Mississippi"], ["MO", "Missouri"], ["MT", "Montana"], ["NE", "Nebraska"],
-  ["NV", "Nevada"], ["NH", "New Hampshire"], ["NJ", "New Jersey"], ["NM", "New Mexico"],
-  ["NY", "New York"], ["NC", "North Carolina"], ["ND", "North Dakota"], ["OH", "Ohio"],
-  ["OK", "Oklahoma"], ["OR", "Oregon"], ["PA", "Pennsylvania"], ["RI", "Rhode Island"],
-  ["SC", "South Carolina"], ["SD", "South Dakota"], ["TN", "Tennessee"], ["TX", "Texas"],
-  ["UT", "Utah"], ["VT", "Vermont"], ["VA", "Virginia"], ["WA", "Washington"],
-  ["WV", "West Virginia"], ["WI", "Wisconsin"], ["WY", "Wyoming"],
-];
 const sukkahTypes = ["Canvas", "Canvas Bingo", "Snap / panel", "Wood boards with bolts", "Schach and beams only"];
 const schachTypes = ["Bamboo mat", "Bamboo sticks", "Evergreen"];
-const addOns = ["Put up lights", "Pressure wash area day before", "Bamboo mat", "Evergreen"];
+const addOns = ["Put up lights", "Pressure wash area day before"];
 ---
 
 <BaseLayout
@@ -44,11 +17,6 @@ const addOns = ["Put up lights", "Pressure wash area day before", "Bamboo mat", 
   description="Share your sukkah setup, location, timing, and site details with Benyamin Kay Sukkas."
   bodyClass="builds-page request-form-page"
 >
-  <Fragment slot="head">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js@11.2.3/public/assets/styles/choices.min.css" />
-  </Fragment>
-
   <section class="builder-hero sukkah-hero-background">
     <div class="shell builder-hero-inner">
       <nav class="breadcrumb" aria-label="Breadcrumb">
@@ -90,31 +58,25 @@ const addOns = ["Put up lights", "Pressure wash area day before", "Bamboo mat", 
             <FormHeading icon="contact" eyebrow="Contact" heading="How can we reach you?" id="contact-heading" />
             <div class="form-grid contact-grid">
               <div class="field">
-                <label for="firstName">First name <span class="required-mark">*</span></label>
-                <input id="firstName" name="firstName" autocomplete="given-name" maxlength="200" required />
-                <p class="field-error" id="firstName-error" data-error-for="firstName"></p>
-              </div>
-              <div class="field">
-                <label for="lastName">Last name <span class="required-mark">*</span></label>
-                <input id="lastName" name="lastName" autocomplete="family-name" maxlength="200" required />
-                <p class="field-error" id="lastName-error" data-error-for="lastName"></p>
+                <label for="name">Name <span class="required-mark">*</span></label>
+                <input id="name" name="name" autocomplete="name" maxlength="200" required />
+                <p class="field-error" id="name-error" data-error-for="name"></p>
               </div>
               <div class="field">
                 <label for="phone">Phone number <span class="required-mark">*</span></label>
                 <input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="100" required />
                 <p class="field-error" id="phone-error" data-error-for="phone"></p>
               </div>
-              <div class="field">
-                <label for="email">Email address <span class="required-mark">*</span></label>
-                <input id="email" name="email" type="email" autocomplete="email" inputmode="email" maxlength="320" required />
+              <div class="field field-full">
+                <label for="email">Email address <span class="optional-text">Optional</span></label>
+                <input id="email" name="email" type="email" autocomplete="email" inputmode="email" maxlength="320" />
                 <p class="field-error" id="email-error" data-error-for="email"></p>
               </div>
             </div>
           </section>
 
-          <section id="service-details" class="form-step" aria-labelledby="service-heading" data-form-step="2" hidden>
-            <FormHeading icon="location" eyebrow="Location" heading="Where will the project be?" id="service-heading" />
-            <p class="step-intro">Enter the address where the sukkah will be used.</p>
+          <section id="location-details" class="form-step" aria-labelledby="location-heading" data-form-step="2" hidden>
+            <FormHeading icon="location" eyebrow="Location" heading="Where will the sukkah be?" id="location-heading" />
             <div class="address-grid">
               <div class="field address-street">
                 <label for="address-line-1">Street address <span class="required-mark">*</span></label>
@@ -135,7 +97,7 @@ const addOns = ["Put up lights", "Pressure wash area day before", "Bamboo mat", 
                 <p class="field-error" id="address-state-error" data-error-for="address-state"></p>
               </div>
               <div class="field address-postal">
-                <label for="address-postal">ZIP code <span class="required-mark">*</span></label>
+                <label for="address-postal">Zip code <span class="required-mark">*</span></label>
                 <input id="address-postal" name="postalCode" inputmode="numeric" autocomplete="postal-code" pattern="[0-9]{5}(-[0-9]{4})?" maxlength="10" required />
                 <p class="field-error" id="address-postal-error" data-error-for="address-postal"></p>
               </div>
@@ -154,8 +116,23 @@ const addOns = ["Put up lights", "Pressure wash area day before", "Bamboo mat", 
               <input id="neighborhoodOther" name="neighborhoodOther" maxlength="200" disabled />
               <p class="field-error" id="neighborhoodOther-error" data-error-for="neighborhoodOther"></p>
             </div>
+            <div class="field">
+              <label for="estimated-size">Approximate sukkah size <span class="required-mark">*</span></label>
+              <input id="estimated-size" name="estimatedSize" maxlength="200" placeholder="For example, 10 × 12 ft" required />
+              <p class="field-error" id="estimated-size-error" data-error-for="estimated-size"></p>
+            </div>
+            <div class="field">
+              <label for="site-description">Where will the sukkah be built?</label>
+              <textarea id="site-description" name="siteDescription" rows="4" maxlength="4000" placeholder="Backyard, patio, driveway, rooftop, balcony, etc."></textarea>
+              <p class="field-error" id="site-description-error" data-error-for="site-description"></p>
+            </div>
+            <SitePhotoUpload />
+          </section>
+
+          <section id="service-details" class="form-step" aria-labelledby="service-heading" data-form-step="4" hidden>
+            <FormHeading icon="location" eyebrow="Requested work" heading="What do you need help with?" id="service-heading" />
             <fieldset data-required-group="service">
-              <legend>What do you need help with? <span class="required-mark">*</span></legend>
+              <legend>Requested work <span class="required-mark">*</span></legend>
               <p class="field-hint">Select everything that applies.</p>
               <div class="choice-grid service-grid">
                 {services.map((service) => (
@@ -176,41 +153,41 @@ const addOns = ["Put up lights", "Pressure wash area day before", "Bamboo mat", 
               <input id="serviceOther" name="serviceOther" maxlength="500" disabled />
               <p class="field-error" id="serviceOther-error" data-error-for="serviceOther"></p>
             </div>
+            <div class="field service-schedule" data-service-schedule="Bring to storage" hidden>
+              <label for="bring-to-storage-date">Bring-to-storage date <span class="required-mark">*</span></label>
+              <p class="field-hint" data-service-date-range>Choose a date before Sukkos.</p>
+              <input id="bring-to-storage-date" name="bringToStorageDate" type="date" data-service-date required />
+              <p class="field-error" id="bring-to-storage-date-error" data-error-for="bring-to-storage-date"></p>
+            </div>
+            <div class="extra-labor-group">
+              <input type="hidden" name="extraServiceRequired" value="No" data-extra-service-required />
+              <label class="choice-card extra-service-check">
+                <input type="checkbox" aria-controls="extra-service-details-field" aria-expanded="false" data-extra-service-toggle />
+                <span>
+                  <strong>Special access or extra labor</strong>
+                  <small>For example, a rooftop sukkah or unusual access.</small>
+                </span>
+              </label>
+              <div id="extra-service-details-field" class="field conditional-field" data-extra-service-details hidden>
+                <label for="extra-service-details">What extra help is needed? <span class="required-mark">*</span></label>
+                <textarea id="extra-service-details" name="extraServiceDetails" rows="4" maxlength="2000" disabled></textarea>
+                <p class="field-error" id="extra-service-details-error" data-error-for="extra-service-details"></p>
+              </div>
+            </div>
           </section>
 
-          <section id="sukkah-details" class="form-step" aria-labelledby="details-heading" data-form-step="3" hidden>
+          <section id="sukkah-details" class="form-step" aria-labelledby="details-heading" data-form-step="5" hidden>
             <FormHeading icon="sukkah" eyebrow="Your sukkah" heading="Tell us about your sukkah" id="details-heading" />
-            <fieldset class="size-field">
-              <legend>Approximate size <span class="required-mark">*</span></legend>
-              <p class="field-hint">An estimate is fine. Adjust each measurement from 0 to 30 feet.</p>
-              <div class="size-grid">
-                <div class="size-control">
-                  <div class="size-label-row"><label for="estimated-width">Width</label></div>
-                  <input id="estimated-width" name="estimatedWidth" type="range" min="0" max="30" step="1" value="10" data-size-slider />
-                  <output for="estimated-width" aria-label="10 feet" data-size-output="estimated-width"><span data-size-number>10</span><span class="size-unit">ft</span></output>
-                </div>
-                <div class="size-control">
-                  <div class="size-label-row"><label for="estimated-length">Length</label></div>
-                  <input id="estimated-length" name="estimatedLength" type="range" min="0" max="30" step="1" value="10" data-size-slider />
-                  <output for="estimated-length" aria-label="10 feet" data-size-output="estimated-length"><span data-size-number>10</span><span class="size-unit">ft</span></output>
-                </div>
-              </div>
-            </fieldset>
-
             <fieldset data-required-group="sukkahType">
               <legend>Sukkah type <span class="required-mark">*</span></legend>
-              <div class="choice-grid configuration-grid">
-                {sukkahTypes.map((type) => (
-                  <label class="choice-card"><input type="radio" name="sukkahType" value={type} /><span>{type}</span></label>
-                ))}
-                <label class="choice-card">
-                  <input type="radio" name="sukkahType" value="Other" aria-controls="sukkah-type-other-field" aria-expanded="false" />
-                  <span>Other</span>
-                </label>
-              </div>
+              <select id="sukkah-type" name="sukkahType" aria-controls="sukkah-type-other-field" aria-expanded="false" required data-sukkah-type-select>
+                <option value="">Choose a sukkah type</option>
+                {sukkahTypes.map((type) => <option value={type}>{type}</option>)}
+                <option value="Other">Other</option>
+              </select>
               <p class="group-error" id="sukkahType-group-error" data-group-error-for="sukkahType"></p>
             </fieldset>
-            <div id="sukkah-type-other-field" class="field conditional-field" data-radio-other-field="sukkahType" hidden>
+            <div id="sukkah-type-other-field" class="field conditional-field" data-sukkah-type-other hidden>
               <label for="sukkahTypeOther">Other sukkah type <span class="required-mark">*</span></label>
               <input id="sukkahTypeOther" name="sukkahTypeOther" maxlength="500" disabled />
               <p class="field-error" id="sukkahTypeOther-error" data-error-for="sukkahTypeOther"></p>
@@ -218,18 +195,19 @@ const addOns = ["Put up lights", "Pressure wash area day before", "Bamboo mat", 
 
             <fieldset data-required-group="schach">
               <legend>Schach type <span class="required-mark">*</span></legend>
+              <p class="field-hint">Select one or more options.</p>
               <div class="choice-grid configuration-grid">
                 {schachTypes.map((type) => (
-                  <label class="choice-card"><input type="radio" name="schach" value={type} /><span>{type}</span></label>
+                  <label class="choice-card"><input type="checkbox" name="schach" value={type} /><span>{type}</span></label>
                 ))}
                 <label class="choice-card">
-                  <input type="radio" name="schach" value="Other" aria-controls="schach-other-field" aria-expanded="false" />
+                  <input type="checkbox" name="schach" value="Other" aria-controls="schach-other-field" aria-expanded="false" data-schach-other-toggle />
                   <span>Other</span>
                 </label>
               </div>
               <p class="group-error" id="schach-group-error" data-group-error-for="schach"></p>
             </fieldset>
-            <div id="schach-other-field" class="field conditional-field" data-radio-other-field="schach" hidden>
+            <div id="schach-other-field" class="field conditional-field" data-schach-other hidden>
               <label for="schachOther">Other schach type <span class="required-mark">*</span></label>
               <input id="schachOther" name="schachOther" maxlength="500" disabled />
               <p class="field-error" id="schachOther-error" data-error-for="schachOther"></p>
@@ -254,88 +232,20 @@ const addOns = ["Put up lights", "Pressure wash area day before", "Bamboo mat", 
               <p class="field-error" id="addOnsOther-error" data-error-for="addOnsOther"></p>
             </div>
 
-            <div class="extra-labor-group">
-              <input type="hidden" name="extraServiceRequired" value="No" data-extra-service-required />
-              <label class="choice-card extra-service-check">
-                <input type="checkbox" aria-controls="extra-service-details-field" aria-expanded="false" data-extra-service-toggle />
-                <span>
-                  <strong>Special access or extra labor</strong>
-                  <small>For example, a rooftop sukkah or unusual access.</small>
-                </span>
-              </label>
-              <div id="extra-service-details-field" class="field conditional-field" data-extra-service-details hidden>
-                <label for="extra-service-details">What extra help is needed? <span class="required-mark">*</span></label>
-                <textarea id="extra-service-details" name="extraServiceDetails" rows="3" maxlength="2000" disabled></textarea>
-                <p class="field-error" id="extra-service-details-error" data-error-for="extra-service-details"></p>
-              </div>
-            </div>
           </section>
 
-          <section id="site-details" class="form-step" aria-labelledby="site-heading" data-form-step="4" hidden>
-            <FormHeading icon="site" eyebrow="The site" heading="Help us understand the space" id="site-heading" />
-            <div class="field">
-              <label for="site-description">Where will the sukkah be built?</label>
-              <textarea id="site-description" name="siteDescription" rows="4" maxlength="4000" placeholder="Backyard, patio, driveway, rooftop, balcony, etc."></textarea>
-              <p class="field-error" id="site-description-error" data-error-for="site-description"></p>
-            </div>
-            <div class="photo-upload-card">
-              <div class="upload-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="5" width="17" height="14" rx="2"></rect><circle cx="9" cy="10" r="1.5"></circle><path d="m5.5 17 4-4 3 3 2-2 4 3"></path></svg>
+          <section id="timing-details" class="form-step" aria-labelledby="timing-heading" data-form-step="3" hidden>
+            <FormHeading icon="timing" eyebrow="Timing" heading="When do you need it?" id="timing-heading" />
+            <div class="form-grid timing-grid">
+              <div class="field">
+                <label for="build-date">Preferred setup date <span class="required-mark">*</span></label>
+                <input id="build-date" name="buildDate" type="date" required />
+                <p class="field-error" id="build-date-error" data-error-for="build-date"></p>
               </div>
-              <div class="upload-copy">
-                <strong>Add photos of the space</strong>
-                <p>Photos help Benyamin understand the area before following up. Up to 3 JPG, PNG, or HEIC files, 10 MB each.</p>
-              </div>
-              <label class="upload-button" for="site-photos">Choose photos</label>
-              <input class="sr-only-file" id="site-photos" name="sitePhotos" type="file" accept=".jpg,.jpeg,.png,.heic,.heif,image/jpeg,image/png,image/heic,image/heif" multiple />
-              <div class="selected-photos" data-selected-photos aria-live="polite"></div>
-              <p class="field-error" id="site-photos-error" data-error-for="site-photos"></p>
-            </div>
-          </section>
-
-          <section id="timing-details" class="form-step" aria-labelledby="timing-heading" data-form-step="5" hidden>
-            <FormHeading icon="timing" eyebrow="Timing" heading="When would you like it installed?" id="timing-heading" />
-            <p class="step-intro">Choose your preferred installation date. We’ll confirm availability when we follow up.</p>
-            <div class="field">
-              <label for="build-date">Preferred installation date <span class="required-mark">*</span></label>
-              <div class="date-control"><input id="build-date" name="buildDate" type="date" required /></div>
-              <p class="field-error" id="build-date-error" data-error-for="build-date"></p>
-            </div>
-            <div class="conditional-schedule" data-reverse-sukkos-schedule hidden>
-              <p class="step-intro">Choose the service dates that apply to your request.</p>
-              <div class="schedule-grid">
-                <div class="service-schedule" data-service-schedule="Take down" hidden>
-                  <div class="field">
-                    <label for="take-down-date">Take-down day <span class="required-mark">*</span></label>
-                    <select id="take-down-date" name="takeDownDate" data-holiday-date-select data-date-order="reverse">
-                      <option value="">Choose a date</option>
-                      <option value="other" data-other-date-option>Other date</option>
-                    </select>
-                    <p class="field-error" id="take-down-date-error" data-error-for="take-down-date"></p>
-                  </div>
-                  <div class="field conditional-field" data-other-date-field hidden>
-                    <label for="custom-take-down-date">Choose another take-down date <span class="required-mark">*</span></label>
-                    <p class="field-hint" data-custom-date-range>Choose a date within the 30 days before Sukkos.</p>
-                    <div class="date-control"><input id="custom-take-down-date" name="customTakeDownDate" type="date" /></div>
-                    <p class="field-error" id="custom-take-down-date-error" data-error-for="custom-take-down-date"></p>
-                  </div>
-                </div>
-                <div class="service-schedule" data-service-schedule="Bring to storage" hidden>
-                  <div class="field">
-                    <label for="bring-to-storage-date">Bring-to-storage day <span class="required-mark">*</span></label>
-                    <select id="bring-to-storage-date" name="bringToStorageDate" data-holiday-date-select data-date-order="reverse">
-                      <option value="">Choose a date</option>
-                      <option value="other" data-other-date-option>Other date</option>
-                    </select>
-                    <p class="field-error" id="bring-to-storage-date-error" data-error-for="bring-to-storage-date"></p>
-                  </div>
-                  <div class="field conditional-field" data-other-date-field hidden>
-                    <label for="custom-storage-date">Choose another storage date <span class="required-mark">*</span></label>
-                    <p class="field-hint" data-custom-date-range>Choose a date within the 30 days before Sukkos.</p>
-                    <div class="date-control"><input id="custom-storage-date" name="customStorageDate" type="date" /></div>
-                    <p class="field-error" id="custom-storage-date-error" data-error-for="custom-storage-date"></p>
-                  </div>
-                </div>
+              <div class="field">
+                <label for="take-down-date">Preferred takedown date <span class="required-mark">*</span></label>
+                <input id="take-down-date" name="takeDownDate" type="date" required />
+                <p class="field-error" id="take-down-date-error" data-error-for="take-down-date"></p>
               </div>
             </div>
             <div class="field">
@@ -354,10 +264,10 @@ const addOns = ["Put up lights", "Pressure wash area day before", "Bamboo mat", 
               </div>
               <dl class="review-list">
                 <div><dt>Contact</dt><dd data-review-contact>Not added yet</dd><button type="button" data-edit-step="1">Edit<span class="sr-only"> contact details</span></button></div>
-                <div><dt>Location</dt><dd data-review-location>Not added yet</dd><button type="button" data-edit-step="2">Edit<span class="sr-only"> location and requested work</span></button></div>
-                <div><dt>Your sukkah</dt><dd data-review-sukkah>Not added yet</dd><button type="button" data-edit-step="3">Edit<span class="sr-only"> sukkah details</span></button></div>
-                <div><dt>The site</dt><dd data-review-site>Not added yet</dd><button type="button" data-edit-step="4">Edit<span class="sr-only"> site details</span></button></div>
-                <div><dt>Timing</dt><dd data-review-timing>Not added yet</dd><button type="button" data-edit-step="5">Edit<span class="sr-only"> timing details</span></button></div>
+                <div><dt>Location</dt><dd data-review-location>Not added yet</dd><button type="button" data-edit-step="2">Edit<span class="sr-only"> location details</span></button></div>
+                <div><dt>Timing</dt><dd data-review-timing>Not added yet</dd><button type="button" data-edit-step="3">Edit<span class="sr-only"> timing details</span></button></div>
+                <div><dt>Requested work</dt><dd data-review-work>Not added yet</dd><button type="button" data-edit-step="4">Edit<span class="sr-only"> requested work</span></button></div>
+                <div><dt>Your sukkah</dt><dd data-review-sukkah>Not added yet</dd><button type="button" data-edit-step="5">Edit<span class="sr-only"> sukkah details</span></button></div>
               </dl>
             </div>
             <div class="field">
@@ -370,6 +280,7 @@ const addOns = ["Put up lights", "Pressure wash area day before", "Bamboo mat", 
               <textarea id="comments" name="comments" rows="3" maxlength="4000" placeholder="Add any details that did not fit above."></textarea>
               <p class="field-error" id="comments-error" data-error-for="comments"></p>
             </div>
+            <PaymentMethods />
           </section>
 
           <div class="wizard-actions">
@@ -396,12 +307,11 @@ const addOns = ["Put up lights", "Pressure wash area day before", "Bamboo mat", 
   </section>
 </BaseLayout>
 
-<script is:inline src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js"></script>
-<script is:inline src="https://cdn.jsdelivr.net/npm/choices.js@11.2.3/public/assets/scripts/choices.min.js"></script>
-
 <script is:inline>
   const builderForm = document.querySelector("[data-builder-form]");
-  const steps = Array.from(document.querySelectorAll("[data-form-step]"));
+  const steps = Array.from(document.querySelectorAll("[data-form-step]")).sort(
+    (first, second) => Number(first.dataset.formStep) - Number(second.dataset.formStep),
+  );
   const progressRegion = document.querySelector("[data-progress-region]");
   const progressBar = document.querySelector("[data-progress-bar]");
   const progressTrack = progressBar?.parentElement;
@@ -416,11 +326,16 @@ const addOns = ["Put up lights", "Pressure wash area day before", "Bamboo mat", 
   const successPanel = document.querySelector("[data-success-panel]");
   const successMessage = document.querySelector("[data-success-message]");
   const editButtons = Array.from(document.querySelectorAll("[data-edit-step]"));
-  const sizeSliders = Array.from(document.querySelectorAll("[data-size-slider]"));
   const serviceInputs = Array.from(document.querySelectorAll('input[name="service"]'));
   const neighborhoodSelect = document.querySelector("[data-neighborhood-select]");
   const neighborhoodOther = document.querySelector("[data-neighborhood-other]");
   const neighborhoodOtherInput = document.querySelector("#neighborhoodOther");
+  const sukkahTypeSelect = document.querySelector("[data-sukkah-type-select]");
+  const sukkahTypeOther = document.querySelector("[data-sukkah-type-other]");
+  const sukkahTypeOtherInput = document.querySelector("#sukkahTypeOther");
+  const schachOtherToggle = document.querySelector("[data-schach-other-toggle]");
+  const schachOtherField = document.querySelector("[data-schach-other]");
+  const schachOtherInput = document.querySelector("#schachOther");
   const serviceOtherToggle = document.querySelector("[data-service-other-toggle]");
   const serviceOtherField = document.querySelector("[data-service-other]");
   const serviceOtherInput = document.querySelector("#serviceOther");
@@ -431,22 +346,18 @@ const addOns = ["Put up lights", "Pressure wash area day before", "Bamboo mat", 
   const extraServiceRequired = document.querySelector("[data-extra-service-required]");
   const extraServiceDetails = document.querySelector("[data-extra-service-details]");
   const extraServiceDetailsInput = document.querySelector("#extra-service-details");
-  const reverseSukkosSchedule = document.querySelector("[data-reverse-sukkos-schedule]");
   const sitePhotos = document.querySelector("#site-photos");
   const selectedPhotos = document.querySelector("[data-selected-photos]");
   const buildDateInput = document.querySelector("#build-date");
-  const stepNames = ["Contact", "Location", "Your sukkah", "The site", "Timing", "Review and send"];
+  const stepNames = ["Contact", "Location", "Timing", "Requested work", "Your sukkah", "Review and send"];
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-  const enhancedSelects = new WeakMap();
   let activeStep = 1;
 
   const scheduleConfigs = Array.from(document.querySelectorAll("[data-service-schedule]")).map((container) => ({
     service: container.getAttribute("data-service-schedule") || "",
     container,
-    select: container.querySelector("[data-holiday-date-select]"),
-    otherDateField: container.querySelector("[data-other-date-field]"),
-    customDateInput: container.querySelector('input[type="date"]'),
-    customDateRange: container.querySelector("[data-custom-date-range]"),
+    dateInput: container.querySelector("[data-service-date]"),
+    dateRange: container.querySelector("[data-service-date-range]"),
   }));
 
   function setContainerVisible(container, visible) {
@@ -515,6 +426,9 @@ const addOns = ["Put up lights", "Pressure wash area day before", "Bamboo mat", 
   }
 
   function selectedOrOther(name) {
+    if (name === "schach") {
+      return checkedValues("schach").map((value) => value === "Other" ? displayValue("schachOther", "Other") : value).join(", ");
+    }
     const value = displayValue(name, "");
     return value === "Other" ? displayValue(`${name}Other`) : value;
   }
@@ -527,46 +441,42 @@ const addOns = ["Put up lights", "Pressure wash area day before", "Bamboo mat", 
       : new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric" }).format(parsed);
   }
 
-  function selectedScheduleDate(name, customName) {
-    const value = displayValue(name, "");
-    const chosen = value === "other" ? displayValue(customName, "") : value;
-    return formatDate(chosen) || chosen;
-  }
-
   function updateReview() {
     const contact = document.querySelector("[data-review-contact]");
     const location = document.querySelector("[data-review-location]");
     const sukkah = document.querySelector("[data-review-sukkah]");
-    const site = document.querySelector("[data-review-site]");
+    const requestedWork = document.querySelector("[data-review-work]");
     const timing = document.querySelector("[data-review-timing]");
     if (contact instanceof HTMLElement) {
-      contact.textContent = [`${displayValue("firstName", "")} ${displayValue("lastName", "")}`.trim(), displayValue("phone", ""), displayValue("email", "")].filter(Boolean).join(" · ");
+      contact.textContent = [displayValue("name", ""), displayValue("phone", ""), displayValue("email", "")].filter(Boolean).join(" / ");
     }
     if (location instanceof HTMLElement) {
       const address = [displayValue("addressLine1", ""), displayValue("city", ""), displayValue("state", ""), displayValue("postalCode", "")].filter(Boolean).join(", ");
-      const work = checkedValues("service").map((value) => value === "Other" ? displayValue("serviceOther", "Other") : value).join(", ");
-      location.textContent = [address, selectedOrOther("neighborhood"), work ? `Work: ${work}` : ""].filter(Boolean).join(" · ");
+      const photoCount = sitePhotos instanceof HTMLInputElement && sitePhotos.files ? sitePhotos.files.length : 0;
+      location.textContent = [address, selectedOrOther("neighborhood"), displayValue("estimatedSize", ""), displayValue("siteDescription", ""), photoCount ? `${photoCount} photo${photoCount === 1 ? "" : "s"} selected` : ""].filter(Boolean).join(" / ");
+    }
+    if (requestedWork instanceof HTMLElement) {
+      const work = checkedValues("service").map((value) => value === "Other" ? displayValue("serviceOther", "Other") : value);
+      if (checkedValues("service").includes("Bring to storage")) work.push(`Storage: ${formatDate(displayValue("bringToStorageDate", "")) || "Not selected"}`);
+      if (extraServiceToggle instanceof HTMLInputElement && extraServiceToggle.checked) work.push("Special access or extra labor");
+      requestedWork.textContent = work.length ? work.join(", ") : "None selected";
     }
     if (sukkah instanceof HTMLElement) {
       const addOns = checkedValues("addOns").map((value) => value === "Other" ? displayValue("addOnsOther", "Other") : value);
       const parts = [
-        `${displayValue("estimatedWidth", "10")} × ${displayValue("estimatedLength", "10")} ft`,
         selectedOrOther("sukkahType"),
         `Schach: ${selectedOrOther("schach")}`,
         addOns.length ? `Add-ons: ${addOns.join(", ")}` : "",
       ];
-      if (extraServiceToggle instanceof HTMLInputElement && extraServiceToggle.checked) parts.push("Special access or extra labor");
       sukkah.textContent = parts.filter(Boolean).join(" · ");
     }
-    if (site instanceof HTMLElement) {
-      const photoCount = sitePhotos instanceof HTMLInputElement && sitePhotos.files ? sitePhotos.files.length : 0;
-      site.textContent = [displayValue("siteDescription", "No site description"), photoCount ? `${photoCount} photo${photoCount === 1 ? "" : "s"} selected` : "No photos selected"].join(" · ");
-    }
     if (timing instanceof HTMLElement) {
-      const parts = [`Install: ${formatDate(displayValue("buildDate", "")) || "Not selected"}`];
-      if (checkedValues("service").includes("Take down")) parts.push(`Take down: ${selectedScheduleDate("takeDownDate", "customTakeDownDate")}`);
-      if (checkedValues("service").includes("Bring to storage")) parts.push(`Storage: ${selectedScheduleDate("bringToStorageDate", "customStorageDate")}`);
-      timing.textContent = parts.join(" · ");
+      const parts = [
+        `Setup: ${formatDate(displayValue("buildDate", "")) || "Not selected"}`,
+        `Takedown: ${formatDate(displayValue("takeDownDate", "")) || "Not selected"}`,
+      ];
+      if (displayValue("timingNotes", "")) parts.push(displayValue("timingNotes", ""));
+      timing.textContent = parts.join(" / ");
     }
   }
 
@@ -592,19 +502,25 @@ const addOns = ["Put up lights", "Pressure wash area day before", "Bamboo mat", 
     }
   }
 
-  function updateRadioOther(name) {
-    const selected = builderForm?.querySelector(`input[name="${name}"]:checked`);
-    const field = builderForm?.querySelector(`[data-radio-other-field="${name}"]`);
-    const input = builderForm?.querySelector(`#${name}Other`);
-    const show = selected instanceof HTMLInputElement && selected.value === "Other";
-    builderForm?.querySelectorAll(`input[name="${name}"]`).forEach((radio) => {
-      if (radio instanceof HTMLInputElement && radio.value === "Other") radio.setAttribute("aria-expanded", String(show));
-    });
-    if (field instanceof HTMLElement) field.hidden = !show;
-    if (input instanceof HTMLInputElement) {
-      input.disabled = !show;
-      input.required = show;
-      if (!show) clearFieldError(input);
+  function updateSukkahTypeOther() {
+    const show = sukkahTypeSelect instanceof HTMLSelectElement && sukkahTypeSelect.value === "Other";
+    if (sukkahTypeSelect instanceof HTMLSelectElement) sukkahTypeSelect.setAttribute("aria-expanded", String(show));
+    if (sukkahTypeOther instanceof HTMLElement) sukkahTypeOther.hidden = !show;
+    if (sukkahTypeOtherInput instanceof HTMLInputElement) {
+      sukkahTypeOtherInput.disabled = !show;
+      sukkahTypeOtherInput.required = show;
+      if (!show) clearFieldError(sukkahTypeOtherInput);
+    }
+  }
+
+  function updateSchachOther() {
+    const show = schachOtherToggle instanceof HTMLInputElement && schachOtherToggle.checked;
+    if (schachOtherToggle instanceof HTMLInputElement) schachOtherToggle.setAttribute("aria-expanded", String(show));
+    if (schachOtherField instanceof HTMLElement) schachOtherField.hidden = !show;
+    if (schachOtherInput instanceof HTMLInputElement) {
+      schachOtherInput.disabled = !show;
+      schachOtherInput.required = show;
+      if (!show) clearFieldError(schachOtherInput);
     }
   }
 
@@ -620,32 +536,13 @@ const addOns = ["Put up lights", "Pressure wash area day before", "Bamboo mat", 
     }
   }
 
-  function syncEnhancedSelect(select) {
-    if (!(select instanceof HTMLSelectElement)) return;
-    const enhanced = enhancedSelects.get(select);
-    if (!enhanced) return;
-    if (select.disabled) enhanced.disable();
-    else enhanced.enable();
-  }
-
-  function updateOtherDateField(config) {
-    const show = config.container instanceof HTMLElement && !config.container.hidden && config.select instanceof HTMLSelectElement && config.select.value === "other";
-    setContainerVisible(config.otherDateField, show);
-    if (config.customDateInput instanceof HTMLInputElement) config.customDateInput.required = show;
-  }
-
   function updateTimingSchedule() {
     const selectedServices = new Set(checkedValues("service"));
     const activeSchedules = scheduleConfigs.filter((config) => selectedServices.has(config.service));
-    if (reverseSukkosSchedule instanceof HTMLElement) reverseSukkosSchedule.hidden = activeSchedules.length === 0;
     scheduleConfigs.forEach((config) => {
       const visible = activeSchedules.includes(config);
       setContainerVisible(config.container, visible);
-      if (config.select instanceof HTMLSelectElement) {
-        config.select.required = visible;
-        syncEnhancedSelect(config.select);
-      }
-      updateOtherDateField(config);
+      if (config.dateInput instanceof HTMLInputElement) config.dateInput.required = visible;
     });
   }
 
@@ -712,7 +609,7 @@ const addOns = ["Put up lights", "Pressure wash area day before", "Bamboo mat", 
     ["service", "sukkahType", "schach"].forEach((name) => {
       const fieldset = steps[stepNumber - 1]?.querySelector(`[data-required-group="${name}"]`);
       if (!fieldset) return;
-      const missing = checkedValues(name).length === 0;
+      const missing = name === "sukkahType" ? !displayValue("sukkahType", "") : checkedValues(name).length === 0;
       setGroupError(name, missing ? (name === "service" ? "Select at least one service." : "Choose one option.") : "");
       if (missing) {
         const first = fieldset.querySelector("input");
@@ -720,10 +617,10 @@ const addOns = ["Put up lights", "Pressure wash area day before", "Bamboo mat", 
       }
     });
 
-    if (stepNumber === 4 && !validatePhotos() && sitePhotos instanceof HTMLInputElement) invalid.push(sitePhotos);
-    if (stepNumber === 5 && buildDateInput instanceof HTMLInputElement && !buildDateInput.value) {
+    if (stepNumber === 2 && !validatePhotos() && sitePhotos instanceof HTMLInputElement) invalid.push(sitePhotos);
+    if (stepNumber === 3 && buildDateInput instanceof HTMLInputElement && !buildDateInput.value) {
       showFieldError(buildDateInput, "Choose an installation date.");
-      invalid.push(buildDateInput._flatpickr?.altInput || buildDateInput);
+      invalid.push(buildDateInput);
     }
 
     if (invalid.length > 0 && focusFirst) {
@@ -777,7 +674,6 @@ const addOns = ["Put up lights", "Pressure wash area day before", "Bamboo mat", 
   };
   const toIsoDate = (date) => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
   const hebrewDateFormatter = new Intl.DateTimeFormat("en-US-u-ca-hebrew", { day: "numeric", month: "long", year: "numeric" });
-  const fullDateFormatter = new Intl.DateTimeFormat("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" });
   const shortDateFormatter = new Intl.DateTimeFormat("en-US", { month: "long", day: "numeric", year: "numeric" });
 
   function findNextSukkos() {
@@ -795,101 +691,40 @@ const addOns = ["Put up lights", "Pressure wash area day before", "Bamboo mat", 
   function initializeHolidayDates() {
     const sukkosDate = findNextSukkos();
     if (!(sukkosDate instanceof Date)) return;
-    const motzeiYomKippur = addCalendarDays(sukkosDate, -5);
     const erevSukkos = addCalendarDays(sukkosDate, -1);
     const customMinimum = addCalendarDays(sukkosDate, -30);
-    const availableDates = [];
-    for (let date = motzeiYomKippur; date <= erevSukkos; date = addCalendarDays(date, 1)) availableDates.push(date);
+
+    if (buildDateInput instanceof HTMLInputElement) {
+      buildDateInput.min = toIsoDate(atLocalNoon(new Date()));
+    }
 
     scheduleConfigs.forEach((config) => {
-      if (!(config.select instanceof HTMLSelectElement) || !(config.customDateInput instanceof HTMLInputElement)) return;
-      const otherOption = config.select.querySelector("[data-other-date-option]");
-      [...availableDates].reverse().forEach((date) => {
-        const option = document.createElement("option");
-        option.value = toIsoDate(date);
-        option.textContent = date.getTime() === erevSukkos.getTime()
-          ? `Erev Sukkos - ${fullDateFormatter.format(date)}`
-          : date.getTime() === motzeiYomKippur.getTime()
-            ? `Motzei Yom Kippur - ${fullDateFormatter.format(date).replace(",", " evening,")}`
-            : fullDateFormatter.format(date);
-        config.select.insertBefore(option, otherOption);
-      });
-      config.customDateInput.min = toIsoDate(customMinimum);
-      config.customDateInput.max = toIsoDate(erevSukkos);
-      if (config.customDateRange instanceof HTMLElement) {
-        config.customDateRange.textContent = `Choose a date from ${shortDateFormatter.format(customMinimum)} through ${shortDateFormatter.format(erevSukkos)}.`;
-      }
-      if (typeof window.flatpickr === "function") {
-        window.flatpickr(config.customDateInput, {
-          altInput: true,
-          altInputClass: "builder-date-input",
-          altFormat: "F j, Y",
-          dateFormat: "Y-m-d",
-          minDate: config.customDateInput.min,
-          maxDate: config.customDateInput.max,
-          disableMobile: false,
-          monthSelectorType: "static",
-          position: "below left",
-        });
-      }
-      if (typeof window.Choices === "function") {
-        enhancedSelects.set(config.select, new window.Choices(config.select, {
-          allowHTML: false,
-          itemSelectText: "",
-          searchEnabled: false,
-          shouldSort: false,
-        }));
+      if (!(config.dateInput instanceof HTMLInputElement)) return;
+      config.dateInput.min = toIsoDate(customMinimum);
+      config.dateInput.max = toIsoDate(erevSukkos);
+      if (config.dateRange instanceof HTMLElement) {
+        config.dateRange.textContent = `Choose a date from ${shortDateFormatter.format(customMinimum)} through ${shortDateFormatter.format(erevSukkos)}.`;
       }
     });
-  }
-
-  if (typeof window.flatpickr === "function" && buildDateInput instanceof HTMLInputElement) {
-    const picker = window.flatpickr(buildDateInput, {
-      altInput: true,
-      altInputClass: "builder-date-input",
-      altFormat: "F j, Y",
-      dateFormat: "Y-m-d",
-      minDate: "today",
-      disableMobile: false,
-      monthSelectorType: "static",
-      position: "below left",
-    });
-    picker.altInput?.setAttribute("aria-label", "Preferred installation date");
-    picker.altInput?.setAttribute("placeholder", "Select a date");
   }
 
   initializeHolidayDates();
 
-  sizeSliders.forEach((slider) => {
-    const update = () => {
-      if (!(slider instanceof HTMLInputElement)) return;
-      const output = document.querySelector(`[data-size-output="${slider.id}"]`);
-      const number = output?.querySelector("[data-size-number]");
-      if (number instanceof HTMLElement) number.textContent = slider.value;
-      if (output instanceof HTMLOutputElement) output.setAttribute("aria-label", `${slider.value} feet`);
-      const progress = ((Number(slider.value) - Number(slider.min)) / (Number(slider.max) - Number(slider.min))) * 100;
-      slider.style.setProperty("--slider-progress", `${progress}%`);
-    };
-    slider.addEventListener("input", update);
-    update();
-  });
-
   neighborhoodSelect?.addEventListener("change", updateNeighborhoodOther);
+  sukkahTypeSelect?.addEventListener("change", updateSukkahTypeOther);
+  schachOtherToggle?.addEventListener("change", updateSchachOther);
   serviceOtherToggle?.addEventListener("change", () => updateConditionalField(serviceOtherToggle, serviceOtherField, serviceOtherInput));
   addOnOtherToggle?.addEventListener("change", () => updateConditionalField(addOnOtherToggle, addOnOtherField, addOnOtherInput));
-  ["sukkahType", "schach"].forEach((name) => {
-    builderForm?.querySelectorAll(`input[name="${name}"]`).forEach((input) => input.addEventListener("change", () => updateRadioOther(name)));
-    updateRadioOther(name);
-  });
   extraServiceToggle?.addEventListener("change", updateExtraService);
   serviceInputs.forEach((input) => input.addEventListener("change", updateTimingSchedule));
-  scheduleConfigs.forEach((config) => config.select?.addEventListener("change", () => updateOtherDateField(config)));
   sitePhotos?.addEventListener("change", () => {
     validatePhotos();
     renderSelectedPhotos();
   });
 
   updateNeighborhoodOther();
+  updateSukkahTypeOther();
+  updateSchachOther();
   updateConditionalField(serviceOtherToggle, serviceOtherField, serviceOtherInput);
   updateConditionalField(addOnOtherToggle, addOnOtherField, addOnOtherInput);
   updateExtraService();
@@ -900,7 +735,7 @@ const addOns = ["Put up lights", "Pressure wash area day before", "Bamboo mat", 
     field.addEventListener("input", () => clearFieldError(field));
     field.addEventListener("change", () => {
       clearFieldError(field);
-      if (field instanceof HTMLInputElement && ["service", "sukkahType", "schach"].includes(field.name)) setGroupError(field.name, "");
+      if ((field instanceof HTMLInputElement || field instanceof HTMLSelectElement) && ["service", "sukkahType", "schach"].includes(field.name)) setGroupError(field.name, "");
     });
   });
 
@@ -1055,109 +890,6 @@ const addOns = ["Put up lights", "Pressure wash area day before", "Bamboo mat", 
     line-height: 1.35;
   }
 
-  .builder-wizard .size-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1.4rem;
-    margin-top: 0.75rem;
-  }
-
-  .builder-wizard .size-control {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    grid-template-areas: "label output" "slider slider";
-    gap: 0.45rem 0.8rem;
-    align-items: center;
-    padding: 0.8rem;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    background: var(--cream-50);
-  }
-
-  .builder-wizard .size-label-row {
-    grid-area: label;
-  }
-
-  .builder-wizard .size-control output {
-    grid-area: output;
-    display: inline-flex;
-    min-width: 3.7rem;
-    min-height: 2.2rem;
-    align-items: center;
-    justify-content: center;
-    gap: 0.2rem;
-    padding: 0.25rem 0.5rem;
-    border: 1px solid rgba(200, 134, 67, 0.32);
-    border-radius: 9px;
-    color: var(--forest-900);
-    background: #fbf2e5;
-    font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
-    font-size: 1.1rem;
-    font-weight: 700;
-    font-variant-numeric: tabular-nums;
-  }
-
-  .builder-wizard .size-unit {
-    font-family: "Inter Variable", Inter, Arial, sans-serif;
-    font-size: 0.62rem;
-    font-weight: 750;
-    letter-spacing: 0;
-    text-transform: uppercase;
-  }
-
-  .builder-wizard .size-control input[type="range"] {
-    --slider-progress: 33.333%;
-    grid-area: slider;
-    width: 100%;
-    height: 30px;
-    min-height: 30px;
-    margin: 0;
-    padding: 0;
-    border: 0;
-    background: transparent;
-    box-shadow: none;
-    cursor: pointer;
-    appearance: none;
-  }
-
-  .builder-wizard .size-control input[type="range"]::-webkit-slider-runnable-track {
-    height: 4px;
-    border-radius: 999px;
-    background: linear-gradient(to right, var(--forest-700) 0 var(--slider-progress), #dfe5e1 var(--slider-progress) 100%);
-  }
-
-  .builder-wizard .size-control input[type="range"]::-moz-range-track {
-    height: 4px;
-    border-radius: 999px;
-    background: #dfe5e1;
-  }
-
-  .builder-wizard .size-control input[type="range"]::-moz-range-progress {
-    height: 4px;
-    border-radius: 999px;
-    background: var(--forest-700);
-  }
-
-  .builder-wizard .size-control input[type="range"]::-webkit-slider-thumb {
-    width: 18px;
-    height: 18px;
-    margin-top: -7px;
-    border: 2px solid var(--forest-700);
-    border-radius: 50%;
-    background: white;
-    box-shadow: 0 1px 4px rgba(16, 45, 37, 0.16);
-    appearance: none;
-  }
-
-  .builder-wizard .size-control input[type="range"]::-moz-range-thumb {
-    width: 14px;
-    height: 14px;
-    border: 2px solid var(--forest-700);
-    border-radius: 50%;
-    background: white;
-    box-shadow: 0 1px 4px rgba(16, 45, 37, 0.16);
-  }
-
   .photo-upload-card {
     display: grid;
     grid-template-columns: auto minmax(0, 1fr) auto;
@@ -1262,54 +994,6 @@ const addOns = ["Put up lights", "Pressure wash area day before", "Bamboo mat", 
     text-decoration: underline;
   }
 
-  .builder-wizard .schedule-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.9rem;
-    margin-top: 0.75rem;
-  }
-
-  .builder-wizard .date-control {
-    min-width: 0;
-  }
-
-  .builder-wizard .date-control input.builder-date-input {
-    width: 100%;
-    min-height: 46px;
-    padding: 0.68rem 0.78rem;
-    border: 1px solid rgba(29, 41, 37, 0.22);
-    border-radius: 9px;
-    color: var(--ink-900);
-    background: white;
-    font-size: 0.98rem;
-  }
-
-  .builder-wizard .choices {
-    width: 100%;
-    margin: 0;
-  }
-
-  .builder-wizard .choices__inner {
-    min-height: 46px;
-    padding: 0.62rem 2.4rem 0.62rem 0.78rem;
-    border: 1px solid rgba(29, 41, 37, 0.22);
-    border-radius: 9px;
-    color: var(--ink-900);
-    background: white;
-    font-size: 0.92rem;
-  }
-
-  .builder-wizard .choices.is-focused .choices__inner {
-    border-color: var(--forest-700);
-    box-shadow: 0 0 0 4px rgba(45, 104, 85, 0.1);
-  }
-
-  .builder-wizard .choices__list--dropdown {
-    border-color: var(--border);
-    border-radius: 9px;
-    box-shadow: var(--shadow-medium);
-  }
-
   .noscript-note {
     margin: 1rem 0 0;
     padding: 1rem;
@@ -1377,11 +1061,6 @@ const addOns = ["Put up lights", "Pressure wash area day before", "Bamboo mat", 
     }
 
     .builder-wizard .address-grid,
-    .builder-wizard .size-grid,
-    .builder-wizard .schedule-grid {
-      grid-template-columns: 1fr;
-    }
-
     .builder-wizard .address-street {
       grid-column: auto;
     }
@@ -1417,9 +1096,4 @@ const addOns = ["Put up lights", "Pressure wash area day before", "Bamboo mat", 
     }
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .builder-wizard .size-control input[type="range"] {
-      scroll-behavior: auto;
-    }
-  }
 </style>

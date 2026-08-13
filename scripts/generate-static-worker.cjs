@@ -118,6 +118,7 @@ function getFile(pathname) {
 const submissionTextFields = [
   "sukkahPlan",
   "fulfillmentMethod",
+  "name",
   "firstName",
   "lastName",
   "phone",
@@ -129,6 +130,7 @@ const submissionTextFields = [
   "neighborhood",
   "neighborhoodOther",
   "serviceOther",
+  "estimatedSize",
   "estimatedWidth",
   "estimatedLength",
   "sukkahType",
@@ -195,18 +197,18 @@ function getFileExtension(name) {
 function requiredFieldsFor(submission) {
   const required = [
     "sukkahPlan",
-    "firstName",
-    "lastName",
+    "name",
     "phone",
-    "email",
     "addressLine1",
     "city",
     "state",
     "postalCode",
     "neighborhood",
+    "estimatedSize",
     "sukkahType",
     "schach",
     "buildDate",
+    "takeDownDate",
     "extraServiceRequired",
     "referral",
   ];
@@ -239,7 +241,29 @@ function appendGoogleFormChoice(body, entryId, value, otherValue, allowedValues)
   body.set(\`entry.\${entryId}\`, value);
 }
 
-async function handleRentalSubmission(request) {
+function isIsoDate(value) {
+  if (!/^\\d{4}-\\d{2}-\\d{2}$/.test(value)) return false;
+  const [year, month, day] = value.split("-").map(Number);
+  const date = new Date(Date.UTC(year, month - 1, day));
+  return date.getUTCFullYear() === year && date.getUTCMonth() === month - 1 && date.getUTCDate() === day;
+}
+
+function appendRentalDate(body, entryId, value, legacyOtherValue) {
+  if (isIsoDate(value)) {
+    appendGoogleFormChoice(body, entryId, "Other", value, new Set());
+    return;
+  }
+
+  appendGoogleFormChoice(
+    body,
+    entryId,
+    value,
+    legacyOtherValue,
+    new Set(["Sunday", "Monday", "Tuesday"]),
+  );
+}
+
+async function handleRentalSubmission(request, env, url) {
   let formData;
   try {
     formData = await request.formData();
@@ -255,7 +279,10 @@ async function handleRentalSubmission(request) {
     name: cleanText(formData.get("name"), 200),
     phone: cleanText(formData.get("phone"), 100),
     email: cleanText(formData.get("email"), 320),
-    address: cleanText(formData.get("address"), 1000),
+    addressLine1: cleanText(formData.get("addressLine1") || formData.get("address"), 1000),
+    city: cleanText(formData.get("city"), 200),
+    state: cleanText(formData.get("state"), 120),
+    postalCode: cleanText(formData.get("postalCode"), 20),
     neighborhood: cleanText(formData.get("neighborhood"), 120),
     neighborhoodOther: cleanText(formData.get("neighborhoodOther"), 200),
     estimatedSize: cleanText(formData.get("estimatedSize"), 200),
@@ -265,17 +292,26 @@ async function handleRentalSubmission(request) {
     takeDownDay: cleanText(formData.get("takeDownDay"), 100),
     takeDownDayOther: cleanText(formData.get("takeDownDayOther"), 200),
     addOns: formData.getAll("addOns").map((value) => cleanText(value, 120)),
+    furnitureDetails: cleanText(formData.get("furnitureDetails"), 1000),
     addOnsOther: cleanText(formData.get("addOnsOther"), 500),
     extraServiceRequired: cleanText(formData.get("extraServiceRequired"), 20),
     extraServiceDetails: cleanText(formData.get("extraServiceDetails"), 2000),
+    timingNotes: cleanText(formData.get("timingNotes"), 1000),
     comments: cleanText(formData.get("comments"), 1000),
     questions: cleanText(formData.get("questions"), 1000),
   };
 
+  rental.address = [rental.addressLine1, rental.city, rental.state, rental.postalCode]
+    .filter(Boolean)
+    .join(", ") || cleanText(formData.get("address"), 1000);
+
   const requiredFields = [
     "name",
     "phone",
-    "address",
+    "addressLine1",
+    "city",
+    "state",
+    "postalCode",
     "neighborhood",
     "estimatedSize",
     "buildDay",
@@ -287,7 +323,10 @@ async function handleRentalSubmission(request) {
   if (rental.neighborhood === "Other" && !rental.neighborhoodOther) missingFields.push("neighborhoodOther");
   if (rental.buildDay === "Other" && !rental.buildDayOther) missingFields.push("buildDayOther");
   if (rental.takeDownDay === "Other" && !rental.takeDownDayOther) missingFields.push("takeDownDayOther");
+  if (rental.buildDay && rental.buildDay !== "Other" && !isIsoDate(rental.buildDay) && !new Set(["Sunday", "Monday", "Tuesday"]).has(rental.buildDay)) missingFields.push("buildDay");
+  if (rental.takeDownDay && rental.takeDownDay !== "Other" && !isIsoDate(rental.takeDownDay) && !new Set(["Sunday", "Monday", "Tuesday"]).has(rental.takeDownDay)) missingFields.push("takeDownDay");
   if (rental.addOns.includes("Other") && !rental.addOnsOther) missingFields.push("addOnsOther");
+  if (rental.addOns.includes("Furniture") && !rental.furnitureDetails) missingFields.push("furnitureDetails");
   if (rental.extraServiceRequired === "Yes" && !rental.extraServiceDetails) {
     missingFields.push("extraServiceDetails");
   }
@@ -299,6 +338,45 @@ async function handleRentalSubmission(request) {
     );
   }
 
+  const photos = formData
+    .getAll("sitePhotos")
+    .filter((value) => typeof File !== "undefined" && value instanceof File && value.size > 0);
+
+  if (photos.length > 3) {
+    return jsonResponse({ ok: false, message: "Please choose no more than three photos." }, 400);
+  }
+
+  for (const photo of photos) {
+    const extension = getFileExtension(photo.name);
+    if (
+      photo.size > maximumPhotoSize ||
+      !allowedPhotoExtensions.has(extension) ||
+      (photo.type && !allowedPhotoTypes.has(photo.type.toLowerCase()))
+    ) {
+      return jsonResponse(
+        {
+          ok: false,
+          message: "Each photo must be a JPG, PNG, or HEIC file no larger than 10 MB.",
+        },
+        400,
+      );
+    }
+  }
+
+  if (photos.length > 0 && !env?.SUBMISSION_PHOTOS) {
+    return jsonResponse(
+      {
+        ok: false,
+        message: "Photo storage is temporarily unavailable. Please call (347) 454-2282.",
+      },
+      503,
+    );
+  }
+
+  const rentalSubmissionId = photos.length > 0 ? crypto.randomUUID() : "";
+  const uploadedPhotoKeys = [];
+  const photoLinks = [];
+
   const body = new URLSearchParams();
   body.set("entry.312894946", rental.name);
   body.set("entry.2077017403", rental.phone);
@@ -307,24 +385,41 @@ async function handleRentalSubmission(request) {
   const rentalNeighborhood = rental.neighborhood === "Remsen Village"
     ? "Remson Village"
     : rental.neighborhood;
+  const rentalNativeNeighborhoods = new Set([
+    "Crown Heights",
+    "Flatbush",
+    "Boro Park",
+    "Williamsburg",
+    "East Flatbush",
+    "Remson Village",
+    "Monsey",
+  ]);
+  const rentalNeighborhoodUsesOther =
+    rentalNeighborhood === "Other" || !rentalNativeNeighborhoods.has(rentalNeighborhood);
   appendGoogleFormChoice(
     body,
     "70526594",
-    rentalNeighborhood === "Los Angeles" ? "Other" : rentalNeighborhood,
-    rental.neighborhood === "Los Angeles" ? "Los Angeles" : rental.neighborhoodOther,
-    new Set(["Crown Heights", "Flatbush", "Boro Park", "Williamsburg", "East Flatbush", "Remson Village", "Monsey"]),
+    rentalNeighborhoodUsesOther ? "Other" : rentalNeighborhood,
+    rentalNeighborhoodUsesOther
+      ? rental.neighborhood === "Other"
+        ? rental.neighborhoodOther
+        : rental.neighborhood
+      : rental.neighborhoodOther,
+    rentalNativeNeighborhoods,
   );
   body.set("entry.1130222480", rental.estimatedSize);
   if (rental.siteDescription) body.set("entry.463838846", rental.siteDescription);
-  appendGoogleFormChoice(body, "1948310674", rental.buildDay, rental.buildDayOther, new Set(["Sunday", "Monday", "Tuesday"]));
-  appendGoogleFormChoice(body, "1550547913", rental.takeDownDay, rental.takeDownDayOther, new Set(["Sunday", "Monday", "Tuesday"]));
+  appendRentalDate(body, "1948310674", rental.buildDay, rental.buildDayOther);
+  appendRentalDate(body, "1550547913", rental.takeDownDay, rental.takeDownDayOther);
   const rentalAddOns = rental.addOns.filter((addOn) => addOn !== "Other");
   if (rental.addOnsOther) rentalAddOns.push(rental.addOnsOther);
   const commentsWithServiceDetails = [
     rental.comments,
+    rental.furnitureDetails ? \`Furniture details: \${rental.furnitureDetails}\` : "",
     \`Add-ons: \${rentalAddOns.length > 0 ? rentalAddOns.join(", ") : "None selected"}\`,
     \`Extra service required: \${rental.extraServiceRequired}\`,
     rental.extraServiceDetails ? \`Extra service details: \${rental.extraServiceDetails}\` : "",
+    rental.timingNotes ? \`Timing notes: \${rental.timingNotes}\` : "",
   ].filter(Boolean).join("\\n\\n");
   body.set("entry.1466499069", commentsWithServiceDetails);
   body.set("entry.455384257", rental.questions || "No questions submitted.");
@@ -332,6 +427,32 @@ async function handleRentalSubmission(request) {
   body.set("pageHistory", "0");
 
   try {
+    for (let index = 0; index < photos.length; index += 1) {
+      const photo = photos[index];
+      const key = \`rental-submissions/\${rentalSubmissionId}/\${String(index + 1).padStart(2, "0")}-\${safeFileName(photo.name)}\`;
+      await env.SUBMISSION_PHOTOS.put(key, photo.stream(), {
+        httpMetadata: {
+          contentType: photo.type || "application/octet-stream",
+        },
+        customMetadata: {
+          originalName: cleanText(photo.name, 120),
+          submissionId: rentalSubmissionId,
+          source: "rental",
+        },
+      });
+      uploadedPhotoKeys.push(key);
+      photoLinks.push(\`\${url.origin}\${photoRoutePrefix}\${key}\`);
+    }
+
+    if (photoLinks.length > 0) {
+      body.set(
+        "entry.1466499069",
+        [commentsWithServiceDetails, \`Photo links: \${photoLinks.join(", ")}\`]
+          .filter(Boolean)
+          .join("\\n\\n"),
+      );
+    }
+
     const googleResponse = await fetch(rentalGoogleFormUrl, {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
@@ -352,6 +473,7 @@ async function handleRentalSubmission(request) {
       message: "Thank you. Your rental request was sent to Benyamin.",
     });
   } catch (error) {
+    await deleteUploadedPhotos(env?.SUBMISSION_PHOTOS, uploadedPhotoKeys);
     console.error("Rental submission failed", error);
     return jsonResponse(
       { ok: false, message: "We could not send your request. Please try again or call (347) 454-2282." },
@@ -480,8 +602,21 @@ async function handleSubmission(request, env, url) {
   for (const fieldName of submissionTextFields) {
     submission[fieldName] = cleanText(formData.get(fieldName));
   }
+  if (submission.name) {
+    const nameParts = submission.name.split(/\s+/);
+    submission.firstName = nameParts.shift() || "";
+    submission.lastName = nameParts.join(" ");
+  }
   submission.service = formData.getAll("service").map((value) => cleanText(value, 120));
   submission.addOns = formData.getAll("addOns").map((value) => cleanText(value, 120));
+  const schachChoices = formData.getAll("schach").map((value) => cleanText(value, 120));
+  submission.schach = schachChoices
+    .filter((value) => value !== "Other")
+    .concat(submission.schachOther ? [submission.schachOther] : [])
+    .join(", ");
+  const sizeMatch = submission.estimatedSize.match(/^\s*(\d+(?:\.\d+)?)\s*(?:x|×|by)\s*(\d+(?:\.\d+)?)(?:\s*ft)?\s*$/i);
+  submission.estimatedWidth = sizeMatch ? sizeMatch[1] : submission.estimatedSize;
+  submission.estimatedLength = sizeMatch ? sizeMatch[2] : "";
 
   const missingFields = requiredFieldsFor(submission).filter((fieldName) => !submission[fieldName]);
   if (submission.sukkahPlan === "I already have a sukkah" && submission.service.length === 0) {
@@ -496,7 +631,7 @@ async function handleSubmission(request, env, url) {
   if (submission.sukkahType === "Other" && !submission.sukkahTypeOther) {
     missingFields.push("sukkahTypeOther");
   }
-  if (submission.schach === "Other" && !submission.schachOther) {
+  if (schachChoices.includes("Other") && !submission.schachOther) {
     missingFields.push("schachOther");
   }
   if (submission.addOns.includes("Other") && !submission.addOnsOther) {
@@ -647,7 +782,7 @@ export default {
     }
 
     if (request.method === "POST" && url.pathname === "/api/rental-submissions") {
-      return handleRentalSubmission(request);
+      return handleRentalSubmission(request, env, url);
     }
 
     if (request.method === "POST" && url.pathname === "/api/testimonial-submissions") {
@@ -708,10 +843,24 @@ export default {
 const serverDir = path.join(outputDir, "server");
 const hostingDir = path.join(outputDir, ".openai");
 
+function writeGeneratedFile(filePath, contents) {
+  const retryableCodes = new Set(["EBUSY", "EPERM", "UNKNOWN"]);
+
+  for (let attempt = 0; attempt < 6; attempt += 1) {
+    try {
+      fs.writeFileSync(filePath, contents);
+      return;
+    } catch (error) {
+      if (attempt === 5 || !retryableCodes.has(error?.code)) throw error;
+      Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 300 * (attempt + 1));
+    }
+  }
+}
+
 fs.mkdirSync(serverDir, { recursive: true });
 fs.mkdirSync(hostingDir, { recursive: true });
-fs.writeFileSync(path.join(rootDir, "index.mjs"), workerSource);
-fs.writeFileSync(path.join(serverDir, "index.js"), workerSource);
+writeGeneratedFile(path.join(rootDir, "index.mjs"), workerSource);
+writeGeneratedFile(path.join(serverDir, "index.js"), workerSource);
 fs.copyFileSync(
   path.join(rootDir, ".openai", "hosting.json"),
   path.join(hostingDir, "hosting.json"),

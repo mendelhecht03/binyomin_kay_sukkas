@@ -1,0 +1,25 @@
+---
+const paymentMethods = [
+  "Cash App",
+  "PayPal",
+  "Venmo",
+  "Zelle",
+  "Cash",
+  "Check",
+];
+---
+
+<section class="payment-methods" aria-labelledby="payment-options-heading">
+  <div class="payment-methods-heading">
+    <p class="eyebrow">Payment</p>
+    <h4 id="payment-options-heading">Payment options</h4>
+    <p>When it&rsquo;s time to pay, you can use any of the following methods.</p>
+  </div>
+  <ul class="payment-method-list" aria-label="Accepted payment methods">
+    {paymentMethods.map((method) => <li>{method}</li>)}
+    <li class="payment-method-card">
+      <span>Credit Card</span>
+      <small>Processing fee applies</small>
+    </li>
+  </ul>
+</section>
