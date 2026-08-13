@@ -1,18 +1,20 @@
-# Google Sheet Submission Bridge
+# Google Testimonial Submission Bridge
 
 The website cannot safely write to a private Google Sheet directly from browser
 JavaScript. The small Apps Script in `Code.gs` acts as a protected bridge:
 
-1. The website Worker validates the form and stores optional photos.
+1. The website Worker validates a testimonial submission.
 2. The Worker sends a private JSON request to Apps Script.
-3. Apps Script appends build requests to `Submissions` and customer
-   testimonials to `Testimonials` for manual review.
+3. Apps Script appends the testimonial to `Testimonials` for manual review.
+
+Builds requests no longer use this bridge. The Builds Worker sends them to the
+separate `BKAY builds` Google Form, including links to any uploaded photos.
 
 ## Destination
 
 - Sheet: [Benyamin Kay — Sukkah Builder Submissions](https://docs.google.com/spreadsheets/d/12ptjlhjooYzWt8dZjKsd-qOET-dnktn7qbDgr5SCRTg/edit)
 - Spreadsheet ID: `12ptjlhjooYzWt8dZjKsd-qOET-dnktn7qbDgr5SCRTg`
-- Tab: `Submissions`
+- Tab used by this integration: `Testimonials`
 
 The script creates the `Testimonials` tab and its header row automatically the
 first time a testimonial is received. New testimonials are marked `Pending

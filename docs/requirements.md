@@ -2,7 +2,7 @@
 
 - ☑ Profile photo
 - ☑ Forest, cream, and wood color palette
-- ☑ Simple code-based brand mark and favicon
+- ☑ Supplied BK Sukkah Builder logo in the shared header, footer, and favicon
 - ☑ Five illustrative sukkah images and one sukkah detail image
 - ☑ Real sukkah hero photo approved for the homepage
 - ☑ Real sukkah project photos selected from the owner's supplied photo folder

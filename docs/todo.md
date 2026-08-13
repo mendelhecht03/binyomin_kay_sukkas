@@ -45,11 +45,13 @@ When adding a task, use this format:
 
 ## Now
 
-- [ ] Connect Builds to a new dedicated Google Form
+- [ ] Finish the dedicated Builds form and publish the new site logo
   - Why: Builds responses must be kept separate from Rentals and from the
-    legacy spreadsheet webhook.
+    legacy spreadsheet webhook, and the supplied BK Sukkah Builder artwork
+    should replace the old code-drawn brand mark.
   - Done when: The new `BKAY builds` form contains every Builds field, the
-    Worker submits to it, a live test response appears in that form, and the
+    Worker submits to it, a live test response appears in that form, the new
+    logo appears in the shared header, footer, and browser icon, and the
     updated site is deployed.
 
 ## Next

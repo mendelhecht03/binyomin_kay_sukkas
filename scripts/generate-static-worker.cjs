@@ -717,7 +717,7 @@ async function handleSubmission(request, env, url) {
     buildsFormBody.set("entry.288053173", submission.neighborhoodOther);
     buildsFormBody.set("entry.102030242", submission.estimatedSize);
     buildsFormBody.set("entry.1183330893", submission.siteDescription);
-    buildsFormBody.set("entry.935662014", photoLinks.join("\n"));
+    buildsFormBody.set("entry.935662014", photoLinks.join("\\n"));
     buildsFormBody.set("entry.1046853169", submission.buildDate);
     buildsFormBody.set("entry.1121106129", submission.takeDownDate);
     buildsFormBody.set("entry.571101021", submission.timingNotes);
