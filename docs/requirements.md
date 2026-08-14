@@ -84,44 +84,29 @@ built as directory-style files, so `/about` is represented by
 
 The `/custom-sukkahs` route presents made-to-order sukka projects for families,
 shuls, businesses, apartment buildings, and schools. It distinguishes custom
-work from preset-size standard metal sukkas, without promising that every
-request is feasible. The page may describe wood or metal frames, confirmed wall
-and schach choices, available features, the confirmed project services, and the
-current service-area list. Pricing remains quote-only. The primary action links
-to `/contact/`, with the business phone number as a secondary option.
+work from preset-size standard sukkas, without promising that every request is
+feasible. Pricing remains quote-only. The primary action links to `/contact/`,
+with the business phone number as a secondary option.
 
 The Sukkahs navigation group contains Builds, Rentals, Custom Sukkahs, and
 Pergolas. The footer uses the same grouping. Public route paths remain
 unchanged for saved links and search engines.
 
 Use approved real project photos on the Custom Sukkahs page by default. The
-confirmed photo subjects currently cover blue, white, and beige tarp walls,
-soft fabric walls, framed plywood walls, a light framed infill-panel
-finishes, rooftop horizontal paneling, horizontal slat siding, a porch build,
-and a carpeted floor covering, plus supplied bamboo sticks, bamboo mats, and
-evergreen schach photos. Keep material names general wherever the exact product
-is not confirmed by Benyamin.
+page is a portfolio first: one large featured finished interior is followed by
+a two-column desktop gallery of large completed or nearly completed projects,
+which becomes one project per row on phones. Project captions and compact tags
+connect the visible finished work to its practical wall, schach, lighting, and
+site details. Do not use generic stock photography or give isolated material
+samples the same visual weight as a complete sukkah.
 
-Show one supplied tarp example in the unified wall and siding card grid, labeled
-"Tarp walls". Keep the fabric, panel, and custom siding examples in the same
-grid rather than dividing them into separate subcategory sections. State beneath
-the full grid: "Tarp walls come in varying thicknesses and colors. Exact options
-and pricing are confirmed during the quote."
-
-Keep the siding section titled "Choose your siding." with the supporting copy,
-"Check below for custom siding used in our recent work, contact for
-availability". The Tarp walls card has no description. Siding and Schach use the same reusable
-image-card component with a consistent 4:3 image crop, border, radius, internal
-spacing, and restrained shadow. Use three columns on desktop, two on tablet and
-normal phone widths, and one only on very narrow screens. Do not use internal
-scrollbars or horizontal swipe containers. Use the supplied real photo for the
-wood lattice panel option and do not label it as an illustrative rendering.
-Reframe the horizontal slat siding photo with a right-anchored crop so the
-worker is not centered in the card.
-
-The Schach grid shows three supplied examples in this order: "Bamboo sticks",
-"Bamboo mats", and "Evergreen". Keep the heading "Schach." and use a short
-availability note rather than promising specific materials or pricing.
+Keep material names general wherever the exact product is not confirmed by
+Benyamin. Preserve the current valid wall, schach, addition, installation,
+service-area, and custom-sizing information in compact secondary sections.
+Wall, schach, and finishing choices use accessible inline disclosure cards;
+their detailed text stays hidden until requested, and they do not resemble an
+ecommerce catalog. Tarp availability, thickness, colors, and exact pricing are
+confirmed during the quote.
 
 The Custom Sukkahs hero uses the same centered, image-free service composition
 as Builds and Rentals: left-aligned breadcrumb with a centered eyebrow, heading,
@@ -131,9 +116,8 @@ photography begins below the hero. The rest of the page may remain more visual
 than the forms, but it uses the same shell, section spacing, typography, button,
 surface, border, radius, accent, CTA, and responsive systems.
 
-Do not show the redundant horizontal rooftop paneling card or a separate
-"More than the walls" project-options section. Keep porch and flooring details
-in the concise details list instead.
+Do not show a separate wood-versus-metal feature section. Keep porch and
+flooring details concise and secondary to the project portfolio.
 
 Treat porch and deck builds as site configurations rather than wall materials.
 List porches, backyards, courtyards, and rooftops as the current site settings.
@@ -141,10 +125,10 @@ Offer flooring as an available furnishing or decor addition, but do not promise
 a raised platform or structural floor until Benyamin confirms the scope of that
 service.
 
-Keep the details section limited to two groups: "Available additions" and
-"Furnishings and decor". Do not show a separate special-request group. Instead,
-include a short link inviting visitors to contact the business about other
-customization options.
+Keep additions grouped as practical finishing touches, including lighting,
+doors, gates, windows or clear panels, furniture, greenery, decor, and floor
+coverings. Do not promise a raised platform or structural floor until that
+scope is confirmed.
 
 The former `/sukkah-packages` route and its old buy/sample routes redirect to
 `/sukka-builder/` so saved links do not lead to a missing page.

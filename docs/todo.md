@@ -45,7 +45,13 @@ When adding a task, use this format:
 
 ## Now
 
-_No active task._
+- [ ] Refocus Custom Sukkahs around completed projects
+  - Why: The page currently gives material samples more visual weight than
+    Benyamin's finished custom sukkahs.
+  - Done when: Recent completed sukkahs lead the page with large responsive
+    imagery, customization details remain available in a compact secondary
+    section, the existing site theme is preserved, and the update is built and
+    deployed.
 
 ## Next
 
