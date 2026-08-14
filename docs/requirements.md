@@ -93,12 +93,13 @@ Pergolas. The footer uses the same grouping. Public route paths remain
 unchanged for saved links and search engines.
 
 Use approved real project photos on the Custom Sukkahs page by default. The
-page is a portfolio first: one large featured finished interior is followed by
-a two-column desktop gallery of large completed or nearly completed projects,
-which becomes one project per row on phones. Project captions and compact tags
-connect the visible finished work to its practical wall, schach, lighting, and
-site details. Do not use generic stock photography or give isolated material
-samples the same visual weight as a complete sukkah.
+page is a portfolio first: one large featured finished interior leads a
+homepage-style desktop composition with two smaller projects beside it and two
+balanced projects underneath. The gallery becomes one project per row on
+phones. Project captions and compact tags connect the visible finished work to
+its practical wall, schach, lighting, and site details. Do not use generic
+stock photography or give isolated material samples the same visual weight as
+a complete sukkah.
 
 Finished-project and customization cards reuse the homepage service-card
 language: white surfaces, shared borders and radii, generous image crops,

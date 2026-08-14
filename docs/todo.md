@@ -92,9 +92,10 @@ _No active task._
 ## Waiting
 
 - [ ] Publish the refined Custom Sukkahs portfolio refactor
-  - Ready: Finished-project and customization cards now share the homepage's
-    white surfaces, borders, rounded image treatment, spacing, labels, shadows,
-    and restrained hover motion. The full production build passes.
+  - Ready: The page now uses a homepage-style bento hierarchy with one large
+    featured project, two smaller projects beside it, and two balanced projects
+    below. Phones return to one full-width project per row, and the production
+    build passes.
   - Waiting for: Approval to publish this version to the public website.
 
 - [ ] Receive and label real custom-sukkah project photos
