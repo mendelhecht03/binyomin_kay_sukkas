@@ -56,7 +56,10 @@ export class GoogleFormsProvider {
     this.source = source;
     this.formId = validateFormId(source, formId);
     this.accessToken = accessToken;
-    this.fetchImpl = fetchImpl;
+    // Cloudflare's built-in fetch must keep the global runtime as its `this`
+    // value. Calling it later as `this.fetchImpl(...)` would bind it to this
+    // provider and throw an "Illegal invocation" error in production.
+    this.fetchImpl = fetchImpl.bind(globalThis);
     this.now = now;
   }
 

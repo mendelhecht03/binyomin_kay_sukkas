@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { getDashboardSubmissions, dashboardCursor } from "../src/server/dashboard/service.js";
+import { clearFormsMetadataCacheForTests } from "../src/server/dashboard/google-forms-provider.js";
 
 const env = {
   GOOGLE_BUILDS_FORM_ID: "private-build-form-id",
@@ -75,6 +76,30 @@ test("Forms pagination tokens round-trip through the dashboard cursor", async ()
     tokenProvider: async () => "token",
   });
   assert.equal(observedPageToken, "google-next-page");
+});
+
+test("Google providers preserve the Cloudflare fetch runtime binding", async () => {
+  clearFormsMetadataCacheForTests();
+  let calls = 0;
+  async function cloudflareStyleFetch(input) {
+    assert.equal(this, globalThis);
+    calls += 1;
+    const url = new URL(input);
+    if (!url.pathname.endsWith("/responses")) {
+      return json({ info: { title: "Builds" }, items: [] });
+    }
+    return json({ responses: [] });
+  }
+
+  const result = await getDashboardSubmissions({
+    env,
+    type: "build",
+    fetchImpl: cloudflareStyleFetch,
+    tokenProvider: async () => "token",
+  });
+
+  assert.equal(result.sources.builds.ok, true);
+  assert.equal(calls, 2);
 });
 
 test("authentication failure returns no private data", async () => {

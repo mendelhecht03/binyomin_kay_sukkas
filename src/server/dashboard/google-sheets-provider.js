@@ -19,7 +19,9 @@ export class TestimonialsSheetProvider {
     this.spreadsheetId = String(spreadsheetId || "").trim();
     this.sheetName = String(sheetName || "Testimonials").trim();
     this.accessToken = accessToken;
-    this.fetchImpl = fetchImpl;
+    // Keep Cloudflare's built-in fetch bound to the global runtime. Using it
+    // as a provider method otherwise changes `this` and fails in production.
+    this.fetchImpl = fetchImpl.bind(globalThis);
     this.now = now;
 
     if (!this.spreadsheetId) {
