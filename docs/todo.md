@@ -94,13 +94,15 @@ _No active task._
 - [ ] Publish the refined Custom Sukkahs portfolio refactor
   - Ready: The page now uses a homepage-style bento hierarchy with one large
     featured project, two smaller projects beside it, and two balanced projects
-    below. Phones return to one full-width project per row, and the production
-    build passes.
+    below. Its project labels match the photographed frames, wall coverings,
+    schach, and settings, and the custom-build service area is limited to the
+    New York, New Jersey, and Connecticut tri-state area. Phones return to one
+    full-width project per row, and the production build passes.
   - Waiting for: Approval to publish this version to the public website.
 
 - [ ] Receive and label real custom-sukkah project photos
   - Received: Examples of blue, white, and beige tarp walls,
-    soft fabric, framed plywood walls, a light framed infill panel,
+    cloth walls, framed plywood walls, a light framed infill panel,
     rooftop horizontal paneling, horizontal slat siding, a porch build, and a
     carpeted floor covering are now used on the Custom Sukkahs page.
   - Waiting for: Benyamin to confirm the exact names and materials listed in
@@ -108,9 +110,9 @@ _No active task._
     approved for future use.
 
 - [ ] Confirm custom wall, siding, and flooring terminology
-  - Ask Benyamin for: the exact soft-fabric name; the beige tarp material,
-    thickness, and weather rating; the product name and substrate of the light
-    framed infill panel; the material used for the rooftop
+  - Ask Benyamin for: the beige tarp material, thickness, and weather rating;
+    the product name and substrate of the light framed infill panel; the
+    material used for the rooftop
     horizontal paneling; and the material used for the reddish-brown
     horizontal slat siding.
   - Also confirm: whether the lattice-panel photo matches an option B. Kay
@@ -151,6 +153,13 @@ _No active task._
   - Unblocks: Publishing multiple testimonial cards in the homepage scroller.
 
 ## Completed
+
+- [x] Apply the August 13 Custom Sukkahs project annotations (2026-08-13)
+  - Result: Updated the finished-project names, frame, wall, schach, and site
+    labels to match the photographed work. Limited the Custom Sukkahs service
+    area to New York, New Jersey, and Connecticut, while leaving the separate
+    Builds and Rentals location choices unchanged. The production build and
+    desktop and phone browser checks passed with no horizontal overflow.
 
 - [x] Email new testimonial submissions (2026-08-13)
   - Result: The testimonial bridge now saves each review privately with

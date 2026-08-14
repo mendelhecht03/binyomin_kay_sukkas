@@ -4,46 +4,46 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 const featuredProject = {
   title: "A finished gathering space",
   description:
-    "A roomy custom sukkah finished with wall covering, carpeting, lighting, and space set up for guests.",
+    "A roomy custom sukkah finished with tarp walls, carpeting, lighting, and space set up for guests.",
   src: "/assets/images/custom-carpet-flooring.jpg",
-  alt: "Finished custom sukkah interior with carpeting, soft walls, schach, and overhead lighting",
+  alt: "Finished custom sukkah interior with carpeting, tarp walls, schach, and overhead lighting",
   width: 1200,
   height: 900,
-  tags: ["Soft walls", "Floor covering", "Lighting", "Large interior"],
+  tags: ["Tarp walls", "Floor covering", "Lighting", "Large interior"],
 };
 
 const recentProjects = [
   {
-    title: "Large freestanding sukkah",
+    title: "Large community sukkah",
     description:
       "A wide custom footprint enclosed with clean white tarp walls for a practical, weather-ready finish.",
     src: "/assets/images/custom-large-white-tarp.jpg",
     alt: "Large finished freestanding sukkah with white tarp walls",
     width: 1600,
     height: 900,
-    tags: ["Large footprint", "Tarp walls", "Freestanding"],
+    tags: ["Metal frame", "Tarp walls", "Freestanding"],
     className: "project-card--wide",
   },
   {
     title: "Wood lattice sukkah",
     description:
-      "A bright, open custom build using wood lattice walls and natural schach overhead.",
+      "A bright, open custom build using wood lattice walls and a bamboo mat overhead.",
     src: "/assets/images/custom-lattice-top-rendering.jpg",
-    alt: "Finished custom wood lattice sukkah with natural schach in daylight",
+    alt: "Finished custom wood lattice sukkah with a bamboo mat in daylight",
     width: 1672,
     height: 941,
-    tags: ["Wood lattice", "Natural schach", "Open finish"],
+    tags: ["Wood lattice", "Bamboo mat", "Open finish"],
     className: "project-card--lattice",
   },
   {
-    title: "Backyard custom fit",
+    title: "Front yard custom fit",
     description:
-      "A sukkah shaped around a compact outdoor space with soft wall covering and a custom frame.",
+      "A sukkah shaped around a compact front yard with cloth wall covering and a wood frame.",
     src: "/assets/images/custom-soft-fabric.jpg",
-    alt: "Finished backyard custom sukkah with soft white wall covering",
+    alt: "Finished front yard custom sukkah with white cloth wall covering and a wood frame",
     width: 1600,
     height: 900,
-    tags: ["Backyard", "Soft walls", "Custom size"],
+    tags: ["Front yard", "Cloth walls", "Wood frame"],
     className: "project-card--backyard",
   },
   {
@@ -76,8 +76,8 @@ const customizationGroups = [
         description: "Available in different thicknesses and colors based on the project.",
       },
       {
-        title: "Soft fabric",
-        description: "Draped walls for a lighter, more flexible finished appearance.",
+        title: "Cloth walls",
+        description: "Cloth wall coverings for a lighter, more flexible finished appearance.",
       },
       {
         title: "Framed plywood walls",
@@ -143,20 +143,7 @@ const customizationGroups = [
   },
 ];
 
-const serviceAreas = [
-  "Crown Heights",
-  "East Flatbush",
-  "Remsen Village",
-  "Flatbush",
-  "Boro Park",
-  "Williamsburg",
-  "Park Slope",
-  "Manhattan",
-  "Queens",
-  "Monsey",
-  "South Florida",
-  "Los Angeles",
-];
+const serviceAreas = ["New York", "New Jersey", "Connecticut"];
 ---
 
 <BaseLayout
@@ -373,8 +360,11 @@ const serviceAreas = [
       <div class="shell">
         <div class="section-heading service-heading">
           <p class="eyebrow">Service areas</p>
-          <h2 id="service-heading">Projects near and far.</h2>
-          <p>Confirm your location and project details when requesting a quote.</p>
+          <h2 id="service-heading">Serving the tri-state area.</h2>
+          <p>
+            Custom builds are available in New York, New Jersey, and Connecticut.
+            Confirm your exact location when requesting a quote.
+          </p>
         </div>
         <ul class="service-list">{serviceAreas.map((area) => <li>{area}</li>)}</ul>
       </div>

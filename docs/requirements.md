@@ -90,6 +90,11 @@ work from preset-size standard sukkas, without promising that every request is
 feasible. Pricing remains quote-only. The primary action links to `/contact/`,
 with the business phone number as a secondary option.
 
+Custom-build service is limited to the New York, New Jersey, and Connecticut
+tri-state area. This confirmed scope applies specifically to the
+`/custom-sukkahs/` route and does not redefine the separate Builds or Rentals
+request-form neighborhood choices.
+
 The Sukkahs navigation group contains Builds, Rentals, Custom Sukkahs, and
 Pergolas. The footer uses the same grouping. Public route paths remain
 unchanged for saved links and search engines.
