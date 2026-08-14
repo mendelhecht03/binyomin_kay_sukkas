@@ -45,13 +45,7 @@ When adding a task, use this format:
 
 ## Now
 
-- [ ] Refocus Custom Sukkahs around completed projects
-  - Why: The page currently gives material samples more visual weight than
-    Benyamin's finished custom sukkahs.
-  - Done when: Recent completed sukkahs lead the page with large responsive
-    imagery, customization details remain available in a compact secondary
-    section, the existing site theme is preserved, and the update is built and
-    deployed.
+_No active task._
 
 ## Next
 
@@ -96,6 +90,11 @@ When adding a task, use this format:
     not imply a partnership or endorsement that does not exist.
 
 ## Waiting
+
+- [ ] Publish the completed Custom Sukkahs portfolio refactor
+  - Ready: The page is rebuilt and validated with finished sukkahs as the main
+    visual focus, compact customization details, and the existing site theme.
+  - Waiting for: Approval to publish this saved version to the public website.
 
 - [ ] Receive and label real custom-sukkah project photos
   - Received: Examples of blue, white, and beige tarp walls,
