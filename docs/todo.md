@@ -45,9 +45,7 @@ When adding a task, use this format:
 
 ## Now
 
-- [ ] Create an owner dashboard for Builds, Rentals, and Testimonials
-  - Why: The owner needs one private place to review incoming entries in addition to the existing Google Forms and Sheets.
-  - Done when: A protected, responsive dashboard shows current Builds, Rentals, and Testimonials data without changing the existing submission paths, and the Apps Script setup and owner access URL are documented.
+No task is actively being implemented.
 
 ## Next
 
@@ -92,6 +90,15 @@ When adding a task, use this format:
     not imply a partnership or endorsement that does not exist.
 
 ## Waiting
+
+- [ ] Publish and verify the owner dashboard
+  - Ready: The protected `/admin/` page, read-only Google provider layer,
+    pagination, search, per-source failures, tests, documentation, dedicated
+    Google Cloud project, service account, source shares, and Sites secrets are
+    configured. All 13 automated tests and the live three-source Google API
+    smoke test pass.
+  - Waiting for: Explicit approval to deploy this saved source version to the
+    public production site, followed by a signed-in `/admin/` browser check.
 
 - [ ] Publish the refined Custom Sukkahs portfolio refactor
   - Ready: The page now uses a homepage-style bento hierarchy with one large

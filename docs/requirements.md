@@ -88,6 +88,18 @@ built as directory-style files, so `/about` is represented by
 
 /eruv-work
 
+The private owner route `/admin/` is also built by Astro, but it is not a public
+navigation destination. The Worker must require a Sites-authenticated email on
+the owner allowlist before returning the page or its data.
+
+The dashboard is read-only and combines Builds, Rentals, and Testimonials. It
+must support source filtering, search, pagination, newest-first ordering,
+responsive detail views, and per-source error states. A failure in one Google
+source must not prevent healthy sources from loading. Private Google Form IDs,
+question IDs, service-account credentials, and Sheet IDs must remain in server
+environment configuration and must never appear in generated browser HTML or
+JavaScript.
+
 The `/custom-sukkahs` route presents made-to-order sukka projects for families,
 shuls, businesses, apartment buildings, and schools. It distinguishes custom
 work from preset-size standard sukkas, without promising that every request is

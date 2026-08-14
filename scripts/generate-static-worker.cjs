@@ -1,6 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const zlib = require("zlib");
+const esbuild = require("esbuild");
 
 const rootDir = path.resolve(__dirname, "..");
 const outputDir = path.join(rootDir, "dist");
@@ -55,6 +56,18 @@ if (!fs.existsSync(outputDir) || !fs.statSync(outputDir).isDirectory()) {
 }
 
 const filesToServe = collectFiles(outputDir);
+const dashboardEntry = path.join(rootDir, "src", "server", "dashboard", "worker-entry.js");
+const dashboardBundle = esbuild.buildSync({
+  entryPoints: [dashboardEntry],
+  bundle: true,
+  write: false,
+  format: "iife",
+  globalName: "BKayDashboard",
+  platform: "browser",
+  target: "es2022",
+  minify: true,
+  legalComments: "none",
+}).outputFiles[0].text;
 
 function routeForFile(filePath) {
   const route = `/${filePath.replace(/\\/g, "/")}`;
@@ -78,6 +91,8 @@ const records = filesToServe.map((filePath) => {
 });
 
 const workerSource = `const files = new Map(${JSON.stringify(records, null, 2)}.map((file) => [file.path, file]));
+
+${dashboardBundle}
 
 function base64ToBytes(base64) {
   const binary = atob(base64);
@@ -801,6 +816,16 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
+    if (url.pathname === "/api/admin/submissions") {
+      if (request.method !== "GET") {
+        return new Response("Method not allowed", {
+          status: 405,
+          headers: { "Content-Type": "text/plain; charset=utf-8" },
+        });
+      }
+      return BKayDashboard.handleAdminSubmissionsRequest(request, env);
+    }
+
     if (request.method === "POST" && url.pathname === "/api/sukkah-submissions") {
       return handleSubmission(request, env, url);
     }
@@ -829,6 +854,19 @@ export default {
         status: 405,
         headers: { "Content-Type": "text/plain; charset=utf-8" },
       });
+    }
+
+    const normalizedPath = normalizePath(url.pathname);
+    if (normalizedPath === "/admin/" || normalizedPath === "/admin/index.html") {
+      const accessResponse = BKayDashboard.adminPageAccessResponse(request, env);
+      if (accessResponse) return accessResponse;
+
+      const adminFile = getFile("/admin/");
+      if (!adminFile) return new Response("Not found", { status: 404 });
+      return BKayDashboard.withAdminPageHeaders(new Response(
+        request.method === "HEAD" ? null : base64ToBytes(adminFile.body),
+        { status: 200, headers: { "Content-Type": adminFile.contentType } },
+      ));
     }
 
     const file = getFile(url.pathname);

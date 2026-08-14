@@ -217,11 +217,13 @@ POST /api/sukkah-submissions
 POST /api/rental-submissions
 POST /api/testimonial-submissions
 GET  /api/sukkah-submission-photos/<unlisted-photo-key>
+GET  /api/admin/submissions
 ```
 
 The POST endpoints accept the builder and rental form data. They validate
 required fields and photo limits, store selected photos in R2, and forward the
-builder row to the Google Sheet webhook or the rental answers to Google Forms.
+Builds and Rentals answers to their existing Google Forms. Testimonial entries
+continue through the protected Apps Script webhook into the Testimonials Sheet.
 If the downstream write fails, newly uploaded photos from that request are
 removed so partial submissions are not left behind.
 
@@ -237,18 +239,40 @@ small amount of server-side submission logic.
 
 ## Owner dashboard
 
-The owner dashboard is intentionally kept in the existing Google Apps Script
-bridge instead of adding a public website route. Apps Script reads the Builds
-and Rentals Google Forms with `FormApp` and the private `Testimonials` tab with
-`SpreadsheetApp`, then serves `Dashboard.html` through `google.script.run`.
-This means the website's public JavaScript never receives Google credentials or
-direct Sheet access, and the current Worker submission routes remain unchanged.
+The owner dashboard is a protected website route at `/admin/`. Its browser code
+never talks to Google directly. It requests normalized data from the private
+`GET /api/admin/submissions` Worker endpoint instead.
 
-The public webhook deployment checks a randomly generated
-`DASHBOARD_ACCESS_KEY` for both the dashboard page and its data function. The
-owner receives a private `/exec?key=...` link; generating a new key revokes the
-previous link. The dashboard provides overview counts, search, refresh, source
-links, and responsive detail cards for Builds, Rentals, and Testimonials.
+Sites supplies the signed-in user's email in a trusted request header. The
+Worker compares that email with `DASHBOARD_ADMIN_EMAILS` before returning the
+page or any data. A missing allowlist fails closed. Signed-out visitors are sent
+to the Sites sign-in route, and signed-in accounts that are not on the allowlist
+receive a forbidden response.
+
+After authorization, the Worker obtains a short-lived Google OAuth token from a
+service account. It uses only read-only Google Forms and Google Sheets scopes:
+
+- Builds and Rentals are read from their private Google Form editor IDs through
+  the Google Forms API. Google requires the service account to be shared as a
+  Form editor to expose responses; read-only OAuth scopes still prevent edits.
+- Testimonials are read from the existing private `Testimonials` tab through
+  the Google Sheets API.
+- Form metadata is mapped by stable question ID, normalized into one dashboard
+  model, and sent to the UI without exposing Google credentials or source IDs.
+
+Each source is isolated. If one Google source is unavailable, the dashboard
+returns the other sources plus a clear per-source error. Results are paginated,
+searchable, newest first, and always returned with private, no-store headers.
+The dashboard is deliberately read-only; approval or editing still happens in
+the existing Google Forms and Sheets.
+
+The Apps Script project is not part of the dashboard read path. It remains a
+small write-only bridge for testimonial storage and notification email. The
+three existing customer submission pipelines and R2 photo storage are therefore
+independent of dashboard availability.
+
+Detailed setup, required environment variables, and field-discovery steps live
+in `docs/owner-dashboard.md`.
 
 Requests for a missing page use Astro's generated `404.html` while keeping the
 correct HTTP `404` status. This gives visitors a useful way back to the site
