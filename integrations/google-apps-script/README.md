@@ -1,4 +1,4 @@
-# Google Testimonial Submission Bridge
+# Google Submission Bridge and Owner Dashboard
 
 The website cannot safely write to a private Google Sheet directly from browser
 JavaScript. The small Apps Script in `Code.gs` acts as a protected bridge:
@@ -11,6 +11,12 @@ JavaScript. The small Apps Script in `Code.gs` acts as a protected bridge:
 
 Builds requests no longer use this bridge. The Builds Worker sends them to the
 separate `BKAY builds` Google Form, including links to any uploaded photos.
+
+The same Apps Script project also serves the private **BKAY Owner Dashboard**.
+It reads the Builds and Rentals Google Forms plus the private `Testimonials`
+tab server-side, so Google permissions and sheet data never enter the public
+website JavaScript. The dashboard has overview counts, search, refresh, source
+links, and detail cards for each entry type.
 
 ## Destination
 
@@ -43,6 +49,24 @@ after the test; the script then returns to the built-in business recipient.
 8. Store the resulting `/exec` URL as `SUKKAH_SHEETS_WEBHOOK_URL` in the Sites
    environment.
 9. Deploy a new site version so the environment revision is applied.
+
+## Owner dashboard setup
+
+After saving `Code.gs` and adding `Dashboard.html` to the Apps Script project:
+
+1. Run `authorizeDashboardAccess` once and approve the Google Forms read
+   permission. This only reads entries; it does not send or edit submissions.
+2. Run `createDashboardAccessKey` once. Copy the returned value from the
+   execution result. Running it again revokes the old dashboard link.
+3. Create a new web-app deployment version with the same settings as the
+   webhook (`Execute as` yourself and access allowed to anyone, because the
+   webhook must receive website requests).
+4. Give the owner the private URL:
+   `https://script.google.com/macros/s/DEPLOYMENT_ID/exec?key=ACCESS_KEY`
+
+The dashboard link is intentionally separate from the public website. Keep it
+private like a password. The random key is checked both when the page loads and
+when the dashboard asks Apps Script for data.
 
 After changing `Code.gs`, create a new Apps Script deployment version. Existing
 deployments do not automatically begin running newly saved code.

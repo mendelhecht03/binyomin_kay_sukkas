@@ -235,6 +235,21 @@ This endpoint returns a sample JSON response. It does not calculate, store, or
 send a quote. Astro remains a static page builder; the generated Worker owns the
 small amount of server-side submission logic.
 
+## Owner dashboard
+
+The owner dashboard is intentionally kept in the existing Google Apps Script
+bridge instead of adding a public website route. Apps Script reads the Builds
+and Rentals Google Forms with `FormApp` and the private `Testimonials` tab with
+`SpreadsheetApp`, then serves `Dashboard.html` through `google.script.run`.
+This means the website's public JavaScript never receives Google credentials or
+direct Sheet access, and the current Worker submission routes remain unchanged.
+
+The public webhook deployment checks a randomly generated
+`DASHBOARD_ACCESS_KEY` for both the dashboard page and its data function. The
+owner receives a private `/exec?key=...` link; generating a new key revokes the
+previous link. The dashboard provides overview counts, search, refresh, source
+links, and responsive detail cards for Builds, Rentals, and Testimonials.
+
 Requests for a missing page use Astro's generated `404.html` while keeping the
 correct HTTP `404` status. This gives visitors a useful way back to the site
 instead of a plain error message.

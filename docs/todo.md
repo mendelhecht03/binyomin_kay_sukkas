@@ -45,7 +45,9 @@ When adding a task, use this format:
 
 ## Now
 
-_No active task._
+- [ ] Create an owner dashboard for Builds, Rentals, and Testimonials
+  - Why: The owner needs one private place to review incoming entries in addition to the existing Google Forms and Sheets.
+  - Done when: A protected, responsive dashboard shows current Builds, Rentals, and Testimonials data without changing the existing submission paths, and the Apps Script setup and owner access URL are documented.
 
 ## Next
 
