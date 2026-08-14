@@ -45,12 +45,7 @@ When adding a task, use this format:
 
 ## Now
 
-- [ ] Publish and verify the owner dashboard
-  - Current: Production deployment succeeded and owner sign-in works. The live
-    Google data request is returning isolated source failures, so deployment
-    verification is continuing before this is marked complete.
-  - Done when: Builds, Rentals, and Testimonials load in the live signed-in
-    dashboard and unauthenticated requests cannot expose submission data.
+No task is actively being implemented.
 
 ## Next
 
@@ -158,6 +153,14 @@ When adding a task, use this format:
   - Unblocks: Publishing multiple testimonial cards in the homepage scroller.
 
 ## Completed
+
+- [x] Publish and verify the owner dashboard (2026-08-13)
+  - Result: Published the protected `/admin/` dashboard with read-only Builds,
+    Rentals, and Testimonials data, search, filters, details, pagination, and
+    isolated source-status handling. Fixed Cloudflare's required `fetch`
+    runtime binding, passed all 14 automated tests, and verified the live owner
+    sign-in, all three Google sources, detail view, signed-out redirect, and
+    unauthorized API response without changing the existing submission paths.
 
 - [x] Restore the original header branding (2026-08-13)
   - Result: Restored the original drawn icon and Benyamin Kay wordmark in the
