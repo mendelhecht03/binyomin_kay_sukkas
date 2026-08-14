@@ -1,6 +1,8 @@
 const SPREADSHEET_ID = "12ptjlhjooYzWt8dZjKsd-qOET-dnktn7qbDgr5SCRTg";
 const SHEET_NAME = "Submissions";
 const TESTIMONIAL_SHEET_NAME = "Testimonials";
+const TESTIMONIAL_NOTIFICATION_EMAIL_PROPERTY = "TESTIMONIAL_NOTIFICATION_EMAIL";
+const DEFAULT_TESTIMONIAL_NOTIFICATION_EMAIL = "bkaysukkahbuilders@gmail.com";
 
 function doPost(event) {
   const lock = LockService.getScriptLock();
@@ -126,9 +128,51 @@ function appendTestimonial_(submission) {
     asSheetText_(submission.sourcePage),
   ]);
 
+  try {
+    sendTestimonialNotification_(submission);
+  } catch (error) {
+    // The review is already safely stored in the Sheet. Keep the website
+    // response successful so a mail problem does not create duplicate rows.
+    console.error(`Testimonial email notification failed: ${error}`);
+  }
+
   return jsonResponse_({
     ok: true,
     submissionId: submission.submissionId,
+  });
+}
+
+function sendTestimonialNotification_(submission) {
+  const properties = PropertiesService.getScriptProperties();
+  const recipient =
+    properties.getProperty(TESTIMONIAL_NOTIFICATION_EMAIL_PROPERTY) ||
+    DEFAULT_TESTIMONIAL_NOTIFICATION_EMAIL;
+  const reviewerName = singleLine_(submission.reviewerName) || "Website visitor";
+  const subject = `[BKAY website] New testimonial from ${reviewerName}`;
+  const body = [
+    "A new testimonial was submitted through the BKAY website.",
+    "",
+    "It is private and pending review. It has not been published automatically.",
+    "",
+    `Submitted: ${submission.submittedAt || ""}`,
+    `Submission ID: ${submission.submissionId || ""}`,
+    `Name: ${submission.reviewerName || ""}`,
+    `Organization: ${submission.reviewerOrganization || ""}`,
+    `Verification contact: ${submission.reviewerContact || ""}`,
+    `Publication consent: ${submission.publicationConsent || ""}`,
+    `Source page: ${submission.sourcePage || ""}`,
+    "",
+    "Testimonial:",
+    submission.testimonial || "",
+    "",
+    `Review it in the ${TESTIMONIAL_SHEET_NAME} tab of the website submissions Sheet.`,
+  ].join("\n");
+
+  MailApp.sendEmail({
+    to: recipient,
+    subject,
+    body,
+    name: "BKAY website",
   });
 }
 
@@ -144,9 +188,19 @@ function setWebhookSecret() {
   }
 }
 
+function authorizeTestimonialEmail() {
+  // Run once in Apps Script after adding email notifications. It requests the
+  // mail permission without sending a message.
+  return MailApp.getRemainingDailyQuota();
+}
+
 function asSheetText_(value) {
   const text = String(value == null ? "" : value);
   return /^[=+\-@]/.test(text) ? `'${text}` : text;
+}
+
+function singleLine_(value) {
+  return String(value == null ? "" : value).replace(/\s+/g, " ").trim();
 }
 
 function jsonResponse_(body) {

@@ -152,6 +152,14 @@ _No active task._
 
 ## Completed
 
+- [x] Email new testimonial submissions (2026-08-13)
+  - Result: The testimonial bridge now saves each review privately with
+    `Pending review` status and emails a private notification. Google mail
+    permission was approved, Apps Script version 2 was deployed, and a labeled
+    live website test reached `mendelhecht16@gmail.com`. The temporary test
+    recipient was then removed, so future notifications use the built-in
+    `bkaysukkahbuilders@gmail.com` address without sending it a test message.
+
 - [x] Connect Builds to a separate Google Form and publish the new logo (2026-08-13)
   - Result: Created and published a brand-new `BKAY builds` Google Form without
     changing the earlier form. The live Builds Worker now sends every form

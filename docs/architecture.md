@@ -156,7 +156,12 @@ Homepage testimonial submissions use the same protected Apps Script webhook
 but include `type: testimonialSubmission`. Apps Script writes them to a
 separate `Testimonials` tab, creates that tab and its header on first use, and
 stores every new entry with `Pending review` status. The browser posts to
-`/api/testimonial-submissions`; there is no automatic publication path.
+`/api/testimonial-submissions`; there is no automatic publication path. After
+the row is stored, Apps Script uses `MailApp` to notify
+`bkaysukkahbuilders@gmail.com`. A temporary
+`TESTIMONIAL_NOTIFICATION_EMAIL` Script property can override that recipient
+for delivery testing; deleting the property restores the business address.
+Notification failure is logged without discarding the safely stored review.
 
 Rental add-ons, furniture details, timing notes, photo links, and extra-service
 details are appended to the existing Google Form comments answer so the data

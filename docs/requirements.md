@@ -38,7 +38,9 @@ layout.
   includes a compact submission form that collects the reviewer's name,
   organization, private verification contact, testimonial, and publication
   consent. New submissions are stored privately with `Pending review` status
-  and never appear on the website automatically.
+  and never appear on the website automatically. After storage, send a private
+  email notification to `bkaysukkahbuilders@gmail.com` so the business knows a
+  testimonial is waiting for review.
 - Testimonial cards use an arrow-controlled carousel with a clipped viewport,
   no visible internal scrollbars, and keyboard/reduced-motion support. Until
   additional reviews are approved, any test card must be clearly labeled as a
