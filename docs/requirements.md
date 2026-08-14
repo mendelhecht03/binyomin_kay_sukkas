@@ -1,8 +1,12 @@
 **Assets**
 
+The header uses the original drawn BK icon and wordmark. The supplied circular
+BK Sukkah Builder artwork remains in the footer and favicon.
+
 - ☑ Profile photo
 - ☑ Forest, cream, and wood color palette
-- ☑ Supplied BK Sukkah Builder logo in the shared header, footer, and favicon
+- ☑ Original drawn BK icon and wordmark in the shared header
+- ☑ Supplied BK Sukkah Builder logo in the footer and favicon
 - ☑ Five illustrative sukkah images and one sukkah detail image
 - ☑ Real sukkah hero photo approved for the homepage
 - ☑ Real sukkah project photos selected from the owner's supplied photo folder

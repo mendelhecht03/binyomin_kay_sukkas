@@ -154,6 +154,12 @@ _No active task._
 
 ## Completed
 
+- [x] Restore the original header branding (2026-08-13)
+  - Result: Restored the original drawn icon and Benyamin Kay wordmark in the
+    shared header, kept the supplied circular BK logo in the footer, and
+    adjusted the footer logo's size and alignment. Production and responsive
+    browser checks passed.
+
 - [x] Apply the August 13 Custom Sukkahs project annotations (2026-08-13)
   - Result: Updated the finished-project names, frame, wall, schach, and site
     labels to match the photographed work. Limited the Custom Sukkahs service
