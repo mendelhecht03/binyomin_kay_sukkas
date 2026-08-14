@@ -100,6 +100,11 @@ connect the visible finished work to its practical wall, schach, lighting, and
 site details. Do not use generic stock photography or give isolated material
 samples the same visual weight as a complete sukkah.
 
+Finished-project and customization cards reuse the homepage service-card
+language: white surfaces, shared borders and radii, generous image crops,
+compact wood-colored labels, restrained shadows, and the same subtle lift and
+image zoom on hover. Disable that motion when reduced motion is requested.
+
 Keep material names general wherever the exact product is not confirmed by
 Benyamin. Preserve the current valid wall, schach, addition, installation,
 service-area, and custom-sizing information in compact secondary sections.

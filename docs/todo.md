@@ -91,10 +91,11 @@ _No active task._
 
 ## Waiting
 
-- [ ] Publish the completed Custom Sukkahs portfolio refactor
-  - Ready: The page is rebuilt and validated with finished sukkahs as the main
-    visual focus, compact customization details, and the existing site theme.
-  - Waiting for: Approval to publish this saved version to the public website.
+- [ ] Publish the refined Custom Sukkahs portfolio refactor
+  - Ready: Finished-project and customization cards now share the homepage's
+    white surfaces, borders, rounded image treatment, spacing, labels, shadows,
+    and restrained hover motion. The full production build passes.
+  - Waiting for: Approval to publish this version to the public website.
 
 - [ ] Receive and label real custom-sukkah project photos
   - Received: Examples of blue, white, and beige tarp walls,
