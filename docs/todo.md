@@ -45,7 +45,12 @@ When adding a task, use this format:
 
 ## Now
 
-No task is actively being implemented.
+- [ ] Publish and verify the owner dashboard
+  - Current: Production deployment succeeded and owner sign-in works. The live
+    Google data request is returning isolated source failures, so deployment
+    verification is continuing before this is marked complete.
+  - Done when: Builds, Rentals, and Testimonials load in the live signed-in
+    dashboard and unauthenticated requests cannot expose submission data.
 
 ## Next
 
@@ -90,15 +95,6 @@ No task is actively being implemented.
     not imply a partnership or endorsement that does not exist.
 
 ## Waiting
-
-- [ ] Publish and verify the owner dashboard
-  - Ready: The protected `/admin/` page, read-only Google provider layer,
-    pagination, search, per-source failures, tests, documentation, dedicated
-    Google Cloud project, service account, source shares, and Sites secrets are
-    configured. All 13 automated tests and the live three-source Google API
-    smoke test pass.
-  - Waiting for: Explicit approval to deploy this saved source version to the
-    public production site, followed by a signed-in `/admin/` browser check.
 
 - [ ] Publish the refined Custom Sukkahs portfolio refactor
   - Ready: The page now uses a homepage-style bento hierarchy with one large

@@ -41,9 +41,15 @@ function selectedSources(type) {
 
 function logSourceFailure(error, logger = console) {
   const sourceError = error instanceof DashboardSourceError ? error : null;
+  const errorName = String(error?.name || "Error").slice(0, 80);
+  const errorMessage = String(error?.message || "Unknown dashboard source failure")
+    .replace(/[\r\n]+/g, " ")
+    .slice(0, 240);
   logger.error(sourceError?.logCode || "dashboard.source.failed", {
     source: sourceError?.source || "unknown",
     code: sourceError?.code || "UPSTREAM_ERROR",
+    errorName,
+    errorMessage,
   });
 }
 
