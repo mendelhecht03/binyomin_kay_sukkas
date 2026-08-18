@@ -135,9 +135,11 @@ edit the live forms from the dashboard without changing page code. Their
 submissions still use the existing `build` and `rental` dashboard categories.
 
 Every step stores a selectable section icon (`contact`, `location`, `timing`,
-`sukkah`, `site`, or `final`). The shared renderer draws those icons with the
-same outlined style used by the original live forms. The editor exposes the
-same icon choices for built-in and newly created forms.
+`sukkah`, `site`, `final`, `phone`, `home`, `ruler`, `tools`, `message`, or
+`photo`). The shared renderer draws those icons with the same outlined style
+used by the original live forms. The dashboard uses a visual picker so the
+owner sees the actual icon artwork while choosing one for built-in or newly
+created forms.
 
 The schema also stores optional placeholder text for short text, email, phone,
 and paragraph controls. The dashboard edits this property and the shared

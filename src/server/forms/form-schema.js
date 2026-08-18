@@ -5,7 +5,10 @@ const FIELD_TYPES = new Set([
 ]);
 const OPTION_FIELD_TYPES = new Set(["select", "radio", "checkboxes"]);
 const CONDITION_OPERATORS = new Set(["equals", "includes"]);
-const STEP_ICONS = new Set(["contact", "location", "timing", "sukkah", "site", "final"]);
+const STEP_ICONS = new Set([
+  "contact", "location", "timing", "sukkah", "site", "final",
+  "phone", "home", "ruler", "tools", "message", "photo",
+]);
 
 const stateOptions = states.map(([code, name]) => `${name} (${code})`);
 const neighborhoodOptions = [...neighborhoods, "Other"];

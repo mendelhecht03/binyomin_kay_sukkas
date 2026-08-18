@@ -45,7 +45,12 @@ When adding a task, use this format:
 
 ## Now
 
-- No active task.
+- [ ] Expand the visual section icon picker
+  - Why: The form builder's current section-icon select only shows text labels,
+    making the available choices harder to recognize.
+  - Done when: The owner can open a visual icon picker, see the actual icon for
+    every choice, choose from a larger useful icon set, and publish those icons
+    to live forms without breaking older saved forms.
 
 ## Next
 

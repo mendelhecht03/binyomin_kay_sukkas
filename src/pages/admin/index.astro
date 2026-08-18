@@ -479,7 +479,28 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
     };
     const optionFieldTypes = new Set(["select", "radio", "checkboxes"]);
     const placeholderFieldTypes = new Set(["text", "email", "phone", "textarea"]);
-    const stepIconLabels = { contact: "Person", location: "Location pin", timing: "Calendar", sukkah: "Sukkah", site: "Photo / site", final: "Checklist" };
+    const stepIconLabels = {
+      contact: "Person", location: "Location pin", timing: "Calendar", sukkah: "Sukkah",
+      site: "Site / landscape", final: "Checklist", phone: "Phone", home: "Home",
+      ruler: "Measurements", tools: "Tools", message: "Message", photo: "Photo",
+    };
+    const stepIconPaths = {
+      contact: '<circle cx="12" cy="8" r="3.25"/><path d="M5.75 19c.65-3.25 2.75-5 6.25-5s5.6 1.75 6.25 5"/>',
+      location: '<path d="M19 10c0 5-7 10-7 10S5 15 5 10a7 7 0 1 1 14 0Z"/><circle cx="12" cy="10" r="2.25"/>',
+      sukkah: '<path d="M5 20V9h14v11M4 9h16"/><path d="M5 7.5c1-1 2-1 3 0s2 1 3 0 2-1 3 0 2 1 3 0 2-1 3 0M9.5 20v-7h5v7"/>',
+      site: '<rect x="3.5" y="5" width="17" height="14" rx="2"/><circle cx="9" cy="10" r="1.5"/><path d="m5.5 17 4-4 3 3 2-2 4 3"/>',
+      timing: '<rect x="4" y="5.5" width="16" height="14" rx="2"/><path d="M8 3.5v4M16 3.5v4M4 10h16"/><path d="m9.5 15 1.5 1.5 3.5-4"/>',
+      final: '<path d="M8 5h8M9 3.5h6v3H9z"/><path d="M7 5.5H5.5v15h13v-15H17"/><path d="m8.5 14 2.25 2.25 4.75-5"/>',
+      phone: '<path d="M7.25 4.5 9.5 4l2 4-1.75 1.5a13.5 13.5 0 0 0 4.75 4.75L16 12.5l4 2 .5 2.25a2.5 2.5 0 0 1-2.75 2.75C11.2 18.5 5.5 12.8 4.5 6.25A2.5 2.5 0 0 1 7.25 4.5Z"/>',
+      home: '<path d="m3.5 11.5 8.5-7 8.5 7"/><path d="M5.5 10.5V20h13v-9.5M9.5 20v-5h5v5"/>',
+      ruler: '<path d="M4 17.5 17.5 4l2.5 2.5L6.5 20z"/><path d="m8 16 2 2M11 13l2 2M14 10l2 2"/>',
+      tools: '<path d="m14 6 4 4M17.5 3.5a4 4 0 0 0-4.6 4.6L5 16a2.1 2.1 0 1 0 3 3l7.9-7.9a4 4 0 0 0 4.6-4.6l-2.5 2.5-3-3Z"/>',
+      message: '<path d="M4 5h16v11H8l-4 4z"/><path d="M8 9h8M8 12h5"/>',
+      photo: '<rect x="3.5" y="5.5" width="17" height="14" rx="2"/><path d="m8 5.5 1.2-2h5.6l1.2 2"/><circle cx="12" cy="12.5" r="3"/>',
+    };
+    function stepIconSvg(icon) {
+      return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${stepIconPaths[icon] || stepIconPaths.site}</svg>`;
+    }
     const editor = {
       forms: [], selectedId: "", schema: null, dirty: false,
     };
@@ -562,7 +583,19 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
           <div class="step-editor-heading">
             <span>${stepIndex + 1}</span>
             <label><span class="sr-only">Step name</span><input data-step-title value="${escapeHtml(step.title)}" maxlength="100" /></label>
-            <label class="step-icon-setting"><span class="sr-only">Section icon</span><select data-step-icon aria-label="Section icon">${supportedStepIcons.map((icon) => `<option value="${icon}"${selected(step.icon, icon)}>${escapeHtml(stepIconLabels[icon] || icon)}</option>`).join("")}</select></label>
+            <div class="step-icon-setting">
+              <span class="sr-only">Section icon</span>
+              <details class="step-icon-picker">
+                <summary aria-label="Section icon: ${escapeHtml(stepIconLabels[step.icon] || "Site / landscape")}">
+                  <span class="step-icon-picker__current">${stepIconSvg(step.icon)}</span>
+                  <span class="step-icon-picker__label">${escapeHtml(stepIconLabels[step.icon] || "Site / landscape")}</span>
+                  <span class="step-icon-picker__chevron" aria-hidden="true">⌄</span>
+                </summary>
+                <div class="step-icon-picker__menu" role="listbox" aria-label="Choose section icon">
+                  ${supportedStepIcons.map((icon) => `<button type="button" role="option" aria-selected="${step.icon === icon ? "true" : "false"}" class="step-icon-picker__option${step.icon === icon ? " is-selected" : ""}" data-step-icon-option="${escapeHtml(icon)}"><span class="step-icon-picker__option-icon">${stepIconSvg(icon)}</span><span>${escapeHtml(stepIconLabels[icon] || icon)}</span></button>`).join("")}
+                </div>
+              </details>
+            </div>
             <div class="mini-actions">
               <button type="button" data-step-action="up" aria-label="Move step up">↑</button>
               <button type="button" data-step-action="down" aria-label="Move step down">↓</button>
@@ -587,7 +620,7 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
     function renderEditorPreview() {
       if (!editor.schema) return;
       previewHost.innerHTML = `<h4>${escapeHtml(editor.schema.title || "Untitled form")}</h4><p>${escapeHtml(editor.schema.description || "")}</p>${editor.schema.steps.map((step, index) => `
-        <section class="preview-step"><div><span title="${escapeHtml(stepIconLabels[step.icon] || "Section icon")}">${escapeHtml((step.icon || "site").slice(0, 1).toUpperCase())}</span><strong>${escapeHtml(step.title)}</strong></div>
+        <section class="preview-step"><div><span title="${escapeHtml(stepIconLabels[step.icon] || "Section icon")}">${stepIconSvg(step.icon)}</span><strong>${escapeHtml(step.title)}</strong></div>
         ${step.fields.slice(0, 5).map((field) => `<div class="preview-field">${previewControl(field)}${field.condition ? `<small>Shown when ${escapeHtml(field.condition.fieldId)} ${escapeHtml(field.condition.operator)} “${escapeHtml(field.condition.value)}”</small>` : ""}</div>`).join("") || "<p class='preview-empty'>Review step</p>"}
         </section>`).join("")}<span class="preview-submit">${escapeHtml(editor.schema.submitLabel || "Send request")}</span>`;
     }
@@ -670,7 +703,6 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
       const stepIndex = Number(stepCard?.dataset.stepIndex);
       const fieldCardElement = event.target.closest("[data-field-index]");
       if (event.target.matches("[data-step-title]") && !fieldCardElement) editor.schema.steps[stepIndex].title = event.target.value;
-      if (event.target.matches("[data-step-icon]") && !fieldCardElement) editor.schema.steps[stepIndex].icon = event.target.value;
       if (fieldCardElement && event.target.matches("[data-field-setting]")) updateFieldFromControl(event.target, editor.schema.steps[stepIndex].fields[Number(fieldCardElement.dataset.fieldIndex)]);
       if (fieldCardElement && event.target.matches("[data-condition-setting]")) {
         const field = editor.schema.steps[stepIndex].fields[Number(fieldCardElement.dataset.fieldIndex)];
@@ -693,6 +725,13 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
       const stepCard = event.target.closest("[data-step-index]");
       if (!stepCard) return;
       const stepIndex = Number(stepCard.dataset.stepIndex);
+      const iconOption = event.target.closest("[data-step-icon-option]");
+      if (iconOption) {
+        editor.schema.steps[stepIndex].icon = iconOption.dataset.stepIconOption;
+        markEditorDirty();
+        renderStepEditor();
+        return;
+      }
       const fieldCardElement = event.target.closest("[data-field-index]");
       if (event.target.closest("[data-add-field]")) {
         editor.schema.steps[stepIndex].fields.push({ id: makeId("question"), type: "text", label: "New question", required: false });
@@ -833,12 +872,25 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
   .form-steps-heading { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: .75rem; }
   .form-steps-heading h3 { margin: 0; font-size: 1.25rem; }
   .form-steps-heading button, .add-question-button, .mini-actions button, .version-row button { min-height: 38px; padding: .4rem .65rem; border: 1px solid var(--border-strong); border-radius: 8px; color: var(--forest-800); background: white; font: inherit; font-size: .76rem; font-weight: 800; cursor: pointer; }
-  .step-editor-card { overflow: hidden; border: 1px solid var(--border-strong); border-radius: var(--radius); background: var(--cream-50); }
+  .step-editor-card { position: relative; border: 1px solid var(--border-strong); border-radius: var(--radius); background: var(--cream-50); }
   .step-editor-card + .step-editor-card { margin-top: .85rem; }
   .step-editor-heading { display: grid; grid-template-columns: 2.15rem minmax(120px, 1fr) minmax(120px, 10rem) auto; gap: .65rem; align-items: center; padding: .75rem; border-bottom: 1px solid var(--border); background: var(--forest-100); }
   .step-editor-heading > span { display: grid; width: 2.15rem; height: 2.15rem; place-items: center; border-radius: 8px; color: white; background: var(--forest-800); font-weight: 850; }
   .step-editor-heading input { width: 100%; min-height: 38px; padding: .4rem .55rem; border: 1px solid var(--border-strong); border-radius: 7px; color: var(--forest-950); background: white; font: inherit; font-weight: 800; }
-  .step-icon-setting select { width: 100%; min-height: 38px; padding: .4rem .5rem; border: 1px solid var(--border-strong); border-radius: 7px; color: var(--forest-900); background: white; font: inherit; font-size: .76rem; font-weight: 750; }
+  .step-icon-setting { position: relative; min-width: 0; }
+  .step-icon-picker { position: relative; }
+  .step-icon-picker summary { display: flex; min-height: 38px; align-items: center; gap: .45rem; padding: .35rem .5rem; border: 1px solid var(--border-strong); border-radius: 7px; color: var(--forest-900); background: white; font-size: .76rem; font-weight: 750; list-style: none; cursor: pointer; }
+  .step-icon-picker summary::-webkit-details-marker { display: none; }
+  .step-icon-picker[open] summary { border-color: var(--forest-700); box-shadow: 0 0 0 2px rgba(47, 105, 82, .12); }
+  .step-icon-picker__current { display: grid; width: 1.55rem; height: 1.55rem; flex: 0 0 auto; place-items: center; border-radius: 5px; color: white; background: var(--forest-800); }
+  .step-icon-picker__current svg { width: 1rem; height: 1rem; }
+  .step-icon-picker__label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .step-icon-picker__chevron { margin-left: auto; color: var(--ink-500); font-size: 1rem; line-height: 1; }
+  .step-icon-picker__menu { position: absolute; z-index: 15; top: calc(100% + .35rem); right: 0; display: grid; width: min(300px, calc(100vw - 2rem)); grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .3rem; padding: .45rem; border: 1px solid var(--border-strong); border-radius: 9px; background: white; box-shadow: 0 16px 32px rgba(16, 45, 37, .16); }
+  .step-icon-picker__option { display: flex; min-height: 42px; align-items: center; gap: .45rem; padding: .35rem .4rem; border: 1px solid transparent; border-radius: 6px; color: var(--ink-700); background: transparent; font: inherit; font-size: .7rem; font-weight: 750; text-align: left; cursor: pointer; }
+  .step-icon-picker__option:hover, .step-icon-picker__option:focus-visible, .step-icon-picker__option.is-selected { border-color: var(--border); color: var(--forest-900); background: var(--forest-100); }
+  .step-icon-picker__option-icon { display: grid; width: 1.65rem; height: 1.65rem; flex: 0 0 auto; place-items: center; border-radius: 5px; color: var(--forest-800); background: var(--cream-100); }
+  .step-icon-picker__option-icon svg { width: 1.05rem; height: 1.05rem; }
   .mini-actions { display: flex; flex-wrap: wrap; gap: .3rem; justify-content: flex-end; }
   .mini-actions button { min-width: 38px; min-height: 38px; padding: .35rem .5rem; }
   .mini-actions .is-danger { color: var(--danger); }
@@ -865,6 +917,7 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
   .preview-step + .preview-step { margin-top: .55rem; }
   .preview-step > div:first-child { display: flex; align-items: center; gap: .45rem; margin-bottom: .65rem; }
   .preview-step > div:first-child span { display: grid; width: 1.45rem; height: 1.45rem; place-items: center; border-radius: 5px; color: white; background: var(--forest-800); font-size: .65rem; font-weight: 850; }
+  .preview-step > div:first-child span svg { width: .9rem; height: .9rem; }
   .preview-step > div:first-child strong { font-size: .78rem; }
   .preview-field + .preview-field { margin-top: .55rem; }
   .preview-field label, .preview-field legend { color: var(--ink-700); font-size: .68rem; font-weight: 750; }

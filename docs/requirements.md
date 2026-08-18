@@ -226,7 +226,9 @@ Rentals. Its six editable steps are Contact, Location, Timing, Requested work,
 Your sukkah, and Review and send. Only one step is visible at a time on mobile
 and desktop. The protected form builder can edit question text, field type,
 options, conditional follow-ups, step order, and each section icon before a
-new version is published.
+new version is published. The icon picker shows the actual outlined artwork for
+Person, Location pin, Calendar, Sukkah, Site / landscape, Checklist, Phone,
+Home, Measurements, Tools, Message, and Photo.
 Entered values and selected photos remain attached to the same form controls
 while visitors move Back, Continue, or Edit a review row.
 

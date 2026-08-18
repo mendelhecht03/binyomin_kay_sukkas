@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import worker from "../index.mjs";
-import { DEFAULT_BUILD_FORM, DEFAULT_RENTAL_FORM, normalizeFormSchema } from "../src/server/forms/form-schema.js";
+import { DEFAULT_BUILD_FORM, DEFAULT_RENTAL_FORM, SUPPORTED_FORM_STEP_ICONS, normalizeFormSchema } from "../src/server/forms/form-schema.js";
 import {
   createFormDraft, getPublishedFormBySlug, listFormVersions, publishForm, saveFormDraft,
 } from "../src/server/storage/form-repository.js";
@@ -42,6 +42,8 @@ test("form schemas accept existing field types and validate conditional follow-u
   assert.equal(valid.schema.steps[0].fields[2].condition.operator, "includes");
   assert.equal(valid.schema.steps[0].icon, "site");
   assert.equal(valid.schema.steps[0].fields[0].placeholder, "Your full name");
+  assert.ok(SUPPORTED_FORM_STEP_ICONS.includes("photo"));
+  assert.ok(SUPPORTED_FORM_STEP_ICONS.includes("tools"));
 
   const invalid = editableSchema();
   invalid.steps[0].fields[2].condition.fieldId = "missing-field";
