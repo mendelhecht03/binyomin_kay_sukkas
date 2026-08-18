@@ -28,9 +28,9 @@ layout.
   whether "Benyamin" or "Binyomin" is the intended spelling before launch.
 - The Builds page uses the website's custom form for sukkahs the customer
   already owns. The former Google Form embed has been removed. Submit completed
-  requests through the site's server-side Worker to the dedicated `BKAY builds`
-  Google Form. Keep the Google Form response URL and entry IDs out of browser
-  markup.
+  requests through the site's server-side Worker to the website-owned
+  submissions database. Google Forms and Sheets must not be part of the
+  submission storage path.
 - Keep the homepage focused on a full-bleed hero, three primary sukkah paths,
   an image-led real-work section, a compact owner introduction, testimonials,
   and a final contact prompt.
@@ -44,7 +44,14 @@ layout.
   consent. New submissions are stored privately with `Pending review` status
   and never appear on the website automatically. After storage, send a private
   email notification to `bkaysukkahbuilders@gmail.com` so the business knows a
-  testimonial is waiting for review.
+  testimonial is waiting for review. Email delivery must remain separate from
+  submission storage and must not require Google Forms, Sheets, or Apps Script.
+- The protected owner dashboard lets the owner approve a pending testimonial,
+  which publishes its name, optional organization, and testimonial text on the
+  homepage. It also lets the owner disapprove a pending testimonial, which
+  permanently deletes it. Approval records who approved the testimonial and
+  when; private verification contact information is never returned by the
+  public testimonials endpoint.
 - Testimonial cards use an arrow-controlled carousel with a clipped viewport,
   no visible internal scrollbars, and keyboard/reduced-motion support. Until
   additional reviews are approved, any test card must be clearly labeled as a
@@ -92,13 +99,23 @@ The private owner route `/admin/` is also built by Astro, but it is not a public
 navigation destination. The Worker must require a Sites-authenticated email on
 the owner allowlist before returning the page or its data.
 
-The dashboard is read-only and combines Builds, Rentals, and Testimonials. It
-must support source filtering, search, pagination, newest-first ordering,
-responsive detail views, and per-source error states. A failure in one Google
-source must not prevent healthy sources from loading. Private Google Form IDs,
-question IDs, service-account credentials, and Sheet IDs must remain in server
-environment configuration and must never appear in generated browser HTML or
-JavaScript.
+The dashboard combines Builds, Rentals, and Testimonials in responsive rows
+that match the public site's forest, cream, and wood theme. It must support
+source filtering, search, pagination, newest-first ordering, responsive detail
+views, and per-source error states. Each row has View and Delete actions. Delete
+must require a separate explicit confirmation, run only for an authenticated
+allowlisted owner, remove the database entry, and remove associated uploaded
+photos only after the database deletion succeeds. A database failure must show
+a safe unavailable state without exposing private data or internal error
+details. Google Forms, Google Sheets, service-account credentials, and Apps
+Script must not be required by the finished backend. Database and storage
+configuration must remain server-side and must never appear in generated
+browser HTML or JavaScript.
+
+Pending testimonial rows additionally show Approve and Disapprove actions.
+Approve changes the record to `Approved` and makes its safe publication fields
+available to the homepage. Disapprove uses the permanent-delete confirmation.
+An approved testimonial can later be removed from the site by deleting it.
 
 The `/custom-sukkahs` route presents made-to-order sukka projects for families,
 shuls, businesses, apartment buildings, and schools. It distinguishes custom
@@ -164,9 +181,9 @@ The former `/sukkah-packages` route and its old buy/sample routes redirect to
 
 The `/sukka-builder` route is labeled `Builds` and contains the website's
 custom, native-styled form for work on a sukkah the customer already owns.
-Its Submit button sends every enabled answer to the dedicated `BKAY builds`
-Google Form. Optional site photos are stored in the site's upload storage, and
-the matching Google Form response receives unlisted links to those files.
+Its Submit button saves every enabled answer as a Build submission in the
+website-owned database. Optional site photos are stored in the site's upload
+storage and related to that database submission by stable file records.
 Show a clear sending, animated success, or retry message beneath the button,
 and disable nonessential motion for visitors who prefer reduced motion.
 
@@ -197,10 +214,8 @@ does not change either submission contract. The reassurance below each submit
 button continues to state that no payment is required when sending a request.
 
 The `/sukkah-rentals` page uses a custom, site-styled rental request form rather
-than an embedded Google Form. It preserves the questions, required fields, and
-choices from the client's published `BK Sukkah rentals` form. The site Worker
-validates each request and forwards it server-side to that Google Form so the
-client's existing response destination remains unchanged.
+choices already approved for the service. The site Worker validates each
+request and saves it directly to the website-owned submissions database.
 
 The rental form is a five-step guided request flow: Contact, Location, Timing,
 Extras, and Review and send. Only one step is visible at a time on mobile and
@@ -215,16 +230,15 @@ step progress fill uses the site's solid gold accent.
 
 Neighborhood uses a compact native select with a conditional Other field.
 Rental setup and takedown timing use required native date pickers while keeping
-the legacy `buildDay` and `takeDownDay` field names. The Worker forwards those
-calendar dates through the existing Google Form questions' Other response.
+the existing `buildDay` and `takeDownDay` field names during migration. The
+Worker stores those calendar dates in normalized database fields.
 Optional services are grouped separately from the required rental details;
 Takedown and Storage are not optional add-ons because they are included in the
 default rental package. The final step shows a compact review with Edit actions
 before the `Request availability` button. Selecting Furniture reveals a
 conditional required details field so the request identifies what furniture is
-needed. When the visitor does not enter a
-separate question, the browser supplies a neutral value for the legacy required
-Google Form question.
+needed. When the visitor does not enter a separate question, the database keeps
+that optional field empty rather than creating a placeholder answer.
 
 The shared Location section accepts a site description and up to three optional
 area photos on both forms. Each photo may be a JPG, PNG, or HEIC file and must

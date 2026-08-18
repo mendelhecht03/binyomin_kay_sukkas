@@ -1,5 +1,7 @@
 import { adminErrorResponse, authorizeAdminRequest } from "./admin-auth.js";
+import { deleteDashboardSubmission } from "./deletion-service.js";
 import { getDashboardSubmissions } from "./service.js";
+import { approveDashboardTestimonial } from "./testimonial-review-service.js";
 
 const PRIVATE_HEADERS = {
   "Cache-Control": "private, no-store",
@@ -34,6 +36,28 @@ export async function handleAdminSubmissionsRequest(request, env) {
   const access = authorizeAdminRequest(request, env);
   if (!access.ok) return adminErrorResponse(access);
 
+  if (request.method === "DELETE" || request.method === "PATCH") {
+    const origin = request.headers.get("Origin");
+    if (origin && origin !== new URL(request.url).origin) {
+      return Response.json({ ok: false, message: "This dashboard request was not allowed." }, { status: 403, headers: PRIVATE_HEADERS });
+    }
+    let body;
+    try {
+      body = await request.json();
+    } catch {
+      return Response.json({ ok: false, message: "The dashboard request could not be read." }, { status: 400, headers: PRIVATE_HEADERS });
+    }
+    if (request.method === "PATCH") {
+      if (body?.action !== "approve-testimonial") {
+        return Response.json({ ok: false, message: "Unknown testimonial review action." }, { status: 400, headers: PRIVATE_HEADERS });
+      }
+      const result = await approveDashboardTestimonial({ env, id: body?.id, approvedBy: access.email });
+      return Response.json(result, { status: result.ok ? 200 : result.status, headers: PRIVATE_HEADERS });
+    }
+    const result = await deleteDashboardSubmission({ env, type: body?.type, id: body?.id });
+    return Response.json(result, { status: result.ok ? 200 : result.status, headers: PRIVATE_HEADERS });
+  }
+
   const url = new URL(request.url);
   const result = await getDashboardSubmissions({
     env,
@@ -41,6 +65,7 @@ export async function handleAdminSubmissionsRequest(request, env) {
     limit: url.searchParams.get("limit") || 50,
     cursor: url.searchParams.get("cursor") || undefined,
     search: url.searchParams.get("search") || "",
+    origin: url.origin,
   });
   if (result.ok === false) {
     return Response.json(result, { status: result.status, headers: PRIVATE_HEADERS });

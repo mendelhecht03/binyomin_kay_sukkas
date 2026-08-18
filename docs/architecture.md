@@ -17,6 +17,7 @@ Static website
   dist/
         |
         | npm run build:worker
+        | bundles src/server/worker-entry.js
         v
 Hosted Worker
   index.mjs and dist/server/index.js
@@ -25,8 +26,11 @@ Hosted Worker
 The hosted Sites project deploys the generated Worker from
 `dist/server/index.js`. The same generated code is also kept in the root
 `index.mjs` file for source history and compatibility. Astro creates the static
-site first, and `scripts/generate-static-worker.cjs` packages the finished files
-into both Worker files.
+site first. `scripts/generate-static-worker.cjs` then packages the finished
+assets and bundles the modular server entry point into both Worker files. The
+generator contains packaging code only; form handling, database storage, photo
+storage, dashboard behavior, and routing live in focused files under
+`src/server/`.
 
 ## Important Folders
 
@@ -39,6 +43,18 @@ into both Worker files.
 |   +-- pages/                one Astro page for each public route
 |   +-- components/           reusable page pieces such as navigation
 |   +-- layouts/              shared page structure
+|   +-- server/
+|       +-- worker-entry.js   central request router
+|       +-- routes/           one handler per customer form
+|       +-- forms/            central form registry
+|       +-- storage/          D1 submission repository
+|       +-- adapters/         R2 photo-storage integration
+|       +-- dashboard/        protected dashboard reading and deletion
+|       +-- common/           small shared HTTP helpers
+|       +-- static-files.js   serves the built Astro assets
++-- db/
+|   +-- schema.ts             relational D1 schema
++-- drizzle/                  versioned SQL migrations
 +-- public/
 |   +-- assets/               files copied without changing their URLs
 +-- dist/                     temporary build and deployment package
@@ -57,6 +73,31 @@ The three main folders have different jobs:
   `public/assets/images/photo.jpg` becomes `/assets/images/photo.jpg`.
 - `dist/` is created by Astro. Do not edit it by hand because the next build
   replaces it. It is ignored by Git.
+
+## Current Server Structure
+
+```mermaid
+flowchart LR
+    visitor["Customer or owner browser"] --> router["Worker router"]
+
+    router --> static["Built Astro pages and assets"]
+    router --> forms["Customer form routes"]
+    router --> dashboard["Protected dashboard route"]
+
+    forms --> database["D1 submission repository"]
+    forms --> photos["R2 photo storage adapter"]
+
+    dashboard --> database
+    dashboard --> photos
+
+    database --> records["Submissions + file metadata"]
+    photos --> objects["Uploaded photo bytes"]
+```
+
+The Worker router is now a small traffic controller. It decides which focused
+handler receives a request; the handler then uses an adapter for the outside
+service it needs. This keeps a future form from requiring edits throughout one
+large generated script.
 
 ## Public Routes
 
@@ -82,28 +123,20 @@ without a trailing slash, such as `/about`, can load the `/about/` page.
 The former package overview, buy, and sample URLs are generated as compatibility
 redirect pages that send visitors to `/sukka-builder/`.
 
-`/sukka-builder/` uses the custom, site-styled form. The former Google Form
-embed and temporary `/sukka-builder-alt/` comparison route have been removed.
-The form submits to the site's Worker, which validates the request, stores
-optional site photos, and forwards every answer to the dedicated `BKAY builds`
-Google Form from the server.
+`/sukka-builder/` uses the custom, site-styled form. The form submits to the
+site's Worker, which validates the request, stores optional site photos in R2,
+and saves the answers and photo metadata in D1.
 
-`/sukkah-rentals/` contains a custom form that mirrors the questions in the
-client's existing rental Google Form. The browser posts to
-`/api/rental-submissions`; the Worker validates the values and forwards them to
-Google Forms from the server. Keeping Google Forms field IDs in the Worker
-avoids exposing the integration in page markup, but those IDs must be updated
-if a Google Form question is deleted and recreated. The page presents those
-fields as a client-side five-step flow with local step navigation, inline
-validation, conditional Other inputs, optional site photos, timing notes, and a
-final review. Step changes do not send requests or replace form controls, so
-entered values remain in the form until the final submission.
+`/sukkah-rentals/` contains a custom form that posts to
+`/api/rental-submissions`. The Worker validates the values and saves them in D1.
+The page presents its fields as a client-side five-step flow with local step
+navigation, inline validation, conditional Other inputs, optional site photos,
+timing notes, and a final review. Step changes do not send requests or replace
+form controls, so entered values remain in the form until final submission.
 
 The rental UI collects setup and takedown with native date inputs under the
-legacy `buildDay` and `takeDownDay` names. Because the existing Google Form
-questions contain weekday choices plus Other, the Worker validates each ISO
-date and sends it as that question's Other response. This preserves the current
-Google response destination without exposing or replacing its field IDs.
+existing `buildDay` and `takeDownDay` request names. The Worker validates each
+ISO date and stores it as a normalized value in the submission record.
 
 Both forms use the same native date controls and timing presentation. Dates are
 stored in `YYYY-MM-DD` format, and the Builds form keeps its optional timing
@@ -143,46 +176,26 @@ Browser form
 Sites Worker
     |-- validates required fields and photo limits
     |-- stores photo files in the SUBMISSION_PHOTOS R2 binding
-    `-- sends text fields and photo links to BKAY builds Google Form
-                                      |
-                                      v
-                         Dedicated Builds response
+    `-- saves answers and file metadata in the DB D1 binding
 ```
 
-The dedicated Google Form stores answers and private, unlisted links to the uploaded
-photos. Photo bytes do not go inside spreadsheet cells.
+Photo bytes stay in R2 instead of occupying database rows. D1 stores each
+photo's key, original filename, type, size, and owning submission. Homepage
+testimonials use the same repository and enter it with `Pending review` status.
+An allowlisted owner can approve a testimonial in the protected dashboard.
+Approval records the owner's email and approval time, after which the public
+testimonials endpoint returns only the reviewer's public name, organization,
+and testimonial text. Disapproval permanently deletes the pending record.
 
-Homepage testimonial submissions use the same protected Apps Script webhook
-but include `type: testimonialSubmission`. Apps Script writes them to a
-separate `Testimonials` tab, creates that tab and its header on first use, and
-stores every new entry with `Pending review` status. The browser posts to
-`/api/testimonial-submissions`; there is no automatic publication path. After
-the row is stored, Apps Script uses `MailApp` to notify
-`bkaysukkahbuilders@gmail.com`. A temporary
-`TESTIMONIAL_NOTIFICATION_EMAIL` Script property can override that recipient
-for delivery testing; deleting the property restores the business address.
-Notification failure is logged without discarding the safely stored review.
+The form registry in `src/server/forms/registry.js` is the central list of
+submission types, labels, endpoints, and dashboard source keys. The router and
+dashboard consume that list, so a future form begins with one registered
+definition and one focused validation handler rather than edits throughout a
+large Worker script.
 
-Rental add-ons, furniture details, timing notes, photo links, and extra-service
-details are appended to the existing Google Form comments answer so the data
-reaches the current rental response sheet without requiring new Google Form
-field IDs. Neighborhoods that are not native choices in the older Google Form
-are forwarded through that question's `Other` response.
-
-Two production environment values remain required for testimonial submissions:
-
-```text
-SUKKAH_SHEETS_WEBHOOK_URL
-SUKKAH_SHEETS_WEBHOOK_SECRET
-```
-
-Builds submissions no longer depend on the Apps Script webhook. The
-`SUBMISSION_PHOTOS` R2 binding is required for Builds submissions and
-for Rentals submissions that include photos.
-
-The webhook secret is stored only in the Sites environment and Google Apps
-Script properties. Do not place it in source control. The Apps Script source
-template and setup notes are in `integrations/google-apps-script/`.
+The `DB` D1 binding and `SUBMISSION_PHOTOS` R2 binding are declared in
+`.openai/hosting.json`. They are hosting-managed resources rather than secrets.
+The only dashboard environment value is the private owner allowlist.
 
 ## Shared Page Structure
 
@@ -205,10 +218,10 @@ radius, and spacing stay synchronized across breakpoints.
 
 ## Worker Generation
 
-`scripts/generate-static-worker.cjs` reads only the completed static files in
-the `dist/` folder.
-It does not scan `src/`, `node_modules/`, or old root HTML files. Each built
-file is encoded into `index.mjs` with its route and content type.
+`scripts/generate-static-worker.cjs` reads the completed static files in
+`dist/`, encodes them with their routes and content types, and bundles
+`src/server/worker-entry.js` with its imported server modules. It does not own
+application behavior and it does not scan old root HTML files.
 
 The Worker handles the live builder endpoint:
 
@@ -217,15 +230,22 @@ POST /api/sukkah-submissions
 POST /api/rental-submissions
 POST /api/testimonial-submissions
 GET  /api/sukkah-submission-photos/<unlisted-photo-key>
+GET  /api/testimonials
 GET  /api/admin/submissions
+PATCH /api/admin/submissions
+DELETE /api/admin/submissions
 ```
 
-The POST endpoints accept the builder and rental form data. They validate
-required fields and photo limits, store selected photos in R2, and forward the
-Builds and Rentals answers to their existing Google Forms. Testimonial entries
-continue through the protected Apps Script webhook into the Testimonials Sheet.
-If the downstream write fails, newly uploaded photos from that request are
+The POST endpoints accept and validate their form data, store selected photos
+in R2, and save one normalized submission plus its form-specific JSON answers
+in D1. If the database write fails, newly uploaded photos from that request are
 removed so partial submissions are not left behind.
+
+`GET /api/testimonials` is public but returns only approved publication fields;
+private verification contact details never leave the protected dashboard.
+`PATCH /api/admin/submissions` is the authenticated approval action, while
+`DELETE /api/admin/submissions` handles both ordinary deletion and testimonial
+disapproval.
 
 The Worker also preserves the existing placeholder endpoint:
 
@@ -240,8 +260,9 @@ small amount of server-side submission logic.
 ## Owner dashboard
 
 The owner dashboard is a protected website route at `/admin/`. Its browser code
-never talks to Google directly. It requests normalized data from the private
-`GET /api/admin/submissions` Worker endpoint instead.
+never talks to the database directly. It reads normalized data from the private
+`GET /api/admin/submissions` Worker endpoint and sends confirmed deletion
+requests to `DELETE /api/admin/submissions`.
 
 Sites supplies the signed-in user's email in a trusted request header. The
 Worker compares that email with `DASHBOARD_ADMIN_EMAILS` before returning the
@@ -249,30 +270,19 @@ page or any data. A missing allowlist fails closed. Signed-out visitors are sent
 to the Sites sign-in route, and signed-in accounts that are not on the allowlist
 receive a forbidden response.
 
-After authorization, the Worker obtains a short-lived Google OAuth token from a
-service account. It uses only read-only Google Forms and Google Sheets scopes:
+After authorization, the Worker queries D1 through prepared SQL statements.
+Results are cursor-paginated, searchable, newest first, and always returned
+with private, no-store headers. Common searchable values use normal database
+columns, while each form's unique answers live in a JSON field.
 
-- Builds and Rentals are read from their private Google Form editor IDs through
-  the Google Forms API. Google requires the service account to be shared as a
-  Form editor to expose responses; read-only OAuth scopes still prevent edits.
-- Testimonials are read from the existing private `Testimonials` tab through
-  the Google Sheets API.
-- Form metadata is mapped by stable question ID, normalized into one dashboard
-  model, and sent to the UI without exposing Google credentials or source IDs.
+The dashboard shows each submission as a responsive row with View and Delete
+actions. Delete is permanent and therefore uses a separate confirmation dialog.
+The authenticated Worker validates the entry type and ID, removes the D1 record
+and its related file metadata, then removes the corresponding R2 photo objects.
+The foreign-key relationship prevents orphaned database file records.
 
-Each source is isolated. If one Google source is unavailable, the dashboard
-returns the other sources plus a clear per-source error. Results are paginated,
-searchable, newest first, and always returned with private, no-store headers.
-The dashboard is deliberately read-only; approval or editing still happens in
-the existing Google Forms and Sheets.
-
-The Apps Script project is not part of the dashboard read path. It remains a
-small write-only bridge for testimonial storage and notification email. The
-three existing customer submission pipelines and R2 photo storage are therefore
-independent of dashboard availability.
-
-Detailed setup, required environment variables, and field-discovery steps live
-in `docs/owner-dashboard.md`.
+Detailed setup, database behavior, and verification steps live in
+`docs/owner-dashboard.md`.
 
 Requests for a missing page use Astro's generated `404.html` while keeping the
 correct HTTP `404` status. This gives visitors a useful way back to the site
@@ -302,11 +312,18 @@ Build both the static site and the deployable Worker:
 npm run build
 ```
 
+After changing `db/schema.ts`, generate and inspect a versioned migration:
+
+```powershell
+npm run db:generate
+```
+
 The full build runs these two steps in order:
 
 1. `npm run build:site` creates `dist/`.
 2. `npm run build:worker` reads `dist/`, regenerates `index.mjs`, and creates
-   `dist/server/index.js` plus the hosting metadata required for deployment.
+   `dist/server/index.js` plus the hosting metadata and D1 migrations required
+   for deployment.
 
 `npm run preview` previews the static Astro output. It does not reproduce the
 Worker-only API endpoints.
@@ -314,13 +331,14 @@ Worker-only API endpoints.
 ## Deployment Checklist
 
 1. Run `npm install` when dependencies have changed.
-2. Run `npm run build`.
-3. Test all public routes on phone and desktop sizes.
-4. Check the reported generated Worker size.
-5. Update this file when routes, folders, or hosting behavior change.
-6. Commit the Astro source, lockfile, and regenerated `index.mjs`.
-7. Push the commit to the Sites source repository.
-8. Save a new Sites version and deploy it.
+2. Generate and inspect a migration whenever the database schema changes.
+3. Run `npm run build`.
+4. Test all public routes on phone and desktop sizes.
+5. Check the reported generated Worker size.
+6. Update this file when routes, folders, or hosting behavior change.
+7. Commit the Astro source, migration, lockfile, and regenerated `index.mjs`.
+8. Push the commit to the Sites source repository.
+9. Save a new Sites version and deploy it.
 
 `dist/` and `node_modules/` are local build folders and should not be
 committed. `index.mjs` must remain committed because it is the Sites deployment

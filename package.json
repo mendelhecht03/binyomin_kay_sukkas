@@ -8,8 +8,7 @@
     "build": "npm run build:site && npm run build:worker",
     "build:site": "astro build",
     "build:worker": "node scripts/generate-static-worker.cjs",
-    "dashboard:discover-fields": "node scripts/discover-dashboard-form-fields.mjs",
-    "dashboard:smoke": "node scripts/smoke-dashboard-live.mjs",
+    "db:generate": "drizzle-kit generate",
     "preview": "astro preview",
     "test": "npm run build:site && npm run build:worker && node --test tests/*.test.mjs"
   },
@@ -18,9 +17,10 @@
   },
   "dependencies": {
     "astro": "^7.0.7",
-    "jose": "^6.2.8"
+    "drizzle-orm": "0.45.2"
   },
   "devDependencies": {
+    "drizzle-kit": "0.31.10",
     "esbuild": "^0.28.2"
   }
 }

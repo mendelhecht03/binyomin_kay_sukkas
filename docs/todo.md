@@ -45,7 +45,12 @@ When adding a task, use this format:
 
 ## Now
 
-No task is actively being implemented.
+- [ ] Deploy and verify the database-backed site
+  - Why: The owner approved publishing the clean D1/R2 backend, protected
+    dashboard, testimonial review workflow, and updated owner allowlist.
+  - Done when: The migrations and validated site are live, the deployment
+    succeeds, the two owner emails are active, and obsolete Google runtime
+    settings are removed after verification.
 
 ## Next
 
@@ -90,6 +95,14 @@ No task is actively being implemented.
     not imply a partnership or endorsement that does not exist.
 
 ## Waiting
+
+- [ ] Replace the testimonial email notification without Google Apps Script
+  - Ready: Testimonial submissions are stored safely in D1 with `Pending
+    review` status and appear in the protected dashboard.
+  - Waiting for: Selection and setup of a transactional email sender with an
+    approved From address. Resend is the recommended simple option. Until then,
+    the database and dashboard work but the private notification email is not
+    sent by the new backend.
 
 - [ ] Publish the refined Custom Sukkahs portfolio refactor
   - Ready: The page now uses a homepage-style bento hierarchy with one large
@@ -153,6 +166,37 @@ No task is actively being implemented.
   - Unblocks: Publishing multiple testimonial cards in the homepage scroller.
 
 ## Completed
+
+- [x] Add testimonial approval controls to the owner dashboard (2026-08-17)
+  - Result: Added authenticated Approve and Disapprove actions for pending
+    testimonials. Approval records the owner and approval time and publishes
+    only the reviewer's consented public fields on the homepage; disapproval
+    permanently deletes the record. Removed the temporary testimonial preview,
+    generated the D1 migration, updated the documentation, and passed all 17
+    automated tests.
+
+- [x] Replace Google Forms and Sheets with a website-owned submissions database (2026-08-17)
+  - Result: Added a Sites D1 relational schema and versioned migration, a shared
+    prepared-query repository, a reusable form registry, and D1-backed create,
+    search, pagination, dashboard read, and permanent-delete flows. Builds,
+    Rentals, and Testimonials now use the database directly, while R2 keeps
+    photo bytes and D1 keeps their relational metadata. Removed the Google
+    Forms, Sheets, service-account, and Apps Script runtime code and settings.
+    The site and Worker build successfully and all 14 database-focused tests
+    pass.
+
+- [x] Refactor the backend and redesign the owner dashboard (2026-08-17)
+  - Result: Moved routing, form validation, Google integrations, R2 photo
+    handling, dashboard behavior, and static-file serving out of the generated
+    Worker script into focused source modules. Rebuilt the owner dashboard with
+    the public site's forest-and-cream theme, accessible responsive rows,
+    search and source filters, details, and explicit permanent-delete
+    confirmation. Added the protected delete bridge and photo cleanup, updated
+    project documentation, passed all 17 automated tests, and verified the
+    dashboard and homepage in the browser at desktop and phone widths.
+  - Superseded: The routing and dashboard presentation remain useful, but this
+    version incorrectly preserved Google Forms and Sheets as storage. The
+    corrective database-backed refactor is now the active task.
 
 - [x] Publish and verify the owner dashboard (2026-08-13)
   - Result: Published the protected `/admin/` dashboard with read-only Builds,

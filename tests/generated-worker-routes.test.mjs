@@ -1,6 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import worker from "../index.mjs";
+import { createSubmission, listSubmissions } from "../src/server/storage/submission-repository.js";
+import { createTestDatabase } from "./helpers/d1-test-database.mjs";
 
 test("the admin page and API both fail closed", async () => {
   const unconfiguredPage = await worker.fetch(new Request("https://example.com/admin/"), {});
@@ -27,13 +29,46 @@ test("the admin page and API both fail closed", async () => {
     { DASHBOARD_ADMIN_EMAILS: "owner@example.com" },
   );
   assert.equal(allowedPage.status, 200);
-  assert.match(await allowedPage.text(), /BKAY submissions/);
+  assert.match(await allowedPage.text(), /Website submissions/);
   assert.equal(allowedPage.headers.get("cache-control"), "private, no-store");
 });
 
-test("the existing Rentals submission route remains independent", async () => {
-  const originalFetch = globalThis.fetch;
-  globalThis.fetch = async () => new Response(null, { status: 302 });
+test("dashboard deletion remains protected and deletes from D1", async () => {
+  const signedOut = await worker.fetch(new Request("https://example.com/api/admin/submissions", {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ type: "testimonial", id: "review-1" }),
+  }), { DASHBOARD_ADMIN_EMAILS: "owner@example.com" });
+  assert.equal(signedOut.status, 401);
+
+  const DB = createTestDatabase();
+  try {
+    await createSubmission({ DB }, {
+      id: "review-1", type: "testimonial", status: "Pending review",
+      submittedAt: "2026-08-17T15:00:00.000Z", customer: { name: "Reviewer" },
+      summary: "Review", data: { testimonial: "A test review." },
+    });
+    const response = await worker.fetch(new Request("https://example.com/api/admin/submissions", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        "oai-authenticated-user-email": "owner@example.com",
+      },
+      body: JSON.stringify({ type: "testimonial", id: "review-1" }),
+    }), {
+      DASHBOARD_ADMIN_EMAILS: "owner@example.com",
+      DB,
+    });
+    assert.equal(response.status, 200);
+    assert.equal((await response.json()).deleted.id, "review-1");
+    assert.deepEqual((await listSubmissions({ env: { DB }, origin: "https://example.com" })).submissions, []);
+  } finally {
+    DB.close();
+  }
+});
+
+test("the Rentals submission route writes to D1", async () => {
+  const DB = createTestDatabase();
   try {
     const form = new FormData();
     Object.entries({
@@ -54,17 +89,17 @@ test("the existing Rentals submission route remains independent", async () => {
     const response = await worker.fetch(new Request("https://example.com/api/rental-submissions", {
       method: "POST",
       body: form,
-    }), {});
+    }), { DB });
     assert.equal(response.status, 200);
     assert.equal((await response.json()).ok, true);
+    assert.equal((await listSubmissions({ env: { DB }, type: "rental", origin: "https://example.com" })).submissions.length, 1);
   } finally {
-    globalThis.fetch = originalFetch;
+    DB.close();
   }
 });
 
-test("the existing Builds submission and photo binding remain independent", async () => {
-  const originalFetch = globalThis.fetch;
-  globalThis.fetch = async () => Response.json({ ok: true });
+test("the Builds submission route writes to D1", async () => {
+  const DB = createTestDatabase();
   try {
     const form = new FormData();
     Object.entries({
@@ -90,17 +125,17 @@ test("the existing Builds submission and photo binding remain independent", asyn
     const response = await worker.fetch(new Request("https://example.com/api/sukkah-submissions", {
       method: "POST",
       body: form,
-    }), { SUBMISSION_PHOTOS: { put() {}, delete() {} } });
+    }), { DB });
     assert.equal(response.status, 200);
     assert.equal((await response.json()).ok, true);
+    assert.equal((await listSubmissions({ env: { DB }, type: "build", origin: "https://example.com" })).submissions.length, 1);
   } finally {
-    globalThis.fetch = originalFetch;
+    DB.close();
   }
 });
 
-test("the existing Testimonial webhook and email bridge remain independent", async () => {
-  const originalFetch = globalThis.fetch;
-  globalThis.fetch = async () => Response.json({ ok: true });
+test("the Testimonial submission route writes to D1", async () => {
+  const DB = createTestDatabase();
   try {
     const form = new FormData();
     form.set("reviewerName", "Test Reviewer");
@@ -111,13 +146,11 @@ test("the existing Testimonial webhook and email bridge remain independent", asy
     const response = await worker.fetch(new Request("https://example.com/api/testimonial-submissions", {
       method: "POST",
       body: form,
-    }), {
-      SUKKAH_SHEETS_WEBHOOK_URL: "https://script.google.com/test",
-      SUKKAH_SHEETS_WEBHOOK_SECRET: "test-secret",
-    });
+    }), { DB });
     assert.equal(response.status, 200);
     assert.equal((await response.json()).ok, true);
+    assert.equal((await listSubmissions({ env: { DB }, type: "testimonial", origin: "https://example.com" })).submissions.length, 1);
   } finally {
-    globalThis.fetch = originalFetch;
+    DB.close();
   }
 });

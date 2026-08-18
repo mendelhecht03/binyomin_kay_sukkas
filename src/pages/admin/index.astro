@@ -1,332 +1,492 @@
 ---
-import "../../styles/global.css";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { FORM_DEFINITIONS } from "../../server/forms/registry.js";
 
-const pageTitle = "Owner Dashboard | Benyamin Kay";
+const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularLabel }) => ({
+  type,
+  sourceKey,
+  label,
+  singularLabel,
+}));
 ---
 
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-    <meta name="robots" content="noindex, nofollow" />
-    <title>{pageTitle}</title>
-  </head>
-  <body class="admin-body">
-    <header class="admin-header">
-      <div class="admin-shell admin-header__inner">
-        <div>
-          <p class="admin-eyebrow">Private owner view</p>
-          <h1>BKAY submissions</h1>
-          <p>Builds, rentals, and testimonials in one read-only view.</p>
-        </div>
-        <div class="admin-account">
-          <span id="viewer-email"></span>
-          <a href="/signout-with-chatgpt?return_to=/">Sign out</a>
-        </div>
+<BaseLayout
+  title="Owner dashboard"
+  description="Private owner dashboard for website submissions."
+  bodyClass="admin-body"
+>
+  <meta slot="head" name="robots" content="noindex, nofollow" />
+
+  <section class="admin-hero">
+    <div class="shell admin-hero__inner">
+      <div>
+        <p class="eyebrow">Private owner view</p>
+        <h1>Website submissions</h1>
+        <p>Review Builds, Rentals, and Testimonials from one organized place.</p>
       </div>
-    </header>
+      <div class="admin-account">
+        <span id="viewer-email">Signed-in owner</span>
+        <a href="/signout-with-chatgpt?return_to=/">Sign out</a>
+      </div>
+    </div>
+  </section>
 
-    <main class="admin-shell admin-main">
-      <section class="admin-summary" aria-label="Submission summary">
-        <article><span>Loaded submissions</span><strong id="count-all">—</strong></article>
-        <article><span>Build requests</span><strong id="count-build">—</strong></article>
-        <article><span>Rental requests</span><strong id="count-rental">—</strong></article>
-        <article><span>Testimonials</span><strong id="count-testimonial">—</strong></article>
-      </section>
+  <section class="section admin-dashboard">
+    <div class="shell">
+      <div class="admin-summary" aria-label="Loaded submission summary">
+        <article><span>Loaded</span><strong id="count-all">—</strong></article>
+        {dashboardForms.map((form) => (
+          <article><span>{form.label}</span><strong id={`count-${form.type}`}>—</strong></article>
+        ))}
+      </div>
 
-      <section id="source-status" class="source-status" aria-label="Data source status"></section>
-
-      <div class="admin-toolbar">
-        <div class="admin-filters" role="group" aria-label="Filter submissions">
-          <button class="is-active" type="button" data-type="all">All</button>
-          <button type="button" data-type="build">Builds</button>
-          <button type="button" data-type="rental">Rentals</button>
-          <button type="button" data-type="testimonial">Testimonials</button>
+      <div class="admin-controls">
+        <div>
+          <p class="admin-controls__label">Show</p>
+          <div class="admin-filters" role="group" aria-label="Filter submissions">
+            <button class="is-active" type="button" data-type="all">All</button>
+            {dashboardForms.map((form) => (
+              <button type="button" data-type={form.type}>{form.label}</button>
+            ))}
+          </div>
         </div>
         <label class="admin-search">
-          <span class="sr-only">Search submissions</span>
-          <input id="admin-search" type="search" placeholder="Search name, email, phone, or neighborhood" />
+          <span>Search submissions</span>
+          <input id="admin-search" type="search" placeholder="Name, email, phone, or neighborhood" />
         </label>
       </div>
 
+      <div id="source-status" class="source-status" aria-label="Data source status"></div>
       <p id="admin-message" class="admin-message" role="status">Loading submissions…</p>
-      <section id="submission-list" class="submission-list" aria-label="Submissions"></section>
-      <button id="load-more" class="load-more" type="button" hidden>Load more</button>
-    </main>
 
-    <dialog id="submission-dialog" class="submission-dialog">
-      <button class="dialog-close" type="button" aria-label="Close submission details">×</button>
-      <div id="dialog-content"></div>
-    </dialog>
+      <div id="submission-table-shell" class="submission-table-shell" hidden>
+        <table class="submission-table">
+          <caption class="sr-only">Website submissions</caption>
+          <thead>
+            <tr>
+              <th scope="col">Type</th>
+              <th scope="col">Customer</th>
+              <th scope="col">Request</th>
+              <th scope="col">Submitted</th>
+              <th scope="col"><span class="sr-only">Actions</span></th>
+            </tr>
+          </thead>
+          <tbody id="submission-list"></tbody>
+        </table>
+      </div>
+      <div id="admin-empty" class="admin-empty" hidden>
+        <h2>No matching submissions</h2>
+        <p>Try another filter or search.</p>
+      </div>
+      <button id="load-more" class="button button-secondary load-more" type="button" hidden>Load more</button>
+    </div>
+  </section>
 
-    <script is:inline>
-      const fixtureData = {
-        ok: true,
-        viewer: { email: "owner@example.com" },
-        sources: { builds: { ok: true }, rentals: { ok: true }, testimonials: { ok: true } },
-        submissions: [
-          {
-            id: "build-demo",
-            type: "build",
-            submittedAt: "2026-08-13T23:42:18.000Z",
-            customer: { name: "Sample Build Customer", phone: "(555) 010-1111", email: "build@example.com" },
-            location: { address: "123 Sample Street", city: "Brooklyn", state: "NY", zip: "11213", neighborhood: "Crown Heights" },
-            summary: "Setup and takedown · 10 × 12 ft",
-            answers: { service: ["Setup", "Takedown"], estimatedSize: "10 × 12 ft", sukkahType: "Canvas", schach: ["Bamboo mat"] },
-            details: [
-              { key: "service", label: "Requested work", value: ["Setup", "Takedown"] },
-              { key: "estimatedSize", label: "Estimated size", value: "10 × 12 ft" },
-              { key: "sukkahType", label: "Sukkah type", value: "Canvas" },
-            ],
-            source: { provider: "google-form", key: "builds" },
-          },
-          {
-            id: "rental-demo",
-            type: "rental",
-            submittedAt: "2026-08-13T21:15:00.000Z",
-            customer: { name: "Sample Rental Customer", phone: "(555) 010-2222" },
-            location: { city: "Brooklyn", state: "NY", neighborhood: "Flatbush" },
-            summary: "12 × 16 ft · September 18, 2026",
-            answers: { estimatedSize: "12 × 16 ft", buildDay: "2026-09-18", takeDownDay: "2026-10-05" },
-            details: [
-              { key: "estimatedSize", label: "Rental size", value: "12 × 16 ft" },
-              { key: "buildDay", label: "Setup date", value: "2026-09-18" },
-              { key: "takeDownDay", label: "Takedown date", value: "2026-10-05" },
-            ],
-            source: { provider: "google-form", key: "rentals" },
-          },
-          {
-            id: "testimonial-demo",
-            type: "testimonial",
-            submittedAt: "2026-08-13T20:04:00.000Z",
-            customer: { name: "Sample Reviewer", email: "review@example.com" },
-            summary: "The team was responsive and the finished sukkah was exactly what we needed.",
-            answers: { testimonial: "The team was responsive and the finished sukkah was exactly what we needed.", status: "Pending review" },
-            details: [
-              { key: "testimonial", label: "Testimonial", value: "The team was responsive and the finished sukkah was exactly what we needed." },
-              { key: "status", label: "Status", value: "Pending review" },
-            ],
-            source: { provider: "google-sheet", key: "testimonials" },
-          },
-        ],
-      };
+  <dialog id="submission-dialog" class="admin-dialog submission-dialog">
+    <button class="dialog-close" type="button" aria-label="Close submission details">×</button>
+    <div id="dialog-content"></div>
+    <div class="dialog-actions">
+      <button class="button button-approve" type="button" data-approve-current hidden>Approve and publish</button>
+      <button class="button button-danger" type="button" data-delete-current>Delete submission</button>
+      <button class="button button-secondary" type="button" data-close-details>Close</button>
+    </div>
+  </dialog>
 
-      const state = { type: "all", search: "", nextCursor: "", submissions: [], loading: false };
-      const list = document.querySelector("#submission-list");
-      const message = document.querySelector("#admin-message");
-      const loadMore = document.querySelector("#load-more");
-      const dialog = document.querySelector("#submission-dialog");
-      const isLocalFixture = ["localhost", "127.0.0.1"].includes(location.hostname) && new URLSearchParams(location.search).get("fixture") === "1";
+  <dialog id="delete-dialog" class="admin-dialog delete-dialog">
+    <p class="eyebrow">Permanent action</p>
+    <h2 id="delete-heading">Delete this submission?</h2>
+    <p id="delete-description"></p>
+    <p class="delete-warning">This cannot be undone. The database entry and its associated website photos will be permanently deleted.</p>
+    <p id="delete-status" class="delete-status" role="status"></p>
+    <div class="dialog-actions">
+      <button id="confirm-delete" class="button button-danger" type="button">Delete permanently</button>
+      <button class="button button-secondary" type="button" data-cancel-delete>Keep submission</button>
+    </div>
+  </dialog>
 
-      function escapeHtml(value) {
-        return String(value ?? "").replace(/[&<>"']/g, (character) => ({
-          "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
-        }[character]));
+  <script id="dashboard-form-definitions" type="application/json" set:html={JSON.stringify(dashboardForms)}></script>
+  <script is:inline>
+    const formDefinitions = JSON.parse(document.querySelector("#dashboard-form-definitions").textContent);
+    const formDefinitionByType = new Map(formDefinitions.map((definition) => [definition.type, definition]));
+    const fixtureData = {
+      ok: true,
+      viewer: { email: "owner@example.com" },
+      sources: Object.fromEntries(formDefinitions.map((definition) => [definition.sourceKey, { ok: true }])),
+      submissions: [
+        {
+          id: "build-demo", type: "build", submittedAt: "2026-08-13T23:42:18.000Z",
+          customer: { name: "Sample Build Customer", phone: "(555) 010-1111", email: "build@example.com" },
+          location: { address: "123 Sample Street", city: "Brooklyn", state: "NY", zip: "11213", neighborhood: "Crown Heights" },
+          summary: "Setup and takedown · 10 × 12 ft",
+          details: [
+            { key: "service", label: "Requested work", value: ["Setup", "Takedown"] },
+            { key: "estimatedSize", label: "Estimated size", value: "10 × 12 ft" },
+            { key: "sukkahType", label: "Sukkah type", value: "Canvas" },
+          ], source: { provider: "database", key: "builds" },
+        },
+        {
+          id: "rental-demo", type: "rental", submittedAt: "2026-08-13T21:15:00.000Z",
+          customer: { name: "Sample Rental Customer", phone: "(555) 010-2222" },
+          location: { city: "Brooklyn", state: "NY", neighborhood: "Flatbush" },
+          summary: "12 × 16 ft · September 18, 2026",
+          details: [
+            { key: "estimatedSize", label: "Rental size", value: "12 × 16 ft" },
+            { key: "buildDay", label: "Setup date", value: "2026-09-18" },
+          ], source: { provider: "database", key: "rentals" },
+        },
+        {
+          id: "testimonial-demo", type: "testimonial", submittedAt: "2026-08-13T20:04:00.000Z",
+          status: "Pending review",
+          customer: { name: "Sample Reviewer", email: "review@example.com" },
+          summary: "The team was responsive and the finished sukkah was exactly what we needed.",
+          details: [
+            { key: "testimonial", label: "Testimonial", value: "The team was responsive and the finished sukkah was exactly what we needed." },
+          ], source: { provider: "database", key: "testimonials" },
+        },
+      ],
+    };
+
+    const state = { type: "all", search: "", nextCursor: "", submissions: [], loading: false, selectedId: "", pendingDeleteId: "" };
+    const list = document.querySelector("#submission-list");
+    const tableShell = document.querySelector("#submission-table-shell");
+    const empty = document.querySelector("#admin-empty");
+    const message = document.querySelector("#admin-message");
+    const loadMore = document.querySelector("#load-more");
+    const detailsDialog = document.querySelector("#submission-dialog");
+    const deleteDialog = document.querySelector("#delete-dialog");
+    const deleteStatus = document.querySelector("#delete-status");
+    const confirmDelete = document.querySelector("#confirm-delete");
+    const isLocalFixture = ["localhost", "127.0.0.1"].includes(location.hostname) && new URLSearchParams(location.search).get("fixture") === "1";
+
+    function escapeHtml(value) {
+      return String(value ?? "").replace(/[&<>"']/g, (character) => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+      }[character]));
+    }
+    function displayValue(value) { return escapeHtml(Array.isArray(value) ? value.join(", ") : value); }
+    function customerName(record) { return record.customer?.name || [record.customer?.firstName, record.customer?.lastName].filter(Boolean).join(" ") || "Name not provided"; }
+    function customerContact(record) { return record.customer?.email || record.customer?.phone || "No contact provided"; }
+    function formatDate(value) {
+      const date = new Date(value);
+      return Number.isNaN(date.getTime()) ? "Date unavailable" : new Intl.DateTimeFormat("en-US", { dateStyle: "medium", timeStyle: "short" }).format(date);
+    }
+    function locationLabel(record) { return record.location?.neighborhood || [record.location?.city, record.location?.state].filter(Boolean).join(", ") || "Location not provided"; }
+    function typeLabel(type) { return formDefinitionByType.get(type)?.singularLabel || "Submission"; }
+    function isPendingTestimonial(record) { return record.type === "testimonial" && record.status === "Pending review"; }
+    function statusLabel(record) { return record.status || (record.type === "testimonial" ? "Pending review" : "New"); }
+
+    function rowActionButtons(record) {
+      if (isPendingTestimonial(record)) {
+        return `<button class="row-view" type="button" data-view>View</button>
+          <button class="row-approve" type="button" data-approve>Approve</button>
+          <button class="row-delete" type="button" data-disapprove>Disapprove</button>`;
       }
+      const deleteLabel = record.type === "testimonial" && record.status === "Approved" ? "Remove" : "Delete";
+      return `<button class="row-view" type="button" data-view>View</button>
+        <button class="row-delete" type="button" data-delete>${deleteLabel}</button>`;
+    }
 
-      function displayValue(value) {
-        return escapeHtml(Array.isArray(value) ? value.join(", ") : value);
-      }
+    function updateCounts() {
+      document.querySelector("#count-all").textContent = state.submissions.length;
+      formDefinitions.forEach(({ type }) => {
+        document.querySelector(`#count-${type}`).textContent = state.submissions.filter((item) => item.type === type).length;
+      });
+    }
 
-      function customerName(record) {
-        return record.customer?.name || [record.customer?.firstName, record.customer?.lastName].filter(Boolean).join(" ") || "Name not provided";
-      }
+    function renderStatuses(sources = {}) {
+      document.querySelector("#source-status").innerHTML = formDefinitions.map(({ sourceKey, label }) => {
+        const source = sources[sourceKey];
+        const className = source?.ok === false ? "is-error" : source?.ok === true ? "is-ok" : "";
+        const text = source?.ok === false ? `${label} unavailable` : source?.ok === true ? `${label} connected` : `${label} not requested`;
+        return `<span class="${className}">${escapeHtml(text)}</span>`;
+      }).join("");
+    }
 
-      function formatDate(value) {
-        const date = new Date(value);
-        return Number.isNaN(date.getTime()) ? "Date unavailable" : new Intl.DateTimeFormat("en-US", { dateStyle: "medium", timeStyle: "short" }).format(date);
-      }
+    function renderList() {
+      updateCounts();
+      const hasRows = state.submissions.length > 0;
+      tableShell.hidden = !hasRows;
+      empty.hidden = hasRows;
+      if (!hasRows) { list.innerHTML = ""; return; }
+      list.innerHTML = state.submissions.map((record) => `
+        <tr data-id="${escapeHtml(record.id)}">
+          <td data-label="Type"><span class="submission-type submission-type--${escapeHtml(record.type)}">${escapeHtml(typeLabel(record.type))}</span><span class="submission-status submission-status--${escapeHtml(statusLabel(record).toLowerCase().replaceAll(" ", "-"))}">${escapeHtml(statusLabel(record))}</span></td>
+          <td data-label="Customer"><strong>${escapeHtml(customerName(record))}</strong><small>${escapeHtml(customerContact(record))}</small></td>
+          <td data-label="Request"><span class="row-summary">${escapeHtml(record.summary || "Submission")}</span><small>${escapeHtml(locationLabel(record))}</small></td>
+          <td data-label="Submitted"><time datetime="${escapeHtml(record.submittedAt)}">${escapeHtml(formatDate(record.submittedAt))}</time></td>
+          <td class="row-actions" data-label="Actions">
+            ${rowActionButtons(record)}
+          </td>
+        </tr>
+      `).join("");
+    }
 
-      function locationLabel(record) {
-        return record.location?.neighborhood || [record.location?.city, record.location?.state].filter(Boolean).join(", ") || "";
-      }
+    function detailSection(title, entries) {
+      const visible = entries.filter(([, value]) => value && (!Array.isArray(value) || value.length));
+      if (!visible.length) return "";
+      return `<section class="detail-section"><h3>${escapeHtml(title)}</h3><dl>${visible.map(([label, value]) => `<div><dt>${escapeHtml(label)}</dt><dd>${displayValue(value)}</dd></div>`).join("")}</dl></section>`;
+    }
 
-      function updateCounts() {
-        document.querySelector("#count-all").textContent = state.submissions.length;
-        ["build", "rental", "testimonial"].forEach((type) => {
-          document.querySelector(`#count-${type}`).textContent = state.submissions.filter((item) => item.type === type).length;
-        });
-      }
+    function openDetails(record) {
+      state.selectedId = record.id;
+      const details = (record.details || []).map((detail) => [detail.label, detail.value]);
+      const photos = (record.photos || []).map((photo) => `<a href="${escapeHtml(photo.url)}" target="_blank" rel="noopener"><img src="${escapeHtml(photo.url)}" alt="${escapeHtml(photo.label || "Submission photo")}" /></a>`).join("");
+      document.querySelector("#dialog-content").innerHTML = `
+        <p class="eyebrow">${escapeHtml(typeLabel(record.type))} submission</p>
+        <h2>${escapeHtml(customerName(record))}</h2>
+        <p class="detail-date">${escapeHtml(formatDate(record.submittedAt))} · ${escapeHtml(statusLabel(record))}</p>
+        ${detailSection("Contact", [["Phone", record.customer?.phone], ["Email", record.customer?.email]])}
+        ${detailSection("Location", [["Address", record.location?.address], ["City", record.location?.city], ["State", record.location?.state], ["ZIP Code", record.location?.zip], ["Neighborhood", record.location?.neighborhood]])}
+        ${detailSection(record.type === "testimonial" ? "Testimonial" : "Request details", details)}
+        ${photos ? `<section class="detail-section"><h3>Photos</h3><div class="detail-photos">${photos}</div></section>` : ""}
+      `;
+      const approveButton = detailsDialog.querySelector("[data-approve-current]");
+      const deleteButton = detailsDialog.querySelector("[data-delete-current]");
+      approveButton.hidden = !isPendingTestimonial(record);
+      deleteButton.textContent = isPendingTestimonial(record)
+        ? "Disapprove and delete"
+        : record.type === "testimonial" && record.status === "Approved"
+          ? "Remove from site"
+          : "Delete submission";
+      detailsDialog.showModal();
+    }
 
-      function renderStatuses(sources = {}) {
-        const labels = { builds: "Builds", rentals: "Rentals", testimonials: "Testimonials" };
-        document.querySelector("#source-status").innerHTML = Object.entries(labels).map(([key, label]) => {
-          const source = sources[key];
-          const className = source?.ok === false ? "is-error" : source?.ok === true ? "is-ok" : "";
-          const text = source?.ok === false ? `${label}: temporarily unavailable` : source?.ok === true ? `${label}: loaded` : `${label}: not requested`;
-          return `<span class="${className}">${escapeHtml(text)}</span>`;
-        }).join("");
-      }
+    function askToDelete(record, disapprove = false) {
+      state.pendingDeleteId = record.id;
+      deleteStatus.textContent = "";
+      document.querySelector("#delete-heading").textContent = disapprove ? "Disapprove this testimonial?" : "Delete this submission?";
+      document.querySelector("#delete-description").textContent = `${typeLabel(record.type)} submission from ${customerName(record)}.`;
+      confirmDelete.textContent = disapprove ? "Disapprove and delete" : "Delete permanently";
+      if (detailsDialog.open) detailsDialog.close();
+      deleteDialog.showModal();
+    }
 
-      function renderList() {
-        updateCounts();
-        if (!state.submissions.length) {
-          list.innerHTML = '<div class="admin-empty"><h2>No matching entries</h2><p>Try another filter or search.</p></div>';
-          return;
-        }
-
-        list.innerHTML = state.submissions.map((record) => `
-          <button class="submission-card" type="button" data-id="${escapeHtml(record.id)}">
-            <span class="submission-type submission-type--${escapeHtml(record.type)}">${escapeHtml(record.type)}</span>
-            <span class="submission-card__main">
-              <strong>${escapeHtml(customerName(record))}</strong>
-              <small>${escapeHtml(formatDate(record.submittedAt))}${locationLabel(record) ? ` · ${escapeHtml(locationLabel(record))}` : ""}</small>
-              <span>${escapeHtml(record.summary || "Submission")}</span>
-            </span>
-            <span class="submission-open">View →</span>
-          </button>
-        `).join("");
-      }
-
-      function detailSection(title, entries) {
-        const visible = entries.filter(([, value]) => value && (!Array.isArray(value) || value.length));
-        if (!visible.length) return "";
-        return `<section class="detail-section"><h3>${escapeHtml(title)}</h3><dl>${visible.map(([label, value]) => `<div><dt>${escapeHtml(label)}</dt><dd>${displayValue(value)}</dd></div>`).join("")}</dl></section>`;
-      }
-
-      function openDetails(record) {
-        const answerDetails = (record.details || []).map((detail) => [detail.label, detail.value]);
-        const photos = (record.photos || []).map((photo) => `<a href="${escapeHtml(photo.url)}" target="_blank" rel="noopener"><img src="${escapeHtml(photo.url)}" alt="${escapeHtml(photo.label || "Submission photo")}" /></a>`).join("");
-        document.querySelector("#dialog-content").innerHTML = `
-          <p class="admin-eyebrow">${escapeHtml(record.type)} request</p>
-          <h2>${escapeHtml(customerName(record))}</h2>
-          <p class="detail-date">${escapeHtml(formatDate(record.submittedAt))}</p>
-          ${detailSection("Contact", [["Phone", record.customer?.phone], ["Email", record.customer?.email]])}
-          ${detailSection("Location", [["Address", record.location?.address], ["City", record.location?.city], ["State", record.location?.state], ["ZIP Code", record.location?.zip], ["Neighborhood", record.location?.neighborhood]])}
-          ${detailSection(record.type === "testimonial" ? "Testimonial" : "Request details", answerDetails)}
-          ${photos ? `<section class="detail-section"><h3>Photos</h3><div class="detail-photos">${photos}</div></section>` : ""}
-        `;
-        dialog.showModal();
-      }
-
-      async function load({ append = false } = {}) {
-        if (state.loading) return;
-        state.loading = true;
-        message.textContent = append ? "Loading more…" : "Loading submissions…";
-        message.hidden = false;
-        loadMore.disabled = true;
-        try {
-          const params = new URLSearchParams({ type: state.type, limit: "60" });
-          if (state.search) params.set("search", state.search);
-          if (append && state.nextCursor) params.set("cursor", state.nextCursor);
-          const data = isLocalFixture ? fixtureData : await fetch(`/api/admin/submissions?${params}`).then(async (response) => {
-            const body = await response.json().catch(() => null);
-            if (!response.ok) throw new Error(body?.message || "The dashboard could not load.");
-            return body;
+    async function approveTestimonial(record, trigger) {
+      if (!isPendingTestimonial(record)) return;
+      if (trigger instanceof HTMLButtonElement) trigger.disabled = true;
+      message.hidden = false;
+      message.textContent = `Approving testimonial from ${customerName(record)}…`;
+      try {
+        if (!isLocalFixture) {
+          const response = await fetch("/api/admin/submissions", {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ action: "approve-testimonial", id: record.id }),
           });
-          state.submissions = append ? [...state.submissions, ...data.submissions] : data.submissions;
-          state.nextCursor = data.nextCursor || "";
-          document.querySelector("#viewer-email").textContent = data.viewer?.email || "";
-          renderStatuses(data.sources);
-          renderList();
-          message.hidden = true;
-          loadMore.hidden = !state.nextCursor || isLocalFixture;
-        } catch (error) {
-          message.textContent = error.message || "The dashboard could not load.";
-          if (!append) list.innerHTML = "";
-        } finally {
-          state.loading = false;
-          loadMore.disabled = false;
+          const body = await response.json().catch(() => null);
+          if (!response.ok) throw new Error(body?.message || "The testimonial could not be approved.");
         }
+        record.status = "Approved";
+        renderList();
+        if (detailsDialog.open) detailsDialog.close();
+        message.textContent = `The testimonial from ${customerName(record)} is now published on the site.`;
+      } catch (error) {
+        message.textContent = error.message || "The testimonial could not be approved.";
+      } finally {
+        if (trigger instanceof HTMLButtonElement) trigger.disabled = false;
       }
+    }
 
-      document.querySelector(".admin-filters").addEventListener("click", (event) => {
-        const button = event.target.closest("[data-type]");
-        if (!button) return;
-        document.querySelectorAll("[data-type]").forEach((item) => item.classList.toggle("is-active", item === button));
-        state.type = button.dataset.type;
-        state.nextCursor = "";
-        load();
-      });
+    async function deletePendingSubmission() {
+      const record = state.submissions.find((item) => item.id === state.pendingDeleteId);
+      if (!record) return;
+      confirmDelete.disabled = true;
+      document.querySelector("[data-cancel-delete]").disabled = true;
+      deleteStatus.textContent = "Deleting submission…";
+      try {
+        if (!isLocalFixture) {
+          const response = await fetch("/api/admin/submissions", {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ type: record.type, id: record.id }),
+          });
+          const body = await response.json().catch(() => null);
+          if (!response.ok) throw new Error(body?.message || "The submission could not be deleted.");
+          if (body?.warning) message.textContent = body.warning;
+        }
+        state.submissions = state.submissions.filter((item) => item.id !== record.id);
+        renderList();
+        deleteDialog.close();
+        message.hidden = false;
+        message.textContent = `${typeLabel(record.type)} submission from ${customerName(record)} was deleted.`;
+      } catch (error) {
+        deleteStatus.textContent = error.message || "The submission could not be deleted.";
+      } finally {
+        confirmDelete.disabled = false;
+        document.querySelector("[data-cancel-delete]").disabled = false;
+      }
+    }
 
-      let searchTimer;
-      document.querySelector("#admin-search").addEventListener("input", (event) => {
-        clearTimeout(searchTimer);
-        searchTimer = setTimeout(() => {
-          state.search = event.target.value.trim();
-          state.nextCursor = "";
-          load();
-        }, 300);
-      });
-      list.addEventListener("click", (event) => {
-        const card = event.target.closest("[data-id]");
-        const record = state.submissions.find((item) => item.id === card?.dataset.id);
-        if (record) openDetails(record);
-      });
-      loadMore.addEventListener("click", () => load({ append: true }));
-      dialog.querySelector(".dialog-close").addEventListener("click", () => dialog.close());
-      dialog.addEventListener("click", (event) => { if (event.target === dialog) dialog.close(); });
+    async function load({ append = false } = {}) {
+      if (state.loading) return;
+      state.loading = true;
+      message.textContent = append ? "Loading more…" : "Loading submissions…";
+      message.hidden = false;
+      loadMore.disabled = true;
+      try {
+        const params = new URLSearchParams({ type: state.type, limit: "60" });
+        if (state.search) params.set("search", state.search);
+        if (append && state.nextCursor) params.set("cursor", state.nextCursor);
+        const data = isLocalFixture ? fixtureData : await fetch(`/api/admin/submissions?${params}`).then(async (response) => {
+          const body = await response.json().catch(() => null);
+          if (!response.ok) throw new Error(body?.message || "The dashboard could not load.");
+          return body;
+        });
+        state.submissions = append ? [...state.submissions, ...data.submissions] : data.submissions;
+        state.nextCursor = data.nextCursor || "";
+        document.querySelector("#viewer-email").textContent = data.viewer?.email || "Signed-in owner";
+        renderStatuses(data.sources);
+        renderList();
+        message.hidden = true;
+        loadMore.hidden = !state.nextCursor || isLocalFixture;
+      } catch (error) {
+        message.textContent = error.message || "The dashboard could not load.";
+        if (!append) { state.submissions = []; renderList(); }
+      } finally {
+        state.loading = false;
+        loadMore.disabled = false;
+      }
+    }
+
+    document.querySelector(".admin-filters").addEventListener("click", (event) => {
+      const button = event.target.closest("[data-type]");
+      if (!button) return;
+      document.querySelectorAll("[data-type]").forEach((item) => item.classList.toggle("is-active", item === button));
+      state.type = button.dataset.type;
+      state.nextCursor = "";
       load();
-    </script>
-  </body>
-</html>
+    });
+    let searchTimer;
+    document.querySelector("#admin-search").addEventListener("input", (event) => {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(() => { state.search = event.target.value.trim(); state.nextCursor = ""; load(); }, 300);
+    });
+    list.addEventListener("click", (event) => {
+      const row = event.target.closest("[data-id]");
+      const record = state.submissions.find((item) => item.id === row?.dataset.id);
+      if (!record) return;
+      if (event.target.closest("[data-approve]")) approveTestimonial(record, event.target.closest("[data-approve]"));
+      else if (event.target.closest("[data-disapprove]")) askToDelete(record, true);
+      else if (event.target.closest("[data-delete]")) askToDelete(record);
+      if (event.target.closest("[data-view]")) openDetails(record);
+    });
+    loadMore.addEventListener("click", () => load({ append: true }));
+    detailsDialog.querySelector(".dialog-close").addEventListener("click", () => detailsDialog.close());
+    detailsDialog.querySelector("[data-close-details]").addEventListener("click", () => detailsDialog.close());
+    detailsDialog.querySelector("[data-delete-current]").addEventListener("click", () => {
+      const record = state.submissions.find((item) => item.id === state.selectedId);
+      if (record) askToDelete(record, isPendingTestimonial(record));
+    });
+    detailsDialog.querySelector("[data-approve-current]").addEventListener("click", (event) => {
+      const record = state.submissions.find((item) => item.id === state.selectedId);
+      if (record) approveTestimonial(record, event.currentTarget);
+    });
+    detailsDialog.addEventListener("click", (event) => { if (event.target === detailsDialog) detailsDialog.close(); });
+    deleteDialog.querySelector("[data-cancel-delete]").addEventListener("click", () => deleteDialog.close());
+    deleteDialog.addEventListener("click", (event) => { if (event.target === deleteDialog && !confirmDelete.disabled) deleteDialog.close(); });
+    confirmDelete.addEventListener("click", deletePendingSubmission);
+    load();
+  </script>
+</BaseLayout>
 
 <style is:global>
-  .admin-body { margin: 0; color: #173d33; background: #f7f4eb; font-family: "Inter", sans-serif; }
-  .admin-shell { width: min(1160px, calc(100% - 32px)); margin-inline: auto; }
-  .admin-header { color: white; background: #0d4336; border-bottom: 5px solid #c47d2f; }
-  .admin-header__inner { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding-block: 28px; }
-  .admin-header h1 { margin: 0 0 4px; color: white; font: 700 clamp(2rem, 5vw, 3rem)/1.05 Georgia, serif; }
-  .admin-header p { margin: 0; color: #d6e6e0; }
-  .admin-eyebrow { margin: 0 0 6px !important; color: #e8b370 !important; font-size: .75rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
-  .admin-account { display: grid; justify-items: end; gap: 5px; font-size: .85rem; }
-  .admin-account a { color: white; }
-  .admin-main { padding-block: 28px 60px; }
-  .admin-summary { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 18px; }
-  .admin-summary article { padding: 18px; border: 1px solid #d8e2dc; border-radius: 14px; background: white; box-shadow: 0 10px 24px rgb(13 67 54 / .06); }
-  .admin-summary span { display: block; color: #65766f; font-size: .78rem; font-weight: 700; }
-  .admin-summary strong { display: block; margin-top: 5px; color: #0d4336; font-size: 1.8rem; }
-  .source-status { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; }
-  .source-status span { padding: 6px 10px; border-radius: 999px; color: #5f6e68; background: #e9edea; font-size: .75rem; font-weight: 700; }
-  .source-status .is-ok { color: #125b43; background: #dceee6; }
-  .source-status .is-error { color: #8a3327; background: #f7ded9; }
-  .admin-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 20px; }
-  .admin-filters { display: flex; flex-wrap: wrap; gap: 8px; }
-  .admin-filters button, .load-more { min-height: 44px; padding: 9px 15px; border: 1px solid #cbd8d1; border-radius: 999px; color: #0d4336; background: white; font: inherit; font-weight: 750; cursor: pointer; }
-  .admin-filters button:hover, .admin-filters button.is-active { color: white; border-color: #0d4336; background: #0d4336; }
-  .admin-search { width: min(390px, 100%); }
-  .admin-search input { width: 100%; min-height: 46px; padding: 10px 13px; border: 1px solid #cbd8d1; border-radius: 10px; font: inherit; background: white; }
-  .admin-search input:focus { outline: 3px solid rgb(196 125 47 / .25); border-color: #c47d2f; }
-  .admin-message { color: #65766f; }
-  .submission-list { display: grid; gap: 10px; }
-  .submission-card { display: grid; grid-template-columns: 105px minmax(0, 1fr) auto; align-items: center; gap: 16px; width: 100%; padding: 16px 18px; border: 1px solid #d8e2dc; border-radius: 14px; color: inherit; background: white; text-align: left; box-shadow: 0 8px 20px rgb(13 67 54 / .04); cursor: pointer; }
-  .submission-card:hover { border-color: #c47d2f; transform: translateY(-1px); }
-  .submission-type { justify-self: start; padding: 5px 9px; border-radius: 999px; color: #0d4336; background: #e1efe9; font-size: .72rem; font-weight: 850; text-transform: uppercase; }
-  .submission-type--rental { color: #6d4718; background: #f8ead6; }
-  .submission-type--testimonial { color: #4d3e77; background: #ece7fa; }
-  .submission-card__main { display: grid; gap: 2px; min-width: 0; }
-  .submission-card__main strong { font-size: 1rem; }
-  .submission-card__main small { color: #65766f; }
-  .submission-card__main > span { overflow: hidden; color: #314f47; text-overflow: ellipsis; white-space: nowrap; }
-  .submission-open { color: #0d4336; font-size: .82rem; font-weight: 800; }
-  .load-more { display: block; margin: 22px auto 0; border-radius: 10px; }
-  .load-more[hidden] { display: none; }
-  .admin-empty { padding: 34px; border: 1px dashed #b8cac1; border-radius: 14px; text-align: center; }
-  .admin-empty h2 { margin: 0 0 4px; font: 700 1.4rem Georgia, serif; }
-  .admin-empty p { margin: 0; color: #65766f; }
-  .submission-dialog { width: min(780px, calc(100% - 24px)); max-height: min(86vh, 900px); padding: 28px; border: 0; border-radius: 18px; color: #173d33; box-shadow: 0 25px 70px rgb(0 0 0 / .28); }
-  .submission-dialog::backdrop { background: rgb(5 27 21 / .55); }
-  .submission-dialog h2 { margin: 0; font: 700 clamp(1.7rem, 5vw, 2.4rem)/1.1 Georgia, serif; }
-  .dialog-close { position: absolute; top: 13px; right: 15px; width: 42px; height: 42px; border: 0; border-radius: 50%; color: #0d4336; background: #edf2ef; font-size: 1.7rem; cursor: pointer; }
-  .detail-date { color: #65766f; }
-  .detail-section { padding-top: 18px; margin-top: 18px; border-top: 1px solid #dce4df; }
-  .detail-section h3 { margin: 0 0 11px; color: #0d4336; font-size: .78rem; letter-spacing: .11em; text-transform: uppercase; }
-  .detail-section dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 13px 20px; margin: 0; }
-  .detail-section dt { color: #65766f; font-size: .75rem; font-weight: 750; }
-  .detail-section dd { margin: 2px 0 0; white-space: pre-wrap; overflow-wrap: anywhere; }
-  .detail-photos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-  .detail-photos img { width: 100%; aspect-ratio: 4 / 3; border-radius: 9px; object-fit: cover; }
-  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
-  @media (max-width: 760px) {
-    .admin-shell { width: min(100% - 22px, 600px); }
-    .admin-header__inner, .admin-toolbar { align-items: stretch; flex-direction: column; }
+  .admin-body { background: var(--cream-50); }
+  .admin-hero { position: relative; overflow: hidden; padding-block: clamp(3rem, 7vw, 5.5rem); color: white; background: var(--forest-950); }
+  .admin-hero::after { position: absolute; right: -8rem; bottom: -15rem; width: 30rem; height: 30rem; border: 4rem solid rgba(255,255,255,.05); border-radius: 50%; content: ""; }
+  .admin-hero__inner { position: relative; z-index: 1; display: flex; align-items: end; justify-content: space-between; gap: 2rem; }
+  .admin-hero h1 { max-width: 760px; margin-bottom: .75rem; color: white; font-size: clamp(2.7rem, 7vw, 5.4rem); }
+  .admin-hero p:last-child { max-width: 650px; margin: 0; color: rgba(255,255,255,.72); font-size: 1.08rem; }
+  .admin-hero .eyebrow, .admin-dialog .eyebrow { margin-bottom: .6rem; color: var(--wood-500); }
+  .admin-account { min-width: 210px; display: grid; justify-items: end; gap: .25rem; padding: 1rem 1.1rem; border: 1px solid rgba(255,255,255,.16); border-radius: var(--radius); background: rgba(255,255,255,.06); font-size: .85rem; }
+  .admin-account a { color: white; font-weight: 800; text-underline-offset: .2em; }
+  .admin-dashboard { min-height: 42rem; padding-top: clamp(2rem, 5vw, 3.5rem); }
+  .admin-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+  .admin-summary article { padding: 1.15rem 1.25rem; border: 1px solid var(--border); border-radius: var(--radius); background: white; box-shadow: var(--shadow-small); }
+  .admin-summary span { display: block; color: var(--ink-500); font-size: .78rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+  .admin-summary strong { display: block; margin-top: .25rem; color: var(--forest-950); font-family: var(--font-heading); font-size: 2rem; line-height: 1; }
+  .admin-controls { display: grid; grid-template-columns: 1fr minmax(280px, 390px); gap: 1.5rem; align-items: end; padding: 1.35rem; border: 1px solid var(--border); border-radius: var(--radius-large); background: var(--cream-100); }
+  .admin-controls__label, .admin-search span { display: block; margin: 0 0 .5rem; color: var(--ink-700); font-size: .8rem; font-weight: 850; letter-spacing: .04em; }
+  .admin-filters { display: flex; flex-wrap: wrap; gap: .45rem; }
+  .admin-filters button { min-height: 44px; padding: .6rem .95rem; border: 1px solid var(--border-strong); border-radius: 999px; color: var(--forest-900); background: white; font: inherit; font-weight: 800; cursor: pointer; }
+  .admin-filters button:hover, .admin-filters button.is-active { border-color: var(--forest-900); color: white; background: var(--forest-900); }
+  .admin-search input { min-height: 46px; }
+  .source-status { display: flex; flex-wrap: wrap; gap: .5rem; margin: 1rem 0; }
+  .source-status span { padding: .35rem .65rem; border-radius: 999px; color: var(--ink-500); background: var(--cream-200); font-size: .74rem; font-weight: 800; }
+  .source-status .is-ok { color: var(--forest-800); background: var(--forest-100); }
+  .source-status .is-error { color: var(--danger); background: #f9e8e4; }
+  .admin-message { margin: 1rem 0; color: var(--ink-500); font-weight: 700; }
+  .submission-table-shell { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius-large); background: white; box-shadow: var(--shadow-small); }
+  .submission-table { width: 100%; border-collapse: collapse; text-align: left; }
+  .submission-table th { padding: .9rem 1rem; border-bottom: 1px solid var(--border-strong); color: var(--ink-500); background: var(--cream-100); font-size: .75rem; letter-spacing: .07em; text-transform: uppercase; }
+  .submission-table td { padding: 1rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  .submission-table tbody tr:last-child td { border-bottom: 0; }
+  .submission-table tbody tr:hover { background: rgba(229,238,232,.35); }
+  .submission-table td strong, .submission-table td small { display: block; }
+  .submission-table td strong { color: var(--forest-950); }
+  .submission-table td small { margin-top: .15rem; color: var(--ink-500); }
+  .submission-table time { display: block; max-width: 14ch; color: var(--ink-700); font-size: .86rem; }
+  .row-summary { display: block; max-width: 34rem; color: var(--ink-900); }
+  .submission-type { display: inline-flex; padding: .3rem .55rem; border-radius: 999px; color: var(--forest-900); background: var(--forest-100); font-size: .7rem; font-weight: 850; letter-spacing: .04em; text-transform: uppercase; }
+  .submission-type--rental { color: #76501e; background: #f6e8d4; }
+  .submission-type--testimonial { color: #57467d; background: #ece7f7; }
+  .submission-status { display: block; width: fit-content; margin-top: .4rem; color: var(--ink-500); font-size: .7rem; font-weight: 800; }
+  .submission-status--approved { color: var(--forest-800); }
+  .submission-status--pending-review { color: #76501e; }
+  .row-actions { min-width: 220px; white-space: nowrap; text-align: right; }
+  .row-actions button { min-height: 42px; padding: .45rem .65rem; border: 0; border-radius: var(--radius-small); background: transparent; font: inherit; font-weight: 800; cursor: pointer; }
+  .row-view { color: var(--forest-800); }
+  .row-approve { color: var(--forest-800); background: var(--forest-100) !important; }
+  .row-delete { color: var(--danger); }
+  .row-actions button:hover { background: var(--cream-100); }
+  .admin-empty { padding: 3rem 1.5rem; border: 1px dashed var(--border-strong); border-radius: var(--radius-large); text-align: center; background: var(--cream-100); }
+  .admin-empty h2 { margin-bottom: .35rem; }
+  .admin-empty p { margin: 0; color: var(--ink-500); }
+  .load-more { display: block; margin: 1.5rem auto 0; }
+  .load-more[hidden], [hidden] { display: none !important; }
+  .admin-dialog { width: min(780px, calc(100% - 24px)); max-height: min(88vh, 900px); padding: clamp(1.4rem, 4vw, 2.25rem); border: 1px solid var(--border); border-radius: var(--radius-large); color: var(--ink-900); background: var(--cream-50); box-shadow: 0 28px 80px rgba(7,27,21,.32); }
+  .admin-dialog::backdrop { background: rgba(7,27,21,.64); backdrop-filter: blur(3px); }
+  .admin-dialog h2 { margin-bottom: .5rem; color: var(--forest-950); font-size: clamp(1.8rem, 5vw, 2.7rem); }
+  .dialog-close { position: absolute; top: .8rem; right: .8rem; width: 44px; height: 44px; border: 0; border-radius: 50%; color: var(--forest-950); background: var(--forest-100); font-size: 1.6rem; cursor: pointer; }
+  .detail-date { color: var(--ink-500); }
+  .detail-section { padding-top: 1.25rem; margin-top: 1.25rem; border-top: 1px solid var(--border); }
+  .detail-section h3 { margin-bottom: .75rem; color: var(--forest-800); font-family: var(--font-body); font-size: .76rem; letter-spacing: .1em; text-transform: uppercase; }
+  .detail-section dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem 1.5rem; margin: 0; }
+  .detail-section dt { color: var(--ink-500); font-size: .76rem; font-weight: 800; }
+  .detail-section dd { margin: .15rem 0 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .detail-photos { display: grid; grid-template-columns: repeat(3, 1fr); gap: .75rem; }
+  .detail-photos img { width: 100%; aspect-ratio: 4 / 3; border-radius: var(--radius-small); object-fit: cover; }
+  .dialog-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: .75rem; padding-top: 1.5rem; margin-top: 1.5rem; border-top: 1px solid var(--border); }
+  .button-danger { border-color: var(--danger); color: white; background: var(--danger); }
+  .button-danger:hover { border-color: #762424; background: #762424; }
+  .button-approve { border-color: var(--forest-800); color: white; background: var(--forest-800); }
+  .button-approve:hover { border-color: var(--forest-950); background: var(--forest-950); }
+  .delete-dialog { width: min(560px, calc(100% - 24px)); }
+  .delete-warning { padding: .9rem 1rem; border-left: 4px solid var(--danger); color: #762424; background: #f9e8e4; }
+  .delete-status { min-height: 1.5rem; color: var(--danger); font-weight: 800; }
+  @media (max-width: 820px) {
+    .admin-hero__inner { align-items: stretch; flex-direction: column; }
     .admin-account { justify-items: start; }
-    .admin-summary { grid-template-columns: repeat(2, 1fr); }
-    .admin-search { width: 100%; }
-    .submission-card { grid-template-columns: 1fr auto; }
-    .submission-type { grid-column: 1 / -1; }
-    .submission-card__main > span { white-space: normal; }
+    .admin-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .admin-controls { grid-template-columns: 1fr; }
+    .submission-table-shell { overflow: visible; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
+    .submission-table, .submission-table tbody { display: grid; gap: .75rem; }
+    .submission-table thead { display: none; }
+    .submission-table tr { display: grid; grid-template-columns: 1fr 1fr; overflow: hidden; border: 1px solid var(--border); border-radius: var(--radius); background: white; box-shadow: var(--shadow-small); }
+    .submission-table td { display: grid; grid-template-columns: 6.5rem minmax(0, 1fr); gap: .75rem; padding: .75rem 1rem; border-bottom: 1px solid var(--border); }
+    .submission-table td::before { content: attr(data-label); color: var(--ink-500); font-size: .72rem; font-weight: 850; letter-spacing: .05em; text-transform: uppercase; }
+    .submission-table td:nth-child(1), .submission-table td:nth-child(2), .submission-table td:nth-child(3), .submission-table .row-actions { grid-column: 1 / -1; }
+    .submission-table tbody tr:last-child td { border-bottom: 1px solid var(--border); }
+    .submission-table .row-actions { display: flex; justify-content: flex-end; }
+    .submission-table .row-actions::before { margin-right: auto; }
+    .submission-table time { max-width: none; }
+  }
+  @media (max-width: 560px) {
+    .admin-summary { gap: .65rem; }
+    .admin-summary article { padding: 1rem; }
+    .submission-table tr { grid-template-columns: 1fr; }
+    .submission-table td { grid-template-columns: 5.5rem minmax(0, 1fr); grid-column: 1 !important; }
     .detail-section dl, .detail-photos { grid-template-columns: 1fr; }
+    .dialog-actions { align-items: stretch; flex-direction: column-reverse; }
+    .dialog-actions .button { width: 100%; }
   }
 </style>
