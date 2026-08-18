@@ -45,12 +45,7 @@ When adding a task, use this format:
 
 ## Now
 
-- [ ] Expand the visual section icon picker
-  - Why: The form builder's current section-icon select only shows text labels,
-    making the available choices harder to recognize.
-  - Done when: The owner can open a visual icon picker, see the actual icon for
-    every choice, choose from a larger useful icon set, and publish those icons
-    to live forms without breaking older saved forms.
+- No active task.
 
 ## Next
 
@@ -157,6 +152,13 @@ When adding a task, use this format:
   - Unblocks: Publishing multiple testimonial cards in the homepage scroller.
 
 ## Completed
+
+- [x] Expand the visual section icon picker (2026-08-18)
+  - Result: Replaced the text-only section icon select with a keyboard-friendly
+    visual picker that shows each outlined icon. Added Phone, Home,
+    Measurements, Tools, Message, and Photo choices while preserving all older
+    icon values. The expanded icons render in the live form renderer, and the
+    published build plus all 22 automated tests passed.
 
 - [x] Add editable placeholder text to form fields (2026-08-18)
   - Result: Added an optional Placeholder text control to the owner builder for
