@@ -45,13 +45,6 @@ When adding a task, use this format:
 
 ## Now
 
-- [ ] Deploy and verify the database-backed site
-  - Why: The owner approved publishing the clean D1/R2 backend, protected
-    dashboard, testimonial review workflow, and updated owner allowlist.
-  - Done when: The migrations and validated site are live, the deployment
-    succeeds, the two owner emails are active, and obsolete Google runtime
-    settings are removed after verification.
-
 ## Next
 
 - [ ] Explain convertible roof and schach options
@@ -103,15 +96,6 @@ When adding a task, use this format:
     approved From address. Resend is the recommended simple option. Until then,
     the database and dashboard work but the private notification email is not
     sent by the new backend.
-
-- [ ] Publish the refined Custom Sukkahs portfolio refactor
-  - Ready: The page now uses a homepage-style bento hierarchy with one large
-    featured project, two smaller projects beside it, and two balanced projects
-    below. Its project labels match the photographed frames, wall coverings,
-    schach, and settings, and the custom-build service area is limited to the
-    New York, New Jersey, and Connecticut tri-state area. Phones return to one
-    full-width project per row, and the production build passes.
-  - Waiting for: Approval to publish this version to the public website.
 
 - [ ] Receive and label real custom-sukkah project photos
   - Received: Examples of blue, white, and beige tarp walls,
@@ -166,6 +150,15 @@ When adding a task, use this format:
   - Unblocks: Publishing multiple testimonial cards in the homepage scroller.
 
 ## Completed
+
+- [x] Deploy and verify the database-backed site (2026-08-17)
+  - Result: Published the clean D1/R2 backend, protected dashboard, permanent
+    deletion, testimonial approval and public-display workflow, and the refined
+    Custom Sukkahs portfolio. Confirmed the live homepage and public testimonial
+    endpoint respond successfully, signed-out dashboard requests redirect to
+    sign-in, the D1 schema is live with an empty submissions table, and both
+    approved owner emails are active. Removed every obsolete Google runtime
+    setting after verification.
 
 - [x] Add testimonial approval controls to the owner dashboard (2026-08-17)
   - Result: Added authenticated Approve and Disapprove actions for pending
