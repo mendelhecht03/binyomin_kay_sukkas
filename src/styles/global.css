@@ -1192,6 +1192,32 @@ input[type="range"]:focus-visible {
   text-underline-offset: 0.2em;
 }
 
+.footer-bottom-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.footer-bottom-actions .footer-admin-link {
+  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.7rem;
+  border: 1px solid rgba(255, 255, 255, 0.26);
+  border-radius: 999px;
+  color: rgba(255, 255, 255, 0.76);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+}
+
+.footer-bottom-actions .footer-admin-link:hover,
+.footer-bottom-actions .footer-admin-link:focus-visible {
+  border-color: rgba(255, 255, 255, 0.7);
+  color: white;
+  text-decoration: none;
+}
+
 @media (max-width: 1050px) {
   .footer-grid {
     grid-template-columns: 1.4fr repeat(2, 1fr);

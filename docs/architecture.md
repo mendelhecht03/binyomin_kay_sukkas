@@ -213,6 +213,11 @@ and phone sizes, its links move into a full-height panel. The page body becomes
 temporarily inert while that panel is open so keyboard focus stays inside the
 navigation.
 
+`src/components/Footer.astro` owns the repeated footer content and includes a
+small Admin link to the protected `/admin/` dashboard. The link is intentionally
+available on every shared-layout page while the dashboard still enforces owner
+authentication.
+
 `src/components/VisualOptionCard.astro` owns the repeated photo, heading, and
 description surface used by the Custom Sukkahs Siding and Schach grids. Both
 sections pass content into the same component so their image ratio, borders,

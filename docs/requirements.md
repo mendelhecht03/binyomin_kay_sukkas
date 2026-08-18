@@ -157,6 +157,10 @@ The Sukkahs navigation group contains Builds, Rentals, Custom Sukkahs, and
 Pergolas. The footer uses the same grouping. Public route paths remain
 unchanged for saved links and search engines.
 
+The shared footer includes a small Admin link to `/admin/` for the owner. It is
+visually quiet but keyboard accessible, and the protected dashboard continues
+to enforce owner authentication when the link is opened.
+
 Use approved real project photos on the Custom Sukkahs page by default. The
 page is a portfolio first: one large featured finished interior leads a
 homepage-style desktop composition with two smaller projects beside it and two

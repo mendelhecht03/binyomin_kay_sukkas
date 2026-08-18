@@ -45,7 +45,12 @@ When adding a task, use this format:
 
 ## Now
 
-- No active task.
+- [ ] Add a small Admin link to the shared footer
+  - Why: The owner should have a discreet, consistent way to reach the
+    protected dashboard from the public site.
+  - Done when: Every page using the shared footer shows an accessible Admin
+    link that matches the site's visual style, works on phone and desktop, and
+    the published site is updated.
 
 ## Next
 
