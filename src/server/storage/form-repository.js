@@ -1,4 +1,4 @@
-import { DEFAULT_CUSTOM_SUKKAH_FORM, normalizeFormSchema } from "../forms/form-schema.js";
+import { DEFAULT_MANAGED_FORMS, normalizeFormSchema } from "../forms/form-schema.js";
 
 function requireDatabase(env) {
   if (!env?.DB || typeof env.DB.prepare !== "function") {
@@ -17,14 +17,14 @@ function safeJson(value) {
   try { return JSON.parse(String(value || "")); } catch { return null; }
 }
 
-function defaultRecord() {
+function defaultRecord(schema) {
   return {
-    id: DEFAULT_CUSTOM_SUKKAH_FORM.id,
-    slug: DEFAULT_CUSTOM_SUKKAH_FORM.slug,
-    title: DEFAULT_CUSTOM_SUKKAH_FORM.title,
-    description: DEFAULT_CUSTOM_SUKKAH_FORM.description,
-    draft: DEFAULT_CUSTOM_SUKKAH_FORM,
-    published: DEFAULT_CUSTOM_SUKKAH_FORM,
+    id: schema.id,
+    slug: schema.slug,
+    title: schema.title,
+    description: schema.description,
+    draft: schema,
+    published: schema,
     publishedVersion: 1,
     isBuiltInDefault: true,
     versions: [],
@@ -32,16 +32,19 @@ function defaultRecord() {
 }
 
 function rowToForm(row) {
+  const rawDraft = safeJson(row.draft_schema_json);
+  const normalizedDraft = normalizeFormSchema(rawDraft);
   return {
     id: row.id,
     slug: row.slug,
     title: row.title,
     description: row.description || "",
-    draft: safeJson(row.draft_schema_json),
+    draft: normalizedDraft.ok ? normalizedDraft.schema : rawDraft,
     publishedVersionId: row.published_version_id || "",
     publishedVersion: Number(row.published_version_number || 0),
     updatedAt: row.updated_at,
     updatedBy: row.updated_by || "",
+    isBuiltInDefault: DEFAULT_MANAGED_FORMS.some((schema) => schema.id === row.id),
   };
 }
 
@@ -51,7 +54,9 @@ export async function listForms({ env }) {
     FROM forms f LEFT JOIN form_versions v ON v.id = f.published_version_id
     ORDER BY lower(f.title), f.id`).all();
   const forms = (page.results || []).map(rowToForm);
-  if (!forms.some((form) => form.slug === DEFAULT_CUSTOM_SUKKAH_FORM.slug)) forms.unshift(defaultRecord());
+  for (const schema of [...DEFAULT_MANAGED_FORMS].reverse()) {
+    if (!forms.some((form) => form.id === schema.id)) forms.unshift(defaultRecord(schema));
+  }
   return forms;
 }
 
@@ -59,7 +64,8 @@ export async function getFormById({ env, id }) {
   const db = requireDatabase(env);
   const row = await db.prepare(`SELECT f.*, v.version_number AS published_version_number
     FROM forms f LEFT JOIN form_versions v ON v.id = f.published_version_id WHERE f.id = ?`).bind(clean(id)).first();
-  if (!row && clean(id) === DEFAULT_CUSTOM_SUKKAH_FORM.id) return defaultRecord();
+  const builtIn = DEFAULT_MANAGED_FORMS.find((schema) => schema.id === clean(id));
+  if (!row && builtIn) return defaultRecord(builtIn);
   return row ? rowToForm(row) : null;
 }
 
@@ -69,11 +75,13 @@ export async function getPublishedFormBySlug({ env, slug }) {
       v.version_number, v.schema_json, v.published_at
     FROM forms f JOIN form_versions v ON v.id = f.published_version_id
     WHERE f.slug = ?`).bind(clean(slug).toLowerCase()).first();
-  if (!row && clean(slug).toLowerCase() === DEFAULT_CUSTOM_SUKKAH_FORM.slug) {
-    return { schema: DEFAULT_CUSTOM_SUKKAH_FORM, versionId: "built-in-1", versionNumber: 1 };
+  const builtIn = DEFAULT_MANAGED_FORMS.find((schema) => schema.slug === clean(slug).toLowerCase());
+  if (!row && builtIn) {
+    return { schema: builtIn, versionId: "built-in-1", versionNumber: 1 };
   }
   const schema = safeJson(row?.schema_json);
-  return row && schema ? { schema, versionId: row.version_id, versionNumber: Number(row.version_number) } : null;
+  const normalized = normalizeFormSchema(schema);
+  return row && normalized.ok ? { schema: normalized.schema, versionId: row.version_id, versionNumber: Number(row.version_number) } : null;
 }
 
 export async function createFormDraft({ env, schema, updatedBy, now = new Date().toISOString() }) {
@@ -93,12 +101,14 @@ export async function createFormDraft({ env, schema, updatedBy, now = new Date()
 export async function saveFormDraft({ env, id, schema, updatedBy, now = new Date().toISOString() }) {
   const normalized = normalizeFormSchema({ ...schema, id });
   if (!normalized.ok) return normalized;
+  const builtIn = DEFAULT_MANAGED_FORMS.find((item) => item.id === clean(id));
+  if (builtIn) normalized.schema.slug = builtIn.slug;
   const db = requireDatabase(env);
   const conflict = await db.prepare("SELECT id FROM forms WHERE slug = ? AND id != ?").bind(normalized.schema.slug, clean(id)).first();
   if (conflict) return { ok: false, status: 409, message: "Another form already uses that URL." };
   let result = await db.prepare(`UPDATE forms SET slug = ?, title = ?, description = ?, draft_schema_json = ?, updated_at = ?, updated_by = ? WHERE id = ?`)
     .bind(normalized.schema.slug, normalized.schema.title, normalized.schema.description, JSON.stringify(normalized.schema), now, clean(updatedBy).toLowerCase(), clean(id)).run();
-  if (!Number(result?.meta?.changes || 0) && clean(id) === DEFAULT_CUSTOM_SUKKAH_FORM.id) {
+  if (!Number(result?.meta?.changes || 0) && DEFAULT_MANAGED_FORMS.some((schema) => schema.id === clean(id))) {
     result = await db.prepare(`INSERT INTO forms (id, slug, title, description, draft_schema_json, published_version_id, created_at, updated_at, updated_by)
       VALUES (?, ?, ?, ?, ?, NULL, ?, ?, ?)`)
       .bind(clean(id), normalized.schema.slug, normalized.schema.title, normalized.schema.description, JSON.stringify(normalized.schema), now, now, clean(updatedBy).toLowerCase()).run();

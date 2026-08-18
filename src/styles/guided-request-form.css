@@ -166,6 +166,16 @@
   resize: vertical;
 }
 
+/* iOS gives native date controls a wide intrinsic size unless it is explicitly
+   allowed to shrink inside a responsive grid. */
+.guided-request-form input[type="date"] {
+  display: block;
+  min-width: 0;
+  max-width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
 .guided-request-form input::placeholder,
 .guided-request-form textarea::placeholder {
   color: var(--ink-500);

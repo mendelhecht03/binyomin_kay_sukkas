@@ -205,25 +205,26 @@ The former `/sukkah-packages` route and its old buy/sample routes redirect to
 `/sukka-builder/` so saved links do not lead to a missing page.
 
 The `/sukka-builder` route is labeled `Builds` and contains the website's
-custom, native-styled form for work on a sukkah the customer already owns.
+schema-driven, native-styled form for work on a sukkah the customer already owns.
 Its Submit button saves every enabled answer as a Build submission in the
 website-owned database. Optional site photos are stored in the site's upload
 storage and related to that database submission by stable file records.
 Show a clear sending, animated success, or retry message beneath the button,
 and disable nonessential motion for visitors who prefer reduced motion.
 
-Builds uses the same guided-request design system as Rentals. Its six steps are
-Contact, Location, Timing, Requested work, Your sukkah, and Review and send. Only one
-step is visible at a time on mobile and desktop. The form uses the shared
-centered 850-pixel maximum width, progress bar, card, controls, Back and
-Continue buttons, review rows, inline errors, and success treatment. The old
-desktop process sidebar and redundant form introduction are not shown.
+Builds uses the same guided-request design system and shared live renderer as
+Rentals. Its six editable steps are Contact, Location, Timing, Requested work,
+Your sukkah, and Review and send. Only one step is visible at a time on mobile
+and desktop. The protected form builder can edit question text, field type,
+options, conditional follow-ups, step order, and each section icon before a
+new version is published.
 Entered values and selected photos remain attached to the same form controls
 while visitors move Back, Continue, or Edit a review row.
 
 The progress row becomes sticky on phone-sized screens. Multi-column choices,
-dates, and uploads must reflow before they can overflow. Labels and form text
-remain left-aligned for easy scanning. The approximate size uses one required
+dates, and uploads must reflow before they can overflow. Native date controls
+must be shrinkable and capped at 100% width so iOS Safari keeps them inside
+the card. Labels and form text remain left-aligned for easy scanning. The approximate size uses one required
 text input in the same format as Rentals, for example `10 × 12 ft`. Standard
 editable controls and action targets remain at least 44 pixels tall on phones,
 and phone text inputs use
@@ -238,15 +239,18 @@ processing fee applies. The panel does not contain selectable form controls and
 does not change either submission contract. The reassurance below each submit
 button continues to state that no payment is required when sending a request.
 
-The `/sukkah-rentals` page uses a custom, site-styled rental request form rather
-choices already approved for the service. The site Worker validates each
+The `/sukkah-rentals` page uses the same schema-driven, site-styled rental
+request form with the approved choices and stable field names. The owner can
+edit its live draft in the protected dashboard. The site Worker validates each
 request and saves it directly to the website-owned submissions database.
 
 The rental form is a five-step guided request flow: Contact, Location, Timing,
 Extras, and Review and send. Only one step is visible at a time on mobile and
 desktop. A clear progress label and bar update with each step, Back and
 Continue preserve entered values, and inline validation identifies the first
-field that needs attention without using alert dialogs.
+field that needs attention without using alert dialogs. Its Location step uses
+the same responsive address layout as Builds; Street address, City, State, and
+ZIP stack vertically on phone-sized screens.
 
 Before the guided steps, the Rentals page shows a compact product summary with
 a fixed-aspect-ratio image placeholder. Its approved description is: "Comes
@@ -316,9 +320,10 @@ beyond the standard scope is required (for example, a rooftop sukkah).` When
 the visitor checks it, the form asks for required details.
 
 Selecting Bring to storage in Builds' Requested work step reveals its required
-date field. Limit that picker to the approved 30-day holiday window before
-Sukkos, and hide and disable it when the service is not selected. The shared
-Timing step always owns the setup and takedown dates.
+date field and hides it when the service is not selected. The shared Timing
+step always owns the setup and takedown dates. These questions remain editable
+through the form builder while their shared native controls and validation stay
+in place.
 
 The footer shows office hours as Sunday-Friday, 7:00 AM-7:00 PM, and states
 that the business is closed on Erev Yom Kippur, Motzei Yom Kippur, and Erev

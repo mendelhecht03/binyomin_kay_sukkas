@@ -126,40 +126,28 @@ without a trailing slash, such as `/about`, can load the `/about/` page.
 The former package overview, buy, and sample URLs are generated as compatibility
 redirect pages that send visitors to `/sukka-builder/`.
 
-`/sukka-builder/` uses the custom, site-styled form. The form submits to the
-site's Worker, which validates the request, stores optional site photos in R2,
-and saves the answers and photo metadata in D1.
+`/sukka-builder/`, `/sukkah-rentals/`, and `/request/<published-form-slug>/`
+all use the same `ManagedRequestForm` renderer. The browser requests the active
+published definition from `GET /api/forms/<slug>`, and the Worker validates the
+same definition before saving a submission. Builds and Rentals are built-in
+managed schemas with stable slugs (`builds` and `rentals`), so the owner can
+edit the live forms from the dashboard without changing page code. Their
+submissions still use the existing `build` and `rental` dashboard categories.
 
-`/sukkah-rentals/` contains a custom form that posts to
-`/api/rental-submissions`. The Worker validates the values and saves them in D1.
-The page presents its fields as a client-side five-step flow with local step
-navigation, inline validation, conditional Other inputs, optional site photos,
-timing notes, and a final review. Step changes do not send requests or replace
-form controls, so entered values remain in the form until final submission.
+Every step stores a selectable section icon (`contact`, `location`, `timing`,
+`sukkah`, `site`, or `final`). The shared renderer draws those icons with the
+same outlined style used by the original live forms. The editor exposes the
+same icon choices for built-in and newly created forms.
 
-The rental UI collects setup and takedown with native date inputs under the
-existing `buildDay` and `takeDownDay` request names. The Worker validates each
-ISO date and stores it as a normalized value in the submission record.
+All managed forms use the shared guided progress, card, field, choice, review,
+validation, and success presentation. Builds and Rentals keep their stable
+field names for existing backend and dashboard reporting. Native date inputs
+are explicitly allowed to shrink inside their grid so iOS Safari cannot push
+the form beyond the card edge.
 
-Both forms use the same native date controls and timing presentation. Dates are
-stored in `YYYY-MM-DD` format, and the Builds form keeps its optional timing
-notes. The Builds-only Bring-to-storage date remains in Requested work and is
-limited to the approved holiday window.
-
-Builds and Rentals share one Location layout: street address, city, state, ZIP,
-neighborhood, approximate size, a site description, and an optional photo card.
-The two pages import the same neighborhood and state option data. Visitors fill
-the address manually; the page does not load a third-party address service.
-
-`/request/<published-form-slug>/` uses one shared guided-form shell. The Worker
-serves that shell for every published slug, and the browser requests the active
-form definition from `GET /api/forms/<slug>`. The same definition controls the
-visible steps and fields and the server-side validation; the browser is never
-trusted to decide which answers are valid.
-
-The initial managed form is `custom-sukkah`. Its sample draft demonstrates
-text, email, phone, dropdown, radio-card, checkbox-card, paragraph, photo, and
-conditional follow-up fields. The closing action on `/custom-sukkahs/` links to
+The initial managed Custom Sukkah form demonstrates text, email, phone,
+dropdown, radio-card, checkbox-card, paragraph, photo, and conditional
+follow-up fields. The closing action on `/custom-sukkahs/` links to
 `/request/custom-sukkah/`.
 
 ## Builds

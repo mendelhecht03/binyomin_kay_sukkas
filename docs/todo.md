@@ -45,6 +45,17 @@ When adding a task, use this format:
 
 ## Now
 
+- [ ] Correct mobile form layouts and connect the builder to live forms
+  - Why: The approved testimonial card is far too tall on iPhone, the Builds
+    location fields do not match Rentals, native date inputs overflow on iOS,
+    and the owner must be able to edit the forms customers actually use.
+  - Done when: Testimonial cards size to their content on phone and desktop;
+    Builds uses the same responsive Location layout as Rentals; date inputs stay
+    inside their cards on iOS-sized screens; Builds, Rentals, and Custom Sukkah
+    forms are editable and published through the owner builder; section icons
+    can be selected in the builder and render in the established form style;
+    tests and responsive browser checks pass; and the update is deployed.
+
 ## Next
 
 - [ ] Explain convertible roof and schach options

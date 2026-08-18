@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { FORM_DEFINITIONS } from "../../server/forms/registry.js";
-import { DEFAULT_CUSTOM_SUKKAH_FORM, SUPPORTED_FORM_FIELD_TYPES } from "../../server/forms/form-schema.js";
+import { DEFAULT_MANAGED_FORMS, SUPPORTED_FORM_FIELD_TYPES, SUPPORTED_FORM_STEP_ICONS } from "../../server/forms/form-schema.js";
 
 const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularLabel }) => ({
   type,
@@ -184,8 +184,9 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
   </dialog>
 
   <script id="dashboard-form-definitions" type="application/json" set:html={JSON.stringify(dashboardForms)}></script>
-  <script id="default-form-schema" type="application/json" set:html={JSON.stringify(DEFAULT_CUSTOM_SUKKAH_FORM)}></script>
+  <script id="default-form-schemas" type="application/json" set:html={JSON.stringify(DEFAULT_MANAGED_FORMS)}></script>
   <script id="supported-field-types" type="application/json" set:html={JSON.stringify(SUPPORTED_FORM_FIELD_TYPES)}></script>
+  <script id="supported-step-icons" type="application/json" set:html={JSON.stringify(SUPPORTED_FORM_STEP_ICONS)}></script>
   <script is:inline>
     const formDefinitions = JSON.parse(document.querySelector("#dashboard-form-definitions").textContent);
     const formDefinitionByType = new Map(formDefinitions.map((definition) => [definition.type, definition]));
@@ -468,14 +469,16 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
     confirmDelete.addEventListener("click", deletePendingSubmission);
     load();
 
-    const defaultFormSchema = JSON.parse(document.querySelector("#default-form-schema").textContent);
+    const defaultFormSchemas = JSON.parse(document.querySelector("#default-form-schemas").textContent);
     const supportedFieldTypes = JSON.parse(document.querySelector("#supported-field-types").textContent);
+    const supportedStepIcons = JSON.parse(document.querySelector("#supported-step-icons").textContent);
     const fieldTypeLabels = {
       text: "Short text", email: "Email", phone: "Phone", date: "Date",
       textarea: "Paragraph", select: "Dropdown", radio: "Single choice",
       checkboxes: "Checkbox cards", photos: "Photo upload",
     };
     const optionFieldTypes = new Set(["select", "radio", "checkboxes"]);
+    const stepIconLabels = { contact: "Person", location: "Location pin", timing: "Calendar", sukkah: "Sukkah", site: "Photo / site", final: "Checklist" };
     const editor = {
       forms: [], selectedId: "", schema: null, dirty: false,
     };
@@ -492,6 +495,11 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
     function slugify(value) { return String(value || "").toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, ""); }
     function selected(value, expected) { return value === expected ? " selected" : ""; }
     function checked(value) { return value ? " checked" : ""; }
+    function publicFormPath(schema) {
+      if (schema.id === "builds") return "/sukka-builder/";
+      if (schema.id === "rentals") return "/sukkah-rentals/";
+      return `/request/${encodeURIComponent(schema.slug)}/`;
+    }
     function editorFields() { return editor.schema?.steps.flatMap((step) => step.fields || []) || []; }
     function markEditorDirty() {
       editor.dirty = true;
@@ -552,6 +560,7 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
           <div class="step-editor-heading">
             <span>${stepIndex + 1}</span>
             <label><span class="sr-only">Step name</span><input data-step-title value="${escapeHtml(step.title)}" maxlength="100" /></label>
+            <label class="step-icon-setting"><span class="sr-only">Section icon</span><select data-step-icon aria-label="Section icon">${supportedStepIcons.map((icon) => `<option value="${icon}"${selected(step.icon, icon)}>${escapeHtml(stepIconLabels[icon] || icon)}</option>`).join("")}</select></label>
             <div class="mini-actions">
               <button type="button" data-step-action="up" aria-label="Move step up">↑</button>
               <button type="button" data-step-action="down" aria-label="Move step down">↓</button>
@@ -576,7 +585,7 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
     function renderEditorPreview() {
       if (!editor.schema) return;
       previewHost.innerHTML = `<h4>${escapeHtml(editor.schema.title || "Untitled form")}</h4><p>${escapeHtml(editor.schema.description || "")}</p>${editor.schema.steps.map((step, index) => `
-        <section class="preview-step"><div><span>${index + 1}</span><strong>${escapeHtml(step.title)}</strong></div>
+        <section class="preview-step"><div><span title="${escapeHtml(stepIconLabels[step.icon] || "Section icon")}">${escapeHtml((step.icon || "site").slice(0, 1).toUpperCase())}</span><strong>${escapeHtml(step.title)}</strong></div>
         ${step.fields.slice(0, 5).map((field) => `<div class="preview-field">${previewControl(field)}${field.condition ? `<small>Shown when ${escapeHtml(field.condition.fieldId)} ${escapeHtml(field.condition.operator)} “${escapeHtml(field.condition.value)}”</small>` : ""}</div>`).join("") || "<p class='preview-empty'>Review step</p>"}
         </section>`).join("")}<span class="preview-submit">${escapeHtml(editor.schema.submitLabel || "Send request")}</span>`;
     }
@@ -587,9 +596,14 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
       editorLoading.hidden = true;
       document.querySelector("[data-editor-form-name]").textContent = editor.schema.title;
       document.querySelector("[data-editor-version]").textContent = selectedForm?.publishedVersion ? `Published version ${selectedForm.publishedVersion}` : "Not published yet";
-      document.querySelector("[data-public-form-link]").href = `/request/${encodeURIComponent(editor.schema.slug)}/`;
+      document.querySelector("[data-public-form-link]").href = publicFormPath(editor.schema);
       document.querySelector("[data-public-form-link]").hidden = !selectedForm?.publishedVersion && !selectedForm?.isBuiltInDefault;
       document.querySelectorAll("[data-form-setting]").forEach((input) => { input.value = editor.schema[input.dataset.formSetting] || ""; });
+      const slugInput = document.querySelector("[data-form-setting='slug']");
+      const slugPrefix = slugInput.closest(".slug-field").querySelector("span");
+      slugInput.hidden = Boolean(selectedForm?.isBuiltInDefault);
+      slugInput.disabled = Boolean(selectedForm?.isBuiltInDefault);
+      slugPrefix.textContent = selectedForm?.isBuiltInDefault ? publicFormPath(editor.schema) : "/request/";
       renderStepEditor();
       renderEditorPreview();
       renderFormList();
@@ -611,7 +625,10 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
       editor.selectedId = id;
       try {
         let form;
-        if (isLocalFixture) form = { id: defaultFormSchema.id, draft: clone(defaultFormSchema), isBuiltInDefault: true, publishedVersion: 1 };
+        if (isLocalFixture) {
+          const schema = defaultFormSchemas.find((item) => item.id === id) || defaultFormSchemas[0];
+          form = { id: schema.id, draft: clone(schema), isBuiltInDefault: true, publishedVersion: 1 };
+        }
         else {
           const response = await fetch(`/api/admin/forms/${encodeURIComponent(id)}`);
           const body = await response.json();
@@ -628,7 +645,7 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
 
     async function loadEditorForms() {
       try {
-        if (isLocalFixture) editor.forms = [{ id: defaultFormSchema.id, slug: defaultFormSchema.slug, title: defaultFormSchema.title, draft: defaultFormSchema, publishedVersion: 1, isBuiltInDefault: true }];
+        if (isLocalFixture) editor.forms = defaultFormSchemas.map((schema) => ({ id: schema.id, slug: schema.slug, title: schema.title, draft: schema, publishedVersion: 1, isBuiltInDefault: true }));
         else {
           const response = await fetch("/api/admin/forms");
           const body = await response.json();
@@ -651,6 +668,7 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
       const stepIndex = Number(stepCard?.dataset.stepIndex);
       const fieldCardElement = event.target.closest("[data-field-index]");
       if (event.target.matches("[data-step-title]") && !fieldCardElement) editor.schema.steps[stepIndex].title = event.target.value;
+      if (event.target.matches("[data-step-icon]") && !fieldCardElement) editor.schema.steps[stepIndex].icon = event.target.value;
       if (fieldCardElement && event.target.matches("[data-field-setting]")) updateFieldFromControl(event.target, editor.schema.steps[stepIndex].fields[Number(fieldCardElement.dataset.fieldIndex)]);
       if (fieldCardElement && event.target.matches("[data-condition-setting]")) {
         const field = editor.schema.steps[stepIndex].fields[Number(fieldCardElement.dataset.fieldIndex)];
@@ -698,11 +716,11 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
       editor.schema[input.dataset.formSetting] = input.dataset.formSetting === "slug" ? slugify(input.value) : input.value;
       if (input.dataset.formSetting === "slug") input.value = editor.schema.slug;
       document.querySelector("[data-editor-form-name]").textContent = editor.schema.title || "Untitled form";
-      document.querySelector("[data-public-form-link]").href = `/request/${encodeURIComponent(editor.schema.slug)}/`;
+      document.querySelector("[data-public-form-link]").href = publicFormPath(editor.schema);
       markEditorDirty();
     }));
     document.querySelector("[data-add-step]").addEventListener("click", () => {
-      editor.schema.steps.push({ id: makeId("step"), title: "New step", fields: [] });
+      editor.schema.steps.push({ id: makeId("step"), title: "New step", icon: "site", fields: [] });
       markEditorDirty(); renderStepEditor();
     });
     formList.addEventListener("click", (event) => { const button = event.target.closest("[data-select-form]"); if (button) selectEditorForm(button.dataset.selectForm); });
@@ -740,12 +758,12 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
       const title = String(values.get("title") || "").trim();
       const newSlug = slugify(values.get("slug"));
       const newSchema = { id: makeId("form"), slug: newSlug, title, description: "Tell us a little about what you need.", submitLabel: "Send request", successTitle: "Your request was sent.", successMessage: "We will review the details and follow up with you.", steps: [
-        { id: "contact", title: "Contact", fields: [
+        { id: "contact", title: "Contact", icon: "contact", fields: [
           { id: "name", type: "text", label: "Name", required: true, autocomplete: "name" },
           { id: "phone", type: "phone", label: "Phone number", required: true, autocomplete: "tel" },
           { id: "email", type: "email", label: "Email address", required: false, autocomplete: "email" },
         ] },
-        { id: "review", title: "Review and send", fields: [] },
+        { id: "review", title: "Review and send", icon: "final", fields: [] },
       ] };
       const status = newFormDialog.querySelector("[data-new-form-status]"); status.textContent = "Creating draft…";
       if (isLocalFixture) { status.textContent = "Creating forms is available on the protected live dashboard."; return; }
@@ -815,9 +833,10 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
   .form-steps-heading button, .add-question-button, .mini-actions button, .version-row button { min-height: 38px; padding: .4rem .65rem; border: 1px solid var(--border-strong); border-radius: 8px; color: var(--forest-800); background: white; font: inherit; font-size: .76rem; font-weight: 800; cursor: pointer; }
   .step-editor-card { overflow: hidden; border: 1px solid var(--border-strong); border-radius: var(--radius); background: var(--cream-50); }
   .step-editor-card + .step-editor-card { margin-top: .85rem; }
-  .step-editor-heading { display: grid; grid-template-columns: 2.15rem minmax(120px, 1fr) auto; gap: .65rem; align-items: center; padding: .75rem; border-bottom: 1px solid var(--border); background: var(--forest-100); }
+  .step-editor-heading { display: grid; grid-template-columns: 2.15rem minmax(120px, 1fr) minmax(120px, 10rem) auto; gap: .65rem; align-items: center; padding: .75rem; border-bottom: 1px solid var(--border); background: var(--forest-100); }
   .step-editor-heading > span { display: grid; width: 2.15rem; height: 2.15rem; place-items: center; border-radius: 8px; color: white; background: var(--forest-800); font-weight: 850; }
   .step-editor-heading input { width: 100%; min-height: 38px; padding: .4rem .55rem; border: 1px solid var(--border-strong); border-radius: 7px; color: var(--forest-950); background: white; font: inherit; font-weight: 800; }
+  .step-icon-setting select { width: 100%; min-height: 38px; padding: .4rem .5rem; border: 1px solid var(--border-strong); border-radius: 7px; color: var(--forest-900); background: white; font: inherit; font-size: .76rem; font-weight: 750; }
   .mini-actions { display: flex; flex-wrap: wrap; gap: .3rem; justify-content: flex-end; }
   .mini-actions button { min-width: 38px; min-height: 38px; padding: .35rem .5rem; }
   .mini-actions .is-danger { color: var(--danger); }
@@ -960,6 +979,7 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
     .form-settings-grid, .field-editor-grid, .condition-grid { grid-template-columns: 1fr; }
     .form-settings-full, .field-editor-full { grid-column: auto; }
     .step-editor-heading { grid-template-columns: 2.15rem minmax(0, 1fr); }
+    .step-editor-heading .step-icon-setting { grid-column: 2; }
     .step-editor-heading .mini-actions { grid-column: 1 / -1; }
     .field-editor-card__top { align-items: flex-start; flex-direction: column; }
     .submission-table tr { grid-template-columns: 1fr; }

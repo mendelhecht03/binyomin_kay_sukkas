@@ -12,6 +12,12 @@ function valueForField(formData, field) {
 
 function hasValue(value) { return Array.isArray(value) ? value.length > 0 : Boolean(cleanText(value)); }
 
+function submissionIdentity(slug, origin) {
+  if (slug === "builds") return { type: "build", sourcePage: `${origin}/sukka-builder/` };
+  if (slug === "rentals") return { type: "rental", sourcePage: `${origin}/sukkah-rentals/` };
+  return { type: "custom", sourcePage: `${origin}/request/${slug}/` };
+}
+
 export async function handleDynamicFormSubmission(request, env, url, slug) {
   const parsed = await readFormData(request);
   if (!parsed.ok) return parsed.response;
@@ -61,12 +67,13 @@ export async function handleDynamicFormSubmission(request, env, url, slug) {
       formVersionId: published.versionId, formVersionNumber: published.versionNumber,
       answers, answerDetails,
     };
+    const identity = submissionIdentity(published.schema.slug, url.origin);
     await createSubmission(env, {
-      id: submissionId, type: "custom", status: "New", submittedAt,
+      id: submissionId, type: identity.type, status: "New", submittedAt,
       customer: { name: answers.name || "", phone: answers.phone || "", email: answers.email || "" },
-      location: { neighborhood: answers.setting || answers.neighborhood || "" },
+      location: { neighborhood: answers.neighborhoodOther || answers.settingOther || answers.setting || answers.neighborhood || "" },
       summary: [published.schema.title, answers.estimatedSize].filter(Boolean).join(" · "),
-      data, files: uploaded.files, sourcePage: `${url.origin}/request/${published.schema.slug}/`,
+      data, files: uploaded.files, sourcePage: identity.sourcePage,
     });
     return jsonResponse({ ok: true, submissionId, message: published.schema.successMessage });
   } catch (error) {

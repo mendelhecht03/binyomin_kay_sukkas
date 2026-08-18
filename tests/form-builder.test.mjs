@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import worker from "../index.mjs";
-import { normalizeFormSchema } from "../src/server/forms/form-schema.js";
+import { DEFAULT_BUILD_FORM, DEFAULT_RENTAL_FORM, normalizeFormSchema } from "../src/server/forms/form-schema.js";
 import {
   createFormDraft, getPublishedFormBySlug, listFormVersions, publishForm, saveFormDraft,
 } from "../src/server/storage/form-repository.js";
@@ -40,6 +40,7 @@ test("form schemas accept existing field types and validate conditional follow-u
   const valid = normalizeFormSchema(editableSchema());
   assert.equal(valid.ok, true);
   assert.equal(valid.schema.steps[0].fields[2].condition.operator, "includes");
+  assert.equal(valid.schema.steps[0].icon, "site");
 
   const invalid = editableSchema();
   invalid.steps[0].fields[2].condition.fieldId = "missing-field";
@@ -101,7 +102,8 @@ test("form management APIs require an approved owner and public form pages use t
       headers: { "oai-authenticated-user-email": "owner@example.com" },
     }), { DB, DASHBOARD_ADMIN_EMAILS: "owner@example.com" });
     assert.equal(allowed.status, 200);
-    assert.ok((await allowed.json()).forms.some((form) => form.slug === "custom-sukkah"));
+    const forms = (await allowed.json()).forms;
+    assert.deepEqual(forms.slice(0, 3).map((form) => form.slug), ["builds", "rentals", "custom-sukkah"]);
 
     const publicConfig = await worker.fetch(new Request("https://example.com/api/forms/custom-sukkah"), { DB });
     assert.equal(publicConfig.status, 200);
@@ -110,5 +112,24 @@ test("form management APIs require an approved owner and public form pages use t
     const shell = await worker.fetch(new Request("https://example.com/request/custom-sukkah/"), { DB });
     assert.equal(shell.status, 200);
     assert.match(await shell.text(), /data-dynamic-form/);
+  } finally { DB.close(); }
+});
+
+test("the live Builds and Rentals definitions use editable section icons and the shared public renderer", async () => {
+  const DB = createTestDatabase();
+  try {
+    for (const schema of [DEFAULT_BUILD_FORM, DEFAULT_RENTAL_FORM]) {
+      const config = await worker.fetch(new Request(`https://example.com/api/forms/${schema.slug}`), { DB });
+      assert.equal(config.status, 200);
+      const body = await config.json();
+      assert.equal(body.schema.steps[0].icon, "contact");
+      assert.equal(body.schema.steps.find((step) => step.id === "location").icon, "location");
+      assert.equal(body.schema.steps.at(-1).icon, "final");
+    }
+
+    const buildsPage = await worker.fetch(new Request("https://example.com/sukka-builder/"), { DB });
+    const rentalsPage = await worker.fetch(new Request("https://example.com/sukkah-rentals/"), { DB });
+    assert.match(await buildsPage.text(), /data-form-slug="builds"/);
+    assert.match(await rentalsPage.text(), /data-form-slug="rentals"/);
   } finally { DB.close(); }
 });

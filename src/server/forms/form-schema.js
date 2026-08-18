@@ -1,8 +1,14 @@
+import { neighborhoods, states } from "../../data/form-options.js";
+
 const FIELD_TYPES = new Set([
   "text", "email", "phone", "date", "textarea", "select", "radio", "checkboxes", "photos",
 ]);
 const OPTION_FIELD_TYPES = new Set(["select", "radio", "checkboxes"]);
 const CONDITION_OPERATORS = new Set(["equals", "includes"]);
+const STEP_ICONS = new Set(["contact", "location", "timing", "sukkah", "site", "final"]);
+
+const stateOptions = states.map(([code, name]) => `${name} (${code})`);
+const neighborhoodOptions = [...neighborhoods, "Other"];
 
 export const DEFAULT_CUSTOM_SUKKAH_FORM = {
   id: "custom-sukkah",
@@ -16,6 +22,7 @@ export const DEFAULT_CUSTOM_SUKKAH_FORM = {
     {
       id: "contact",
       title: "Contact",
+      icon: "contact",
       fields: [
         { id: "name", type: "text", label: "Name", required: true, autocomplete: "name" },
         { id: "phone", type: "phone", label: "Phone number", required: true, autocomplete: "tel" },
@@ -25,6 +32,7 @@ export const DEFAULT_CUSTOM_SUKKAH_FORM = {
     {
       id: "location",
       title: "Location",
+      icon: "location",
       fields: [
         { id: "addressLine1", type: "text", label: "Street address", required: true, autocomplete: "address-line1" },
         { id: "city", type: "text", label: "City", required: true, autocomplete: "address-level2" },
@@ -48,6 +56,7 @@ export const DEFAULT_CUSTOM_SUKKAH_FORM = {
     {
       id: "project",
       title: "Your project",
+      icon: "sukkah",
       fields: [
         {
           id: "framePreference", type: "radio", label: "Which frame are you considering?", required: true,
@@ -68,9 +77,133 @@ export const DEFAULT_CUSTOM_SUKKAH_FORM = {
         { id: "projectNotes", type: "textarea", label: "Anything else we should know?", required: false, placeholder: "Share timing, access, design ideas, or special requests." },
       ],
     },
-    { id: "review", title: "Review and send", fields: [] },
+    { id: "review", title: "Review and send", icon: "final", fields: [] },
   ],
 };
+
+export const DEFAULT_BUILD_FORM = {
+  id: "builds",
+  slug: "builds",
+  title: "Build request",
+  description: "Share your sukkah setup, location, timing, and site details.",
+  submitLabel: "Request a quote",
+  successTitle: "Your request was sent.",
+  successMessage: "Benyamin will review the details and follow up with you.",
+  steps: [
+    {
+      id: "contact", title: "Contact", icon: "contact", fields: [
+        { id: "name", type: "text", label: "Name", required: true, autocomplete: "name" },
+        { id: "phone", type: "phone", label: "Phone number", required: true, autocomplete: "tel" },
+        { id: "email", type: "email", label: "Email address", required: false, autocomplete: "email" },
+      ],
+    },
+    {
+      id: "location", title: "Location", icon: "location", fields: [
+        { id: "addressLine1", type: "text", label: "Street address", required: true, autocomplete: "address-line1" },
+        { id: "city", type: "text", label: "City", required: true, autocomplete: "address-level2" },
+        { id: "state", type: "select", label: "State", required: true, autocomplete: "address-level1", options: stateOptions },
+        { id: "postalCode", type: "text", label: "Zip code", required: true, autocomplete: "postal-code" },
+        { id: "neighborhood", type: "select", label: "Neighborhood", required: true, options: neighborhoodOptions },
+        { id: "neighborhoodOther", type: "text", label: "Other neighborhood", required: true, condition: { fieldId: "neighborhood", operator: "equals", value: "Other" } },
+        { id: "estimatedSize", type: "text", label: "Approximate sukkah size", required: true, placeholder: "For example, 10 × 12 ft" },
+        { id: "siteDescription", type: "textarea", label: "Where will the sukkah be built?", required: false, placeholder: "Backyard, patio, driveway, rooftop, balcony, etc." },
+        { id: "sitePhotos", type: "photos", label: "Photos of the space", required: false, helpText: "Optional · Up to three JPG, PNG, or HEIC photos" },
+      ],
+    },
+    {
+      id: "timing", title: "Timing", icon: "timing", fields: [
+        { id: "buildDate", type: "date", label: "Preferred setup date", required: true },
+        { id: "takeDownDate", type: "date", label: "Preferred takedown date", required: true },
+        { id: "timingNotes", type: "text", label: "Timing notes", required: false, placeholder: "Any timing preferences or scheduling details" },
+      ],
+    },
+    {
+      id: "requested-work", title: "Requested work", icon: "site", fields: [
+        { id: "service", type: "checkboxes", label: "What do you need help with?", required: true, helpText: "Select everything that applies.", options: ["Bring out of storage", "Build", "Take down", "Bring to storage", "Other"] },
+        { id: "serviceOther", type: "text", label: "Other requested work", required: true, condition: { fieldId: "service", operator: "includes", value: "Other" } },
+        { id: "bringToStorageDate", type: "date", label: "Bring-to-storage date", required: true, condition: { fieldId: "service", operator: "includes", value: "Bring to storage" } },
+        { id: "extraLabor", type: "checkboxes", label: "Special access or extra labor", required: false, helpText: "For example, a rooftop sukkah or unusual access.", options: ["Yes"] },
+        { id: "extraServiceDetails", type: "textarea", label: "What extra help is needed?", required: true, condition: { fieldId: "extraLabor", operator: "includes", value: "Yes" } },
+      ],
+    },
+    {
+      id: "sukkah", title: "Your sukkah", icon: "sukkah", fields: [
+        { id: "sukkahType", type: "select", label: "Sukkah type", required: true, options: ["Canvas", "Canvas Bingo", "Snap / panel", "Wood boards with bolts", "Schach and beams only", "Other"] },
+        { id: "sukkahTypeOther", type: "text", label: "Other sukkah type", required: true, condition: { fieldId: "sukkahType", operator: "equals", value: "Other" } },
+        { id: "schach", type: "checkboxes", label: "Schach type", required: true, helpText: "Select one or more options.", options: ["Bamboo mat", "Bamboo sticks", "Evergreen", "Other"] },
+        { id: "schachOther", type: "text", label: "Other schach type", required: true, condition: { fieldId: "schach", operator: "includes", value: "Other" } },
+        { id: "addOns", type: "checkboxes", label: "Optional add-ons", required: false, options: ["Put up lights", "Pressure wash area day before", "Other"] },
+        { id: "addOnsOther", type: "text", label: "Other add-on", required: true, condition: { fieldId: "addOns", operator: "includes", value: "Other" } },
+      ],
+    },
+    {
+      id: "review", title: "Review and send", icon: "final", fields: [
+        { id: "referral", type: "text", label: "How did you hear about us?", required: true },
+        { id: "comments", type: "textarea", label: "Comments or questions", required: false, placeholder: "Add any details that did not fit above." },
+      ],
+    },
+  ],
+};
+
+export const DEFAULT_RENTAL_FORM = {
+  id: "rentals",
+  slug: "rentals",
+  title: "Sukkah rental request",
+  description: "Share a few details and we’ll follow up with availability and pricing.",
+  submitLabel: "Request availability",
+  successTitle: "Your rental request was sent.",
+  successMessage: "Benyamin will review the details and follow up with you.",
+  steps: [
+    {
+      id: "contact", title: "Contact", icon: "contact", fields: [
+        { id: "name", type: "text", label: "Name", required: true, autocomplete: "name" },
+        { id: "phone", type: "phone", label: "Phone number", required: true, autocomplete: "tel" },
+        { id: "email", type: "email", label: "Email address", required: false, autocomplete: "email" },
+      ],
+    },
+    {
+      id: "location", title: "Location", icon: "location", fields: [
+        { id: "addressLine1", type: "text", label: "Street address", required: true, autocomplete: "address-line1" },
+        { id: "city", type: "text", label: "City", required: true, autocomplete: "address-level2" },
+        { id: "state", type: "select", label: "State", required: true, autocomplete: "address-level1", options: stateOptions },
+        { id: "postalCode", type: "text", label: "Zip code", required: true, autocomplete: "postal-code" },
+        { id: "neighborhood", type: "select", label: "Neighborhood", required: true, options: neighborhoodOptions },
+        { id: "neighborhoodOther", type: "text", label: "Other neighborhood", required: true, condition: { fieldId: "neighborhood", operator: "equals", value: "Other" } },
+        { id: "estimatedSize", type: "text", label: "Approximate sukkah size", required: true, placeholder: "For example, 10 × 12 ft" },
+        { id: "siteDescription", type: "textarea", label: "Where will the sukkah be built?", required: false, placeholder: "Backyard, patio, driveway, rooftop, balcony, etc." },
+        { id: "sitePhotos", type: "photos", label: "Photos of the space", required: false, helpText: "Optional · Up to three JPG, PNG, or HEIC photos" },
+      ],
+    },
+    {
+      id: "timing", title: "Timing", icon: "timing", fields: [
+        { id: "buildDay", type: "date", label: "Preferred setup date", required: true },
+        { id: "takeDownDay", type: "date", label: "Preferred takedown date", required: true },
+        { id: "timingNotes", type: "text", label: "Timing notes", required: false, placeholder: "Any timing preferences or scheduling details" },
+      ],
+    },
+    {
+      id: "extras", title: "Extras", icon: "sukkah", fields: [
+        { id: "addOns", type: "checkboxes", label: "Additional services", required: false, options: ["Put up lights", "Furniture", "Pressure wash area day before", "Other"] },
+        { id: "furnitureDetails", type: "textarea", label: "What furniture is required?", required: true, placeholder: "For example, tables and chairs for 12 guests.", condition: { fieldId: "addOns", operator: "includes", value: "Furniture" } },
+        { id: "addOnsOther", type: "text", label: "Other service", required: true, placeholder: "Tell us what you need", condition: { fieldId: "addOns", operator: "includes", value: "Other" } },
+        { id: "extraLabor", type: "checkboxes", label: "Special access or extra labor", required: false, helpText: "For example, a rooftop sukkah or unusual access.", options: ["Yes"] },
+        { id: "extraServiceDetails", type: "textarea", label: "What extra help is needed?", required: true, condition: { fieldId: "extraLabor", operator: "includes", value: "Yes" } },
+      ],
+    },
+    {
+      id: "review", title: "Review and send", icon: "final", fields: [
+        { id: "comments", type: "textarea", label: "Comments or special requests", required: true },
+        { id: "questions", type: "textarea", label: "Your question", required: false },
+      ],
+    },
+  ],
+};
+
+export const DEFAULT_MANAGED_FORMS = Object.freeze([
+  DEFAULT_BUILD_FORM,
+  DEFAULT_RENTAL_FORM,
+  DEFAULT_CUSTOM_SUKKAH_FORM,
+]);
 
 function clean(value, maximum = 4000) {
   return String(value ?? "").replace(/\u0000/g, "").trim().slice(0, maximum);
@@ -83,6 +216,16 @@ function cleanId(value, fallback = "") {
 
 function cleanSlug(value) {
   return clean(value, 80).toLowerCase().replace(/[^a-z0-9_-]+/g, "-").replace(/^-+|-+$/g, "");
+}
+
+function defaultStepIcon(stepId, title) {
+  const value = `${stepId} ${title}`.toLowerCase();
+  if (value.includes("contact")) return "contact";
+  if (value.includes("location")) return "location";
+  if (value.includes("timing") || value.includes("date")) return "timing";
+  if (value.includes("review") || value.includes("final")) return "final";
+  if (value.includes("sukkah") || value.includes("project") || value.includes("extra")) return "sukkah";
+  return "site";
 }
 
 function normalizeCondition(condition, knownIds) {
@@ -146,7 +289,8 @@ export function normalizeFormSchema(input, { allowMissingIdentity = false } = {}
       if (condition) field.condition = condition;
       fields.push(field);
     }
-    steps.push({ id: stepId, title: stepTitle, fields });
+    const icon = clean(rawStep.icon, 30);
+    steps.push({ id: stepId, title: stepTitle, icon: STEP_ICONS.has(icon) ? icon : defaultStepIcon(stepId, stepTitle), fields });
   }
 
   return {
@@ -172,3 +316,4 @@ export function fieldIsVisible(field, answers) {
 }
 
 export const SUPPORTED_FORM_FIELD_TYPES = Object.freeze([...FIELD_TYPES]);
+export const SUPPORTED_FORM_STEP_ICONS = Object.freeze([...STEP_ICONS]);

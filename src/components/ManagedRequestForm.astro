@@ -1,0 +1,335 @@
+---
+import "../styles/guided-request-form.css";
+import { DEFAULT_MANAGED_FORMS } from "../server/forms/form-schema.js";
+import PaymentMethods from "./PaymentMethods.astro";
+
+const { slug, rentalSummary = false } = Astro.props;
+const fallbackSlug = slug === "auto" ? "custom-sukkah" : slug;
+const fallbackSchema = DEFAULT_MANAGED_FORMS.find((schema) => schema.slug === fallbackSlug);
+const showPaymentMethods = ["builds", "rentals"].includes(fallbackSlug);
+---
+
+<section class="managed-form-section" data-managed-form-root data-form-slug={slug} data-payment-methods={showPaymentMethods ? "true" : "false"}>
+  <div class="shell managed-form-shell">
+    <p class="managed-form-loading" data-form-loading>Preparing the form…</p>
+    <form class="guided-request-form" data-dynamic-form novalidate hidden>
+      <div class="form-honeypot" aria-hidden="true">
+        <label>Leave this field empty<input name="website" type="text" tabindex="-1" autocomplete="off" /></label>
+      </div>
+
+      {rentalSummary && (
+        <section class="rental-package-summary" aria-labelledby="rental-package-heading">
+          <div class="rental-package-placeholder" role="img" aria-label="Rental sukkah photo coming soon"><span>Rental photo coming soon</span></div>
+          <div class="rental-package-copy">
+            <p class="eyebrow">Rental sukkah</p>
+            <h2 id="rental-package-heading">A simple seasonal setup</h2>
+            <p>Comes with a basic metal frame with a variety of canvas tarps to choose from.</p>
+          </div>
+        </section>
+      )}
+
+      <div class="wizard-progress" data-progress-region aria-live="polite">
+        <p><span>Step <strong data-current-step>1</strong> of <span data-total-steps>1</span></span><span class="progress-separator" aria-hidden="true">·</span><strong data-current-label>Contact</strong></p>
+        <div class="progress-track" role="progressbar" aria-label="Request progress" aria-valuemin="1" aria-valuemax="1" aria-valuenow="1"><span data-progress-bar></span></div>
+      </div>
+      <div class="wizard-card">
+        <div data-form-steps></div>
+        <div class="wizard-actions">
+          <button class="wizard-back" type="button" data-step-back hidden>Back</button>
+          <button class="button wizard-continue" type="button" data-step-next>Continue</button>
+          <button class="button form-submit-button" type="submit" data-submit-button hidden>Send request</button>
+        </div>
+        <p class="submit-reassurance" data-submit-status role="status" aria-live="polite" hidden></p>
+      </div>
+      <div class="request-success" data-success-panel hidden tabindex="-1">
+        <p class="eyebrow">Request sent</p>
+        <h3 data-success-title>Thank you.</h3>
+        <p data-success-message>We’ll review the details and follow up.</p>
+        <a class="button" href="/">Return home</a>
+      </div>
+    </form>
+    <div class="managed-form-error" data-form-error hidden>
+      <h2>This form is unavailable.</h2>
+      <p>Please try again later or call <a href="tel:+13474542282">(347) 454-2282</a>.</p>
+    </div>
+    <noscript><p class="managed-form-error">JavaScript is needed to use this form. Please call <a href="tel:+13474542282">(347) 454-2282</a>.</p></noscript>
+    {fallbackSchema && <script type="application/json" data-local-fallback-schema set:html={JSON.stringify(fallbackSchema)}></script>}
+    {showPaymentMethods && <template data-payment-template><PaymentMethods /></template>}
+  </div>
+</section>
+
+<script is:inline>
+  (() => {
+    const root = document.currentScript?.previousElementSibling;
+    if (!(root instanceof HTMLElement) || !root.matches("[data-managed-form-root]")) return;
+    const formElement = root.querySelector("[data-dynamic-form]");
+    const stepsHost = root.querySelector("[data-form-steps]");
+    const loadingMessage = root.querySelector("[data-form-loading]");
+    const loadError = root.querySelector("[data-form-error]");
+    const configuredSlug = root.dataset.formSlug;
+    const pathSlug = location.pathname.split("/").filter(Boolean).at(-1) || "";
+    const slug = configuredSlug === "auto" ? (pathSlug === "request" ? (new URLSearchParams(location.search).get("form") || "custom-sukkah") : pathSlug) : configuredSlug;
+    const showPaymentMethods = root.dataset.paymentMethods === "true";
+    let formSchema;
+    let activeStep = 0;
+
+    const iconPaths = {
+      contact: '<circle cx="12" cy="8" r="3.25"/><path d="M5.75 19c.65-3.25 2.75-5 6.25-5s5.6 1.75 6.25 5"/>',
+      location: '<path d="M19 10c0 5-7 10-7 10S5 15 5 10a7 7 0 1 1 14 0Z"/><circle cx="12" cy="10" r="2.25"/>',
+      sukkah: '<path d="M5 20V9h14v11M4 9h16"/><path d="M5 7.5c1-1 2-1 3 0s2 1 3 0 2-1 3 0 2 1 3 0 2-1 3 0M9.5 20v-7h5v7"/>',
+      site: '<rect x="3.5" y="5" width="17" height="14" rx="2"/><circle cx="9" cy="10" r="1.5"/><path d="m5.5 17 4-4 3 3 2-2 4 3"/>',
+      timing: '<rect x="4" y="5.5" width="16" height="14" rx="2"/><path d="M8 3.5v4M16 3.5v4M4 10h16"/><path d="m9.5 15 1.5 1.5 3.5-4"/>',
+      final: '<path d="M8 5h8M9 3.5h6v3H9z"/><path d="M7 5.5H5.5v15h13v-15H17"/><path d="m8.5 14 2.25 2.25 4.75-5"/>',
+    };
+
+    function element(tag, attributes = {}, text = "") {
+      const node = document.createElement(tag);
+      Object.entries(attributes).forEach(([name, value]) => {
+        if (value === false || value == null || value === "") return;
+        if (name === "className") node.className = value;
+        else if (name in node && !name.startsWith("aria")) node[name] = value;
+        else node.setAttribute(name, value === true ? "" : value);
+      });
+      if (text) node.textContent = text;
+      return node;
+    }
+
+    function stepIcon(icon) {
+      const wrapper = element("span", { className: "step-icon", "aria-hidden": "true" });
+      wrapper.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${iconPaths[icon] || iconPaths.site}</svg>`;
+      return wrapper;
+    }
+
+    function fieldValue(field) {
+      if (field.type === "checkboxes") return [...formElement.querySelectorAll(`[name="${CSS.escape(field.id)}"]:checked`)].map((input) => input.value);
+      if (field.type === "photos") return [...(formElement.elements.namedItem("sitePhotos")?.files || [])].map((file) => file.name);
+      return formElement.elements.namedItem(field.id)?.value?.trim() || "";
+    }
+
+    function conditionMatches(field) {
+      if (!field.condition) return true;
+      const source = formSchema.steps.flatMap((step) => step.fields).find((item) => item.id === field.condition.fieldId);
+      const value = source ? fieldValue(source) : "";
+      return field.condition.operator === "includes" ? Array.isArray(value) && value.includes(field.condition.value) : value === field.condition.value;
+    }
+
+    function updateConditions() {
+      formSchema.steps.flatMap((step) => step.fields).forEach((field) => {
+        const wrapper = formElement.querySelector(`[data-field-id="${CSS.escape(field.id)}"]`);
+        if (!wrapper) return;
+        const visible = conditionMatches(field);
+        wrapper.hidden = !visible;
+        wrapper.querySelectorAll("input, select, textarea").forEach((control) => {
+          control.disabled = !visible;
+          if (!visible && (control.type === "checkbox" || control.type === "radio")) control.checked = false;
+        });
+      });
+    }
+
+    function makeField(field) {
+      const wrapper = element("div", { className: `field dynamic-field dynamic-field--${field.type}`, "data-field-id": field.id });
+      const requiredText = field.required ? " *" : " (Optional)";
+      if (["radio", "checkboxes"].includes(field.type)) {
+        const fieldset = element("fieldset", { "data-choice-field": field.id, "data-required": field.required ? "true" : "false" });
+        fieldset.append(element("legend", {}, field.label + requiredText));
+        if (field.helpText) fieldset.append(element("p", { className: "field-hint" }, field.helpText));
+        const choices = element("div", { className: "choice-grid" });
+        field.options.forEach((option) => {
+          const label = element("label", { className: "choice-card" });
+          label.append(element("input", { type: field.type === "radio" ? "radio" : "checkbox", name: field.id, value: option }));
+          label.append(element("span", {}, option));
+          choices.append(label);
+        });
+        fieldset.append(choices, element("p", { className: "group-error", "data-group-error": field.id }));
+        wrapper.append(fieldset);
+        return wrapper;
+      }
+      wrapper.append(element("label", { htmlFor: `field-${field.id}` }, field.label + requiredText));
+      if (field.helpText) wrapper.append(element("p", { className: "field-hint" }, field.helpText));
+      let control;
+      if (field.type === "textarea") control = element("textarea", { id: `field-${field.id}`, name: field.id, rows: 4, maxLength: 4000, placeholder: field.placeholder, required: field.required });
+      else if (field.type === "select") {
+        control = element("select", { id: `field-${field.id}`, name: field.id, autocomplete: field.autocomplete, required: field.required });
+        control.append(element("option", { value: "" }, "Choose an option"));
+        field.options.forEach((option) => control.append(element("option", { value: option }, option)));
+      } else if (field.type === "photos") {
+        control = element("input", { id: `field-${field.id}`, name: "sitePhotos", type: "file", accept: ".jpg,.jpeg,.png,.heic,.heif,image/jpeg,image/png,image/heic,image/heif", multiple: true, required: field.required });
+        wrapper.classList.add("photo-upload-card");
+      } else {
+        const types = { email: "email", phone: "tel", date: "date", text: "text" };
+        control = element("input", { id: `field-${field.id}`, name: field.id, type: types[field.type] || "text", placeholder: field.placeholder, autocomplete: field.autocomplete, required: field.required, maxLength: field.type === "email" ? 320 : 1000 });
+      }
+      wrapper.append(control, element("p", { className: "field-error", "data-field-error": field.id }));
+      return wrapper;
+    }
+
+    function appendStepFields(section, step) {
+      const fields = step.fields.map(makeField);
+      if (step.id === "contact") {
+        const grid = element("div", { className: "form-grid contact-grid" });
+        fields.forEach((field) => grid.append(field));
+        section.append(grid);
+        return;
+      }
+      if (step.id === "location") {
+        const addressIds = new Set(["addressLine1", "city", "state", "postalCode"]);
+        const addressGrid = element("div", { className: "address-grid" });
+        fields.forEach((field, index) => {
+          if (addressIds.has(step.fields[index].id)) {
+            if (step.fields[index].id === "addressLine1") field.classList.add("address-street");
+            addressGrid.append(field);
+          } else section.append(field);
+        });
+        section.insertBefore(addressGrid, section.children[1] || null);
+        return;
+      }
+      if (step.id === "timing") {
+        const dateGrid = element("div", { className: "form-grid timing-grid" });
+        fields.forEach((field, index) => step.fields[index].type === "date" ? dateGrid.append(field) : section.append(field));
+        section.insertBefore(dateGrid, section.children[1] || null);
+        return;
+      }
+      fields.forEach((field) => section.append(field));
+    }
+
+    function renderReview(section) {
+      const review = element("div", { className: "request-review" });
+      const heading = element("div", { className: "review-heading" });
+      heading.append(element("h4", {}, "Your request"), element("p", {}, "Check the details before sending."));
+      review.append(heading, element("dl", { className: "review-list", "data-review-list": "true" }));
+      section.append(review);
+      if (showPaymentMethods) {
+        const template = root.querySelector("[data-payment-template]");
+        if (template instanceof HTMLTemplateElement) section.append(template.content.cloneNode(true));
+      }
+    }
+
+    function renderForm(schema) {
+      formSchema = schema;
+      document.querySelector("[data-form-title]")?.replaceChildren(schema.title);
+      document.querySelector("[data-form-description]")?.replaceChildren(schema.description);
+      root.querySelector("[data-submit-button]").textContent = schema.submitLabel;
+      root.querySelector("[data-success-title]").textContent = schema.successTitle;
+      root.querySelector("[data-success-message]").textContent = schema.successMessage;
+      stepsHost.replaceChildren();
+      schema.steps.forEach((step, index) => {
+        const section = element("section", { className: "form-step", "data-form-step": String(index), hidden: index !== 0 });
+        const heading = element("div", { className: "form-group-heading" });
+        heading.append(stepIcon(step.icon), element("h3", {}, step.title));
+        section.append(heading);
+        if (index === schema.steps.length - 1) {
+          renderReview(section);
+          step.fields.forEach((field) => section.append(makeField(field)));
+        } else appendStepFields(section, step);
+        stepsHost.append(section);
+      });
+      formElement.action = `/api/form-submissions/${encodeURIComponent(schema.slug)}`;
+      formElement.method = "post";
+      formElement.enctype = "multipart/form-data";
+      root.querySelector("[data-total-steps]").textContent = schema.steps.length;
+      root.querySelector(".progress-track").setAttribute("aria-valuemax", schema.steps.length);
+      loadingMessage.hidden = true;
+      formElement.hidden = false;
+      updateConditions();
+      showStep(0);
+    }
+
+    function updateReview() {
+      const list = formElement.querySelector("[data-review-list]");
+      if (!list) return;
+      list.replaceChildren();
+      formSchema.steps.slice(0, -1).forEach((step, index) => {
+        const values = step.fields.filter(conditionMatches).map((field) => {
+          const value = fieldValue(field);
+          const display = Array.isArray(value) ? value.join(", ") : value;
+          return display ? `${field.label}: ${display}` : "";
+        }).filter(Boolean);
+        const row = element("div");
+        row.append(element("dt", {}, step.title), element("dd", {}, values.join(" · ") || "Nothing added"), element("button", { type: "button", "data-edit-step": String(index) }, "Edit"));
+        list.append(row);
+      });
+    }
+
+    function showStep(index) {
+      activeStep = Math.max(0, Math.min(index, formSchema.steps.length - 1));
+      formElement.querySelectorAll("[data-form-step]").forEach((step, stepIndex) => { step.hidden = stepIndex !== activeStep; });
+      if (activeStep === formSchema.steps.length - 1) updateReview();
+      root.querySelector("[data-current-step]").textContent = activeStep + 1;
+      root.querySelector("[data-current-label]").textContent = formSchema.steps[activeStep].title;
+      root.querySelector("[data-progress-bar]").style.width = `${((activeStep + 1) / formSchema.steps.length) * 100}%`;
+      const track = root.querySelector(".progress-track");
+      track.setAttribute("aria-valuenow", activeStep + 1);
+      track.setAttribute("aria-valuetext", `Step ${activeStep + 1} of ${formSchema.steps.length}: ${formSchema.steps[activeStep].title}`);
+      root.querySelector("[data-step-back]").hidden = activeStep === 0;
+      root.querySelector("[data-step-next]").hidden = activeStep === formSchema.steps.length - 1;
+      root.querySelector("[data-submit-button]").hidden = activeStep !== formSchema.steps.length - 1;
+    }
+
+    function validateStep() {
+      updateConditions();
+      const step = formElement.querySelector(`[data-form-step="${activeStep}"]`);
+      let valid = true;
+      step.querySelectorAll("input:not(:disabled), select:not(:disabled), textarea:not(:disabled)").forEach((control) => {
+        const error = step.querySelector(`[data-field-error="${CSS.escape(control.name)}"]`);
+        if (!control.checkValidity()) { valid = false; if (error) error.textContent = control.validity.valueMissing ? "Please complete this field." : "Check this field and try again."; }
+        else if (error) error.textContent = "";
+      });
+      step.querySelectorAll("[data-choice-field][data-required='true']").forEach((group) => {
+        const error = group.querySelector("[data-group-error]");
+        if (!group.querySelector("input:checked")) { valid = false; error.textContent = "Choose at least one option."; } else error.textContent = "";
+      });
+      if (!valid) step.querySelector(":invalid, [data-group-error]:not(:empty)")?.focus?.();
+      return valid;
+    }
+
+    formElement.addEventListener("change", updateConditions);
+    root.querySelector("[data-step-next]").addEventListener("click", () => { if (validateStep()) showStep(activeStep + 1); });
+    root.querySelector("[data-step-back]").addEventListener("click", () => showStep(activeStep - 1));
+    stepsHost.addEventListener("click", (event) => { const edit = event.target.closest("[data-edit-step]"); if (edit) showStep(Number(edit.dataset.editStep)); });
+    formElement.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      if (!validateStep()) return;
+      const button = root.querySelector("[data-submit-button]");
+      const status = root.querySelector("[data-submit-status]");
+      button.disabled = true; button.setAttribute("aria-busy", "true"); status.hidden = false; status.textContent = "Sending your request…";
+      try {
+        const response = await fetch(formElement.action, { method: "POST", headers: { Accept: "application/json" }, body: new FormData(formElement) });
+        const body = await response.json().catch(() => null);
+        if (!response.ok || body?.ok !== true) throw new Error(body?.message || "Your request could not be sent.");
+        formElement.querySelector(".wizard-card").hidden = true;
+        formElement.querySelector(".wizard-progress").hidden = true;
+        root.querySelector("[data-success-panel]").hidden = false;
+        root.querySelector("[data-success-message]").textContent = body.message || formSchema.successMessage;
+        root.querySelector("[data-success-panel]").focus({ preventScroll: true });
+      } catch (error) { status.dataset.state = "error"; status.textContent = error.message || "Your request could not be sent."; button.disabled = false; button.removeAttribute("aria-busy"); }
+    });
+
+    (async () => {
+      try {
+        const response = await fetch(`/api/forms/${encodeURIComponent(slug)}`, { headers: { Accept: "application/json" } });
+        const body = await response.json().catch(() => null);
+        if (!response.ok || body?.ok !== true) throw new Error();
+        renderForm(body.schema);
+      } catch {
+        const fallback = root.querySelector("[data-local-fallback-schema]");
+        if (["localhost", "127.0.0.1"].includes(location.hostname) && fallback?.textContent) renderForm(JSON.parse(fallback.textContent));
+        else { loadingMessage.hidden = true; loadError.hidden = false; }
+      }
+    })();
+  })();
+</script>
+
+<style>
+  .managed-form-section { padding-block: clamp(2.5rem, 6vw, 5rem); background: var(--cream-50); }
+  .managed-form-shell { max-width: 850px; }
+  .managed-form-loading, .managed-form-error { padding: 2rem; border: 1px solid var(--border); border-radius: var(--radius-large); background: white; text-align: center; }
+  .managed-form-error h2 { margin-bottom: .5rem; }
+  .managed-form-error p { margin: 0; }
+  .rental-package-summary { display: grid; grid-template-columns: 8rem minmax(0, 1fr); gap: 1.15rem; align-items: center; margin-bottom: 1.5rem; padding: 1rem; border: 1px solid var(--border); border-radius: 14px; background: white; }
+  .rental-package-placeholder { display: grid; aspect-ratio: 4 / 3; place-items: center; padding: .5rem; border-radius: 9px; color: var(--ink-500); background: var(--cream-100); text-align: center; }
+  .rental-package-placeholder span { font-size: .7rem; font-weight: 750; }
+  .rental-package-copy .eyebrow { margin-bottom: .25rem; }
+  .rental-package-copy h2 { margin-bottom: .25rem; font-size: 1.45rem; }
+  .rental-package-copy > p:last-child { margin: 0; color: var(--ink-500); font-size: .88rem; }
+  @media (max-width: 700px) { .rental-package-summary { grid-template-columns: 6.5rem minmax(0, 1fr); gap: .9rem; } }
+</style>
