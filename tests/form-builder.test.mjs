@@ -22,7 +22,7 @@ function editableSchema(overrides = {}) {
         id: "questions",
         title: "Questions",
         fields: [
-          { id: "name", type: "text", label: "Name", required: true },
+          { id: "name", type: "text", label: "Name", required: true, placeholder: "Your full name" },
           { id: "interests", type: "checkboxes", label: "Interests", required: true, options: ["Lighting", "Other"] },
           {
             id: "otherInterest", type: "text", label: "Other interest", required: true,
@@ -41,6 +41,7 @@ test("form schemas accept existing field types and validate conditional follow-u
   assert.equal(valid.ok, true);
   assert.equal(valid.schema.steps[0].fields[2].condition.operator, "includes");
   assert.equal(valid.schema.steps[0].icon, "site");
+  assert.equal(valid.schema.steps[0].fields[0].placeholder, "Your full name");
 
   const invalid = editableSchema();
   invalid.steps[0].fields[2].condition.fieldId = "missing-field";

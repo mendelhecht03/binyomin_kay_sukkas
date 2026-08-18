@@ -139,6 +139,11 @@ Every step stores a selectable section icon (`contact`, `location`, `timing`,
 same outlined style used by the original live forms. The editor exposes the
 same icon choices for built-in and newly created forms.
 
+The schema also stores optional placeholder text for short text, email, phone,
+and paragraph controls. The dashboard edits this property and the shared
+renderer applies it to the matching native control while keeping the question
+label separate for accessibility.
+
 All managed forms use the shared guided progress, card, field, choice, review,
 validation, and success presentation. Builds and Rentals keep their stable
 field names for existing backend and dashboard reporting. Native date inputs

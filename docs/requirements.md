@@ -134,6 +134,11 @@ questions. Supported customer controls are short text, email, phone, date,
 paragraph, dropdown, single-choice cards, checkbox cards, and up to three site
 photos. Option controls expose their choices in the editor.
 
+For short text, email, phone, and paragraph fields, the owner can also edit or
+add optional placeholder text. It is saved with the draft and published schema,
+appears in the builder preview, and renders inside the live control without
+replacing the accessible question label.
+
 The editor supports one-level conditional follow-ups. The owner chooses a
 source question and triggering answer; checkbox groups show the follow-up when
 the selected answers include that value, while single-value fields use an

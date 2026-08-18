@@ -478,6 +478,7 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
       checkboxes: "Checkbox cards", photos: "Photo upload",
     };
     const optionFieldTypes = new Set(["select", "radio", "checkboxes"]);
+    const placeholderFieldTypes = new Set(["text", "email", "phone", "textarea"]);
     const stepIconLabels = { contact: "Person", location: "Location pin", timing: "Calendar", sukkah: "Sukkah", site: "Photo / site", final: "Checklist" };
     const editor = {
       forms: [], selectedId: "", schema: null, dirty: false,
@@ -539,6 +540,7 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
           <label><span>Question</span><input data-field-setting="label" value="${escapeHtml(field.label)}" maxlength="180" /></label>
           <label><span>Field type</span><select data-field-setting="type">${typeChoices}</select></label>
           <label class="field-editor-full"><span>Help text <small>Optional</small></span><input data-field-setting="helpText" value="${escapeHtml(field.helpText || "")}" maxlength="500" /></label>
+          ${placeholderFieldTypes.has(field.type) ? `<label class="field-editor-full"><span>Placeholder text <small>Optional</small></span><input data-field-setting="placeholder" value="${escapeHtml(field.placeholder || "")}" maxlength="300" placeholder="Example text shown inside the field" /></label>` : ""}
           ${optionFieldTypes.has(field.type) ? `<label class="field-editor-full"><span>Options <small>One per line</small></span><textarea data-field-setting="options" rows="4">${escapeHtml((field.options || []).join("\n"))}</textarea></label>` : ""}
           <label class="toggle-setting"><input data-field-setting="required" type="checkbox"${checked(field.required)} /><span>Required question</span></label>
         </div>
@@ -576,7 +578,7 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
     function previewControl(field) {
       const optional = field.required ? " *" : " (Optional)";
       if (["radio", "checkboxes"].includes(field.type)) return `<fieldset><legend>${escapeHtml(field.label + optional)}</legend><div class="preview-choice-grid">${(field.options || []).slice(0, 4).map((option) => `<span>○ ${escapeHtml(option)}</span>`).join("")}</div></fieldset>`;
-      if (field.type === "textarea") return `<label>${escapeHtml(field.label + optional)}<span class="preview-textarea"></span></label>`;
+      if (field.type === "textarea") return `<label>${escapeHtml(field.label + optional)}<span class="preview-textarea">${escapeHtml(field.placeholder || "")}</span></label>`;
       if (field.type === "select") return `<label>${escapeHtml(field.label + optional)}<span class="preview-input">Choose an option⌄</span></label>`;
       if (field.type === "photos") return `<label>${escapeHtml(field.label + optional)}<span class="preview-upload">Choose photos</span></label>`;
       return `<label>${escapeHtml(field.label + optional)}<span class="preview-input">${field.type === "date" ? "mm/dd/yyyy" : field.placeholder || ""}</span></label>`;

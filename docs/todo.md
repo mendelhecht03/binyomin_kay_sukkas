@@ -45,7 +45,12 @@ When adding a task, use this format:
 
 ## Now
 
-- No active task.
+- [ ] Add editable placeholder text to form fields
+  - Why: The owner needs to control the example text shown inside supported
+    text fields without changing code.
+  - Done when: The builder can add or edit placeholder text for supported
+    fields, the draft preview and live form render it, existing forms keep
+    their current placeholders, and the published build passes its tests.
 
 ## Next
 
