@@ -45,12 +45,7 @@ When adding a task, use this format:
 
 ## Now
 
-- [ ] Add editable placeholder text to form fields
-  - Why: The owner needs to control the example text shown inside supported
-    text fields without changing code.
-  - Done when: The builder can add or edit placeholder text for supported
-    fields, the draft preview and live form render it, existing forms keep
-    their current placeholders, and the published build passes its tests.
+- No active task.
 
 ## Next
 
@@ -157,6 +152,13 @@ When adding a task, use this format:
   - Unblocks: Publishing multiple testimonial cards in the homepage scroller.
 
 ## Completed
+
+- [x] Add editable placeholder text to form fields (2026-08-18)
+  - Result: Added an optional Placeholder text control to the owner builder for
+    short text, email, phone, and paragraph fields. Draft previews show the
+    value, and the saved schema already flows through to the live form without
+    changing its accessible labels. Existing placeholders remain intact; the
+    published build and all 22 automated tests passed.
 
 - [x] Add a small Admin link to the shared footer (2026-08-18)
   - Result: Added a discreet, keyboard-accessible Admin pill beside the
