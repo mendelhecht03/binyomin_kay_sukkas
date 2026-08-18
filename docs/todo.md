@@ -45,12 +45,7 @@ When adding a task, use this format:
 
 ## Now
 
-- [ ] Add a small Admin link to the shared footer
-  - Why: The owner should have a discreet, consistent way to reach the
-    protected dashboard from the public site.
-  - Done when: Every page using the shared footer shows an accessible Admin
-    link that matches the site's visual style, works on phone and desktop, and
-    the published site is updated.
+- No active task.
 
 ## Next
 
@@ -157,6 +152,12 @@ When adding a task, use this format:
   - Unblocks: Publishing multiple testimonial cards in the homepage scroller.
 
 ## Completed
+
+- [x] Add a small Admin link to the shared footer (2026-08-18)
+  - Result: Added a discreet, keyboard-accessible Admin pill beside the
+    Request a quote link in the shared footer. It points to the protected
+    `/admin/` dashboard, appears across shared-layout pages, and is included in
+    the published site. The full build and all 22 automated tests passed.
 
 - [x] Fix live forms, responsive layouts, and testimonial sizing (2026-08-18)
   - Result: Published the protected, versioned owner builder against the live
