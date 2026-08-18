@@ -45,16 +45,7 @@ When adding a task, use this format:
 
 ## Now
 
-- [ ] Correct mobile form layouts and connect the builder to live forms
-  - Why: The approved testimonial card is far too tall on iPhone, the Builds
-    location fields do not match Rentals, native date inputs overflow on iOS,
-    and the owner must be able to edit the forms customers actually use.
-  - Done when: Testimonial cards size to their content on phone and desktop;
-    Builds uses the same responsive Location layout as Rentals; date inputs stay
-    inside their cards on iOS-sized screens; Builds, Rentals, and Custom Sukkah
-    forms are editable and published through the owner builder; section icons
-    can be selected in the builder and render in the established form style;
-    tests and responsive browser checks pass; and the update is deployed.
+- No active task.
 
 ## Next
 
@@ -162,16 +153,16 @@ When adding a task, use this format:
 
 ## Completed
 
-- [x] Fix testimonials and add a reusable owner-managed form builder (2026-08-18)
-  - Result: Published a protected, versioned form builder that lets the owner
-    create forms; add, edit, duplicate, reorder, require, or remove supported
-    fields and steps; manage choices and conditional follow-ups; preview and
-    save drafts; publish immutable versions; and restore earlier versions.
-    Added the matching four-step Custom Sukkah request form and linked it from
-    the service page. Submissions preserve their published field labels and
-    values, server validation follows the published schema, and the approved
-    testimonial now uses the full carousel width. All 21 automated tests and
-    live production browser checks passed.
+- [x] Fix live forms, responsive layouts, and testimonial sizing (2026-08-18)
+  - Result: Published the protected, versioned owner builder against the live
+    Builds, Rentals, and Custom Sukkah forms. The owner can edit supported
+    questions, choices, conditions, order, required state, and section icons;
+    save drafts; publish versions; and restore earlier versions. Builds and
+    Rentals now share the same responsive Location layout, native date inputs
+    stay inside their cards on iOS-sized screens, and the approved testimonial
+    card sizes to its content instead of stretching. Production checks passed
+    for all three public forms and the homepage, and all 22 automated tests
+    passed.
 
 - [x] Deploy and verify the database-backed site (2026-08-17)
   - Result: Published the clean D1/R2 backend, protected dashboard, permanent
