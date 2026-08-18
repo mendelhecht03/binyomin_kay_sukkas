@@ -6,6 +6,9 @@ import {
 } from "./dashboard/worker-entry.js";
 import { submissionHandlerForPath } from "./routes/index.js";
 import { handlePublicTestimonialsRequest } from "./routes/public-testimonials.js";
+import { handlePublicFormRequest } from "./routes/public-forms.js";
+import { handleAdminFormsRequest } from "./dashboard/form-editor-service.js";
+import { handleDynamicFormSubmission } from "./routes/dynamic-form-submissions.js";
 import { createStaticFileService, normalizePath } from "./static-files.js";
 
 export function createWorker(fileRecords) {
@@ -13,6 +16,15 @@ export function createWorker(fileRecords) {
   return {
     async fetch(request, env) {
       const url = new URL(request.url);
+      if (url.pathname === "/api/admin/forms" || url.pathname.startsWith("/api/admin/forms/")) {
+        return handleAdminFormsRequest(request, env, url.pathname);
+      }
+      if (url.pathname.startsWith("/api/forms/") && request.method === "GET") {
+        return handlePublicFormRequest(env, decodeURIComponent(url.pathname.slice("/api/forms/".length)));
+      }
+      if (url.pathname.startsWith("/api/form-submissions/") && request.method === "POST") {
+        return handleDynamicFormSubmission(request, env, url, decodeURIComponent(url.pathname.slice("/api/form-submissions/".length)));
+      }
       if (url.pathname === "/api/admin/submissions") {
         if (request.method !== "GET" && request.method !== "DELETE" && request.method !== "PATCH") {
           return new Response("Method not allowed", { status: 405, headers: { "Content-Type": "text/plain; charset=utf-8" } });
@@ -33,6 +45,10 @@ export function createWorker(fileRecords) {
       }
 
       const normalizedPath = normalizePath(url.pathname);
+      if (/^\/request\/[a-z0-9_-]+\/$/.test(normalizedPath)) {
+        const requestFile = staticFiles.get("/request/");
+        return requestFile ? staticFiles.response(requestFile, request.method) : staticFiles.notFound(request.method);
+      }
       if (normalizedPath === "/admin/" || normalizedPath === "/admin/index.html") {
         const accessResponse = adminPageAccessResponse(request, env);
         if (accessResponse) return accessResponse;

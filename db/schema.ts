@@ -1,4 +1,4 @@
-import { index, integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { index, integer, sqliteTable, text, uniqueIndex } from "drizzle-orm/sqlite-core";
 
 export const submissions = sqliteTable("submissions", {
   id: text("id").primaryKey(),
@@ -30,4 +30,30 @@ export const submissionFiles = sqliteTable("submission_files", {
   createdAt: text("created_at").notNull(),
 }, (table) => [
   index("idx_submission_files_submission_id").on(table.submissionId),
+]);
+
+export const forms = sqliteTable("forms", {
+  id: text("id").primaryKey(),
+  slug: text("slug").notNull(),
+  title: text("title").notNull(),
+  description: text("description").notNull().default(""),
+  draftSchemaJson: text("draft_schema_json").notNull(),
+  publishedVersionId: text("published_version_id"),
+  createdAt: text("created_at").notNull(),
+  updatedAt: text("updated_at").notNull(),
+  updatedBy: text("updated_by").notNull().default(""),
+}, (table) => [
+  uniqueIndex("idx_forms_slug").on(table.slug),
+]);
+
+export const formVersions = sqliteTable("form_versions", {
+  id: text("id").primaryKey(),
+  formId: text("form_id").notNull().references(() => forms.id, { onDelete: "cascade" }),
+  versionNumber: integer("version_number").notNull(),
+  schemaJson: text("schema_json").notNull(),
+  publishedAt: text("published_at").notNull(),
+  publishedBy: text("published_by").notNull().default(""),
+}, (table) => [
+  uniqueIndex("idx_form_versions_form_number").on(table.formId, table.versionNumber),
+  index("idx_form_versions_form_published").on(table.formId, table.publishedAt),
 ]);

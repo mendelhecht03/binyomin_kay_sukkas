@@ -5,6 +5,7 @@ const OMITTED_DETAIL_FIELDS = new Set([
   "submissionId", "submittedAt", "sourcePage", "status", "name", "firstName", "lastName",
   "phone", "email", "address", "addressLine1", "city", "state", "postalCode",
   "neighborhood", "neighborhoodOther", "photoLinks",
+  "formId", "formSlug", "formTitle", "formVersionId", "formVersionNumber", "answers", "answerDetails",
 ]);
 
 function requireDatabase(env) {
@@ -86,7 +87,12 @@ function rowToRecord(row, files, origin) {
     zip: data.postalCode,
     neighborhood: row.neighborhood || data.neighborhoodOther || data.neighborhood,
   }).filter(([, value]) => clean(value)));
-  const details = Object.entries(data)
+  const savedAnswerDetails = Array.isArray(data.answerDetails)
+    ? data.answerDetails.filter((detail) => detail && hasValue(detail.value)).map((detail) => ({
+        key: clean(detail.id), label: clean(detail.label) || labelForField(detail.id), value: detail.value,
+      }))
+    : [];
+  const details = savedAnswerDetails.length ? savedAnswerDetails : Object.entries(data)
     .filter(([key, value]) => !OMITTED_DETAIL_FIELDS.has(key) && hasValue(value))
     .map(([key, value]) => ({ key, label: labelForField(key), value }));
   const photos = (files.get(row.id) || []).map((file, index) => ({

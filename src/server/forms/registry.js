@@ -1,5 +1,12 @@
 const definitions = [
   {
+    type: "custom",
+    sourceKey: "customSukkahs",
+    label: "Custom Sukkahs",
+    singularLabel: "Custom Sukkah",
+    endpoint: "/api/form-submissions/custom-sukkah",
+  },
+  {
     type: "build",
     sourceKey: "builds",
     label: "Builds",

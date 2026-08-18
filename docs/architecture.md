@@ -46,8 +46,8 @@ storage, dashboard behavior, and routing live in focused files under
 |   +-- server/
 |       +-- worker-entry.js   central request router
 |       +-- routes/           one handler per customer form
-|       +-- forms/            central form registry
-|       +-- storage/          D1 submission repository
+|       +-- forms/            form registry and shared form-schema rules
+|       +-- storage/          D1 submissions, form drafts, and versions
 |       +-- adapters/         R2 photo-storage integration
 |       +-- dashboard/        protected dashboard reading and deletion
 |       +-- common/           small shared HTTP helpers
@@ -82,10 +82,12 @@ flowchart LR
 
     router --> static["Built Astro pages and assets"]
     router --> forms["Customer form routes"]
-    router --> dashboard["Protected dashboard route"]
+    router --> dashboard["Protected dashboard and form editor"]
+    router --> dynamicForms["Published schema-driven forms"]
 
     forms --> database["D1 submission repository"]
     forms --> photos["R2 photo storage adapter"]
+    dynamicForms --> database
 
     dashboard --> database
     dashboard --> photos
@@ -114,6 +116,7 @@ Astro builds these routes as directory-style HTML files. For example,
 /pergolas/
 /tree-trimming/
 /eruv-work/
+/request/<published-form-slug>/
 ```
 
 The configuration uses static output, directory-format pages, and trailing
@@ -147,6 +150,17 @@ Builds and Rentals share one Location layout: street address, city, state, ZIP,
 neighborhood, approximate size, a site description, and an optional photo card.
 The two pages import the same neighborhood and state option data. Visitors fill
 the address manually; the page does not load a third-party address service.
+
+`/request/<published-form-slug>/` uses one shared guided-form shell. The Worker
+serves that shell for every published slug, and the browser requests the active
+form definition from `GET /api/forms/<slug>`. The same definition controls the
+visible steps and fields and the server-side validation; the browser is never
+trusted to decide which answers are valid.
+
+The initial managed form is `custom-sukkah`. Its sample draft demonstrates
+text, email, phone, dropdown, radio-card, checkbox-card, paragraph, photo, and
+conditional follow-up fields. The closing action on `/custom-sukkahs/` links to
+`/request/custom-sukkah/`.
 
 ## Builds
 
@@ -231,9 +245,17 @@ POST /api/rental-submissions
 POST /api/testimonial-submissions
 GET  /api/sukkah-submission-photos/<unlisted-photo-key>
 GET  /api/testimonials
+GET  /api/forms/<published-form-slug>
+POST /api/form-submissions/<published-form-slug>
 GET  /api/admin/submissions
 PATCH /api/admin/submissions
 DELETE /api/admin/submissions
+GET  /api/admin/forms[/<form-id>]
+POST /api/admin/forms
+PUT  /api/admin/forms/<form-id>
+POST /api/admin/forms/<form-id>/publish
+GET  /api/admin/forms/<form-id>/versions
+POST /api/admin/forms/<form-id>/restore
 ```
 
 The POST endpoints accept and validate their form data, store selected photos
@@ -263,6 +285,21 @@ The owner dashboard is a protected website route at `/admin/`. Its browser code
 never talks to the database directly. It reads normalized data from the private
 `GET /api/admin/submissions` Worker endpoint and sends confirmed deletion
 requests to `DELETE /api/admin/submissions`.
+
+The same protected page contains the form builder. It can create a new form,
+edit or remove questions, reorder steps and questions, duplicate fields, edit
+choice options, and configure a simple conditional follow-up. A checkbox-card
+condition uses `includes`, while single-value controls use `equals`. Drafts are
+saved separately from published versions, so editing does not change the live
+form. Publishing creates an immutable numbered version; restoring an older
+version copies it back into the draft for review rather than silently changing
+the public form.
+
+D1 stores the current draft in `forms` and immutable published snapshots in
+`form_versions`. Dynamic submissions record both the published version ID and
+a label-and-value snapshot for every visible answer. Consequently, renaming or
+removing a question in a later version does not make earlier submissions
+unreadable.
 
 Sites supplies the signed-in user's email in a trusted request header. The
 Worker compares that email with `DASHBOARD_ADMIN_EMAILS` before returning the

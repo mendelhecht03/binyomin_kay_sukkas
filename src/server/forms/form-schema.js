@@ -1,0 +1,174 @@
+const FIELD_TYPES = new Set([
+  "text", "email", "phone", "date", "textarea", "select", "radio", "checkboxes", "photos",
+]);
+const OPTION_FIELD_TYPES = new Set(["select", "radio", "checkboxes"]);
+const CONDITION_OPERATORS = new Set(["equals", "includes"]);
+
+export const DEFAULT_CUSTOM_SUKKAH_FORM = {
+  id: "custom-sukkah",
+  slug: "custom-sukkah",
+  title: "Custom Sukkah request",
+  description: "Tell us about your space and the custom sukkah you have in mind.",
+  submitLabel: "Request a custom quote",
+  successTitle: "Your request was sent.",
+  successMessage: "Benyamin will review the details and follow up with you.",
+  steps: [
+    {
+      id: "contact",
+      title: "Contact",
+      fields: [
+        { id: "name", type: "text", label: "Name", required: true, autocomplete: "name" },
+        { id: "phone", type: "phone", label: "Phone number", required: true, autocomplete: "tel" },
+        { id: "email", type: "email", label: "Email address", required: false, autocomplete: "email" },
+      ],
+    },
+    {
+      id: "location",
+      title: "Location",
+      fields: [
+        { id: "addressLine1", type: "text", label: "Street address", required: true, autocomplete: "address-line1" },
+        { id: "city", type: "text", label: "City", required: true, autocomplete: "address-level2" },
+        {
+          id: "state", type: "select", label: "State", required: true,
+          options: ["New York", "New Jersey", "Connecticut", "Other"],
+        },
+        { id: "postalCode", type: "text", label: "Zip code", required: true, autocomplete: "postal-code" },
+        {
+          id: "setting", type: "select", label: "Where will the sukkah be built?", required: true,
+          options: ["Backyard", "Porch", "Courtyard", "Rooftop", "Other"],
+        },
+        {
+          id: "settingOther", type: "text", label: "Describe the location", required: true,
+          condition: { fieldId: "setting", operator: "equals", value: "Other" },
+        },
+        { id: "estimatedSize", type: "text", label: "Approximate size", required: true, placeholder: "For example, 10 × 12 ft" },
+        { id: "sitePhotos", type: "photos", label: "Photos of the space", required: false, helpText: "Optional · Up to three JPG, PNG, or HEIC photos" },
+      ],
+    },
+    {
+      id: "project",
+      title: "Your project",
+      fields: [
+        {
+          id: "framePreference", type: "radio", label: "Which frame are you considering?", required: true,
+          options: ["Wood", "Metal", "Not sure"],
+        },
+        {
+          id: "wallPreferences", type: "checkboxes", label: "Which wall options interest you?", required: false,
+          options: ["Flexible covering", "Framed panels", "Wood lattice", "Horizontal siding", "Other", "Not sure"],
+        },
+        {
+          id: "wallPreferencesOther", type: "text", label: "Tell us about the other wall option", required: true,
+          condition: { fieldId: "wallPreferences", operator: "includes", value: "Other" },
+        },
+        {
+          id: "features", type: "checkboxes", label: "Features you may want", required: false,
+          options: ["Lighting", "Door or gate", "Windows or clear panels", "Furniture", "Greenery or decor", "Floor covering"],
+        },
+        { id: "projectNotes", type: "textarea", label: "Anything else we should know?", required: false, placeholder: "Share timing, access, design ideas, or special requests." },
+      ],
+    },
+    { id: "review", title: "Review and send", fields: [] },
+  ],
+};
+
+function clean(value, maximum = 4000) {
+  return String(value ?? "").replace(/\u0000/g, "").trim().slice(0, maximum);
+}
+
+function cleanId(value, fallback = "") {
+  const id = clean(value, 80).replace(/[^a-zA-Z0-9_-]+/g, "-").replace(/^-+|-+$/g, "");
+  return id || fallback;
+}
+
+function cleanSlug(value) {
+  return clean(value, 80).toLowerCase().replace(/[^a-z0-9_-]+/g, "-").replace(/^-+|-+$/g, "");
+}
+
+function normalizeCondition(condition, knownIds) {
+  if (!condition || typeof condition !== "object") return undefined;
+  const fieldId = cleanId(condition.fieldId);
+  const operator = clean(condition.operator, 20);
+  const value = clean(condition.value, 200);
+  if (!knownIds.has(fieldId) || !CONDITION_OPERATORS.has(operator) || !value) return undefined;
+  return { fieldId, operator, value };
+}
+
+export function normalizeFormSchema(input, { allowMissingIdentity = false } = {}) {
+  if (!input || typeof input !== "object") return { ok: false, message: "The form definition could not be read." };
+  const id = cleanId(input.id);
+  const slug = cleanSlug(input.slug);
+  const title = clean(input.title, 120);
+  if ((!id && !allowMissingIdentity) || !slug || !title) {
+    return { ok: false, message: "Every form needs a name and URL." };
+  }
+  if (!Array.isArray(input.steps) || input.steps.length < 1 || input.steps.length > 12) {
+    return { ok: false, message: "A form must have between 1 and 12 steps." };
+  }
+
+  const knownIds = new Set();
+  const rawFields = input.steps.flatMap((step) => Array.isArray(step?.fields) ? step.fields : []);
+  if (rawFields.length > 80) return { ok: false, message: "A form can contain no more than 80 fields." };
+  for (const field of rawFields) {
+    const fieldId = cleanId(field?.id);
+    if (!fieldId || knownIds.has(fieldId)) return { ok: false, message: "Every question needs a unique internal name." };
+    knownIds.add(fieldId);
+  }
+
+  const stepIds = new Set();
+  const steps = [];
+  for (let stepIndex = 0; stepIndex < input.steps.length; stepIndex += 1) {
+    const rawStep = input.steps[stepIndex] || {};
+    const stepId = cleanId(rawStep.id, `step-${stepIndex + 1}`);
+    const stepTitle = clean(rawStep.title, 100);
+    if (!stepTitle || stepIds.has(stepId)) return { ok: false, message: "Every step needs a unique name." };
+    stepIds.add(stepId);
+    const fields = [];
+    for (const rawField of Array.isArray(rawStep.fields) ? rawStep.fields : []) {
+      const type = clean(rawField.type, 30);
+      const label = clean(rawField.label, 180);
+      if (!FIELD_TYPES.has(type) || !label) return { ok: false, message: "Every question needs a supported type and label." };
+      const field = {
+        id: cleanId(rawField.id), type, label, required: Boolean(rawField.required),
+        ...(clean(rawField.helpText, 500) ? { helpText: clean(rawField.helpText, 500) } : {}),
+        ...(clean(rawField.placeholder, 300) ? { placeholder: clean(rawField.placeholder, 300) } : {}),
+        ...(clean(rawField.autocomplete, 80) ? { autocomplete: clean(rawField.autocomplete, 80) } : {}),
+      };
+      if (OPTION_FIELD_TYPES.has(type)) {
+        const options = [...new Set((Array.isArray(rawField.options) ? rawField.options : [])
+          .map((option) => clean(option, 160)).filter(Boolean))];
+        if (options.length < 1 || options.length > 40) return { ok: false, message: `“${label}” needs between 1 and 40 unique options.` };
+        field.options = options;
+      }
+      const condition = normalizeCondition(rawField.condition, knownIds);
+      if (rawField.condition && !condition) return { ok: false, message: `The display rule for “${label}” is incomplete.` };
+      if (condition?.fieldId === field.id) return { ok: false, message: `“${label}” cannot depend on itself.` };
+      if (condition) field.condition = condition;
+      fields.push(field);
+    }
+    steps.push({ id: stepId, title: stepTitle, fields });
+  }
+
+  return {
+    ok: true,
+    schema: {
+      id: id || slug,
+      slug,
+      title,
+      description: clean(input.description, 500),
+      submitLabel: clean(input.submitLabel, 80) || "Send request",
+      successTitle: clean(input.successTitle, 120) || "Your request was sent.",
+      successMessage: clean(input.successMessage, 500) || "We will review the details and follow up with you.",
+      steps,
+    },
+  };
+}
+
+export function fieldIsVisible(field, answers) {
+  if (!field.condition) return true;
+  const answer = answers[field.condition.fieldId];
+  if (field.condition.operator === "includes") return Array.isArray(answer) && answer.includes(field.condition.value);
+  return String(answer ?? "") === field.condition.value;
+}
+
+export const SUPPORTED_FORM_FIELD_TYPES = Object.freeze([...FIELD_TYPES]);

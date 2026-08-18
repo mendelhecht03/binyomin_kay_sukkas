@@ -1354,15 +1354,16 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   }
 
   .testimonial-story-track {
-    display: flex;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 100%;
     width: 100%;
     transition: transform 420ms cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .testimonial-story-card {
     width: 100%;
-    min-width: 100%;
-    flex: 0 0 100%;
+    min-width: 0;
     display: grid;
     align-content: start;
     padding: clamp(1.45rem, 3.3vw, 2.4rem);
@@ -1404,7 +1405,14 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   }
 
   .testimonial-story-card blockquote {
+    width: 100%;
+    min-width: 0;
     margin: 0;
+  }
+
+  .testimonial-story-card-approved {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: stretch;
   }
 
   .testimonial-story > summary {
@@ -1475,6 +1483,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   }
 
   .testimonial-story-card footer {
+    width: 100%;
+    min-width: 0;
     margin-top: 1.45rem;
     padding-top: 0.85rem;
     border-top: 1px solid var(--border);
@@ -1484,10 +1494,14 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   }
 
   .testimonial-story-card cite {
+    display: block;
+    overflow-wrap: anywhere;
     font-style: normal;
   }
 
   .testimonial-approved-copy {
+    width: 100%;
+    max-width: 34ch;
     margin: 0;
     color: var(--forest-950);
     font-family: var(--font-heading);

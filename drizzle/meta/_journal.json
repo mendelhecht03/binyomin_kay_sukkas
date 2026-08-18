@@ -15,6 +15,13 @@
       "when": 1787017224183,
       "tag": "0001_sad_blink",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1787084388168,
+      "tag": "0002_needy_rick_jones",
+      "breakpoints": true
     }
   ]
 }

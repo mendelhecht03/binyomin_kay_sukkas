@@ -95,6 +95,8 @@ built as directory-style files, so `/about` is represented by
 
 /eruv-work
 
+/request/<published-form-slug>
+
 The private owner route `/admin/` is also built by Astro, but it is not a public
 navigation destination. The Worker must require a Sites-authenticated email on
 the owner allowlist before returning the page or its data.
@@ -121,7 +123,30 @@ The `/custom-sukkahs` route presents made-to-order sukka projects for families,
 shuls, businesses, apartment buildings, and schools. It distinguishes custom
 work from preset-size standard sukkas, without promising that every request is
 feasible. Pricing remains quote-only. The primary action links to `/contact/`,
-with the business phone number as a secondary option.
+with the business phone number as a secondary option. Its closing primary
+action opens the managed Custom Sukkah request at
+`/request/custom-sukkah/`.
+
+The protected owner dashboard includes a schema-driven form builder. An
+allowlisted owner can create a form, edit its name, URL, introduction, submit
+and success text, add/reorder/remove steps, and add/edit/duplicate/reorder/remove
+questions. Supported customer controls are short text, email, phone, date,
+paragraph, dropdown, single-choice cards, checkbox cards, and up to three site
+photos. Option controls expose their choices in the editor.
+
+The editor supports one-level conditional follow-ups. The owner chooses a
+source question and triggering answer; checkbox groups show the follow-up when
+the selected answers include that value, while single-value fields use an
+exact match. This covers the existing “Other” and checkbox-reveals-text
+patterns without requiring code.
+
+Every managed form has a private draft, live preview, explicit Publish action,
+numbered published versions, and restorable version history. Draft edits must
+never change the customer-facing form. Public and protected server routes
+validate the complete definition, reject unsupported or duplicate fields and
+invalid options or conditions, and enforce the published definition when a
+customer submits. Saved submissions retain the form version and the label
+shown with each answer so later edits do not damage earlier records.
 
 Custom-build service is limited to the New York, New Jersey, and Connecticut
 tri-state area. This confirmed scope applies specifically to the

@@ -1,0 +1,291 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { DEFAULT_CUSTOM_SUKKAH_FORM } from "../../server/forms/form-schema.js";
+import "../../styles/guided-request-form.css";
+---
+
+<BaseLayout
+  title="Request a quote"
+  description="Share the details of your sukkah project with Benyamin Kay Sukkas."
+  bodyClass="request-form-page dynamic-request-page"
+>
+  <section class="dynamic-form-hero sukkah-hero-background">
+    <div class="shell dynamic-form-hero__inner">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="/">Home</a><span aria-hidden="true">/</span><span data-form-breadcrumb>Request</span>
+      </nav>
+      <div class="dynamic-form-hero__copy">
+        <p class="eyebrow">Project request</p>
+        <h1 data-form-title>Tell us what you need.</h1>
+        <p class="lead" data-form-description>Share a few details and we’ll follow up.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="dynamic-form-section" aria-labelledby="dynamic-form-heading">
+    <div class="shell dynamic-form-shell">
+      <h2 id="dynamic-form-heading" class="sr-only">Project request form</h2>
+      <p class="dynamic-form-loading" data-form-loading>Preparing the form…</p>
+      <form class="guided-request-form" data-dynamic-form novalidate hidden>
+        <div class="form-honeypot" aria-hidden="true">
+          <label for="dynamic-website">Leave this field empty</label>
+          <input id="dynamic-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+        </div>
+        <div class="wizard-progress" data-progress-region aria-live="polite">
+          <p><span>Step <strong data-current-step>1</strong> of <span data-total-steps>1</span></span><span class="progress-separator" aria-hidden="true">·</span><strong data-current-label>Contact</strong></p>
+          <div class="progress-track" role="progressbar" aria-label="Request progress" aria-valuemin="1" aria-valuemax="1" aria-valuenow="1"><span data-progress-bar></span></div>
+        </div>
+        <div class="wizard-card">
+          <div data-form-steps></div>
+          <div class="wizard-actions">
+            <button class="wizard-back" type="button" data-step-back hidden>Back</button>
+            <button class="button wizard-continue" type="button" data-step-next>Continue</button>
+            <button class="button form-submit-button" type="submit" data-submit-button hidden>Send request</button>
+          </div>
+          <p class="submit-reassurance" data-submit-status role="status" aria-live="polite" hidden></p>
+        </div>
+        <div class="request-success" data-success-panel hidden tabindex="-1">
+          <p class="eyebrow">Request sent</p>
+          <h3 data-success-title>Thank you.</h3>
+          <p data-success-message>We’ll review the details and follow up.</p>
+          <a class="button" href="/">Return home</a>
+        </div>
+      </form>
+      <div class="dynamic-form-error" data-form-error hidden>
+        <h2>This form is unavailable.</h2>
+        <p>Please try again later or call <a href="tel:+13474542282">(347) 454-2282</a>.</p>
+      </div>
+      <noscript><p class="dynamic-form-error">JavaScript is needed to use this form. Please call <a href="tel:+13474542282">(347) 454-2282</a>.</p></noscript>
+    </div>
+  </section>
+  <script id="default-custom-form" type="application/json" set:html={JSON.stringify(DEFAULT_CUSTOM_SUKKAH_FORM)}></script>
+</BaseLayout>
+
+<script is:inline>
+  const formElement = document.querySelector("[data-dynamic-form]");
+  const stepsHost = document.querySelector("[data-form-steps]");
+  const loadingMessage = document.querySelector("[data-form-loading]");
+  const loadError = document.querySelector("[data-form-error]");
+  const pathSlug = location.pathname.split("/").filter(Boolean).at(-1) || "";
+  const slug = pathSlug === "request" ? (new URLSearchParams(location.search).get("form") || "custom-sukkah") : pathSlug;
+  const builtInCustom = JSON.parse(document.querySelector("#default-custom-form").textContent);
+  let formSchema;
+  let activeStep = 0;
+
+  function element(tag, attributes = {}, text = "") {
+    const node = document.createElement(tag);
+    Object.entries(attributes).forEach(([name, value]) => {
+      if (value === false || value == null || value === "") return;
+      if (name === "className") node.className = value;
+      else if (name in node && !name.startsWith("aria")) node[name] = value;
+      else node.setAttribute(name, value === true ? "" : value);
+    });
+    if (text) node.textContent = text;
+    return node;
+  }
+
+  function fieldValue(field) {
+    if (field.type === "checkboxes") return [...formElement.querySelectorAll(`[name="${CSS.escape(field.id)}"]:checked`)].map((input) => input.value);
+    if (field.type === "photos") return [...(formElement.querySelector("[name='sitePhotos']")?.files || [])].map((file) => file.name);
+    return formElement.elements.namedItem(field.id)?.value?.trim() || "";
+  }
+
+  function conditionMatches(field) {
+    if (!field.condition) return true;
+    const source = formSchema.steps.flatMap((step) => step.fields).find((item) => item.id === field.condition.fieldId);
+    const value = source ? fieldValue(source) : "";
+    return field.condition.operator === "includes" ? Array.isArray(value) && value.includes(field.condition.value) : value === field.condition.value;
+  }
+
+  function updateConditions() {
+    formSchema.steps.flatMap((step) => step.fields).forEach((field) => {
+      const wrapper = formElement.querySelector(`[data-field-id="${CSS.escape(field.id)}"]`);
+      if (!wrapper) return;
+      const visible = conditionMatches(field);
+      wrapper.hidden = !visible;
+      wrapper.querySelectorAll("input, select, textarea").forEach((control) => {
+        control.disabled = !visible;
+        if (!visible && (control.type === "checkbox" || control.type === "radio")) control.checked = false;
+      });
+    });
+  }
+
+  function makeField(field) {
+    const wrapper = element("div", { className: `field dynamic-field dynamic-field--${field.type}`, "data-field-id": field.id });
+    const requiredText = field.required ? " *" : " (Optional)";
+    if (["radio", "checkboxes"].includes(field.type)) {
+      const fieldset = element("fieldset", { "data-choice-field": field.id, "data-required": field.required ? "true" : "false" });
+      fieldset.append(element("legend", {}, field.label + requiredText));
+      if (field.helpText) fieldset.append(element("p", { className: "field-hint" }, field.helpText));
+      const choices = element("div", { className: "choice-grid" });
+      field.options.forEach((option) => {
+        const label = element("label", { className: "choice-card" });
+        label.append(element("input", { type: field.type === "radio" ? "radio" : "checkbox", name: field.id, value: option }));
+        label.append(element("span", {}, option));
+        choices.append(label);
+      });
+      fieldset.append(choices, element("p", { className: "group-error", "data-group-error": field.id }));
+      wrapper.append(fieldset);
+      return wrapper;
+    }
+    const label = element("label", { htmlFor: `field-${field.id}` }, field.label + requiredText);
+    wrapper.append(label);
+    if (field.helpText) wrapper.append(element("p", { className: "field-hint" }, field.helpText));
+    let control;
+    if (field.type === "textarea") control = element("textarea", { id: `field-${field.id}`, name: field.id, rows: 4, maxLength: 4000, placeholder: field.placeholder, required: field.required });
+    else if (field.type === "select") {
+      control = element("select", { id: `field-${field.id}`, name: field.id, required: field.required });
+      control.append(element("option", { value: "" }, "Choose an option"));
+      field.options.forEach((option) => control.append(element("option", { value: option }, option)));
+    } else if (field.type === "photos") {
+      control = element("input", { id: `field-${field.id}`, name: "sitePhotos", type: "file", accept: ".jpg,.jpeg,.png,.heic,.heif,image/jpeg,image/png,image/heic,image/heif", multiple: true, required: field.required });
+      wrapper.classList.add("photo-upload-card");
+    } else {
+      const types = { email: "email", phone: "tel", date: "date", text: "text" };
+      control = element("input", { id: `field-${field.id}`, name: field.id, type: types[field.type] || "text", placeholder: field.placeholder, autocomplete: field.autocomplete, required: field.required, maxLength: field.type === "email" ? 320 : 1000 });
+    }
+    wrapper.append(control, element("p", { className: "field-error", "data-field-error": field.id }));
+    return wrapper;
+  }
+
+  function renderReview(stepSection) {
+    const review = element("div", { className: "request-review" });
+    const heading = element("div", { className: "review-heading" });
+    heading.append(element("h4", {}, "Your request"), element("p", {}, "Check the details before sending."));
+    const list = element("dl", { className: "review-list", "data-review-list": "true" });
+    review.append(heading, list);
+    stepSection.append(review);
+  }
+
+  function renderForm(schema) {
+    formSchema = schema;
+    document.title = `${schema.title} | Benyamin Kay Sukkas`;
+    document.querySelector("[data-form-title]").textContent = schema.title;
+    document.querySelector("[data-form-description]").textContent = schema.description;
+    document.querySelector("[data-form-breadcrumb]").textContent = schema.title;
+    document.querySelector("[data-submit-button]").textContent = schema.submitLabel;
+    document.querySelector("[data-success-title]").textContent = schema.successTitle;
+    document.querySelector("[data-success-message]").textContent = schema.successMessage;
+    stepsHost.replaceChildren();
+    schema.steps.forEach((step, index) => {
+      const section = element("section", { className: "form-step", "data-form-step": String(index), hidden: index !== 0 });
+      const heading = element("div", { className: "form-group-heading" });
+      heading.append(element("span", { className: "step-number", "aria-hidden": "true" }, String(index + 1)), element("h3", {}, step.title));
+      section.append(heading);
+      if (index === schema.steps.length - 1 && step.fields.length === 0) renderReview(section);
+      else step.fields.forEach((field) => section.append(makeField(field)));
+      stepsHost.append(section);
+    });
+    formElement.action = `/api/form-submissions/${encodeURIComponent(schema.slug)}`;
+    formElement.method = "post";
+    formElement.enctype = "multipart/form-data";
+    document.querySelector("[data-total-steps]").textContent = schema.steps.length;
+    document.querySelector(".progress-track").setAttribute("aria-valuemax", schema.steps.length);
+    loadingMessage.hidden = true;
+    formElement.hidden = false;
+    updateConditions();
+    showStep(0);
+  }
+
+  function updateReview() {
+    const list = formElement.querySelector("[data-review-list]");
+    if (!list) return;
+    list.replaceChildren();
+    formSchema.steps.slice(0, -1).forEach((step, index) => {
+      const values = step.fields.filter((field) => conditionMatches(field)).map((field) => {
+        const value = fieldValue(field);
+        const display = Array.isArray(value) ? value.join(", ") : value;
+        return display ? `${field.label}: ${display}` : "";
+      }).filter(Boolean);
+      const row = element("div");
+      row.append(element("dt", {}, step.title), element("dd", {}, values.join(" · ") || "Nothing added"));
+      const edit = element("button", { type: "button", "data-edit-step": String(index) }, "Edit");
+      row.append(edit);
+      list.append(row);
+    });
+  }
+
+  function showStep(index) {
+    activeStep = Math.max(0, Math.min(index, formSchema.steps.length - 1));
+    formElement.querySelectorAll("[data-form-step]").forEach((step, stepIndex) => { step.hidden = stepIndex !== activeStep; });
+    if (activeStep === formSchema.steps.length - 1) updateReview();
+    document.querySelector("[data-current-step]").textContent = activeStep + 1;
+    document.querySelector("[data-current-label]").textContent = formSchema.steps[activeStep].title;
+    const progress = ((activeStep + 1) / formSchema.steps.length) * 100;
+    document.querySelector("[data-progress-bar]").style.width = `${progress}%`;
+    const track = document.querySelector(".progress-track");
+    track.setAttribute("aria-valuenow", activeStep + 1);
+    track.setAttribute("aria-valuetext", `Step ${activeStep + 1} of ${formSchema.steps.length}: ${formSchema.steps[activeStep].title}`);
+    document.querySelector("[data-step-back]").hidden = activeStep === 0;
+    document.querySelector("[data-step-next]").hidden = activeStep === formSchema.steps.length - 1;
+    document.querySelector("[data-submit-button]").hidden = activeStep !== formSchema.steps.length - 1;
+  }
+
+  function validateStep() {
+    updateConditions();
+    const step = formElement.querySelector(`[data-form-step="${activeStep}"]`);
+    let valid = true;
+    step.querySelectorAll("input:not(:disabled), select:not(:disabled), textarea:not(:disabled)").forEach((control) => {
+      const error = step.querySelector(`[data-field-error="${CSS.escape(control.name)}"]`);
+      if (!control.checkValidity()) { valid = false; if (error) error.textContent = control.validity.valueMissing ? "Please complete this field." : "Check this field and try again."; }
+      else if (error) error.textContent = "";
+    });
+    step.querySelectorAll("[data-choice-field][data-required='true']").forEach((group) => {
+      const checked = group.querySelector("input:checked");
+      const error = group.querySelector("[data-group-error]");
+      if (!checked) { valid = false; error.textContent = "Choose at least one option."; } else error.textContent = "";
+    });
+    if (!valid) step.querySelector(":invalid, [data-group-error]:not(:empty)")?.focus?.();
+    return valid;
+  }
+
+  formElement.addEventListener("change", updateConditions);
+  document.querySelector("[data-step-next]").addEventListener("click", () => { if (validateStep()) showStep(activeStep + 1); });
+  document.querySelector("[data-step-back]").addEventListener("click", () => showStep(activeStep - 1));
+  stepsHost.addEventListener("click", (event) => { const edit = event.target.closest("[data-edit-step]"); if (edit) showStep(Number(edit.dataset.editStep)); });
+  formElement.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const button = document.querySelector("[data-submit-button]");
+    const status = document.querySelector("[data-submit-status]");
+    button.disabled = true; button.setAttribute("aria-busy", "true"); status.hidden = false; status.textContent = "Sending your request…";
+    try {
+      const response = await fetch(formElement.action, { method: "POST", headers: { Accept: "application/json" }, body: new FormData(formElement) });
+      const body = await response.json().catch(() => null);
+      if (!response.ok || body?.ok !== true) throw new Error(body?.message || "Your request could not be sent.");
+      formElement.querySelector(".wizard-card").hidden = true;
+      formElement.querySelector(".wizard-progress").hidden = true;
+      document.querySelector("[data-success-panel]").hidden = false;
+      document.querySelector("[data-success-message]").textContent = body.message || formSchema.successMessage;
+      document.querySelector("[data-success-panel]").focus({ preventScroll: true });
+    } catch (error) { status.dataset.state = "error"; status.textContent = error.message || "Your request could not be sent."; button.disabled = false; button.removeAttribute("aria-busy"); }
+  });
+
+  (async () => {
+    try {
+      const response = await fetch(`/api/forms/${encodeURIComponent(slug)}`, { headers: { Accept: "application/json" } });
+      const body = await response.json().catch(() => null);
+      if (!response.ok || body?.ok !== true) throw new Error();
+      renderForm(body.schema);
+    } catch {
+      if (slug === "custom-sukkah") renderForm(builtInCustom);
+      else { loadingMessage.hidden = true; loadError.hidden = false; }
+    }
+  })();
+</script>
+
+<style>
+  .dynamic-form-hero { padding-block: clamp(2rem, 4vw, 3rem) clamp(3rem, 6vw, 5rem); }
+  .dynamic-form-hero__copy { width: min(100%, 760px); margin: clamp(2.5rem, 5vw, 4rem) auto 0; text-align: center; }
+  .dynamic-form-hero__copy .eyebrow { justify-content: center; }
+  .dynamic-form-hero h1 { margin-bottom: .8rem; font-size: clamp(2.8rem, 6vw, 4.8rem); }
+  .dynamic-form-hero .lead { max-width: 640px; margin-inline: auto; }
+  .dynamic-form-section { padding-block: clamp(3rem, 7vw, 6rem); background: var(--cream-50); }
+  .dynamic-form-shell { max-width: 850px; }
+  .dynamic-form-loading, .dynamic-form-error { padding: 2rem; border: 1px solid var(--border); border-radius: var(--radius-large); background: white; text-align: center; }
+  .dynamic-form-error h2 { margin-bottom: .5rem; }
+  .dynamic-form-error p { margin: 0; }
+  .step-number { display: grid; width: 2.65rem; height: 2.65rem; place-items: center; border: 1px solid rgba(200,134,67,.34); border-radius: 10px; color: var(--forest-900); background: #fbf2e5; font-weight: 850; }
+  .dynamic-field--photos { display: grid; grid-template-columns: minmax(0, 1fr); }
+  .dynamic-field--photos input { width: 100%; padding: .75rem; border: 1px dashed rgba(45,104,85,.36); border-radius: 10px; background: white; }
+  @media (max-width: 700px) { .dynamic-form-hero__copy { margin-top: 2.5rem; } }
+</style>
