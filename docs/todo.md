@@ -45,20 +45,6 @@ When adding a task, use this format:
 
 ## Now
 
-- [ ] Fix testimonials and add a reusable owner-managed form builder
-  - Why: Approved testimonials must render correctly, Custom Sukkah customers
-    need a matching guided request form, and the owner needs a simple GUI for
-    creating and maintaining complete forms without changing code.
-  - Done when: Approved testimonial cards use the full carousel width; the
-    Custom Sukkahs page includes the shared contact, location, project, and
-    review flow; the protected dashboard can create a new form, add and reorder
-    steps, add/edit/duplicate/require/remove every supported field type and its
-    options, configure simple conditional follow-ups, preview changes, save a
-    draft, publish a version, and restore an earlier version; all generated
-    forms use the same guided-form renderer and styling; server validation and
-    D1 persistence use the published version without damaging older
-    submissions; tests and browser checks pass; and the update is deployed.
-
 ## Next
 
 - [ ] Explain convertible roof and schach options
@@ -164,6 +150,17 @@ When adding a task, use this format:
   - Unblocks: Publishing multiple testimonial cards in the homepage scroller.
 
 ## Completed
+
+- [x] Fix testimonials and add a reusable owner-managed form builder (2026-08-18)
+  - Result: Published a protected, versioned form builder that lets the owner
+    create forms; add, edit, duplicate, reorder, require, or remove supported
+    fields and steps; manage choices and conditional follow-ups; preview and
+    save drafts; publish immutable versions; and restore earlier versions.
+    Added the matching four-step Custom Sukkah request form and linked it from
+    the service page. Submissions preserve their published field labels and
+    values, server validation follows the published schema, and the approved
+    testimonial now uses the full carousel width. All 21 automated tests and
+    live production browser checks passed.
 
 - [x] Deploy and verify the database-backed site (2026-08-17)
   - Result: Published the clean D1/R2 backend, protected dashboard, permanent
