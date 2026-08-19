@@ -153,6 +153,13 @@ invalid options or conditions, and enforce the published definition when a
 customer submits. Saved submissions retain the form version and the label
 shown with each answer so later edits do not damage earlier records.
 
+The owner dashboard presents the form editor and submission manager as separate
+tabs. The builder preview accepts the supported controls as a safe, unsent
+interactive preview, including conditional follow-ups, and keeps the editor and
+preview sections synchronized while the owner scrolls. The form chooser uses a
+compact responsive card rail with hidden native scrollbars and accessible arrow
+controls on small screens, while retaining a clear vertical list on desktop.
+
 Custom-build service is limited to the New York, New Jersey, and Connecticut
 tri-state area. This confirmed scope applies specifically to the
 `/custom-sukkahs/` route and does not redefine the separate Builds or Rentals

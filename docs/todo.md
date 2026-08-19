@@ -45,7 +45,13 @@ When adding a task, use this format:
 
 ## Now
 
-- No active task.
+- [ ] Improve the admin builder workspace
+  - Why: The owner needs a clearer separation between form editing and
+    submissions, a preview that behaves like the real form, and a more polished
+    mobile form selector.
+  - Done when: Builder and submissions are separate tabs; the preview accepts
+    real form interactions and follows the active editor section while
+    scrolling; and the Your forms rail uses a sleek, accessible card slider.
 
 ## Next
 

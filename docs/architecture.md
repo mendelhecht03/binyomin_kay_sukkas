@@ -295,6 +295,14 @@ form. Publishing creates an immutable numbered version; restoring an older
 version copies it back into the draft for review rather than silently changing
 the public form.
 
+The dashboard separates these tools into Form builder and Submissions tabs, so
+the editing workspace does not compete visually with the submission rows. The
+builder preview uses the same field types and section icons as a live form. Its
+controls are interactive for testing conditional questions, and scrolling the
+editor or preview highlights and follows the matching section. The form chooser
+is a compact snap-scrolling card rail on small screens with keyboard-friendly
+previous and next buttons; on larger screens it remains a simple vertical list.
+
 D1 stores the current draft in `forms` and immutable published snapshots in
 `form_versions`. Dynamic submissions record both the published version ID and
 a label-and-value snapshot for every visible answer. Consequently, renaming or
