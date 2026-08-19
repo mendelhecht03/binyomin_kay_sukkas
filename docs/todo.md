@@ -45,7 +45,13 @@ When adding a task, use this format:
 
 ## Now
 
-- No active task.
+- [ ] Publish the Pergolas, branding, testimonial, and service-page refresh
+  - Why: The latest approved changes combine the new Pergolas portfolio with
+    the Bkay Sukkahs brand, a more reliable testimonial card, and consistent
+    Tree Trimming, Eruv Work, and About pages.
+  - Done when: All requested pages and shared branding are built, the
+    testimonial card renders safely, the documentation is current, and the
+    complete site is published successfully.
 
 ## Next
 

@@ -19,7 +19,9 @@ interface Service {
   metaTitle: string;
   description: string;
   summary: string;
-  heroPlaceholder: string;
+  heroPlaceholder?: string;
+  heroNote?: string;
+  showMedia?: boolean;
   primaryAction: Action;
   secondaryAction?: Action;
   highlights: TextItem[];
@@ -39,458 +41,369 @@ const {
   showSecondaryAction = true,
   showRequestSection = true,
 } = Astro.props;
+const showMedia = service.showMedia !== false;
 const heroHeadingId = `${service.slug}-heading`;
 ---
 
 <BaseLayout title={service.metaTitle} description={service.description}>
-  <div class="service-page">
+  <div class:list={["service-page", { "service-page--text-first": !showMedia }]}>
     <section class="service-hero sukkah-hero-background" aria-labelledby={heroHeadingId}>
-      <div class="service-hero__copy">
-        <p class="eyebrow">{service.eyebrow}</p>
-        <h1 id={heroHeadingId}>{service.title}</h1>
-        <p class="service-hero__summary">{service.summary}</p>
-        <div class="action-row">
-          <a class="action action--primary" href={service.primaryAction.href}>
-            {service.primaryAction.label}
-          </a>
+      <div class="shell">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <a href="/">Home</a>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page">{service.eyebrow}</span>
+        </nav>
+
+        <div class="service-hero__inner">
+          <div class="service-hero__copy">
+            <p class="eyebrow">{service.eyebrow}</p>
+            <h1 id={heroHeadingId}>{service.title}</h1>
+            <p class="lead">{service.summary}</p>
+            <div class="button-row">
+              <a class="button" href={service.primaryAction.href}>{service.primaryAction.label}</a>
+              {
+                showSecondaryAction && service.secondaryAction && (
+                  <a class="button button-secondary" href={service.secondaryAction.href}>
+                    {service.secondaryAction.label}
+                  </a>
+                )
+              }
+            </div>
+          </div>
+
           {
-            showSecondaryAction && service.secondaryAction && (
-              <a class="action action--secondary" href={service.secondaryAction.href}>
-                {service.secondaryAction.label}
-              </a>
+            showMedia ? (
+              <div class="service-hero__media">
+                <MediaPlaceholder
+                  label={service.heroPlaceholder || "A real project example will be added here"}
+                  description="This space is reserved for a real example of this service."
+                  ratio="wide"
+                />
+              </div>
+            ) : (
+              <aside class="service-hero__note" aria-label="Service note">
+                <p class="eyebrow">A clear starting point</p>
+                <strong>{service.heroNote || "Start with the space and the details you already have."}</strong>
+                <p>Share what you know, and we can work through the practical next step together.</p>
+              </aside>
             )
           }
         </div>
       </div>
-
-      <div class="service-hero__media">
-        <MediaPlaceholder
-          label={service.heroPlaceholder}
-          description="This space is reserved for a real example of this service."
-          ratio="wide"
-        />
-      </div>
     </section>
 
-    <section class="section-shell" aria-labelledby={`${service.slug}-details-heading`}>
-      <div class="section-heading">
-        <p class="eyebrow">A clearer starting point</p>
-        <h2 id={`${service.slug}-details-heading`}>Useful details before you reach out</h2>
-      </div>
-      <div class="highlight-grid">
-        {
-          service.highlights.map((highlight) => (
-            <article class="highlight-card">
-              <h3>{highlight.title}</h3>
-              <p>{highlight.text}</p>
-            </article>
-          ))
-        }
+    <section class="section" aria-labelledby={`${service.slug}-details-heading`}>
+      <div class="shell">
+        <div class="section-heading">
+          <p class="eyebrow">A practical scope</p>
+          <h2 id={`${service.slug}-details-heading`}>Start with the part of the site that needs attention.</h2>
+        </div>
+
+        <div class="service-highlight-grid">
+          {
+            service.highlights.map((highlight) => (
+              <article class="service-highlight">
+                <h3>{highlight.title}</h3>
+                <p>{highlight.text}</p>
+              </article>
+            ))
+          }
+        </div>
       </div>
     </section>
 
     {
       showRequestSection && (
-        <section class="request-section" aria-labelledby={`${service.slug}-request-heading`}>
-          <div>
-            <p class="eyebrow">What to share</p>
-            <h2 id={`${service.slug}-request-heading`}>Help make the first conversation useful.</h2>
-            <p>
-              You do not need every answer before getting in touch. These details simply make
-              it easier to understand the request.
-            </p>
+        <section class="section section-muted" aria-labelledby={`${service.slug}-request-heading`}>
+          <div class="shell service-request-grid">
+            <div>
+              <p class="eyebrow">What to share</p>
+              <h2 id={`${service.slug}-request-heading`}>Make the first conversation useful.</h2>
+              <p>
+                You do not need every answer before getting in touch. These details simply make
+                it easier to understand the location and the work you have in mind.
+              </p>
+            </div>
+            <ul class="feature-list">
+              {service.requestItems.map((item) => <li>{item}</li>)}
+            </ul>
           </div>
-          <ul class="check-list">
-            {service.requestItems.map((item) => <li>{item}</li>)}
-          </ul>
         </section>
       )
     }
 
-    <section class="section-shell" aria-labelledby={`${service.slug}-process-heading`}>
-      <div class="section-heading">
-        <p class="eyebrow">Simple process</p>
-        <h2 id={`${service.slug}-process-heading`}>From request to next step</h2>
-      </div>
-      <ol class="process-grid">
-        {
-          service.steps.map((step, index) => (
-            <li>
-              <span aria-hidden="true">{index + 1}</span>
-              <div>
-                <h3>{step.title}</h3>
-                <p>{step.text}</p>
-              </div>
-            </li>
-          ))
-        }
-      </ol>
-    </section>
-
-    <section class="section-shell" aria-labelledby={`${service.slug}-photos-heading`}>
-      <div class="section-heading section-heading--split">
-        <div>
-          <p class="eyebrow">Project photos</p>
-          <h2 id={`${service.slug}-photos-heading`}>Real examples will be added here.</h2>
+    <section class="section" aria-labelledby={`${service.slug}-process-heading`}>
+      <div class="shell">
+        <div class="section-heading">
+          <p class="eyebrow">A clear process</p>
+          <h2 id={`${service.slug}-process-heading`}>From the first message to the next step.</h2>
         </div>
-        <p>
-          These fixed-size spaces keep the page ready for photography without pretending
-          that temporary images are completed customer projects.
-        </p>
-      </div>
-      <div class="media-grid">
-        {
-          service.mediaPlaceholders.map((label) => (
-            <MediaPlaceholder label={label} />
-          ))
-        }
+        <ol class="service-process-grid">
+          {
+            service.steps.map((step, index) => (
+              <li>
+                <span aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+                <div>
+                  <h3>{step.title}</h3>
+                  <p>{step.text}</p>
+                </div>
+              </li>
+            ))
+          }
+        </ol>
       </div>
     </section>
 
-    <section class="contact-band" aria-labelledby={`${service.slug}-contact-heading`}>
-      <div>
-        <p class="eyebrow">Ready to ask?</p>
-        <h2 id={`${service.slug}-contact-heading`}>Start with the details you already have.</h2>
+    {
+      showMedia && service.mediaPlaceholders.length > 0 && (
+        <section class="section section-muted" aria-labelledby={`${service.slug}-photos-heading`}>
+          <div class="shell">
+            <div class="section-heading">
+              <p class="eyebrow">Project photos</p>
+              <h2 id={`${service.slug}-photos-heading`}>Real examples can be added here.</h2>
+              <p>These fixed-size spaces keep the page ready for approved project photography.</p>
+            </div>
+            <div class="service-media-grid">
+              {service.mediaPlaceholders.map((label) => <MediaPlaceholder label={label} />)}
+            </div>
+          </div>
+        </section>
+      )
+    }
+
+    <section class="section-compact service-cta" aria-labelledby={`${service.slug}-contact-heading`}>
+      <div class="shell">
+        <div class="cta-panel">
+          <div>
+            <p class="eyebrow">Ready to talk?</p>
+            <h2 id={`${service.slug}-contact-heading`}>Contact today and start with the details you have.</h2>
+            <p>We can review the location, timing, and practical next step together.</p>
+          </div>
+          <a class="button button-light" href={service.primaryAction.href}>{service.primaryAction.label}</a>
+        </div>
       </div>
-      <a class="action action--light" href={service.primaryAction.href}>
-        {service.primaryAction.label}
-      </a>
     </section>
   </div>
 </BaseLayout>
 
 <style>
   .service-page {
-    width: min(100% - 2rem, 74rem);
-    margin-inline: auto;
-    padding-block: clamp(2rem, 5vw, 4.5rem);
+    overflow: clip;
+    padding-bottom: clamp(3.5rem, 7vw, 6rem);
   }
 
   .service-hero {
+    padding-block: clamp(1.35rem, 3vw, 2.5rem) clamp(3.25rem, 7vw, 5.75rem);
+  }
+
+  .service-hero .breadcrumb {
+    margin-bottom: 0;
+  }
+
+  .service-hero__inner {
     display: grid;
-    grid-template-columns: minmax(0, 1.04fr) minmax(19rem, 0.96fr);
-    gap: clamp(2rem, 5vw, 4.5rem);
+    grid-template-columns: minmax(0, 1.05fr) minmax(19rem, 0.95fr);
+    gap: clamp(2rem, 7vw, 5.5rem);
     align-items: center;
-    padding: clamp(1.4rem, 4vw, 3.5rem);
-    border: 1px solid rgba(23, 63, 50, 0.13);
-    border-radius: 1.25rem;
-    box-shadow: 0 1.25rem 3.5rem rgba(35, 46, 40, 0.08);
+    margin-top: clamp(2.5rem, 5vw, 4.5rem);
+  }
+
+  .service-page--text-first .service-hero__inner {
+    grid-template-columns: minmax(0, 1.08fr) minmax(17rem, 0.72fr);
   }
 
   .service-hero__copy,
   .service-hero__media,
-  .section-heading,
-  .request-section > div {
+  .service-hero__note {
     min-width: 0;
   }
 
-  .eyebrow {
-    margin: 0 0 0.75rem;
-    color: #33654f;
-    font-size: 0.78rem;
-    font-weight: 850;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-  }
-
-  h1,
-  h2,
-  h3,
-  p {
-    margin-top: 0;
-  }
-
-  h1,
-  h2,
-  h3 {
-    color: #173f32;
-    text-wrap: balance;
-  }
-
-  h1 {
-    max-width: 13ch;
-    margin-bottom: 1.25rem;
-    font-size: clamp(2.35rem, 6vw, 4.7rem);
+  .service-hero__copy h1 {
+    max-width: 12ch;
+    margin-bottom: 1.15rem;
+    font-size: clamp(2.9rem, 6vw, 5.2rem);
     line-height: 0.98;
   }
 
-  h2 {
-    margin-bottom: 0.8rem;
-    font-size: clamp(1.75rem, 3.5vw, 2.7rem);
-    line-height: 1.1;
-  }
-
-  h3 {
-    margin-bottom: 0.45rem;
-    font-size: 1.12rem;
-  }
-
-  p {
-    color: #59675f;
-    line-height: 1.7;
-  }
-
-  .service-hero__summary {
-    max-width: 38rem;
+  .service-hero__copy .lead {
+    max-width: 42rem;
     margin-bottom: 1.5rem;
+  }
+
+  .service-hero__note {
+    display: flex;
+    min-height: 16rem;
+    flex-direction: column;
+    justify-content: center;
+    padding: clamp(1.5rem, 4vw, 2.7rem);
+    border: 1px solid rgba(23, 63, 52, 0.14);
+    border-radius: var(--radius-large);
+    background: rgba(255, 255, 255, 0.68);
+    box-shadow: var(--shadow-small);
+  }
+
+  .service-hero__note .eyebrow {
+    margin-bottom: 1rem;
+  }
+
+  .service-hero__note strong {
+    max-width: 16ch;
+    color: var(--forest-950);
+    font-family: var(--font-heading);
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
+    line-height: 1.08;
+  }
+
+  .service-hero__note p:last-child {
+    max-width: 28ch;
+    margin: 1rem 0 0;
+  }
+
+  .service-highlight-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(1.25rem, 3vw, 2.5rem);
+  }
+
+  .service-highlight {
+    min-width: 0;
+    padding-top: 1.1rem;
+    border-top: 2px solid var(--wood-500);
+  }
+
+  .service-highlight h3 {
+    margin-bottom: 0.45rem;
+    font-family: var(--font-nav);
+    font-size: 1.15rem;
+  }
+
+  .service-highlight p {
+    margin-bottom: 0;
+  }
+
+  .service-request-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.82fr) minmax(20rem, 1.18fr);
+    gap: clamp(2rem, 7vw, 5.5rem);
+    align-items: start;
+  }
+
+  .service-request-grid > * {
+    min-width: 0;
+  }
+
+  .service-request-grid h2 {
+    max-width: 14ch;
+  }
+
+  .service-request-grid .feature-list {
+    margin-top: 0;
+  }
+
+  .service-process-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(1.25rem, 3vw, 2rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .service-process-grid li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.85rem;
+    align-items: start;
+    min-width: 0;
+  }
+
+  .service-process-grid li > span {
+    color: var(--wood-600);
+    font-size: 0.78rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+  }
+
+  .service-process-grid h3 {
+    margin-bottom: 0.35rem;
+    font-family: var(--font-nav);
     font-size: 1.08rem;
   }
 
-  .action-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
+  .service-process-grid p {
+    margin-bottom: 0;
   }
 
-  .action {
-    min-height: 3rem;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0.75rem 1.15rem;
-    border: 1px solid transparent;
-    border-radius: 0.7rem;
-    font-weight: 800;
-    line-height: 1.2;
-    text-align: center;
-    text-decoration: none;
-    transition: transform 160ms ease, background-color 160ms ease, border-color 160ms ease;
-  }
-
-  .action:hover {
-    transform: translateY(-1px);
-  }
-
-  .action:focus-visible {
-    outline: 3px solid rgba(184, 137, 66, 0.55);
-    outline-offset: 3px;
-  }
-
-  .action--primary {
-    background: #1f5f46;
-    color: white;
-  }
-
-  .action--primary:hover {
-    background: #173f32;
-  }
-
-  .action--secondary {
-    border-color: rgba(23, 63, 50, 0.25);
-    background: rgba(255, 255, 255, 0.76);
-    color: #173f32;
-  }
-
-  .action--secondary:hover {
-    border-color: rgba(23, 63, 50, 0.42);
-    background: white;
-  }
-
-  .section-shell {
-    padding-block: clamp(3.5rem, 7vw, 6.5rem);
-  }
-
-  .section-heading {
-    max-width: 46rem;
-    margin-bottom: 1.75rem;
-  }
-
-  .section-heading--split {
-    max-width: none;
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.72fr);
-    gap: 2rem;
-    align-items: end;
-  }
-
-  .section-heading--split p:last-child {
-    margin-bottom: 0.35rem;
-  }
-
-  .highlight-grid,
-  .media-grid {
+  .service-media-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 1rem;
   }
 
-  .highlight-card {
-    padding: 1.35rem;
-    border: 1px solid rgba(23, 63, 50, 0.14);
-    border-radius: 0.9rem;
-    background: rgba(255, 255, 255, 0.78);
+  .service-cta {
+    padding-bottom: 0;
   }
 
-  .highlight-card p {
-    margin-bottom: 0;
-  }
-
-  .request-section {
-    display: grid;
-    grid-template-columns: minmax(0, 0.9fr) minmax(20rem, 1.1fr);
-    gap: clamp(2rem, 6vw, 5rem);
-    align-items: start;
-    padding: clamp(1.5rem, 4vw, 3rem);
-    border-radius: 1.1rem;
-    background: #173f32;
-  }
-
-  .request-section h2,
-  .request-section .eyebrow,
-  .request-section p {
-    color: white;
-  }
-
-  .request-section .eyebrow {
-    color: #e7c88f;
-  }
-
-  .request-section p {
-    margin-bottom: 0;
-    color: rgba(255, 255, 255, 0.78);
-  }
-
-  .check-list {
-    display: grid;
-    gap: 0.85rem;
-    margin: 0;
-    padding: 0;
-    color: white;
-    list-style: none;
-  }
-
-  .check-list li {
-    position: relative;
-    padding: 0.85rem 1rem 0.85rem 3rem;
-    border: 1px solid rgba(255, 255, 255, 0.17);
-    border-radius: 0.7rem;
-    background: rgba(255, 255, 255, 0.06);
-    line-height: 1.55;
-  }
-
-  .check-list li::before {
-    content: "✓";
-    position: absolute;
-    top: 0.78rem;
-    left: 1rem;
-    color: #e7c88f;
-    font-weight: 900;
-  }
-
-  .process-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 1.5rem;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  .process-grid li {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 0.9rem;
-    align-items: start;
-  }
-
-  .process-grid li > span {
-    width: 2.25rem;
-    height: 2.25rem;
-    display: grid;
-    place-items: center;
-    border-radius: 999px;
-    background: #e8d3ab;
-    color: #173f32;
-    font-weight: 900;
-  }
-
-  .process-grid p {
-    margin-bottom: 0;
-  }
-
-  .contact-band {
-    display: flex;
-    gap: 2rem;
-    align-items: center;
-    justify-content: space-between;
-    padding: clamp(1.5rem, 4vw, 3rem);
-    border-radius: 1.1rem;
-    background: linear-gradient(110deg, #1f5f46, #173f32);
-  }
-
-  .contact-band .eyebrow {
-    color: #e7c88f;
-  }
-
-  .contact-band h2 {
-    max-width: 24ch;
-    margin-bottom: 0;
-    color: white;
-  }
-
-  .action--light {
+  .service-cta .button {
     flex: 0 0 auto;
-    background: #fffaf0;
-    color: #173f32;
   }
 
-  .action--light:hover {
-    background: white;
+  .service-cta .eyebrow {
+    color: #f0bd7e;
   }
 
-  @media (max-width: 56rem) {
-    .service-hero,
-    .request-section {
+  @media (max-width: 58rem) {
+    .service-hero__inner,
+    .service-page--text-first .service-hero__inner,
+    .service-request-grid {
       grid-template-columns: 1fr;
     }
 
-    .service-hero__media {
+    .service-hero__media,
+    .service-hero__note {
       max-width: 40rem;
     }
 
-    .highlight-grid,
-    .media-grid,
-    .process-grid {
+    .service-highlight-grid,
+    .service-process-grid,
+    .service-media-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
-
-    .section-heading--split {
-      grid-template-columns: 1fr;
-      gap: 0;
-    }
   }
 
-  @media (max-width: 40rem) {
-    .service-page {
-      width: min(100% - 1.25rem, 74rem);
-    }
-
+  @media (max-width: 42rem) {
     .service-hero {
-      gap: 1.5rem;
-      border-radius: 1rem;
+      padding-block: 1.35rem 3rem;
     }
 
-    .highlight-grid,
-    .media-grid,
-    .process-grid {
+    .service-hero__inner {
+      gap: 1.75rem;
+      margin-top: 2.25rem;
+    }
+
+    .service-hero__copy h1 {
+      font-size: clamp(2.55rem, 12vw, 3.8rem);
+    }
+
+    .service-highlight-grid,
+    .service-process-grid,
+    .service-media-grid {
       grid-template-columns: 1fr;
     }
 
-    .action-row,
-    .contact-band {
-      align-items: stretch;
-      flex-direction: column;
-    }
-
-    .action-row .action,
-    .contact-band .action {
+    .service-hero__copy .button-row,
+    .service-cta .button {
       width: 100%;
     }
-  }
 
-  @media (prefers-reduced-motion: reduce) {
-    .action {
-      transition: none;
+    .service-hero__copy .button-row {
+      display: grid;
+    }
+
+    .service-cta .cta-panel {
+      align-items: stretch;
+      grid-template-columns: 1fr;
     }
   }
 </style>

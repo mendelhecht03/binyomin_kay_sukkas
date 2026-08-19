@@ -1,147 +1,190 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+
+// Replace these placeholders only after the business history and totals are approved.
+const biography =
+  "Benyamin helps families and communities plan practical sukkah and outdoor projects with clear communication from the first conversation through the finished work.";
+
+const aboutStats = [
+  { label: "Sukkahs built", value: 0 },
+  { label: "Years working", value: 0 },
+];
 ---
 
 <BaseLayout
   title="About"
-  description="Learn about Benyamin Kay's practical approach to sukkah-season projects and outdoor work."
+  description="A short introduction to Benyamin Kay and his practical approach to sukkah and outdoor work."
 >
   <div class="about-page">
-    <section class="about-hero shell" aria-labelledby="about-heading">
-      <div class="about-copy">
-        <nav class="breadcrumb" aria-label="Breadcrumb">
-          <a href="/">Home</a>
-          <span aria-hidden="true">/</span>
-          <span aria-current="page">About</span>
-        </nav>
-        <p class="eyebrow">About Benyamin</p>
-        <h1 id="about-heading">Hands-on work with clear communication.</h1>
-        <p class="lead">
-          Benyamin helps with sukkah-season projects and practical outdoor work.
-          The starting point is simple: explain what you need, review the important
-          details, and agree on a clear next step.
-        </p>
-        <p>
-          The work listed on this site includes Builds, rentals, custom
-          sukkahs, pergolas, tree trimming, and eruv work. Each kind of request has
-          different details, so photos, measurements, and timing are useful when you
-          first get in touch.
-        </p>
-        <div class="button-row">
-          <a class="button" href="/contact/">Request a quote</a>
+    <section class="about-hero sukkah-hero-background" aria-labelledby="about-heading">
+      <div class="shell about-hero__inner">
+        <div class="about-hero__copy">
+          <nav class="breadcrumb" aria-label="Breadcrumb">
+            <a href="/">Home</a>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page">About</span>
+          </nav>
+          <p class="eyebrow">About Benyamin</p>
+          <h1 id="about-heading">Practical work. Clear communication.</h1>
+          <p class="lead">A straightforward way to plan sukkah-season projects and outdoor work.</p>
+          <div class="button-row">
+            <a class="button" href="/contact/">Request a quote</a>
+          </div>
         </div>
-      </div>
 
-      <figure class="about-photo">
-        <img
-          src="/assets/images/profile-photo1.jpg"
-          alt="Benyamin Kay smiling as he crosses the finish line of a road race"
-          width="1448"
-          height="1086"
-        />
-        <figcaption>Benyamin Kay</figcaption>
-      </figure>
+        <figure class="about-photo">
+          <img
+            src="/assets/images/profile-photo1.jpg"
+            alt="Benyamin Kay smiling as he crosses the finish line of a road race"
+            width="1448"
+            height="1086"
+            loading="eager"
+          />
+          <figcaption>Benyamin Kay</figcaption>
+        </figure>
+      </div>
     </section>
 
-    <section class="about-section section-muted" aria-labelledby="approach-heading">
+    <section class="about-stats section-muted" aria-labelledby="about-stats-heading">
       <div class="shell">
-        <div class="section-heading">
-          <p class="eyebrow">A straightforward approach</p>
-          <h2 id="approach-heading">Make the important details easy to understand.</h2>
-          <p>
-            A useful first conversation does not need to be complicated. Start with
-            what you know, and fill in the remaining details as the request is reviewed.
-          </p>
+        <div class="about-stats__heading">
+          <p class="eyebrow">At a glance</p>
+          <h2 id="about-stats-heading">The numbers can tell the story.</h2>
+          <p class="about-edit-note">Placeholder totals — update these values after they are confirmed.</p>
         </div>
-
-        <div class="approach-grid">
-          <article>
-            <span aria-hidden="true">01</span>
-            <h3>Describe the request</h3>
-            <p>Share the kind of work, approximate size, timing, and location details.</p>
-          </article>
-          <article>
-            <span aria-hidden="true">02</span>
-            <h3>Show the space</h3>
-            <p>Clear photos can explain access, measurements, and unusual conditions.</p>
-          </article>
-          <article>
-            <span aria-hidden="true">03</span>
-            <h3>Confirm the next step</h3>
-            <p>Review the scope, availability, and price before scheduling the work.</p>
-          </article>
+        <div class="about-stats__grid">
+          {aboutStats.map((stat) => (
+            <article class="about-stat">
+              <strong class="about-stat__value" data-counter-target={stat.value}>0</strong>
+              <span>{stat.label}</span>
+            </article>
+          ))}
         </div>
       </div>
     </section>
 
-    <section class="services-overview shell" aria-labelledby="services-heading">
-      <div>
-        <p class="eyebrow">Services</p>
-        <h2 id="services-heading">Find the page that matches your project.</h2>
-      </div>
-      <div class="service-links">
-        <a href="/sukka-builder/">Builds <span aria-hidden="true">→</span></a>
-        <a href="/sukkah-rentals/">Sukkah rentals <span aria-hidden="true">→</span></a>
-        <a href="/custom-sukkahs/">Custom sukkahs <span aria-hidden="true">→</span></a>
-        <a href="/pergolas/">Pergolas <span aria-hidden="true">→</span></a>
-        <a href="/tree-trimming/">Tree trimming <span aria-hidden="true">→</span></a>
-        <a href="/eruv-work/">Eruv work <span aria-hidden="true">→</span></a>
+    <section class="section about-story" aria-labelledby="about-story-heading">
+      <div class="shell about-story__panel">
+        <div>
+          <p class="eyebrow">A little more</p>
+          <h2 id="about-story-heading">A clear plan before the work begins.</h2>
+        </div>
+        <div class="about-story__copy">
+          <p>{biography}</p>
+          <p class="about-edit-note">Editable placeholder biography — replace this paragraph with the approved business history.</p>
+        </div>
       </div>
     </section>
 
-    <section class="about-cta shell" aria-labelledby="about-contact-heading">
-      <div>
-        <p class="eyebrow">Get started</p>
-        <h2 id="about-contact-heading">Tell Benyamin what you need help with.</h2>
-        <p>Share the project type, timing, and any photos or measurements you have.</p>
+    <section class="section-compact about-cta" aria-labelledby="about-cta-heading">
+      <div class="shell">
+        <div class="cta-panel">
+          <div>
+            <p class="eyebrow">Get started</p>
+            <h2 id="about-cta-heading">Have a project in mind?</h2>
+            <p>Share the location, timing, and the details you already know.</p>
+          </div>
+          <a class="button button-light" href="/contact/">Contact Benyamin</a>
+        </div>
       </div>
-      <a class="button button-light" href="/contact/">Contact Benyamin</a>
     </section>
   </div>
 </BaseLayout>
 
+<script>
+  const counters = [...document.querySelectorAll("[data-counter-target]")];
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function renderCounter(counter, value) {
+    counter.textContent = new Intl.NumberFormat("en-US").format(value);
+  }
+
+  function animateCounter(counter) {
+    const target = Number(counter.dataset.counterTarget);
+    if (!Number.isFinite(target) || target <= 0 || prefersReducedMotion) {
+      renderCounter(counter, Number.isFinite(target) ? target : 0);
+      return;
+    }
+
+    const duration = 700;
+    const startedAt = performance.now();
+
+    function tick(now) {
+      const progress = Math.min((now - startedAt) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      renderCounter(counter, Math.round(target * eased));
+      if (progress < 1) window.requestAnimationFrame(tick);
+    }
+
+    window.requestAnimationFrame(tick);
+  }
+
+  if ("IntersectionObserver" in window && !prefersReducedMotion) {
+    const observer = new IntersectionObserver((entries, currentObserver) => {
+      entries.filter((entry) => entry.isIntersecting).forEach((entry) => {
+        animateCounter(entry.target);
+        currentObserver.unobserve(entry.target);
+      });
+    }, { threshold: 0.35 });
+    counters.forEach((counter) => observer.observe(counter));
+  } else {
+    counters.forEach(animateCounter);
+  }
+</script>
+
 <style>
   .about-page {
-    padding-block: clamp(2rem, 5vw, 4.5rem) 0;
+    overflow: clip;
+    padding-bottom: clamp(3.5rem, 7vw, 6rem);
   }
 
   .about-hero {
-    display: grid;
-    grid-template-columns: minmax(0, 1.08fr) minmax(18rem, 0.72fr);
-    gap: clamp(2rem, 7vw, 6rem);
-    align-items: center;
-    padding-bottom: clamp(4rem, 9vw, 7.5rem);
+    padding-block: clamp(1.35rem, 3vw, 2.5rem) clamp(3rem, 7vw, 5.5rem);
   }
 
-  .about-copy {
+  .about-hero__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.72fr);
+    gap: clamp(2rem, 8vw, 7rem);
+    align-items: center;
+    margin-top: clamp(2.5rem, 5vw, 4.5rem);
+  }
+
+  .about-hero__copy,
+  .about-photo {
     min-width: 0;
   }
 
-  .about-copy h1 {
-    max-width: 12ch;
-    font-size: clamp(2.7rem, 7vw, 5.3rem);
+  .about-hero__copy h1 {
+    max-width: 11ch;
+    margin-bottom: 1.1rem;
+    font-size: clamp(3rem, 7vw, 5.4rem);
+    line-height: 0.96;
   }
 
-  .about-copy > p:not(.eyebrow) {
-    max-width: 42rem;
+  .about-hero__copy .lead {
+    max-width: 34rem;
+    margin-bottom: 1.5rem;
   }
 
   .about-photo {
     position: relative;
     margin: 0;
-    padding: 0 0 1.15rem 1.15rem;
+    padding: 0 0 1rem 1rem;
   }
 
   .about-photo::before {
     position: absolute;
-    inset: 1.15rem 1.15rem 0 0;
-    z-index: -1;
+    inset: 1rem 1rem 0 0;
+    z-index: 0;
     border-radius: var(--radius-large);
     content: "";
     background: var(--wood-500);
   }
 
   .about-photo img {
+    position: relative;
+    z-index: 1;
     width: 100%;
     aspect-ratio: 4 / 5;
     border-radius: var(--radius-large);
@@ -152,8 +195,9 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 
   .about-photo figcaption {
     position: absolute;
-    right: 1.75rem;
-    bottom: 2rem;
+    right: 1.6rem;
+    bottom: 1.8rem;
+    z-index: 2;
     padding: 0.45rem 0.75rem;
     border-radius: var(--radius-small);
     color: var(--forest-950);
@@ -163,140 +207,155 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
     backdrop-filter: blur(8px);
   }
 
-  .about-section {
-    padding-block: clamp(4rem, 9vw, 7rem);
+  .about-stats {
+    padding-block: clamp(2.75rem, 6vw, 4.75rem);
   }
 
-  .approach-grid {
+  .about-stats__heading {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 1rem;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+    gap: 0 2rem;
+    align-items: baseline;
+    margin-bottom: 2rem;
   }
 
-  .approach-grid article {
-    min-width: 0;
-    padding: 1.5rem;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    background: rgba(255, 255, 255, 0.76);
+  .about-stats__heading .eyebrow {
+    grid-column: 1 / -1;
+    margin-bottom: 0.75rem;
   }
 
-  .approach-grid article > span {
-    display: inline-block;
-    margin-bottom: 1.8rem;
-    color: var(--wood-600);
-    font-size: 0.82rem;
-    font-weight: 900;
-    letter-spacing: 0.08em;
-  }
-
-  .approach-grid p {
+  .about-stats__heading h2,
+  .about-stats__heading p:last-child {
     margin-bottom: 0;
   }
 
-  .services-overview {
-    display: grid;
-    grid-template-columns: minmax(0, 0.8fr) minmax(20rem, 1.2fr);
-    gap: clamp(2rem, 7vw, 5rem);
-    padding-block: clamp(4rem, 9vw, 7rem);
+  .about-edit-note {
+    color: var(--ink-500);
+    font-size: 0.88rem;
   }
 
-  .service-links {
+  .about-stats__grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.75rem;
-  }
-
-  .service-links a {
-    min-height: 4.4rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
     gap: 1rem;
-    padding: 1rem 1.15rem;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-small);
-    color: var(--forest-900);
-    background: white;
+  }
+
+  .about-stat {
+    display: flex;
+    min-height: 9rem;
+    flex-direction: column;
+    justify-content: center;
+    padding: 1.5rem;
+    border: 1px solid rgba(23, 63, 52, 0.14);
+    border-radius: var(--radius);
+    background: rgba(255, 255, 255, 0.66);
+  }
+
+  .about-stat__value {
+    color: var(--forest-950);
+    font-family: var(--font-heading);
+    font-size: clamp(2.8rem, 7vw, 4.5rem);
+    line-height: 0.95;
+  }
+
+  .about-stat span {
+    margin-top: 0.6rem;
+    color: var(--ink-700);
     font-weight: 800;
-    text-decoration: none;
   }
 
-  .service-links a:hover {
-    border-color: var(--border-strong);
-    background: var(--cream-100);
+  .about-story {
+    padding-bottom: clamp(3rem, 7vw, 5.5rem);
   }
 
-  .service-links span {
-    color: var(--wood-600);
+  .about-story__panel {
+    display: grid;
+    grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr);
+    gap: clamp(2rem, 7vw, 5rem);
+    align-items: start;
+    padding: clamp(1.75rem, 5vw, 3.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-large);
+    background: white;
+    box-shadow: var(--shadow-small);
+  }
+
+  .about-story__panel h2 {
+    max-width: 12ch;
+  }
+
+  .about-story__copy p:first-child {
+    margin-bottom: 0.85rem;
+    color: var(--ink-700);
+    font-size: clamp(1.08rem, 2vw, 1.3rem);
+    line-height: 1.65;
+  }
+
+  .about-story__copy p:last-child {
+    margin-bottom: 0;
   }
 
   .about-cta {
-    display: flex;
-    gap: 2rem;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: clamp(4rem, 9vw, 7rem);
-    padding: clamp(1.75rem, 5vw, 3.5rem);
-    border-radius: var(--radius-large);
-    background: var(--forest-900);
-  }
-
-  .about-cta h2 {
-    max-width: 22ch;
-    margin-bottom: 0.55rem;
-    color: white;
+    padding-bottom: 0;
   }
 
   .about-cta .eyebrow {
     color: #f0bd7e;
   }
 
-  .about-cta p:last-child {
-    margin-bottom: 0;
-    color: rgba(255, 255, 255, 0.74);
-  }
-
   .about-cta .button {
     flex: 0 0 auto;
   }
 
-  @media (max-width: 54rem) {
-    .about-hero,
-    .services-overview {
+  @media (max-width: 58rem) {
+    .about-hero__inner,
+    .about-story__panel {
       grid-template-columns: 1fr;
     }
 
     .about-photo {
-      max-width: 30rem;
-    }
-
-    .approach-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .approach-grid article:last-child {
-      grid-column: 1 / -1;
+      max-width: 32rem;
     }
   }
 
-  @media (max-width: 38rem) {
-    .approach-grid,
-    .service-links {
+  @media (max-width: 42rem) {
+    .about-hero {
+      padding-block: 1.35rem 3rem;
+    }
+
+    .about-hero__inner {
+      gap: 1.75rem;
+      margin-top: 2.25rem;
+    }
+
+    .about-hero__copy h1 {
+      font-size: clamp(2.65rem, 13vw, 3.9rem);
+    }
+
+    .about-hero__copy .button,
+    .about-cta .button {
+      width: 100%;
+    }
+
+    .about-hero__copy .button-row {
+      display: grid;
+    }
+
+    .about-stats__heading {
+      display: block;
+    }
+
+    .about-stats__heading h2 {
+      margin-bottom: 0.75rem;
+    }
+
+    .about-stats__grid {
       grid-template-columns: 1fr;
     }
 
-    .approach-grid article:last-child {
-      grid-column: auto;
-    }
-
-    .about-cta {
+    .about-cta .cta-panel {
       align-items: stretch;
-      flex-direction: column;
-    }
-
-    .about-cta .button {
-      width: 100%;
+      grid-template-columns: 1fr;
     }
   }
 </style>

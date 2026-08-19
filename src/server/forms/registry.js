@@ -7,6 +7,13 @@ const definitions = [
     endpoint: "/api/form-submissions/custom-sukkah",
   },
   {
+    type: "pergola",
+    sourceKey: "pergolas",
+    label: "Pergolas",
+    singularLabel: "Pergola",
+    endpoint: "/api/form-submissions/pergolas",
+  },
+  {
     type: "build",
     sourceKey: "builds",
     label: "Builds",

@@ -84,6 +84,67 @@ export const DEFAULT_CUSTOM_SUKKAH_FORM = {
   ],
 };
 
+export const DEFAULT_PERGOLA_FORM = {
+  id: "pergolas",
+  slug: "pergolas",
+  title: "Pergola request",
+  description: "Tell us about the outdoor structure, shade, and finish you have in mind.",
+  submitLabel: "Request a pergola quote",
+  successTitle: "Your pergola request was sent.",
+  successMessage: "Benyamin will review the details and follow up with you.",
+  steps: [
+    {
+      id: "contact", title: "Contact", icon: "contact", fields: [
+        { id: "name", type: "text", label: "Name", required: true, autocomplete: "name" },
+        { id: "phone", type: "phone", label: "Phone number", required: true, autocomplete: "tel" },
+        { id: "email", type: "email", label: "Email address", required: false, autocomplete: "email" },
+      ],
+    },
+    {
+      id: "location", title: "Location", icon: "location", fields: [
+        { id: "addressLine1", type: "text", label: "Street address", required: true, autocomplete: "address-line1" },
+        { id: "city", type: "text", label: "City", required: true, autocomplete: "address-level2" },
+        { id: "state", type: "select", label: "State", required: true, autocomplete: "address-level1", options: stateOptions },
+        { id: "postalCode", type: "text", label: "Zip code", required: true, autocomplete: "postal-code" },
+        { id: "neighborhood", type: "select", label: "Neighborhood", required: true, options: neighborhoodOptions },
+        { id: "neighborhoodOther", type: "text", label: "Other neighborhood", required: true, condition: { fieldId: "neighborhood", operator: "equals", value: "Other" } },
+        { id: "estimatedSize", type: "text", label: "Approximate pergola size", required: true, placeholder: "For example, 12 × 16 ft" },
+        { id: "setting", type: "select", label: "Where will the pergola be built?", required: true, options: ["Backyard", "Porch or deck", "Courtyard", "Rooftop or terrace", "Side yard", "Driveway", "Other"] },
+        { id: "settingOther", type: "text", label: "Describe the location", required: true, condition: { fieldId: "setting", operator: "equals", value: "Other" } },
+        { id: "siteDescription", type: "textarea", label: "Tell us about the site", required: false, placeholder: "Share access, nearby walls, grade changes, trees, or other site details." },
+        { id: "sitePhotos", type: "photos", label: "Photos of the space", required: false, helpText: "Optional · Up to three JPG, PNG, or HEIC photos" },
+      ],
+    },
+    {
+      id: "structure", title: "Your structure", icon: "home", fields: [
+        { id: "projectType", type: "radio", label: "What are you planning?", required: true, options: ["A new pergola", "An addition or conversion", "A repair or refresh", "Not sure yet"] },
+        { id: "connection", type: "radio", label: "How should the pergola connect to the site?", required: true, options: ["Freestanding", "Attached to the house", "Partly attached and partly freestanding", "Surface-mounted without new ground excavation", "Not sure yet"] },
+        { id: "framePreference", type: "radio", label: "Which frame direction interests you?", required: true, options: ["Wood", "Metal", "A combination", "Not sure yet"] },
+        { id: "roofPreferences", type: "checkboxes", label: "Which roof or shade options interest you?", required: false, helpText: "Select everything that sounds useful.", options: ["Open slats", "Bamboo schach", "Fabric canopy", "Retractable tarp or shade", "Solid weather cover", "Custom roof detail", "Not sure yet"] },
+        { id: "screenPreferences", type: "checkboxes", label: "Would you like screening or side details?", required: false, options: ["Open sides", "Wood slats", "Metal panels", "Fabric or cloth", "Lattice", "Clear panels", "Privacy screens", "Custom artwork or graphic panels", "Other"] },
+        { id: "screenPreferencesOther", type: "text", label: "Tell us about the other side detail", required: true, condition: { fieldId: "screenPreferences", operator: "includes", value: "Other" } },
+      ],
+    },
+    {
+      id: "finishing", title: "Finishing touches", icon: "tools", fields: [
+        { id: "features", type: "checkboxes", label: "Which additions should we consider?", required: false, options: ["Lighting", "Electrical outlets", "Fan or heater", "Curtains or shades", "Gate or door", "Built-in seating", "Counter or serving area", "Planters or greenery", "Storage", "Custom artwork", "Other"] },
+        { id: "featuresOther", type: "text", label: "Tell us about another addition", required: true, condition: { fieldId: "features", operator: "includes", value: "Other" } },
+        { id: "finishPreference", type: "checkboxes", label: "Which finish details matter to you?", required: false, options: ["Natural wood look", "Painted or stained color", "Powder-coated metal", "Low-maintenance materials", "Match the house", "Not sure yet"] },
+        { id: "projectNotes", type: "textarea", label: "Anything else we should know?", required: false, placeholder: "Share design references, artwork ideas, access concerns, or special requests." },
+      ],
+    },
+    {
+      id: "timing", title: "Timing", icon: "timing", fields: [
+        { id: "preferredStartDate", type: "date", label: "Preferred project start date", required: false },
+        { id: "timingNotes", type: "text", label: "Timing notes", required: false, placeholder: "Any seasonal or scheduling preferences" },
+      ],
+    },
+    { id: "review", title: "Review and send", icon: "final", fields: [
+      { id: "comments", type: "textarea", label: "Comments or questions", required: false, placeholder: "Add any details that did not fit above." },
+    ] },
+  ],
+};
+
 export const DEFAULT_BUILD_FORM = {
   id: "builds",
   slug: "builds",
@@ -206,6 +267,7 @@ export const DEFAULT_MANAGED_FORMS = Object.freeze([
   DEFAULT_BUILD_FORM,
   DEFAULT_RENTAL_FORM,
   DEFAULT_CUSTOM_SUKKAH_FORM,
+  DEFAULT_PERGOLA_FORM,
 ]);
 
 function clean(value, maximum = 4000) {

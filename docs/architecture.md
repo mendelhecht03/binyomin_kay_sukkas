@@ -157,6 +157,13 @@ dropdown, radio-card, checkbox-card, paragraph, photo, and conditional
 follow-up fields. The closing action on `/custom-sukkahs/` links to
 `/request/custom-sukkah/`.
 
+The built-in Pergola form uses the same renderer at `/request/?form=pergolas`.
+It is a separate `pergola` dashboard category, so requests can be filtered and
+exported independently while still using the same editable, versioned form
+architecture. Its fields cover site connection, house attachment, frame
+materials, roof and shade, screening, artwork, comfort features, photos, and
+timing.
+
 ## Builds
 
 The `/sukka-builder/` route keeps its existing URL but is labeled `Builds` in
@@ -219,6 +226,16 @@ The desktop Sukkahs menu opens as a flat rail attached to the header. At tablet
 and phone sizes, its links move into a full-height panel. The page body becomes
 temporarily inert while that panel is open so keyboard focus stays inside the
 navigation.
+
+The header and footer both use the supplied BK logo asset and display the
+“Bkay Sukkahs” brand name. The inline hut mark is not duplicated in individual
+pages; the shared components keep the logo and accessibility labels consistent.
+
+Tree Trimming and Eruv Work use the shared `ServicePage` template with an
+optional text-first mode (`showMedia: false`) so pages without approved photos
+do not render misleading placeholders. The compact About route owns its small
+profile layout and uses an intersection-triggered, reduced-motion-aware counter
+animation for editable placeholder totals.
 
 `src/components/Footer.astro` owns the repeated footer content and includes a
 small Admin link to the protected `/admin/` dashboard. The link is intentionally

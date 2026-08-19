@@ -1,18 +1,17 @@
 **Assets**
 
-The header uses the original drawn BK icon and wordmark. The supplied circular
-BK Sukkah Builder artwork remains in the footer and favicon.
+The shared header and footer use the supplied circular BK Sukkah Builder logo
+and the public brand name “Bkay Sukkahs.”
 
 - ☑ Profile photo
 - ☑ Forest, cream, and wood color palette
-- ☑ Original drawn BK icon and wordmark in the shared header
-- ☑ Supplied BK Sukkah Builder logo in the footer and favicon
+- ☑ Supplied BK Sukkah Builder logo in the shared header, footer, and favicon
 - ☑ Five illustrative sukkah images and one sukkah detail image
 - ☑ Real sukkah hero photo approved for the homepage
 - ☑ Real sukkah project photos selected from the owner's supplied photo folder
 - ☐ Rental sukkah photos
 - ☐ Custom sukkah photos
-- ☐ Pergola photos
+- ☑ Five supplied pergola project photos
 - ☐ Tree-trimming before and after photos
 - ☐ Eruv-work photos
 - ☐ Photos of other team members, if they should appear on the site
@@ -24,8 +23,8 @@ layout.
 
 **Content decisions to confirm**
 
-- The existing public name, "Benyamin Kay Sukkas," is kept for now. Confirm
-  whether "Benyamin" or "Binyomin" is the intended spelling before launch.
+- The public brand is “Bkay Sukkahs.” Personal references to Benyamin remain
+  only where the copy is describing the owner.
 - The Builds page uses the website's custom form for sukkahs the customer
   already owns. The former Google Form embed has been removed. Submit completed
   requests through the site's server-side Worker to the website-owned
@@ -137,6 +136,22 @@ feasible. Pricing remains quote-only. The primary action links to `/contact/`,
 with the business phone number as a secondary option. Its closing primary
 action opens the managed Custom Sukkah request at
 `/request/custom-sukkah/`.
+
+The `/pergolas` route uses the Custom Sukkahs portfolio template with five
+approved pergola project photos. It explains ground connection and house
+attachment choices, surfaces practical site considerations, and groups a wide
+range of roof, shade, frame, siding, screening, artwork, lighting, and comfort
+options in expandable cards. The primary action near the top and the closing
+action both open the built-in Pergola request at `/request/?form=pergolas`.
+
+Tree Trimming, Eruv Work, and About use the same shared service shell and
+navigation as the rest of the public site. Tree Trimming is text-first and
+does not show photo placeholders; its copy explains trimming small branches,
+large branches, or full trees when a sukkah site is not suitable. Eruv Work is
+also text-first and explains working with highly qualified rabbonim. About is
+intentionally compact: one owner photo, editable placeholder biography copy,
+and two clearly labeled placeholder counters for sukkahs built and years
+working. The counters animate when visible and respect reduced-motion settings.
 
 The protected owner dashboard includes a schema-driven form builder. An
 allowlisted owner can create a form, edit its name, URL, introduction, submit

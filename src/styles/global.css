@@ -413,9 +413,12 @@ strong {
 }
 
 .brand-mark {
+  display: block;
   width: 38px;
   height: 38px;
   flex: 0 0 auto;
+  object-fit: contain;
+  border-radius: 50%;
 }
 
 .brand-copy {
