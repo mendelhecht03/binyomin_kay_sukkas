@@ -45,13 +45,7 @@ When adding a task, use this format:
 
 ## Now
 
-- [ ] Simplify Google Sheets submission syncing feedback
-  - Why: The all-request export is the single supported export action, so
-    per-row buttons are redundant; the dashboard should make the Sheet's
-    current sync state easy to understand.
-  - Done when: Per-row Add to Sheet actions are removed, a clear sync indicator
-    reports whether the configured Sheet matches the current non-testimonial
-    dashboard submissions, and the updated admin view is tested and published.
+- No active task.
 
 ## Next
 
@@ -158,6 +152,14 @@ When adding a task, use this format:
   - Unblocks: Publishing multiple testimonial cards in the homepage scroller.
 
 ## Completed
+
+- [x] Simplify Google Sheets submission syncing feedback (2026-08-19)
+  - Result: Removed redundant per-row Add to Sheet actions and kept the
+    all-request export as the single export flow. Added a live sync indicator
+    that compares managed Sheet Submission IDs with current non-testimonial
+    dashboard records and flags missing, stale, or duplicate rows. Updated the
+    documentation, added sync-status coverage, passed all 27 automated tests,
+    and published the dashboard update.
 
 - [x] Add direct Google Sheets exports and audit the admin workspace (2026-08-19)
   - Result: Added protected direct Google Sheets settings, connection testing,
