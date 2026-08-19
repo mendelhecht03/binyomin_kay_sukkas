@@ -124,7 +124,10 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
           <span>Share the Sheet with <code data-sheets-service-account>the site’s Google service account</code> as an Editor.</span>
         </div>
         <div class="sheets-export-card__actions">
-          <p data-sheets-status role="status">Checking Google Sheets setup…</p>
+          <div class="sheets-export-card__status">
+            <p data-sheets-status role="status">Checking Google Sheets setup…</p>
+            <p class="sheets-sync-indicator" data-sheets-sync data-state="checking" role="status"><span class="sheets-sync-indicator__dot" aria-hidden="true"></span><span data-sheets-sync-text>Checking sync status…</span></p>
+          </div>
           <div><button class="button button-secondary" type="button" data-sheets-test>Test connection</button><button class="button" type="button" data-sheets-export-all disabled>Export all requests</button></div>
         </div>
       </section>
@@ -258,7 +261,7 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
     };
 
     const state = { type: "all", search: "", nextCursor: "", submissions: [], loading: false, selectedId: "", pendingDeleteId: "" };
-    const sheetsState = { configured: false, ready: false, loading: false };
+    const sheetsState = { configured: false, ready: false, loading: false, sync: null };
     const list = document.querySelector("#submission-list");
     const tableShell = document.querySelector("#submission-table-shell");
     const empty = document.querySelector("#admin-empty");
@@ -288,7 +291,6 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
     function statusLabel(record) { return record.status || (record.type === "testimonial" ? "Pending review" : "New"); }
 
     function rowActionButtons(record) {
-      const exportButton = record.type === "testimonial" ? "" : `<button class="row-export" type="button" data-export${sheetsState.ready ? "" : " disabled"}>Add to Sheet</button>`;
       if (isPendingTestimonial(record)) {
         return `<button class="row-view" type="button" data-view>View</button>
           <button class="row-approve" type="button" data-approve>Approve</button>
@@ -296,7 +298,6 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
       }
       const deleteLabel = record.type === "testimonial" && record.status === "Approved" ? "Remove" : "Delete";
       return `<button class="row-view" type="button" data-view>View</button>
-        ${exportButton}
         <button class="row-delete" type="button" data-delete>${deleteLabel}</button>`;
     }
 
@@ -339,6 +340,8 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
     const sheetsSettingsForm = document.querySelector("[data-sheets-settings-form]");
     const sheetsSpreadsheetInput = document.querySelector("[data-sheets-spreadsheet]");
     const sheetsStatus = document.querySelector("[data-sheets-status]");
+    const sheetsSync = document.querySelector("[data-sheets-sync]");
+    const sheetsSyncText = document.querySelector("[data-sheets-sync-text]");
     const sheetsServiceAccount = document.querySelector("[data-sheets-service-account]");
     const sheetsSaveButton = document.querySelector("[data-sheets-save]");
     const sheetsTestButton = document.querySelector("[data-sheets-test]");
@@ -349,11 +352,37 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
       sheetsStatus.dataset.state = state;
     }
 
+    function renderSheetsSync(sync) {
+      sheetsState.sync = sync || null;
+      if (!sheetsSync || !sheetsSyncText) return;
+      if (isLocalFixture) {
+        sheetsSync.dataset.state = "success";
+        sheetsSyncText.textContent = "Preview mode · sync is simulated.";
+        return;
+      }
+      if (!sheetsState.configured) {
+        sheetsSync.dataset.state = "neutral";
+        sheetsSyncText.textContent = "Connect a Sheet to see sync status.";
+        return;
+      }
+      if (!sheetsSpreadsheetInput.value.trim()) {
+        sheetsSync.dataset.state = "neutral";
+        sheetsSyncText.textContent = "No destination Sheet selected.";
+        return;
+      }
+      if (!sync) {
+        sheetsSync.dataset.state = "checking";
+        sheetsSyncText.textContent = "Sync status is being checked…";
+        return;
+      }
+      sheetsSync.dataset.state = sync.status === "synced" ? "success" : sync.status === "check-failed" ? "error" : "warning";
+      sheetsSyncText.textContent = sync.message || "Sync status could not be checked.";
+    }
+
     function updateSheetsControls() {
       sheetsExportAllButton.disabled = !sheetsState.ready || sheetsState.loading;
       sheetsTestButton.disabled = sheetsState.loading;
       sheetsSaveButton.disabled = sheetsState.loading;
-      document.querySelectorAll("[data-export]").forEach((button) => { button.disabled = !sheetsState.ready || sheetsState.loading; });
     }
 
     async function readSheetsSettings() {
@@ -362,6 +391,7 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
         sheetsState.ready = true;
         sheetsSpreadsheetInput.value = "fixture-sheet";
         setSheetsStatus("Preview mode: export buttons are simulated locally.", "success");
+        renderSheetsSync({ status: "synced", message: "Preview mode · sync is simulated." });
         updateSheetsControls();
         return;
       }
@@ -373,9 +403,11 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
         sheetsServiceAccount.textContent = body.serviceAccountEmail || "the site’s Google service account";
         sheetsState.configured = Boolean(body.configured);
         sheetsState.ready = Boolean(body.configured && body.spreadsheetId && !body.accessMessage);
+        renderSheetsSync(body.sync);
         if (!body.configured) setSheetsStatus("The site still needs its Google Sheets service account setup.", "error");
         else if (body.accessMessage) setSheetsStatus(body.accessMessage, "error");
-        else setSheetsStatus(`${body.spreadsheetTitle || "Google Sheet"} is connected.`, "success");
+        else if (body.spreadsheetTitle) setSheetsStatus(`${body.spreadsheetTitle} is connected.`, "success");
+        else setSheetsStatus("Service account ready. Add a Sheet URL to test the connection.");
       } catch (error) { setSheetsStatus(error.message || "Google Sheets setup could not be loaded.", "error"); }
       updateSheetsControls();
       renderList();
@@ -395,6 +427,7 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
         sheetsState.ready = true;
         sheetsSpreadsheetInput.value = body.spreadsheetId || sheetsSpreadsheetInput.value;
         setSheetsStatus(`${body.spreadsheetTitle || "Google Sheet"} is connected and ready.`, "success");
+        renderSheetsSync(body.sync);
       } catch (error) {
         sheetsState.ready = false;
         setSheetsStatus(error.message || "The Sheet could not be connected.", "error");
@@ -411,28 +444,26 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
         const body = await response.json().catch(() => null);
         if (!response.ok) throw new Error(body?.message || "The Sheet connection could not be tested.");
         sheetsState.ready = true;
+        renderSheetsSync(body.sync);
         setSheetsStatus(`${body.spreadsheetTitle || "Google Sheet"} is connected.`, "success");
       } catch (error) { sheetsState.ready = false; setSheetsStatus(error.message || "The Sheet connection could not be tested.", "error"); }
       finally { sheetsState.loading = false; updateSheetsControls(); renderList(); }
     }
 
-    async function exportSubmissions(submissionId, trigger) {
+    async function exportSubmissions() {
       if (sheetsState.loading) return;
-      if (isLocalFixture) { setSheetsStatus("Preview mode: this row would be added to its form tab.", "success"); return; }
+      if (isLocalFixture) { setSheetsStatus("Preview mode: all requests would be exported to their form tabs.", "success"); renderSheetsSync({ status: "synced", message: "Preview mode · sync is simulated." }); return; }
       sheetsState.loading = true;
-      if (trigger instanceof HTMLButtonElement) { trigger.disabled = true; trigger.textContent = "Adding…"; }
       updateSheetsControls();
-      setSheetsStatus(submissionId ? "Adding this request to its form tab…" : "Exporting all requests to their form tabs…");
+      setSheetsStatus("Exporting all requests to their form tabs…");
       try {
-        const response = await fetch("/api/admin/google-sheets/export", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(submissionId ? { submissionId } : {}) });
+        const response = await fetch("/api/admin/google-sheets/export", { method: "POST", headers: { "Content-Type": "application/json" }, body: "{}" });
         const body = await response.json().catch(() => null);
         if (!response.ok) throw new Error(body?.message || "The export could not be completed.");
+        renderSheetsSync(body.sync);
         setSheetsStatus(body.message || "The export is complete.", body.failed ? "error" : "success");
-        if (trigger instanceof HTMLButtonElement) trigger.textContent = body.alreadyPresent ? "Already added" : "Added";
-      } catch (error) {
-        setSheetsStatus(error.message || "The export could not be completed.", "error");
-        if (trigger instanceof HTMLButtonElement) { trigger.disabled = false; trigger.textContent = "Add to Sheet"; }
-      } finally { sheetsState.loading = false; updateSheetsControls(); }
+      } catch (error) { setSheetsStatus(error.message || "The export could not be completed.", "error"); }
+      finally { sheetsState.loading = false; updateSheetsControls(); }
     }
 
     sheetsSettingsForm.addEventListener("submit", saveSheetsSettings);
@@ -585,7 +616,6 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
       if (!record) return;
       if (event.target.closest("[data-approve]")) approveTestimonial(record, event.target.closest("[data-approve]"));
       else if (event.target.closest("[data-disapprove]")) askToDelete(record, true);
-      else if (event.target.closest("[data-export]")) exportSubmissions(record.id, event.target.closest("[data-export]"));
       else if (event.target.closest("[data-delete]")) askToDelete(record);
       if (event.target.closest("[data-view]")) openDetails(record);
     });
@@ -1274,9 +1304,18 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
   .sheets-export-card__help strong { color: var(--forest-900); }
   .sheets-export-card__help code { overflow-wrap: anywhere; color: var(--forest-800); font-family: inherit; font-weight: 800; }
   .sheets-export-card__actions { display: flex; align-items: center; justify-content: space-between; gap: 1rem; grid-column: 1 / -1; padding-top: .8rem; border-top: 1px solid var(--border); }
-  .sheets-export-card__actions p { min-height: 1.4rem; margin: 0; color: var(--ink-500); font-size: .78rem; font-weight: 750; }
-  .sheets-export-card__actions p[data-state="success"] { color: var(--forest-800); }
-  .sheets-export-card__actions p[data-state="error"] { color: var(--danger); }
+  .sheets-export-card__status { display: grid; gap: .35rem; min-width: 0; }
+  .sheets-export-card__status > p { min-height: 1.2rem; margin: 0; color: var(--ink-500); font-size: .78rem; font-weight: 750; }
+  .sheets-export-card__status > p[data-state="success"] { color: var(--forest-800); }
+  .sheets-export-card__status > p[data-state="error"] { color: var(--danger); }
+  .sheets-sync-indicator { display: inline-flex; align-items: center; gap: .42rem; color: var(--ink-600) !important; }
+  .sheets-sync-indicator__dot { width: .55rem; height: .55rem; flex: 0 0 auto; border-radius: 50%; background: var(--ink-300); box-shadow: 0 0 0 3px rgba(102, 119, 111, .12); }
+  .sheets-sync-indicator[data-state="success"] { color: var(--forest-800) !important; }
+  .sheets-sync-indicator[data-state="success"] .sheets-sync-indicator__dot { background: var(--forest-700); box-shadow: 0 0 0 3px rgba(45, 104, 85, .13); }
+  .sheets-sync-indicator[data-state="warning"] { color: #8a5a15 !important; }
+  .sheets-sync-indicator[data-state="warning"] .sheets-sync-indicator__dot { background: #bd7e1f; box-shadow: 0 0 0 3px rgba(189, 126, 31, .14); }
+  .sheets-sync-indicator[data-state="error"] { color: var(--danger) !important; }
+  .sheets-sync-indicator[data-state="error"] .sheets-sync-indicator__dot { background: var(--danger); box-shadow: 0 0 0 3px rgba(161, 63, 57, .14); }
   .sheets-export-card__actions > div { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: .55rem; }
   .admin-summary article { padding: 1.15rem 1.25rem; border: 1px solid var(--border); border-radius: var(--radius); background: white; box-shadow: var(--shadow-small); }
   .admin-summary span { display: block; color: var(--ink-500); font-size: .78rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
@@ -1312,7 +1351,6 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
   .row-actions { min-width: 220px; white-space: nowrap; text-align: right; }
   .row-actions button { min-height: 42px; padding: .45rem .65rem; border: 0; border-radius: var(--radius-small); background: transparent; font: inherit; font-weight: 800; cursor: pointer; }
   .row-view { color: var(--forest-800); }
-  .row-export { color: var(--forest-800); background: var(--forest-100) !important; }
   .row-approve { color: var(--forest-800); background: var(--forest-100) !important; }
   .row-delete { color: var(--danger); }
   .row-actions button:hover { background: var(--cream-100); }

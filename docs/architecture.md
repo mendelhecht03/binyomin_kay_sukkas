@@ -332,8 +332,9 @@ with a server-side Google service account. The Worker creates alphabetized tabs
 for each saved form slug/title, writes stable submission IDs plus common and
 form-specific columns, skips Testimonials, and sorts rows chronologically. A
 unique D1 export log and a Sheet-side ID check make repeated exports safe. The
-Sheet is a reporting copy only; it never replaces D1 or participates in public
-submission handling.
+dashboard also compares the managed Sheet IDs with current D1 submissions and
+reports missing, stale, or duplicate rows. The Sheet is a reporting copy only;
+it never replaces D1 or participates in public submission handling.
 
 Detailed setup, database behavior, and verification steps live in
 `docs/owner-dashboard.md`.

@@ -120,9 +120,11 @@ available to the homepage. Disapprove uses the permanent-delete confirmation.
 An approved testimonial can later be removed from the site by deleting it.
 
 The Submissions tab includes an optional direct Google Sheets reporting export.
-The owner can paste a Google Sheet URL, test and save the connection, export all
-non-testimonial submissions, or add one non-testimonial row from its dashboard
-row. The Worker must keep Google credentials server-side, reject Testimonials
+The owner can paste a Google Sheet URL, test and save the connection, and
+export all non-testimonial submissions. The card must show whether the managed
+Sheet is synced with the current dashboard records, including a clear warning
+when requests are missing, old rows remain, or duplicate Submission IDs are
+found. The Worker must keep Google credentials server-side, reject Testimonials
 even if a client submits their ID, skip duplicate Submission IDs, create one
 tab per saved form slug/title, sort tabs alphabetically, and keep rows in
 chronological order. Google Sheets is a reporting destination only; D1 remains

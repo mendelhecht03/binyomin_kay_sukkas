@@ -45,7 +45,13 @@ When adding a task, use this format:
 
 ## Now
 
-- No active task.
+- [ ] Simplify Google Sheets submission syncing feedback
+  - Why: The all-request export is the single supported export action, so
+    per-row buttons are redundant; the dashboard should make the Sheet's
+    current sync state easy to understand.
+  - Done when: Per-row Add to Sheet actions are removed, a clear sync indicator
+    reports whether the configured Sheet matches the current non-testimonial
+    dashboard submissions, and the updated admin view is tested and published.
 
 ## Next
 

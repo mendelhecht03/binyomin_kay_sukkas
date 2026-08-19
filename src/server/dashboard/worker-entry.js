@@ -42,16 +42,16 @@ export async function handleAdminGoogleSheetsRequest(request, env, pathname) {
   if (!sameOrigin(request)) return Response.json({ ok: false, message: "This dashboard request was not allowed." }, { status: 403, headers: PRIVATE_HEADERS });
   try {
     if (request.method === "GET" && pathname === "/api/admin/google-sheets/settings") {
-      return Response.json(await getGoogleSheetsSettings({ env }), { headers: PRIVATE_HEADERS });
+      return Response.json(await getGoogleSheetsSettings({ env, origin: new URL(request.url).origin }), { headers: PRIVATE_HEADERS });
     }
     if (request.method === "PUT" && pathname === "/api/admin/google-sheets/settings") {
       let body;
       try { body = await request.json(); } catch { return Response.json({ ok: false, message: "The Google Sheet setting could not be read." }, { status: 400, headers: PRIVATE_HEADERS }); }
-      const result = await saveAndTestGoogleSheet({ env, spreadsheetValue: body?.spreadsheet || body?.spreadsheetId, updatedBy: access.email });
+      const result = await saveAndTestGoogleSheet({ env, spreadsheetValue: body?.spreadsheet || body?.spreadsheetId, updatedBy: access.email, origin: new URL(request.url).origin });
       return Response.json(result, { headers: PRIVATE_HEADERS });
     }
     if (request.method === "POST" && pathname === "/api/admin/google-sheets/test") {
-      return Response.json(await testConfiguredGoogleSheet({ env }), { headers: PRIVATE_HEADERS });
+      return Response.json(await testConfiguredGoogleSheet({ env, origin: new URL(request.url).origin }), { headers: PRIVATE_HEADERS });
     }
     if (request.method === "POST" && pathname === "/api/admin/google-sheets/export") {
       const body = await request.json().catch(() => ({}));

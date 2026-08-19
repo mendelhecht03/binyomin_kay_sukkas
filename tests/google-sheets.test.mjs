@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { generateKeyPairSync } from "node:crypto";
 import worker from "../index.mjs";
-import { exportGoogleSheetSubmissions } from "../src/server/dashboard/google-sheets-service.js";
+import { exportGoogleSheetSubmissions, getGoogleSheetsSyncStatus } from "../src/server/dashboard/google-sheets-service.js";
 import { parseSpreadsheetId } from "../src/server/integrations/google-sheets-client.js";
 import { createSubmission } from "../src/server/storage/submission-repository.js";
 import { createTestDatabase } from "./helpers/d1-test-database.mjs";
@@ -86,6 +86,44 @@ test("a non-testimonial export creates a managed tab and appends one normalized 
     assert.equal(result.failed, 0);
     assert.ok(calls.some((call) => call.url.includes(":append")));
     assert.ok(calls.some((call) => call.url.includes(":batchUpdate")));
+  } finally {
+    globalThis.fetch = originalFetch;
+    DB.close();
+  }
+});
+
+test("Google Sheets sync status reports dashboard requests missing from the Sheet", async () => {
+  const DB = createTestDatabase();
+  const originalFetch = globalThis.fetch;
+  const { privateKey } = generateKeyPairSync("rsa", { modulusLength: 2048 });
+  globalThis.fetch = async (url) => {
+    const target = String(url);
+    if (target === "https://oauth2.googleapis.com/token") return Response.json({ access_token: "test-token", expires_in: 3600 });
+    if (target.includes("/spreadsheets/1Abcdefghij_KLMNOP?")) {
+      return Response.json({ properties: { title: "Reporting" }, sheets: [{ properties: { sheetId: 42, title: "Builds", index: 0 } }] });
+    }
+    if (target.includes("/values/") && target.includes("Builds")) {
+      return Response.json({ values: [["Submission ID", "Submitted At"], ["build-sync-test", "2026-08-18T12:00:00.000Z"]] });
+    }
+    if (target.includes("/values/")) return Response.json({ values: [] });
+    return Response.json({});
+  };
+  try {
+    await createSubmission({ DB }, {
+      id: "build-sync-test", type: "build", submittedAt: "2026-08-18T12:00:00.000Z",
+      customer: { name: "Build Customer" }, summary: "Build request", data: {},
+    });
+    await createSubmission({ DB }, {
+      id: "rental-sync-test", type: "rental", submittedAt: "2026-08-18T13:00:00.000Z",
+      customer: { name: "Rental Customer" }, summary: "Rental request", data: {},
+    });
+    const result = await getGoogleSheetsSyncStatus({
+      env: { DB, GOOGLE_SHEETS_SERVICE_ACCOUNT_EMAIL: "site@example.iam.gserviceaccount.com", GOOGLE_SHEETS_PRIVATE_KEY: privateKey.export({ type: "pkcs8", format: "pem" }) },
+      spreadsheetId: "1Abcdefghij_KLMNOP", origin: "https://example.com",
+    });
+    assert.equal(result.status, "needs-export");
+    assert.equal(result.missingCount, 1);
+    assert.equal(result.sheetCount, 1);
   } finally {
     globalThis.fetch = originalFetch;
     DB.close();

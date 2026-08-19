@@ -116,9 +116,10 @@ contacts, or the full private submission data.
 ## Google Sheets reporting export
 
 The Submissions tab has an optional Google Sheets export card. It supports a
-single configured spreadsheet, a connection test, an export-all action, and an
-`Add to Sheet` action on each non-testimonial row. Testimonials are rejected by
-the Worker as well as hidden from the row export action.
+single configured spreadsheet, a connection test, and one export-all action.
+The card also shows whether the Sheet is synced with the current
+non-testimonial dashboard records. Testimonials are rejected by the Worker and
+are never included in the sync check.
 
 The Worker creates one managed tab per saved form slug/title, including future
 custom forms. Managed tab titles are sanitized and sorted alphabetically. Each
@@ -127,9 +128,12 @@ specific answer columns. Rows are sorted by ISO `Submitted At` and then ID so a
 single older row cannot break chronological order. Repeating an export checks
 the Sheet ID column first and uses a unique D1 export log as a second guard.
 
-The D1 export log records pending, exported, and failed attempts. Google Sheets
-is never treated as the source of truth; a temporary Sheets outage therefore
-does not affect website submissions or testimonial approval.
+The D1 export log records pending, exported, and failed attempts. The sync
+indicator reads the managed Sheet tabs and compares their stable Submission IDs
+with the current dashboard records, so it can flag missing requests, old rows,
+or duplicates. Google Sheets is never treated as the source of truth; a
+temporary Sheets outage therefore does not affect website submissions or
+testimonial approval.
 
 ## Local and automated verification
 
