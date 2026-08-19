@@ -45,13 +45,7 @@ When adding a task, use this format:
 
 ## Now
 
-- [ ] Improve the admin builder workspace
-  - Why: The owner needs a clearer separation between form editing and
-    submissions, a preview that behaves like the real form, and a more polished
-    mobile form selector.
-  - Done when: Builder and submissions are separate tabs; the preview accepts
-    real form interactions and follows the active editor section while
-    scrolling; and the Your forms rail uses a sleek, accessible card slider.
+- No active task.
 
 ## Next
 
@@ -158,6 +152,11 @@ When adding a task, use this format:
   - Unblocks: Publishing multiple testimonial cards in the homepage scroller.
 
 ## Completed
+
+- [x] Improve the admin builder workspace (2026-08-19)
+  - Added accessible Form builder and Submissions tabs, an interactive preview
+    with conditional-field testing and linked section scrolling, and a sleek
+    responsive card rail for choosing forms.
 
 - [x] Expand the visual section icon picker (2026-08-18)
   - Result: Replaced the text-only section icon select with a keyboard-friendly
