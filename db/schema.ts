@@ -57,3 +57,24 @@ export const formVersions = sqliteTable("form_versions", {
   uniqueIndex("idx_form_versions_form_number").on(table.formId, table.versionNumber),
   index("idx_form_versions_form_published").on(table.formId, table.publishedAt),
 ]);
+
+export const googleSheetSettings = sqliteTable("google_sheet_settings", {
+  id: integer("id").primaryKey(),
+  spreadsheetId: text("spreadsheet_id").notNull(),
+  updatedAt: text("updated_at").notNull(),
+  updatedBy: text("updated_by").notNull().default(""),
+});
+
+export const googleSheetExports = sqliteTable("google_sheet_exports", {
+  id: text("id").primaryKey(),
+  spreadsheetId: text("spreadsheet_id").notNull(),
+  submissionId: text("submission_id").notNull(),
+  sheetTitle: text("sheet_title").notNull().default(""),
+  status: text("status").notNull().default("exported"),
+  exportedAt: text("exported_at"),
+  exportedBy: text("exported_by").notNull().default(""),
+  lastError: text("last_error").notNull().default(""),
+}, (table) => [
+  uniqueIndex("idx_google_sheet_exports_sheet_submission").on(table.spreadsheetId, table.submissionId),
+  index("idx_google_sheet_exports_submission").on(table.submissionId),
+]);

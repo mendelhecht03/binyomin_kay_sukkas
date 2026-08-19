@@ -2,6 +2,12 @@ import { adminErrorResponse, authorizeAdminRequest } from "./admin-auth.js";
 import { deleteDashboardSubmission } from "./deletion-service.js";
 import { getDashboardSubmissions } from "./service.js";
 import { approveDashboardTestimonial } from "./testimonial-review-service.js";
+import {
+  exportGoogleSheetSubmissions,
+  getGoogleSheetsSettings,
+  saveAndTestGoogleSheet,
+  testConfiguredGoogleSheet,
+} from "./google-sheets-service.js";
 
 const PRIVATE_HEADERS = {
   "Cache-Control": "private, no-store",
@@ -13,6 +19,50 @@ const PRIVATE_HEADERS = {
 
 export function checkAdminAccess(request, env) {
   return authorizeAdminRequest(request, env);
+}
+
+function sameOrigin(request) {
+  const origin = request.headers.get("Origin");
+  return !origin || origin === new URL(request.url).origin;
+}
+
+function googleSheetsErrorResponse(error) {
+  const status = Number(error?.status) || (error?.code === "GOOGLE_SHEETS_ACCESS_DENIED" ? 403 : ["GOOGLE_SHEETS_NOT_CONFIGURED", "DATABASE_NOT_CONFIGURED"].includes(error?.code) ? 503 : 502);
+  const message = error?.code === "GOOGLE_SHEETS_NOT_CONFIGURED"
+    ? "Google Sheets credentials have not been configured for this site yet."
+    : error?.code === "DATABASE_NOT_CONFIGURED"
+      ? "The submissions database is temporarily unavailable."
+    : error?.message || "The Google Sheets request could not be completed.";
+  return Response.json({ ok: false, code: error?.code || "GOOGLE_SHEETS_ERROR", message }, { status, headers: PRIVATE_HEADERS });
+}
+
+export async function handleAdminGoogleSheetsRequest(request, env, pathname) {
+  const access = authorizeAdminRequest(request, env);
+  if (!access.ok) return adminErrorResponse(access);
+  if (!sameOrigin(request)) return Response.json({ ok: false, message: "This dashboard request was not allowed." }, { status: 403, headers: PRIVATE_HEADERS });
+  try {
+    if (request.method === "GET" && pathname === "/api/admin/google-sheets/settings") {
+      return Response.json(await getGoogleSheetsSettings({ env }), { headers: PRIVATE_HEADERS });
+    }
+    if (request.method === "PUT" && pathname === "/api/admin/google-sheets/settings") {
+      let body;
+      try { body = await request.json(); } catch { return Response.json({ ok: false, message: "The Google Sheet setting could not be read." }, { status: 400, headers: PRIVATE_HEADERS }); }
+      const result = await saveAndTestGoogleSheet({ env, spreadsheetValue: body?.spreadsheet || body?.spreadsheetId, updatedBy: access.email });
+      return Response.json(result, { headers: PRIVATE_HEADERS });
+    }
+    if (request.method === "POST" && pathname === "/api/admin/google-sheets/test") {
+      return Response.json(await testConfiguredGoogleSheet({ env }), { headers: PRIVATE_HEADERS });
+    }
+    if (request.method === "POST" && pathname === "/api/admin/google-sheets/export") {
+      const body = await request.json().catch(() => ({}));
+      const result = await exportGoogleSheetSubmissions({ env, submissionId: body?.submissionId, exportedBy: access.email, origin: new URL(request.url).origin });
+      return Response.json(result, { status: result.ok ? 200 : 502, headers: PRIVATE_HEADERS });
+    }
+    return Response.json({ ok: false, message: "Unknown Google Sheets endpoint." }, { status: 404, headers: PRIVATE_HEADERS });
+  } catch (error) {
+    console.error("dashboard.google_sheets.failed", { code: String(error?.code || "GOOGLE_SHEETS_ERROR").slice(0, 80) });
+    return googleSheetsErrorResponse(error);
+  }
 }
 
 export function adminPageAccessResponse(request, env) {

@@ -217,6 +217,26 @@ export async function listSubmissions({ env, type = "all", limit = 50, cursor, s
   };
 }
 
+export async function getSubmissionRecord({ env, id, origin }) {
+  const cleanId = clean(id);
+  if (!cleanId || cleanId.length > 300) {
+    const error = new Error("The submission could not be identified.");
+    error.code = "INVALID_SUBMISSION";
+    throw error;
+  }
+  const db = requireDatabase(env);
+  const row = await db.prepare("SELECT * FROM submissions WHERE id = ?").bind(cleanId).first();
+  if (!row) {
+    const error = new Error("The submission was not found.");
+    error.code = "SUBMISSION_NOT_FOUND";
+    throw error;
+  }
+  const filePage = await db.prepare(`SELECT submission_id, r2_key, original_name
+    FROM submission_files WHERE submission_id = ? ORDER BY created_at, id`).bind(cleanId).all();
+  const files = new Map([[cleanId, filePage.results || []]]);
+  return rowToRecord(row, files, origin);
+}
+
 export async function deleteSubmissionRecord({ env, type, id }) {
   if (!FORM_TYPES.has(type) || !clean(id) || clean(id).length > 300) {
     const error = new Error("The submission could not be identified.");

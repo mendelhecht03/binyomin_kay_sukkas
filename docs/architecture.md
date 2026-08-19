@@ -326,6 +326,15 @@ The authenticated Worker validates the entry type and ID, removes the D1 record
 and its related file metadata, then removes the corresponding R2 photo objects.
 The foreign-key relationship prevents orphaned database file records.
 
+The Submissions tab also contains an optional direct Google Sheets reporting
+export. The owner pastes a Sheet URL after the deployment has been configured
+with a server-side Google service account. The Worker creates alphabetized tabs
+for each saved form slug/title, writes stable submission IDs plus common and
+form-specific columns, skips Testimonials, and sorts rows chronologically. A
+unique D1 export log and a Sheet-side ID check make repeated exports safe. The
+Sheet is a reporting copy only; it never replaces D1 or participates in public
+submission handling.
+
 Detailed setup, database behavior, and verification steps live in
 `docs/owner-dashboard.md`.
 

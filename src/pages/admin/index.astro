@@ -109,6 +109,25 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
   <section id="submissions-dashboard" class="section admin-dashboard" role="tabpanel" data-admin-panel="submissions" aria-labelledby="submissions-tab" hidden>
     <div class="shell">
       <h2 id="submissions-heading" class="sr-only">Submissions dashboard</h2>
+      <section class="sheets-export-card" aria-labelledby="sheets-export-heading" data-sheets-export>
+        <div class="sheets-export-card__copy">
+          <p class="eyebrow">Optional reporting</p>
+          <h2 id="sheets-export-heading">Google Sheets export</h2>
+          <p>Send Builds, Rentals, and Custom Sukkah requests to separate tabs. Testimonials are always excluded.</p>
+        </div>
+        <form class="sheets-settings-form" data-sheets-settings-form>
+          <label><span>Google Sheet URL or ID</span><input data-sheets-spreadsheet placeholder="Paste a Google Sheet link" autocomplete="off" /></label>
+          <button class="button button-secondary" type="submit" data-sheets-save>Test and save</button>
+        </form>
+        <div class="sheets-export-card__help">
+          <strong>One-time setup</strong>
+          <span>Share the Sheet with <code data-sheets-service-account>the site’s Google service account</code> as an Editor.</span>
+        </div>
+        <div class="sheets-export-card__actions">
+          <p data-sheets-status role="status">Checking Google Sheets setup…</p>
+          <div><button class="button button-secondary" type="button" data-sheets-test>Test connection</button><button class="button" type="button" data-sheets-export-all disabled>Export all requests</button></div>
+        </div>
+      </section>
       <div class="admin-summary" aria-label="Loaded submission summary">
         <article><span>Loaded</span><strong id="count-all">—</strong></article>
         {dashboardForms.map((form) => (
@@ -158,7 +177,7 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
     </div>
   </section>
 
-  <dialog id="submission-dialog" class="admin-dialog submission-dialog">
+  <dialog id="submission-dialog" class="admin-dialog submission-dialog" aria-labelledby="submission-dialog-title">
     <button class="dialog-close" type="button" aria-label="Close submission details">×</button>
     <div id="dialog-content"></div>
     <div class="dialog-actions">
@@ -168,11 +187,11 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
     </div>
   </dialog>
 
-  <dialog id="delete-dialog" class="admin-dialog delete-dialog">
+  <dialog id="delete-dialog" class="admin-dialog delete-dialog" aria-labelledby="delete-heading" aria-describedby="delete-description delete-warning">
     <p class="eyebrow">Permanent action</p>
     <h2 id="delete-heading">Delete this submission?</h2>
     <p id="delete-description"></p>
-    <p class="delete-warning">This cannot be undone. The database entry and its associated website photos will be permanently deleted.</p>
+    <p id="delete-warning" class="delete-warning">This cannot be undone. The database entry and its associated website photos will be permanently deleted.</p>
     <p id="delete-status" class="delete-status" role="status"></p>
     <div class="dialog-actions">
       <button id="confirm-delete" class="button button-danger" type="button">Delete permanently</button>
@@ -239,6 +258,7 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
     };
 
     const state = { type: "all", search: "", nextCursor: "", submissions: [], loading: false, selectedId: "", pendingDeleteId: "" };
+    const sheetsState = { configured: false, ready: false, loading: false };
     const list = document.querySelector("#submission-list");
     const tableShell = document.querySelector("#submission-table-shell");
     const empty = document.querySelector("#admin-empty");
@@ -268,6 +288,7 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
     function statusLabel(record) { return record.status || (record.type === "testimonial" ? "Pending review" : "New"); }
 
     function rowActionButtons(record) {
+      const exportButton = record.type === "testimonial" ? "" : `<button class="row-export" type="button" data-export${sheetsState.ready ? "" : " disabled"}>Add to Sheet</button>`;
       if (isPendingTestimonial(record)) {
         return `<button class="row-view" type="button" data-view>View</button>
           <button class="row-approve" type="button" data-approve>Approve</button>
@@ -275,6 +296,7 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
       }
       const deleteLabel = record.type === "testimonial" && record.status === "Approved" ? "Remove" : "Delete";
       return `<button class="row-view" type="button" data-view>View</button>
+        ${exportButton}
         <button class="row-delete" type="button" data-delete>${deleteLabel}</button>`;
     }
 
@@ -313,6 +335,110 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
       `).join("");
     }
 
+    const sheetsCard = document.querySelector("[data-sheets-export]");
+    const sheetsSettingsForm = document.querySelector("[data-sheets-settings-form]");
+    const sheetsSpreadsheetInput = document.querySelector("[data-sheets-spreadsheet]");
+    const sheetsStatus = document.querySelector("[data-sheets-status]");
+    const sheetsServiceAccount = document.querySelector("[data-sheets-service-account]");
+    const sheetsSaveButton = document.querySelector("[data-sheets-save]");
+    const sheetsTestButton = document.querySelector("[data-sheets-test]");
+    const sheetsExportAllButton = document.querySelector("[data-sheets-export-all]");
+
+    function setSheetsStatus(text, state = "") {
+      sheetsStatus.textContent = text;
+      sheetsStatus.dataset.state = state;
+    }
+
+    function updateSheetsControls() {
+      sheetsExportAllButton.disabled = !sheetsState.ready || sheetsState.loading;
+      sheetsTestButton.disabled = sheetsState.loading;
+      sheetsSaveButton.disabled = sheetsState.loading;
+      document.querySelectorAll("[data-export]").forEach((button) => { button.disabled = !sheetsState.ready || sheetsState.loading; });
+    }
+
+    async function readSheetsSettings() {
+      if (isLocalFixture) {
+        sheetsState.configured = true;
+        sheetsState.ready = true;
+        sheetsSpreadsheetInput.value = "fixture-sheet";
+        setSheetsStatus("Preview mode: export buttons are simulated locally.", "success");
+        updateSheetsControls();
+        return;
+      }
+      try {
+        const response = await fetch("/api/admin/google-sheets/settings");
+        const body = await response.json().catch(() => null);
+        if (!response.ok) throw new Error(body?.message || "Google Sheets setup could not be loaded.");
+        sheetsSpreadsheetInput.value = body.spreadsheetId || "";
+        sheetsServiceAccount.textContent = body.serviceAccountEmail || "the site’s Google service account";
+        sheetsState.configured = Boolean(body.configured);
+        sheetsState.ready = Boolean(body.configured && body.spreadsheetId && !body.accessMessage);
+        if (!body.configured) setSheetsStatus("The site still needs its Google Sheets service account setup.", "error");
+        else if (body.accessMessage) setSheetsStatus(body.accessMessage, "error");
+        else setSheetsStatus(`${body.spreadsheetTitle || "Google Sheet"} is connected.`, "success");
+      } catch (error) { setSheetsStatus(error.message || "Google Sheets setup could not be loaded.", "error"); }
+      updateSheetsControls();
+      renderList();
+    }
+
+    async function saveSheetsSettings(event) {
+      event.preventDefault();
+      if (isLocalFixture) { setSheetsStatus("Preview mode: this connection is simulated locally.", "success"); return; }
+      sheetsState.loading = true;
+      updateSheetsControls();
+      setSheetsStatus("Testing the Sheet and saving the connection…");
+      try {
+        const response = await fetch("/api/admin/google-sheets/settings", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ spreadsheet: sheetsSpreadsheetInput.value }) });
+        const body = await response.json().catch(() => null);
+        if (!response.ok) throw new Error(body?.message || "The Sheet could not be connected.");
+        sheetsState.configured = true;
+        sheetsState.ready = true;
+        sheetsSpreadsheetInput.value = body.spreadsheetId || sheetsSpreadsheetInput.value;
+        setSheetsStatus(`${body.spreadsheetTitle || "Google Sheet"} is connected and ready.`, "success");
+      } catch (error) {
+        sheetsState.ready = false;
+        setSheetsStatus(error.message || "The Sheet could not be connected.", "error");
+      } finally { sheetsState.loading = false; updateSheetsControls(); renderList(); }
+    }
+
+    async function testSheetsConnection() {
+      if (isLocalFixture) { setSheetsStatus("Preview mode: this connection is simulated locally.", "success"); return; }
+      sheetsState.loading = true;
+      updateSheetsControls();
+      setSheetsStatus("Testing the Sheet connection…");
+      try {
+        const response = await fetch("/api/admin/google-sheets/test", { method: "POST" });
+        const body = await response.json().catch(() => null);
+        if (!response.ok) throw new Error(body?.message || "The Sheet connection could not be tested.");
+        sheetsState.ready = true;
+        setSheetsStatus(`${body.spreadsheetTitle || "Google Sheet"} is connected.`, "success");
+      } catch (error) { sheetsState.ready = false; setSheetsStatus(error.message || "The Sheet connection could not be tested.", "error"); }
+      finally { sheetsState.loading = false; updateSheetsControls(); renderList(); }
+    }
+
+    async function exportSubmissions(submissionId, trigger) {
+      if (sheetsState.loading) return;
+      if (isLocalFixture) { setSheetsStatus("Preview mode: this row would be added to its form tab.", "success"); return; }
+      sheetsState.loading = true;
+      if (trigger instanceof HTMLButtonElement) { trigger.disabled = true; trigger.textContent = "Adding…"; }
+      updateSheetsControls();
+      setSheetsStatus(submissionId ? "Adding this request to its form tab…" : "Exporting all requests to their form tabs…");
+      try {
+        const response = await fetch("/api/admin/google-sheets/export", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(submissionId ? { submissionId } : {}) });
+        const body = await response.json().catch(() => null);
+        if (!response.ok) throw new Error(body?.message || "The export could not be completed.");
+        setSheetsStatus(body.message || "The export is complete.", body.failed ? "error" : "success");
+        if (trigger instanceof HTMLButtonElement) trigger.textContent = body.alreadyPresent ? "Already added" : "Added";
+      } catch (error) {
+        setSheetsStatus(error.message || "The export could not be completed.", "error");
+        if (trigger instanceof HTMLButtonElement) { trigger.disabled = false; trigger.textContent = "Add to Sheet"; }
+      } finally { sheetsState.loading = false; updateSheetsControls(); }
+    }
+
+    sheetsSettingsForm.addEventListener("submit", saveSheetsSettings);
+    sheetsTestButton.addEventListener("click", testSheetsConnection);
+    sheetsExportAllButton.addEventListener("click", () => exportSubmissions());
+
     function detailSection(title, entries) {
       const visible = entries.filter(([, value]) => value && (!Array.isArray(value) || value.length));
       if (!visible.length) return "";
@@ -325,7 +451,7 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
       const photos = (record.photos || []).map((photo) => `<a href="${escapeHtml(photo.url)}" target="_blank" rel="noopener"><img src="${escapeHtml(photo.url)}" alt="${escapeHtml(photo.label || "Submission photo")}" /></a>`).join("");
       document.querySelector("#dialog-content").innerHTML = `
         <p class="eyebrow">${escapeHtml(typeLabel(record.type))} submission</p>
-        <h2>${escapeHtml(customerName(record))}</h2>
+        <h2 id="submission-dialog-title">${escapeHtml(customerName(record))}</h2>
         <p class="detail-date">${escapeHtml(formatDate(record.submittedAt))} · ${escapeHtml(statusLabel(record))}</p>
         ${detailSection("Contact", [["Phone", record.customer?.phone], ["Email", record.customer?.email]])}
         ${detailSection("Location", [["Address", record.location?.address], ["City", record.location?.city], ["State", record.location?.state], ["ZIP Code", record.location?.zip], ["Neighborhood", record.location?.neighborhood]])}
@@ -433,7 +559,7 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
         loadMore.hidden = !state.nextCursor || isLocalFixture;
       } catch (error) {
         message.textContent = error.message || "The dashboard could not load.";
-        if (!append) { state.submissions = []; renderList(); }
+        if (!append) { state.submissions = []; renderList(); empty.hidden = true; tableShell.hidden = true; }
       } finally {
         state.loading = false;
         loadMore.disabled = false;
@@ -459,6 +585,7 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
       if (!record) return;
       if (event.target.closest("[data-approve]")) approveTestimonial(record, event.target.closest("[data-approve]"));
       else if (event.target.closest("[data-disapprove]")) askToDelete(record, true);
+      else if (event.target.closest("[data-export]")) exportSubmissions(record.id, event.target.closest("[data-export]"));
       else if (event.target.closest("[data-delete]")) askToDelete(record);
       if (event.target.closest("[data-view]")) openDetails(record);
     });
@@ -478,6 +605,7 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
     deleteDialog.addEventListener("click", (event) => { if (event.target === deleteDialog && !confirmDelete.disabled) deleteDialog.close(); });
     confirmDelete.addEventListener("click", deletePendingSubmission);
     load();
+    readSheetsSettings();
 
     const defaultFormSchemas = JSON.parse(document.querySelector("#default-form-schemas").textContent);
     const supportedFieldTypes = JSON.parse(document.querySelector("#supported-field-types").textContent);
@@ -567,6 +695,9 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
       return `/request/${encodeURIComponent(schema.slug)}/`;
     }
     function editorFields() { return editor.schema?.steps.flatMap((step) => step.fields || []) || []; }
+    function fieldsBefore(stepIndex, fieldIndex) {
+      return editor.schema?.steps.flatMap((step, index) => index < stepIndex ? (step.fields || []) : index === stepIndex ? (step.fields || []).slice(0, fieldIndex) : []) || [];
+    }
     function markEditorDirty() {
       editor.dirty = true;
       editorStatus.dataset.state = "working";
@@ -576,7 +707,7 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
 
     function renderFormList() {
       formList.innerHTML = editor.forms.map((form) => `
-        <button type="button" class="form-list-item${form.id === editor.selectedId ? " is-active" : ""}" data-select-form="${escapeHtml(form.id)}">
+        <button type="button" class="form-list-item${form.id === editor.selectedId ? " is-active" : ""}" data-select-form="${escapeHtml(form.id)}"${form.id === editor.selectedId ? " aria-current=\"true\"" : ""}>
           <strong>${escapeHtml(form.title)}</strong>
           <small>${form.publishedVersion ? `Published version ${escapeHtml(form.publishedVersion)}` : "Draft only"}</small>
         </button>
@@ -602,13 +733,15 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
     window.addEventListener("resize", updateFormListScrollButtons);
 
     function fieldCard(field, stepIndex, fieldIndex) {
-      const conditionSource = editorFields().find((candidate) => candidate.id === field.condition?.fieldId);
-      const conditionChoices = editorFields().filter((candidate) => candidate.id !== field.id).map((candidate) =>
+      const conditionSource = fieldsBefore(stepIndex, fieldIndex).find((candidate) => candidate.id === field.condition?.fieldId);
+      const conditionChoices = fieldsBefore(stepIndex, fieldIndex).map((candidate) =>
         `<option value="${escapeHtml(candidate.id)}"${selected(field.condition?.fieldId, candidate.id)}>${escapeHtml(candidate.label)}</option>`).join("");
       const typeChoices = supportedFieldTypes.map((type) => `<option value="${type}"${selected(field.type, type)}>${fieldTypeLabels[type]}</option>`).join("");
+      const conditionOperator = conditionSource?.type === "checkboxes" ? "includes" : "equals";
       const conditionValueControl = Array.isArray(conditionSource?.options)
         ? `<select data-condition-setting="value"><option value="">Choose an answer</option>${conditionSource.options.map((option) => `<option value="${escapeHtml(option)}"${selected(field.condition?.value, option)}>${escapeHtml(option)}</option>`).join("")}</select>`
         : `<input data-condition-setting="value" value="${escapeHtml(field.condition?.value || "")}" placeholder="Answer that should trigger this question" />`;
+      const conditionIncomplete = field.condition?.fieldId && !field.condition?.value;
       return `<article class="field-editor-card" data-step-index="${stepIndex}" data-field-index="${fieldIndex}">
         <div class="field-editor-card__top">
           <span class="field-type-badge">${escapeHtml(fieldTypeLabels[field.type] || field.type)}</span>
@@ -629,11 +762,11 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
         </div>
         <details class="condition-editor"${field.condition ? " open" : ""}>
           <summary>Conditional follow-up</summary>
-          <p>Show this question only when another answer matches.</p>
+          <p>Use this for a follow-up question that should appear only after a specific answer. For example, show “Tell us about it” when someone chooses “Other.”</p>
           <div class="condition-grid">
-            <label><span>Question to watch</span><select data-condition-setting="fieldId"><option value="">Always show</option>${conditionChoices}</select></label>
-            <label><span>Rule</span><select data-condition-setting="operator"><option value="equals"${selected(field.condition?.operator, "equals")}>Equals</option><option value="includes"${selected(field.condition?.operator, "includes")}>Includes selected option</option></select></label>
-            <label><span>Answer that triggers it</span>${conditionValueControl}</label>
+            <label><span>Question to watch</span><select data-condition-setting="fieldId"><option value="">Always show</option>${conditionChoices}</select><small>Choose the earlier question that controls this one.</small></label>
+            <label><span>Rule</span><select data-condition-setting="operator"><option value="equals"${selected(conditionOperator, "equals")}>Equals</option>${conditionSource?.type === "checkboxes" ? `<option value="includes"${selected(conditionOperator, "includes")}>Includes selected option</option>` : ""}</select><small>${conditionSource?.type === "checkboxes" ? "Use Includes for checkbox cards." : "Use Equals for one-answer fields."}</small></label>
+            <label><span>Answer that triggers it</span>${conditionValueControl}<small>${conditionIncomplete ? "Choose an answer to turn this rule on." : "This answer makes the follow-up appear."}</small></label>
           </div>
         </details>
       </article>`;
@@ -689,10 +822,17 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
 
     function previewFieldMarkup(field) {
       const condition = field.condition;
-      const conditionAttributes = condition
+      const completeCondition = condition?.fieldId && condition?.value;
+      const conditionSource = editorFields().find((candidate) => candidate.id === condition?.fieldId);
+      const conditionSourceLabel = conditionSource?.label || condition?.fieldId || "another question";
+      const conditionAttributes = completeCondition
         ? ` data-condition-field-id="${escapeHtml(condition.fieldId)}" data-condition-operator="${escapeHtml(condition.operator)}" data-condition-value="${escapeHtml(condition.value)}"`
         : "";
-      const conditionHint = condition ? `<small>Shown when ${escapeHtml(condition.fieldId)} ${escapeHtml(condition.operator)} “${escapeHtml(condition.value)}”</small>` : "";
+      const conditionHint = completeCondition
+        ? `<small>Shown when ${escapeHtml(conditionSourceLabel)} ${escapeHtml(condition.operator)} “${escapeHtml(condition.value)}”</small>`
+        : condition?.fieldId
+          ? "<small class=\"preview-condition-warning\">Choose a trigger answer in the builder to activate this follow-up.</small>"
+          : "";
       return `<div class="preview-field" data-preview-field-id="${escapeHtml(field.id)}"${conditionAttributes}>${previewControl(field)}${conditionHint}</div>`;
     }
 
@@ -709,7 +849,7 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
       editorFields().forEach((field) => {
         const wrapper = previewHost.querySelector(`[data-preview-field-id="${CSS.escape(field.id)}"]`);
         if (!wrapper) return;
-        const condition = field.condition;
+        const condition = field.condition?.fieldId && field.condition?.value ? field.condition : null;
         const sourceValue = condition ? previewFieldValue(condition.fieldId) : "";
         const visible = !condition || (condition.operator === "includes" ? Array.isArray(sourceValue) && sourceValue.includes(condition.value) : sourceValue === condition.value);
         wrapper.hidden = !visible;
@@ -794,7 +934,7 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
       document.querySelector("[data-editor-form-name]").textContent = editor.schema.title;
       document.querySelector("[data-editor-version]").textContent = selectedForm?.publishedVersion ? `Published version ${selectedForm.publishedVersion}` : "Not published yet";
       document.querySelector("[data-public-form-link]").href = publicFormPath(editor.schema);
-      document.querySelector("[data-public-form-link]").hidden = !selectedForm?.publishedVersion && !selectedForm?.isBuiltInDefault;
+      document.querySelector("[data-public-form-link]").hidden = !selectedForm?.publishedVersion;
       document.querySelectorAll("[data-form-setting]").forEach((input) => { input.value = editor.schema[input.dataset.formSetting] || ""; });
       const slugInput = document.querySelector("[data-form-setting='slug']");
       const slugPrefix = slugInput.closest(".slug-field").querySelector("span");
@@ -871,7 +1011,7 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
         field.condition ||= { fieldId: "", operator: "equals", value: "" };
         field.condition[event.target.dataset.conditionSetting] = event.target.value;
         if (event.target.dataset.conditionSetting === "fieldId" && field.condition.fieldId) {
-          const source = editorFields().find((candidate) => candidate.id === field.condition.fieldId);
+          const source = fieldsBefore(stepIndex, Number(fieldCardElement.dataset.fieldIndex)).find((candidate) => candidate.id === field.condition.fieldId);
           field.condition.operator = source?.type === "checkboxes" ? "includes" : "equals";
           field.condition.value = "";
         }
@@ -1100,9 +1240,11 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
   .preview-field input[type="file"]::file-selector-button { margin-right: .35rem; padding: .28rem .4rem; border: 0; border-radius: 4px; color: white; background: var(--forest-800); font: inherit; font-size: .62rem; cursor: pointer; }
   .preview-choice-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .25rem; margin-top: .25rem; }
   .preview-choice-grid label { display: flex; min-height: 30px; grid-template-columns: none; align-items: center; gap: .3rem; padding: .32rem; border: 1px solid var(--border); border-radius: 5px; background: white; font-size: .62rem; font-weight: 550; cursor: pointer; }
-  .preview-choice-grid input { width: .85rem; min-height: .85rem; accent-color: var(--forest-700); }
+  .preview-choice-grid input[type="checkbox"], .preview-choice-grid input[type="radio"] { width: .85rem; height: .85rem; min-height: .85rem; flex: 0 0 auto; margin: 0; padding: 0; border: 0; border-radius: 0; outline: 0; box-shadow: none; background: transparent; accent-color: var(--forest-700); }
+  .preview-choice-grid label:has(input:focus-visible) { outline: 2px solid rgba(45,104,85,.5); outline-offset: 2px; }
   .preview-choice-grid span { color: var(--ink-700); }
   .preview-field small { display: block; margin-top: .2rem; color: #76501e; font-size: .57rem; }
+  .preview-field .preview-condition-warning { color: #8b4c22; font-weight: 750; }
   .preview-empty { margin: 0; color: var(--ink-500); font-size: .7rem; }
   .preview-submit-row { display: grid; gap: .35rem; margin-top: .7rem; }
   .preview-submit { display: block; width: 100%; min-height: 36px; padding: .55rem; border: 1px solid var(--forest-900); border-radius: 7px; color: white; background: var(--forest-900); font: inherit; font-size: .7rem; font-weight: 800; text-align: center; cursor: pointer; }
@@ -1120,6 +1262,22 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
   .version-row small { color: var(--ink-500); }
   .new-form-dialog form { display: grid; gap: .9rem; margin-top: 1rem; }
   .admin-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+  .sheets-export-card { display: grid; grid-template-columns: minmax(220px, .85fr) minmax(300px, 1.15fr); gap: 1rem 1.5rem; margin-bottom: 1.5rem; padding: 1.25rem; border: 1px solid var(--border-strong); border-radius: var(--radius-large); background: white; box-shadow: var(--shadow-small); }
+  .sheets-export-card__copy h2 { margin: 0 0 .35rem; color: var(--forest-950); font-size: clamp(1.45rem, 3vw, 2rem); }
+  .sheets-export-card__copy p:last-child { margin: 0; color: var(--ink-500); font-size: .85rem; }
+  .sheets-settings-form { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: .65rem; }
+  .sheets-settings-form label { display: grid; gap: .35rem; color: var(--ink-700); font-size: .78rem; font-weight: 800; }
+  .sheets-settings-form input { width: 100%; min-height: 44px; padding: .55rem .65rem; border: 1px solid rgba(29,41,37,.22); border-radius: 8px; color: var(--ink-900); background: white; font: inherit; font-size: .87rem; }
+  .sheets-settings-form input:focus-visible { border-color: var(--forest-700); outline: 0; box-shadow: 0 0 0 3px rgba(45,104,85,.16); }
+  .sheets-settings-form button { min-height: 44px; white-space: nowrap; }
+  .sheets-export-card__help { display: flex; flex-wrap: wrap; align-items: baseline; gap: .35rem .5rem; padding: .7rem .8rem; border-radius: 8px; color: var(--ink-700); background: var(--cream-100); font-size: .76rem; }
+  .sheets-export-card__help strong { color: var(--forest-900); }
+  .sheets-export-card__help code { overflow-wrap: anywhere; color: var(--forest-800); font-family: inherit; font-weight: 800; }
+  .sheets-export-card__actions { display: flex; align-items: center; justify-content: space-between; gap: 1rem; grid-column: 1 / -1; padding-top: .8rem; border-top: 1px solid var(--border); }
+  .sheets-export-card__actions p { min-height: 1.4rem; margin: 0; color: var(--ink-500); font-size: .78rem; font-weight: 750; }
+  .sheets-export-card__actions p[data-state="success"] { color: var(--forest-800); }
+  .sheets-export-card__actions p[data-state="error"] { color: var(--danger); }
+  .sheets-export-card__actions > div { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: .55rem; }
   .admin-summary article { padding: 1.15rem 1.25rem; border: 1px solid var(--border); border-radius: var(--radius); background: white; box-shadow: var(--shadow-small); }
   .admin-summary span { display: block; color: var(--ink-500); font-size: .78rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
   .admin-summary strong { display: block; margin-top: .25rem; color: var(--forest-950); font-family: var(--font-heading); font-size: 2rem; line-height: 1; }
@@ -1154,9 +1312,11 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
   .row-actions { min-width: 220px; white-space: nowrap; text-align: right; }
   .row-actions button { min-height: 42px; padding: .45rem .65rem; border: 0; border-radius: var(--radius-small); background: transparent; font: inherit; font-weight: 800; cursor: pointer; }
   .row-view { color: var(--forest-800); }
+  .row-export { color: var(--forest-800); background: var(--forest-100) !important; }
   .row-approve { color: var(--forest-800); background: var(--forest-100) !important; }
   .row-delete { color: var(--danger); }
   .row-actions button:hover { background: var(--cream-100); }
+  .row-actions button:disabled { opacity: .45; cursor: not-allowed; }
   .admin-empty { padding: 3rem 1.5rem; border: 1px dashed var(--border-strong); border-radius: var(--radius-large); text-align: center; background: var(--cream-100); }
   .admin-empty h2 { margin-bottom: .35rem; }
   .admin-empty p { margin: 0; color: var(--ink-500); }
@@ -1187,6 +1347,9 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
     .admin-account { justify-items: start; }
     .admin-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .admin-controls { grid-template-columns: 1fr; }
+    .sheets-export-card { grid-template-columns: 1fr; }
+    .sheets-export-card__actions { align-items: stretch; flex-direction: column; }
+    .sheets-export-card__actions > div { justify-content: flex-start; }
     .admin-tabs { overflow-x: auto; scrollbar-width: none; }
     .admin-tabs::-webkit-scrollbar { display: none; }
     .form-builder-layout { grid-template-columns: 1fr; }
@@ -1217,6 +1380,8 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
     .admin-summary { gap: .65rem; }
     .admin-summary article { padding: 1rem; }
     .form-builder-heading, .form-editor-toolbar { align-items: stretch; flex-direction: column; }
+    .sheets-settings-form { grid-template-columns: 1fr; }
+    .sheets-settings-form button, .sheets-export-card__actions button { width: 100%; }
     .form-settings-grid, .field-editor-grid, .condition-grid { grid-template-columns: 1fr; }
     .form-settings-full, .field-editor-full { grid-column: auto; }
     .step-editor-heading { grid-template-columns: 2.15rem minmax(0, 1fr); }

@@ -30,7 +30,10 @@ export async function getDashboardSubmissions({
     }
     logDatabaseFailure(error, logger);
     return {
-      ok: true,
+      ok: false,
+      status: 503,
+      code: "DATABASE_UNAVAILABLE",
+      message: "The submissions database is temporarily unavailable.",
       submissions: [],
       sources: databaseSourceStatuses(false, "The submissions database is temporarily unavailable."),
     };

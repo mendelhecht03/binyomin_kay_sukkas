@@ -30,6 +30,8 @@ test("database failures return no private data or internal error details", async
     env: {},
     logger: { error: (...values) => logs.push(values) },
   });
+  assert.equal(result.ok, false);
+  assert.equal(result.status, 503);
   assert.deepEqual(result.submissions, []);
   assert.equal(result.sources.builds.ok, false);
   assert.equal(JSON.stringify(result).includes("not configured"), false);

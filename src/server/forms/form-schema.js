@@ -231,12 +231,15 @@ function defaultStepIcon(stepId, title) {
   return "site";
 }
 
-function normalizeCondition(condition, knownIds) {
+function normalizeCondition(condition, knownIds, sourceTypes) {
   if (!condition || typeof condition !== "object") return undefined;
   const fieldId = cleanId(condition.fieldId);
   const operator = clean(condition.operator, 20);
   const value = clean(condition.value, 200);
   if (!knownIds.has(fieldId) || !CONDITION_OPERATORS.has(operator) || !value) return undefined;
+  const sourceType = sourceTypes.get(fieldId);
+  if (operator === "includes" && sourceType !== "checkboxes") return undefined;
+  if (operator === "equals" && sourceType === "checkboxes") return undefined;
   return { fieldId, operator, value };
 }
 
@@ -252,15 +255,18 @@ export function normalizeFormSchema(input, { allowMissingIdentity = false } = {}
     return { ok: false, message: "A form must have between 1 and 12 steps." };
   }
 
-  const knownIds = new Set();
+  const allFieldIds = new Set();
+  const sourceTypes = new Map();
   const rawFields = input.steps.flatMap((step) => Array.isArray(step?.fields) ? step.fields : []);
   if (rawFields.length > 80) return { ok: false, message: "A form can contain no more than 80 fields." };
   for (const field of rawFields) {
     const fieldId = cleanId(field?.id);
-    if (!fieldId || knownIds.has(fieldId)) return { ok: false, message: "Every question needs a unique internal name." };
-    knownIds.add(fieldId);
+    if (!fieldId || allFieldIds.has(fieldId)) return { ok: false, message: "Every question needs a unique internal name." };
+    allFieldIds.add(fieldId);
+    sourceTypes.set(fieldId, clean(field?.type, 30));
   }
 
+  const knownIds = new Set();
   const stepIds = new Set();
   const steps = [];
   for (let stepIndex = 0; stepIndex < input.steps.length; stepIndex += 1) {
@@ -286,11 +292,12 @@ export function normalizeFormSchema(input, { allowMissingIdentity = false } = {}
         if (options.length < 1 || options.length > 40) return { ok: false, message: `“${label}” needs between 1 and 40 unique options.` };
         field.options = options;
       }
-      const condition = normalizeCondition(rawField.condition, knownIds);
+      const condition = normalizeCondition(rawField.condition, knownIds, sourceTypes);
       if (rawField.condition && !condition) return { ok: false, message: `The display rule for “${label}” is incomplete.` };
       if (condition?.fieldId === field.id) return { ok: false, message: `“${label}” cannot depend on itself.` };
       if (condition) field.condition = condition;
       fields.push(field);
+      knownIds.add(field.id);
     }
     const icon = clean(rawStep.icon, 30);
     steps.push({ id: stepId, title: stepTitle, icon: STEP_ICONS.has(icon) ? icon : defaultStepIcon(stepId, stepTitle), fields });

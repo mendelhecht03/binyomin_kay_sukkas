@@ -4,7 +4,8 @@ The owner dashboard is a private website view for reviewing and permanently
 deleting Builds, Rentals, Testimonials, and future registered form types. It
 also owns the testimonial approval workflow. The
 website owns its submission data; Google Forms, Google Sheets, service accounts,
-and Apps Script are not part of the backend.
+and Apps Script are not part of the submission backend. Google Sheets is an
+optional reporting export destination only.
 
 ## Data flow
 
@@ -19,6 +20,8 @@ flowchart LR
     api --> r2
     d1 --> approved["Approved public testimonials API"]
     approved --> homepage["Homepage customer stories"]
+    owner --> export["Optional Sheets export"]
+    export --> sheets["Google Sheets reporting tabs"]
 ```
 
 D1 is the system of record. It stores the submission ID, type, status, time,
@@ -52,6 +55,18 @@ are included with the deployment package. After changing the schema, run
 The only dashboard environment value is:
 
 - `DASHBOARD_ADMIN_EMAILS`
+
+Optional Google Sheets reporting also needs these server-side Sites secrets:
+
+- `GOOGLE_SHEETS_SERVICE_ACCOUNT_EMAIL`
+- `GOOGLE_SHEETS_PRIVATE_KEY`
+
+The owner never enters either credential in the dashboard. Instead, the owner
+shares the chosen spreadsheet with the service-account email and pastes the
+spreadsheet URL into the protected Submissions tab. The Worker tests access,
+stores only the spreadsheet ID in D1, and keeps Google Sheets outside the
+submission storage path. If the secrets are not configured, the rest of the
+dashboard continues to work and the export card explains that setup is needed.
 
 No database credentials are placed in `.env`; Sites supplies the DB and R2
 bindings at runtime.
@@ -97,6 +112,24 @@ The owner has two choices:
 
 The public endpoint never returns email addresses, phone numbers, verification
 contacts, or the full private submission data.
+
+## Google Sheets reporting export
+
+The Submissions tab has an optional Google Sheets export card. It supports a
+single configured spreadsheet, a connection test, an export-all action, and an
+`Add to Sheet` action on each non-testimonial row. Testimonials are rejected by
+the Worker as well as hidden from the row export action.
+
+The Worker creates one managed tab per saved form slug/title, including future
+custom forms. Managed tab titles are sanitized and sorted alphabetically. Each
+tab uses a stable `Submission ID` column, common contact columns, and form-
+specific answer columns. Rows are sorted by ISO `Submitted At` and then ID so a
+single older row cannot break chronological order. Repeating an export checks
+the Sheet ID column first and uses a unique D1 export log as a second guard.
+
+The D1 export log records pending, exported, and failed attempts. Google Sheets
+is never treated as the source of truth; a temporary Sheets outage therefore
+does not affect website submissions or testimonial approval.
 
 ## Local and automated verification
 

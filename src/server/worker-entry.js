@@ -1,6 +1,7 @@
 import { PHOTO_ROUTE_PREFIX, handlePhotoRequest } from "./adapters/photo-storage.js";
 import {
   adminPageAccessResponse,
+  handleAdminGoogleSheetsRequest,
   handleAdminSubmissionsRequest,
   withAdminPageHeaders,
 } from "./dashboard/worker-entry.js";
@@ -30,6 +31,9 @@ export function createWorker(fileRecords) {
           return new Response("Method not allowed", { status: 405, headers: { "Content-Type": "text/plain; charset=utf-8" } });
         }
         return handleAdminSubmissionsRequest(request, env);
+      }
+      if (url.pathname.startsWith("/api/admin/google-sheets/")) {
+        return handleAdminGoogleSheetsRequest(request, env, url.pathname);
       }
       if (url.pathname === "/api/testimonials" && request.method === "GET") {
         return handlePublicTestimonialsRequest(env);

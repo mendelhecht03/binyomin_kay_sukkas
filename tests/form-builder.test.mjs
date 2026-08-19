@@ -48,6 +48,14 @@ test("form schemas accept existing field types and validate conditional follow-u
   const invalid = editableSchema();
   invalid.steps[0].fields[2].condition.fieldId = "missing-field";
   assert.equal(normalizeFormSchema(invalid).ok, false);
+
+  const laterField = editableSchema();
+  laterField.steps[0].fields[1].condition = { fieldId: "otherInterest", operator: "equals", value: "Custom" };
+  assert.equal(normalizeFormSchema(laterField).ok, false);
+
+  const incompatible = editableSchema();
+  incompatible.steps[0].fields[2].condition = { fieldId: "interests", operator: "equals", value: "Other" };
+  assert.equal(normalizeFormSchema(incompatible).ok, false);
 });
 
 test("form drafts publish immutable versions and keep later edits private", async () => {

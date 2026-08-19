@@ -12,6 +12,25 @@ function valueForField(formData, field) {
 
 function hasValue(value) { return Array.isArray(value) ? value.length > 0 : Boolean(cleanText(value)); }
 
+function firstAnswer(fields, answers, matcher) {
+  const field = fields.find((candidate) => matcher(candidate));
+  const value = field ? answers[field.id] : "";
+  return Array.isArray(value) ? value.join(", ") : value;
+}
+
+function contactAnswers(fields, answers) {
+  return {
+    name: answers.name || firstAnswer(fields, answers, (field) => /\b(name|contact)\b/i.test(field.label || "")),
+    phone: answers.phone || firstAnswer(fields, answers, (field) => field.type === "phone" || /phone|mobile|tel/i.test(field.label || "")),
+    email: answers.email || firstAnswer(fields, answers, (field) => field.type === "email" || /e-?mail/i.test(field.label || "")),
+  };
+}
+
+function neighborhoodAnswer(fields, answers) {
+  return answers.neighborhoodOther || answers.settingOther || answers.setting || answers.neighborhood
+    || firstAnswer(fields, answers, (field) => /neighborhood|location|where will/i.test(field.label || ""));
+}
+
 function submissionIdentity(slug, origin) {
   if (slug === "builds") return { type: "build", sourcePage: `${origin}/sukka-builder/` };
   if (slug === "rentals") return { type: "rental", sourcePage: `${origin}/sukkah-rentals/` };
@@ -68,10 +87,11 @@ export async function handleDynamicFormSubmission(request, env, url, slug) {
       answers, answerDetails,
     };
     const identity = submissionIdentity(published.schema.slug, url.origin);
+    const customer = contactAnswers(fields, answers);
     await createSubmission(env, {
       id: submissionId, type: identity.type, status: "New", submittedAt,
-      customer: { name: answers.name || "", phone: answers.phone || "", email: answers.email || "" },
-      location: { neighborhood: answers.neighborhoodOther || answers.settingOther || answers.setting || answers.neighborhood || "" },
+      customer,
+      location: { neighborhood: neighborhoodAnswer(fields, answers) || "" },
       summary: [published.schema.title, answers.estimatedSize].filter(Boolean).join(" · "),
       data, files: uploaded.files, sourcePage: identity.sourcePage,
     });
