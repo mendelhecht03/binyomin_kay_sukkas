@@ -45,13 +45,12 @@ When adding a task, use this format:
 
 ## Now
 
-- [ ] Publish the Pergolas, branding, testimonial, and service-page refresh
-  - Why: The latest approved changes combine the new Pergolas portfolio with
-    the Bkay Sukkahs brand, a more reliable testimonial card, and consistent
-    Tree Trimming, Eruv Work, and About pages.
-  - Done when: All requested pages and shared branding are built, the
-    testimonial card renders safely, the documentation is current, and the
-    complete site is published successfully.
+- [ ] Tighten public pages and publish the current refresh
+  - Why: The latest feedback asks for a denser About page, tighter Tree
+    Trimming and Eruv Work layouts, a centered footer logo, and updated hours
+    on top of the pending Pergolas, branding, and testimonial work.
+  - Done when: The counters, copy, spacing, footer details, documentation,
+    and prior refresh all pass the build and the complete site is published.
 
 ## Next
 

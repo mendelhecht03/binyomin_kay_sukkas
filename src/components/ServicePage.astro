@@ -190,11 +190,19 @@ const heroHeadingId = `${service.slug}-heading`;
 <style>
   .service-page {
     overflow: clip;
-    padding-bottom: clamp(3.5rem, 7vw, 6rem);
+    padding-bottom: 1.5rem;
+  }
+
+  .service-page > .section {
+    padding-block: clamp(2.25rem, 4vw, 3.75rem);
+  }
+
+  .service-page > .section-compact {
+    padding-block: 2rem;
   }
 
   .service-hero {
-    padding-block: clamp(1.35rem, 3vw, 2.5rem) clamp(3.25rem, 7vw, 5.75rem);
+    padding-block: 1.15rem clamp(2rem, 4vw, 3.25rem);
   }
 
   .service-hero .breadcrumb {
@@ -204,9 +212,9 @@ const heroHeadingId = `${service.slug}-heading`;
   .service-hero__inner {
     display: grid;
     grid-template-columns: minmax(0, 1.05fr) minmax(19rem, 0.95fr);
-    gap: clamp(2rem, 7vw, 5.5rem);
+    gap: clamp(1.5rem, 5vw, 3.5rem);
     align-items: center;
-    margin-top: clamp(2.5rem, 5vw, 4.5rem);
+    margin-top: clamp(1.5rem, 3vw, 2.5rem);
   }
 
   .service-page--text-first .service-hero__inner {
@@ -233,10 +241,10 @@ const heroHeadingId = `${service.slug}-heading`;
 
   .service-hero__note {
     display: flex;
-    min-height: 16rem;
+    min-height: 11rem;
     flex-direction: column;
     justify-content: center;
-    padding: clamp(1.5rem, 4vw, 2.7rem);
+    padding: clamp(1.15rem, 3vw, 1.75rem);
     border: 1px solid rgba(23, 63, 52, 0.14);
     border-radius: var(--radius-large);
     background: rgba(255, 255, 255, 0.68);
@@ -263,7 +271,7 @@ const heroHeadingId = `${service.slug}-heading`;
   .service-highlight-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: clamp(1.25rem, 3vw, 2.5rem);
+    gap: clamp(1rem, 2vw, 1.75rem);
   }
 
   .service-highlight {
@@ -285,7 +293,7 @@ const heroHeadingId = `${service.slug}-heading`;
   .service-request-grid {
     display: grid;
     grid-template-columns: minmax(0, 0.82fr) minmax(20rem, 1.18fr);
-    gap: clamp(2rem, 7vw, 5.5rem);
+    gap: clamp(1.5rem, 5vw, 3rem);
     align-items: start;
   }
 

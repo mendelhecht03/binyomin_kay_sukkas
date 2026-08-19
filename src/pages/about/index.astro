@@ -6,8 +6,8 @@ const biography =
   "Benyamin helps families and communities plan practical sukkah and outdoor projects with clear communication from the first conversation through the finished work.";
 
 const aboutStats = [
-  { label: "Sukkahs built", value: 0 },
-  { label: "Years working", value: 0 },
+  { label: "Sukkahs built", value: 200 },
+  { label: "Years working", value: 5 },
 ];
 ---
 
@@ -27,6 +27,7 @@ const aboutStats = [
           <p class="eyebrow">About Benyamin</p>
           <h1 id="about-heading">Practical work. Clear communication.</h1>
           <p class="lead">A straightforward way to plan sukkah-season projects and outdoor work.</p>
+          <p class="about-hero__bio">{biography}</p>
           <div class="button-row">
             <a class="button" href="/contact/">Request a quote</a>
           </div>
@@ -49,8 +50,8 @@ const aboutStats = [
       <div class="shell">
         <div class="about-stats__heading">
           <p class="eyebrow">At a glance</p>
-          <h2 id="about-stats-heading">The numbers can tell the story.</h2>
-          <p class="about-edit-note">Placeholder totals — update these values after they are confirmed.</p>
+          <h2 id="about-stats-heading">A little experience goes a long way.</h2>
+          <p class="about-edit-note">Editable totals — update these values whenever they are confirmed.</p>
         </div>
         <div class="about-stats__grid">
           {aboutStats.map((stat) => (
@@ -63,31 +64,6 @@ const aboutStats = [
       </div>
     </section>
 
-    <section class="section about-story" aria-labelledby="about-story-heading">
-      <div class="shell about-story__panel">
-        <div>
-          <p class="eyebrow">A little more</p>
-          <h2 id="about-story-heading">A clear plan before the work begins.</h2>
-        </div>
-        <div class="about-story__copy">
-          <p>{biography}</p>
-          <p class="about-edit-note">Editable placeholder biography — replace this paragraph with the approved business history.</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="section-compact about-cta" aria-labelledby="about-cta-heading">
-      <div class="shell">
-        <div class="cta-panel">
-          <div>
-            <p class="eyebrow">Get started</p>
-            <h2 id="about-cta-heading">Have a project in mind?</h2>
-            <p>Share the location, timing, and the details you already know.</p>
-          </div>
-          <a class="button button-light" href="/contact/">Contact Benyamin</a>
-        </div>
-      </div>
-    </section>
   </div>
 </BaseLayout>
 
@@ -106,7 +82,7 @@ const aboutStats = [
       return;
     }
 
-    const duration = 700;
+    const duration = 480;
     const startedAt = performance.now();
 
     function tick(now) {
@@ -114,6 +90,7 @@ const aboutStats = [
       const eased = 1 - Math.pow(1 - progress, 3);
       renderCounter(counter, Math.round(target * eased));
       if (progress < 1) window.requestAnimationFrame(tick);
+      else counter.classList.add("is-complete");
     }
 
     window.requestAnimationFrame(tick);
@@ -135,19 +112,19 @@ const aboutStats = [
 <style>
   .about-page {
     overflow: clip;
-    padding-bottom: clamp(3.5rem, 7vw, 6rem);
+    padding-bottom: 1.5rem;
   }
 
   .about-hero {
-    padding-block: clamp(1.35rem, 3vw, 2.5rem) clamp(3rem, 7vw, 5.5rem);
+    padding-block: 1.15rem clamp(1.75rem, 4vw, 3rem);
   }
 
   .about-hero__inner {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.72fr);
-    gap: clamp(2rem, 8vw, 7rem);
+    gap: clamp(1.5rem, 5vw, 3.5rem);
     align-items: center;
-    margin-top: clamp(2.5rem, 5vw, 4.5rem);
+    margin-top: clamp(1.5rem, 3vw, 2.5rem);
   }
 
   .about-hero__copy,
@@ -164,7 +141,15 @@ const aboutStats = [
 
   .about-hero__copy .lead {
     max-width: 34rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .about-hero__bio {
+    max-width: 34rem;
+    margin-bottom: 1rem;
+    color: var(--ink-700);
+    font-size: 0.95rem;
+    line-height: 1.55;
   }
 
   .about-photo {
@@ -186,7 +171,7 @@ const aboutStats = [
     position: relative;
     z-index: 1;
     width: 100%;
-    aspect-ratio: 4 / 5;
+    aspect-ratio: 1 / 1;
     border-radius: var(--radius-large);
     box-shadow: var(--shadow-medium);
     object-fit: cover;
@@ -208,23 +193,27 @@ const aboutStats = [
   }
 
   .about-stats {
-    padding-block: clamp(2.75rem, 6vw, 4.75rem);
+    padding-block: 1.35rem 1.75rem;
   }
 
   .about-stats__heading {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
-    gap: 0 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.1rem;
     align-items: baseline;
-    margin-bottom: 2rem;
+    margin-bottom: 0.85rem;
   }
 
   .about-stats__heading .eyebrow {
-    grid-column: 1 / -1;
+    flex-basis: 100%;
     margin-bottom: 0.75rem;
   }
 
-  .about-stats__heading h2,
+  .about-stats__heading h2 {
+    margin-bottom: 0;
+    font-size: clamp(1.45rem, 3vw, 2rem);
+  }
+
   .about-stats__heading p:last-child {
     margin-bottom: 0;
   }
@@ -237,15 +226,15 @@ const aboutStats = [
   .about-stats__grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1rem;
+    gap: 0.75rem;
   }
 
   .about-stat {
     display: flex;
-    min-height: 9rem;
+    min-height: 6.5rem;
     flex-direction: column;
     justify-content: center;
-    padding: 1.5rem;
+    padding: 1rem 1.25rem;
     border: 1px solid rgba(23, 63, 52, 0.14);
     border-radius: var(--radius);
     background: rgba(255, 255, 255, 0.66);
@@ -258,58 +247,25 @@ const aboutStats = [
     line-height: 0.95;
   }
 
+  .about-stat__value.is-complete {
+    animation: about-counter-jiggle 420ms ease-out;
+  }
+
+  @keyframes about-counter-jiggle {
+    0%, 100% { transform: translateX(0) rotate(0); }
+    25% { transform: translateX(-2px) rotate(-1.2deg); }
+    50% { transform: translateX(2px) rotate(1.2deg); }
+    75% { transform: translateX(-1px) rotate(-0.6deg); }
+  }
+
   .about-stat span {
     margin-top: 0.6rem;
     color: var(--ink-700);
     font-weight: 800;
   }
 
-  .about-story {
-    padding-bottom: clamp(3rem, 7vw, 5.5rem);
-  }
-
-  .about-story__panel {
-    display: grid;
-    grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr);
-    gap: clamp(2rem, 7vw, 5rem);
-    align-items: start;
-    padding: clamp(1.75rem, 5vw, 3.5rem);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-large);
-    background: white;
-    box-shadow: var(--shadow-small);
-  }
-
-  .about-story__panel h2 {
-    max-width: 12ch;
-  }
-
-  .about-story__copy p:first-child {
-    margin-bottom: 0.85rem;
-    color: var(--ink-700);
-    font-size: clamp(1.08rem, 2vw, 1.3rem);
-    line-height: 1.65;
-  }
-
-  .about-story__copy p:last-child {
-    margin-bottom: 0;
-  }
-
-  .about-cta {
-    padding-bottom: 0;
-  }
-
-  .about-cta .eyebrow {
-    color: #f0bd7e;
-  }
-
-  .about-cta .button {
-    flex: 0 0 auto;
-  }
-
   @media (max-width: 58rem) {
-    .about-hero__inner,
-    .about-story__panel {
+    .about-hero__inner {
       grid-template-columns: 1fr;
     }
 
@@ -320,20 +276,19 @@ const aboutStats = [
 
   @media (max-width: 42rem) {
     .about-hero {
-      padding-block: 1.35rem 3rem;
+      padding-block: 1rem 2rem;
     }
 
     .about-hero__inner {
-      gap: 1.75rem;
-      margin-top: 2.25rem;
+      gap: 1.25rem;
+      margin-top: 1.75rem;
     }
 
     .about-hero__copy h1 {
       font-size: clamp(2.65rem, 13vw, 3.9rem);
     }
 
-    .about-hero__copy .button,
-    .about-cta .button {
+    .about-hero__copy .button {
       width: 100%;
     }
 
@@ -341,21 +296,12 @@ const aboutStats = [
       display: grid;
     }
 
-    .about-stats__heading {
-      display: block;
-    }
-
-    .about-stats__heading h2 {
-      margin-bottom: 0.75rem;
-    }
-
     .about-stats__grid {
       grid-template-columns: 1fr;
     }
+  }
 
-    .about-cta .cta-panel {
-      align-items: stretch;
-      grid-template-columns: 1fr;
-    }
+  @media (prefers-reduced-motion: reduce) {
+    .about-stat__value.is-complete { animation: none; }
   }
 </style>
