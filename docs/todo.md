@@ -45,14 +45,7 @@ When adding a task, use this format:
 
 ## Now
 
-- [ ] Add direct Google Sheets exports and audit the admin workspace
-  - Why: The owner needs a reliable reporting export without Google Apps
-    Script, and the dashboard should remain clear as more forms are added.
-  - Done when: A protected admin can configure one Sheet, test access, export
-    all non-testimonial submissions or one row with duplicate protection,
-    alphabetized form tabs, chronological rows, and clear status feedback;
-    critical admin audit issues and the preview choice-control outline are
-    addressed.
+- No active task.
 
 ## Next
 
@@ -159,6 +152,15 @@ When adding a task, use this format:
   - Unblocks: Publishing multiple testimonial cards in the homepage scroller.
 
 ## Completed
+
+- [x] Add direct Google Sheets exports and audit the admin workspace (2026-08-19)
+  - Result: Added protected direct Google Sheets settings, connection testing,
+    and all-or-one submission exports without Google Apps Script. Exports use
+    alphabetized form tabs, chronological rows, stable IDs, duplicate
+    protection, and clear dashboard status feedback; testimonials are always
+    excluded. Also fixed critical admin audit issues around conditional
+    follow-ups, dynamic contact fields, database errors, published-form links,
+    accessible controls, and the live-preview choice-control outline.
 
 - [x] Improve the admin builder workspace (2026-08-19)
   - Added accessible Form builder and Submissions tabs, an interactive preview
