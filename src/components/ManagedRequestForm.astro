@@ -23,7 +23,8 @@ const showPaymentMethods = ["builds", "rentals"].includes(fallbackSlug);
           <div class="rental-package-copy">
             <p class="eyebrow">Rental sukkah</p>
             <h2 id="rental-package-heading">A simple seasonal setup</h2>
-            <p>Comes with a basic metal frame with a variety of canvas tarps to choose from.</p>
+            <p>Our base package includes a basic metal frame, standard schach, and a choice of canvas tarp styles.</p>
+            <p class="rental-package-addons"><strong>Optional add-ons:</strong> different style lighting, furniture (including the chairs you need), and evergreen schach for an additional cost.</p>
           </div>
         </section>
       )}
@@ -336,6 +337,8 @@ const showPaymentMethods = ["builds", "rentals"].includes(fallbackSlug);
   .rental-package-placeholder span { font-size: .7rem; font-weight: 750; }
   .rental-package-copy .eyebrow { margin-bottom: .25rem; }
   .rental-package-copy h2 { margin-bottom: .25rem; font-size: 1.45rem; }
-  .rental-package-copy > p:last-child { margin: 0; color: var(--ink-500); font-size: .88rem; }
+  .rental-package-copy > p { margin: 0; color: var(--ink-500); font-size: .88rem; line-height: 1.45; }
+  .rental-package-copy > p + p { margin-top: .45rem; }
+  .rental-package-addons strong { color: var(--forest-800); }
   @media (max-width: 700px) { .rental-package-summary { grid-template-columns: 6.5rem minmax(0, 1fr); gap: .9rem; } }
 </style>

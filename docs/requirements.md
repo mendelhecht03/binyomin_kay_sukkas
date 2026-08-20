@@ -1,7 +1,8 @@
 **Assets**
 
-The shared header and footer use the supplied circular BK Sukkah Builder logo
-and the public brand name “Bkay Sukkahs.”
+The shared header and footer use the supplied circular BK Sukkah Builder logo,
+the public brand name “Bkay Sukkahs,” and the header descriptor “Sukkah
+Builders.”
 
 - ☑ Profile photo
 - ☑ Forest, cream, and wood color palette
@@ -30,7 +31,8 @@ layout.
   requests through the site's server-side Worker to the website-owned
   submissions database. Google Forms and Sheets must not be part of the
   submission storage path.
-- Keep the homepage focused on a full-bleed hero, three primary sukkah paths,
+- Keep the homepage focused on a full-bleed hero, three primary sukkah paths
+  with Builds first,
   an image-led real-work section, a compact owner introduction, testimonials,
   and a final contact prompt.
 - Style the homepage as one light, spacious page using the existing forest
@@ -149,9 +151,10 @@ navigation as the rest of the public site. Tree Trimming is text-first and
 does not show photo placeholders; its copy explains trimming small branches,
 large branches, or full trees when a sukkah site is not suitable. Eruv Work is
 also text-first and explains working with highly qualified rabbonim. About is
-intentionally compact: one owner photo, editable placeholder biography copy,
-and two clearly labeled placeholder counters for sukkahs built and years
-working. The counters animate when visible and respect reduced-motion settings.
+intentionally compact: one owner photo, the approved BK Sukkah introduction,
+short What We Do and Why Choose Us sections, a Get in Touch prompt, and two
+clearly labeled counters for sukkahs built and years working. The counters
+animate when visible and respect reduced-motion settings.
 
 The protected owner dashboard includes a schema-driven form builder. An
 allowlisted owner can create a form, edit its name, URL, introduction, submit
@@ -297,21 +300,25 @@ the same responsive address layout as Builds; Street address, City, State, and
 ZIP stack vertically on phone-sized screens.
 
 Before the guided steps, the Rentals page shows a compact product summary with
-a fixed-aspect-ratio image placeholder. Its approved description is: "Comes
-with a basic metal frame with a variety of canvas tarps to choose from." The
-step progress fill uses the site's solid gold accent.
+a fixed-aspect-ratio image placeholder. It explains that the base package
+includes a basic metal frame, standard schach, and canvas tarp styles, then
+lists optional different-style lighting, furniture and chair choices, and
+evergreen schach for an additional cost. The step progress fill uses the
+site's solid gold accent.
 
 Neighborhood uses a compact native select with a conditional Other field.
 Rental setup and takedown timing use required native date pickers while keeping
 the existing `buildDay` and `takeDownDay` field names during migration. The
 Worker stores those calendar dates in normalized database fields.
 Optional services are grouped separately from the required rental details;
-Takedown and Storage are not optional add-ons because they are included in the
-default rental package. The final step shows a compact review with Edit actions
-before the `Request availability` button. Selecting Furniture reveals a
-conditional required details field so the request identifies what furniture is
-needed. When the visitor does not enter a separate question, the database keeps
-that optional field empty rather than creating a placeholder answer.
+lighting setup and extra labor are included in the default rental package.
+The optional choices are different-style lighting, furniture, evergreen schach,
+pressure washing, and Other. Takedown and Storage are not optional add-ons.
+The final step shows a compact review with Edit actions before the `Request
+availability` button. Selecting Furniture reveals a conditional required
+details field asking which furniture and chairs are needed. When the visitor
+does not enter a separate question, the database keeps that optional field
+empty rather than creating a placeholder answer.
 
 The shared Location section accepts a site description and up to three optional
 area photos on both forms. Each photo may be a JPG, PNG, or HEIC file and must
@@ -337,8 +344,10 @@ Both forms use a Location step titled `Where will the sukkah be?` with separate
 fields for street address, city, state, and Zip code. State is a required
 dropdown containing the 50 U.S. states and Washington, D.C. Neighborhood uses
 the same compact select and shared option list on both forms, with a
-conditional required text field when Other is selected. Requested work is kept
-in its own Builds step instead of being mixed into Location.
+conditional required text field when Other is selected. Choosing New Jersey or
+Florida reveals a required location-details follow-up, and choosing Los Angeles
+reveals a Los Angeles-area details follow-up. Requested work is kept in its own
+Builds step instead of being mixed into Location.
 
 Size the ZIP Code field for the longest supported U.S. format, `12345-6789`.
 Accept no more than 10 characters while continuing to support both five-digit
@@ -357,11 +366,9 @@ Rentals includes the same field. Builds' submitted setup date remains
 Both forms use the same neighborhood choices: Crown Heights, East Flatbush,
 Remsen Village, Flatbush, Boro Park, Williamsburg, Park Slope, Manhattan,
 Queens, Monsey, South Florida, and Los Angeles; New Haven is not listed.
-Rentals offer lighting, furniture, and pressure washing; Builds offer lighting
-and pressure washing. Both include an optional
-`Extra service` checkbox with this helper text: `Check this if additional labor
-beyond the standard scope is required (for example, a rooftop sukkah).` When
-the visitor checks it, the form asks for required details.
+Rentals offer different-style lighting, furniture, evergreen schach, and
+pressure washing; Builds offer lighting and pressure washing. Both forms keep
+their location follow-ups in the shared editable schema.
 
 Selecting Bring to storage in Builds' Requested work step reveals its required
 date field and hides it when the service is not selected. The shared Timing

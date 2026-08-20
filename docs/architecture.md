@@ -228,8 +228,9 @@ temporarily inert while that panel is open so keyboard focus stays inside the
 navigation.
 
 The header and footer both use the supplied BK logo asset and display the
-“Bkay Sukkahs” brand name. The inline hut mark is not duplicated in individual
-pages; the shared components keep the logo and accessibility labels consistent.
+“Bkay Sukkahs” brand name. The header descriptor is “Sukkah Builders.” The
+inline hut mark is not duplicated in individual pages; the shared components
+keep the logo and accessibility labels consistent.
 
 Tree Trimming and Eruv Work use the shared `ServicePage` template with an
 optional text-first mode (`showMedia: false`) so pages without approved photos

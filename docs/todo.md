@@ -45,12 +45,13 @@ When adding a task, use this format:
 
 ## Now
 
-- [ ] Tighten public pages and publish the current refresh
-  - Why: The latest feedback asks for a denser About page, tighter Tree
-    Trimming and Eruv Work layouts, a centered footer logo, and updated hours
-    on top of the pending Pergolas, branding, and testimonial work.
-  - Done when: The counters, copy, spacing, footer details, documentation,
-    and prior refresh all pass the build and the complete site is published.
+- [ ] Publish the current public-site and form refresh
+  - Why: The latest feedback adds the approved About copy, rental add-on
+    changes, Builds-first homepage ordering, Sukkah Builders wordmark, and
+    location-specific follow-up questions. The prior publish also hit the
+    Worker size limit and needs a smaller asset bundle.
+  - Done when: The content, forms, documentation, optimized assets, full
+    checks, and deployed site all reflect the current request.
 
 ## Next
 

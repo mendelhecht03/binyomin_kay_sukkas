@@ -1,9 +1,30 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
-// Replace these placeholders only after the business history and totals are approved.
 const biography =
-  "Benyamin helps families and communities plan practical sukkah and outdoor projects with clear communication from the first conversation through the finished work.";
+  "Started at just 15 years old as a humble side hustle with only a handful of clients, BK Sukkah has grown year after year. Working alongside multiple name-brand sukkah companies, we now serve hundreds of satisfied customers from multiple locations across multiple states.";
+
+const whatWeDo =
+  "We offer a comprehensive range of services tailored to bring any vision to life. Whether you need regular sukkah builds, custom sukkah designs, elegant pergolas, rentals, or anything in between, we handle it all. If a project needs a specific item you do not have on hand, we track it down and get it for you so you never have to worry about a thing.";
+
+const whyChooseUs = [
+  {
+    title: "Industry partnerships",
+    body: "We collaborate with multiple name-brand sukkah companies to bring top-tier products and expertise to our clients.",
+  },
+  {
+    title: "End-to-end service",
+    body: "We manage every detail from start to finish with the highest level of professionalism for a seamless experience.",
+  },
+  {
+    title: "Zero stress",
+    body: "We handle every hurdle and supply missing materials so you can enjoy a genuinely stress-free holiday.",
+  },
+  {
+    title: "Expert team",
+    body: "Our qualified, responsible, and dedicated professionals treat every structure with the utmost care.",
+  },
+];
 
 const aboutStats = [
   { label: "Sukkahs built", value: 200 },
@@ -24,9 +45,9 @@ const aboutStats = [
             <span aria-hidden="true">/</span>
             <span aria-current="page">About</span>
           </nav>
-          <p class="eyebrow">About Benyamin</p>
-          <h1 id="about-heading">Practical work. Clear communication.</h1>
-          <p class="lead">A straightforward way to plan sukkah-season projects and outdoor work.</p>
+          <p class="eyebrow">About BK Sukkah</p>
+          <h1 id="about-heading">A stress-free holiday starts here.</h1>
+          <p class="lead">From the first conversation through the finished work, we take care of the details from A to Z.</p>
           <p class="about-hero__bio">{biography}</p>
           <div class="button-row">
             <a class="button" href="/contact/">Request a quote</a>
@@ -50,8 +71,7 @@ const aboutStats = [
       <div class="shell">
         <div class="about-stats__heading">
           <p class="eyebrow">At a glance</p>
-          <h2 id="about-stats-heading">A little experience goes a long way.</h2>
-          <p class="about-edit-note">Editable totals — update these values whenever they are confirmed.</p>
+          <h2 id="about-stats-heading">Built on hands-on experience.</h2>
         </div>
         <div class="about-stats__grid">
           {aboutStats.map((stat) => (
@@ -61,6 +81,35 @@ const aboutStats = [
             </article>
           ))}
         </div>
+      </div>
+    </section>
+
+    <section class="about-details" aria-labelledby="about-details-heading">
+      <div class="shell about-details__inner">
+        <article class="about-detail about-detail-wide">
+          <p class="eyebrow">What we do</p>
+          <h2 id="about-details-heading">Bring your vision to life.</h2>
+          <p>{whatWeDo}</p>
+        </article>
+
+        <article class="about-detail about-detail-wide">
+          <p class="eyebrow">Why choose us</p>
+          <div class="about-reasons">
+            {whyChooseUs.map((reason) => (
+              <div class="about-reason">
+                <h3>{reason.title}</h3>
+                <p>{reason.body}</p>
+              </div>
+            ))}
+          </div>
+        </article>
+
+        <article class="about-detail about-contact-detail">
+          <p class="eyebrow">Get in touch</p>
+          <h2>Ready for a completely stress-free holiday?</h2>
+          <p>Contact us today to book your build, custom project, or rental and let BK Sukkah take care of the rest.</p>
+          <a class="button" href="/contact/">Contact us</a>
+        </article>
       </div>
     </section>
 
@@ -223,6 +272,65 @@ const aboutStats = [
     font-size: 0.88rem;
   }
 
+  .about-details {
+    padding-block: 1.5rem 2.5rem;
+    background: var(--cream-50);
+  }
+
+  .about-details__inner {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem 2.5rem;
+  }
+
+  .about-detail {
+    min-width: 0;
+    padding-top: 1.25rem;
+    border-top: 1px solid rgba(23, 63, 52, 0.18);
+  }
+
+  .about-detail-wide {
+    grid-column: 1 / -1;
+  }
+
+  .about-detail h2 {
+    max-width: 24ch;
+    margin-bottom: 0.65rem;
+    font-size: clamp(1.65rem, 3vw, 2.35rem);
+  }
+
+  .about-detail p {
+    max-width: 72ch;
+    margin-bottom: 0;
+    color: var(--ink-700);
+    line-height: 1.55;
+  }
+
+  .about-reasons {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem 2rem;
+  }
+
+  .about-reason h3 {
+    margin-bottom: 0.25rem;
+    color: var(--forest-900);
+    font-size: 1rem;
+    text-transform: none;
+  }
+
+  .about-reason p {
+    font-size: 0.93rem;
+  }
+
+  .about-contact-detail {
+    align-self: start;
+  }
+
+  .about-contact-detail .button {
+    margin-top: 1rem;
+  }
+
   .about-stats__grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -298,6 +406,19 @@ const aboutStats = [
 
     .about-stats__grid {
       grid-template-columns: 1fr;
+    }
+
+    .about-details__inner,
+    .about-reasons {
+      grid-template-columns: 1fr;
+    }
+
+    .about-detail-wide {
+      grid-column: auto;
+    }
+
+    .about-contact-detail .button {
+      width: 100%;
     }
   }
 
