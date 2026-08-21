@@ -26,10 +26,6 @@ const whyChooseUs = [
   },
 ];
 
-const aboutStats = [
-  { label: "Sukkahs built", value: 200 },
-  { label: "Years working", value: 5 },
-];
 ---
 
 <BaseLayout
@@ -46,7 +42,7 @@ const aboutStats = [
             <span aria-current="page">About</span>
           </nav>
           <p class="eyebrow">About BK Sukkah</p>
-          <h1 id="about-heading">A stress-free holiday starts here.</h1>
+          <h1 id="about-heading">A stress-free Yom Tov starts here.</h1>
           <p class="lead">From the first conversation through the finished work, we take care of the details from A to Z.</p>
           <p class="about-hero__bio">{biography}</p>
           <div class="button-row">
@@ -64,23 +60,6 @@ const aboutStats = [
           />
           <figcaption>Benyamin Kay</figcaption>
         </figure>
-      </div>
-    </section>
-
-    <section class="about-stats section-muted" aria-labelledby="about-stats-heading">
-      <div class="shell">
-        <div class="about-stats__heading">
-          <p class="eyebrow">At a glance</p>
-          <h2 id="about-stats-heading">Built on hands-on experience.</h2>
-        </div>
-        <div class="about-stats__grid">
-          {aboutStats.map((stat) => (
-            <article class="about-stat">
-              <strong class="about-stat__value" data-counter-target={stat.value}>0</strong>
-              <span>{stat.label}</span>
-            </article>
-          ))}
-        </div>
       </div>
     </section>
 
@@ -115,48 +94,6 @@ const aboutStats = [
 
   </div>
 </BaseLayout>
-
-<script>
-  const counters = [...document.querySelectorAll("[data-counter-target]")];
-  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  function renderCounter(counter, value) {
-    counter.textContent = new Intl.NumberFormat("en-US").format(value);
-  }
-
-  function animateCounter(counter) {
-    const target = Number(counter.dataset.counterTarget);
-    if (!Number.isFinite(target) || target <= 0 || prefersReducedMotion) {
-      renderCounter(counter, Number.isFinite(target) ? target : 0);
-      return;
-    }
-
-    const duration = 480;
-    const startedAt = performance.now();
-
-    function tick(now) {
-      const progress = Math.min((now - startedAt) / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      renderCounter(counter, Math.round(target * eased));
-      if (progress < 1) window.requestAnimationFrame(tick);
-      else counter.classList.add("is-complete");
-    }
-
-    window.requestAnimationFrame(tick);
-  }
-
-  if ("IntersectionObserver" in window && !prefersReducedMotion) {
-    const observer = new IntersectionObserver((entries, currentObserver) => {
-      entries.filter((entry) => entry.isIntersecting).forEach((entry) => {
-        animateCounter(entry.target);
-        currentObserver.unobserve(entry.target);
-      });
-    }, { threshold: 0.35 });
-    counters.forEach((counter) => observer.observe(counter));
-  } else {
-    counters.forEach(animateCounter);
-  }
-</script>
 
 <style>
   .about-page {
@@ -241,37 +178,6 @@ const aboutStats = [
     backdrop-filter: blur(8px);
   }
 
-  .about-stats {
-    padding-block: 1.35rem 1.75rem;
-  }
-
-  .about-stats__heading {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.25rem 1.1rem;
-    align-items: baseline;
-    margin-bottom: 0.85rem;
-  }
-
-  .about-stats__heading .eyebrow {
-    flex-basis: 100%;
-    margin-bottom: 0.75rem;
-  }
-
-  .about-stats__heading h2 {
-    margin-bottom: 0;
-    font-size: clamp(1.45rem, 3vw, 2rem);
-  }
-
-  .about-stats__heading p:last-child {
-    margin-bottom: 0;
-  }
-
-  .about-edit-note {
-    color: var(--ink-500);
-    font-size: 0.88rem;
-  }
-
   .about-details {
     padding-block: 1.5rem 2.5rem;
     background: var(--cream-50);
@@ -331,47 +237,6 @@ const aboutStats = [
     margin-top: 1rem;
   }
 
-  .about-stats__grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.75rem;
-  }
-
-  .about-stat {
-    display: flex;
-    min-height: 6.5rem;
-    flex-direction: column;
-    justify-content: center;
-    padding: 1rem 1.25rem;
-    border: 1px solid rgba(23, 63, 52, 0.14);
-    border-radius: var(--radius);
-    background: rgba(255, 255, 255, 0.66);
-  }
-
-  .about-stat__value {
-    color: var(--forest-950);
-    font-family: var(--font-heading);
-    font-size: clamp(2.8rem, 7vw, 4.5rem);
-    line-height: 0.95;
-  }
-
-  .about-stat__value.is-complete {
-    animation: about-counter-jiggle 420ms ease-out;
-  }
-
-  @keyframes about-counter-jiggle {
-    0%, 100% { transform: translateX(0) rotate(0); }
-    25% { transform: translateX(-2px) rotate(-1.2deg); }
-    50% { transform: translateX(2px) rotate(1.2deg); }
-    75% { transform: translateX(-1px) rotate(-0.6deg); }
-  }
-
-  .about-stat span {
-    margin-top: 0.6rem;
-    color: var(--ink-700);
-    font-weight: 800;
-  }
-
   @media (max-width: 58rem) {
     .about-hero__inner {
       grid-template-columns: 1fr;
@@ -404,10 +269,6 @@ const aboutStats = [
       display: grid;
     }
 
-    .about-stats__grid {
-      grid-template-columns: 1fr;
-    }
-
     .about-details__inner,
     .about-reasons {
       grid-template-columns: 1fr;
@@ -420,9 +281,5 @@ const aboutStats = [
     .about-contact-detail .button {
       width: 100%;
     }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .about-stat__value.is-complete { animation: none; }
   }
 </style>

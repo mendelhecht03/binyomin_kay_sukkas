@@ -237,8 +237,8 @@ keep the logo and accessibility labels consistent.
 Tree Trimming and Eruv Work use the shared `ServicePage` template with an
 optional text-first mode (`showMedia: false`) so pages without approved photos
 do not render misleading placeholders. The compact About route owns its small
-profile layout and uses an intersection-triggered, reduced-motion-aware counter
-animation for editable placeholder totals.
+profile layout and keeps the personal introduction and company details in one
+focused page.
 
 `src/components/Footer.astro` owns the repeated footer content and includes a
 small Admin link to the protected `/admin/` dashboard. The link is intentionally

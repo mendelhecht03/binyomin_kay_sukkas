@@ -144,6 +144,12 @@ When adding a task, use this format:
 
 ## Completed
 
+- [x] Simplify the About page presentation (2026-08-21)
+  - Result: Changed the About hero to “A stress-free Yom Tov starts here,”
+    removed the At a glance stats section and its unused counter
+    animation/styles, and updated the related documentation. The build and
+    all 29 tests passed; deployment remains deferred.
+
 - [x] Use Benyamin for personal builder copy (2026-08-21)
   - Result: Updated the homepage’s personal-service section and image alt text
     to refer to Benyamin, while leaving company-level BK Sukkah references

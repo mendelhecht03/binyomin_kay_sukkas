@@ -167,9 +167,7 @@ does not show photo placeholders; its copy explains trimming small branches,
 large branches, or full trees when a sukkah site is not suitable. Eruv Work is
 also text-first and explains working with highly qualified rabbonim. About is
 intentionally compact: one owner photo, the approved BK Sukkah introduction,
-short What We Do and Why Choose Us sections, a Get in Touch prompt, and two
-clearly labeled counters for sukkahs built and years working. The counters
-animate when visible and respect reduced-motion settings.
+short What We Do and Why Choose Us sections, and a Get in Touch prompt.
 
 The protected owner dashboard includes a schema-driven form builder. An
 allowlisted owner can create a form, edit its name, URL, introduction, submit
