@@ -431,9 +431,9 @@ Sukkos.
 
 - Use the site's old-style serif heading family for normal navigation and
   dropdown labels so the header feels consistent with the heritage craft
-  brand. Keep the Request a Quote button in the sans-serif body family so it
-  remains clearly actionable.
-- Keep the Request a Quote label medium-weight rather than bold. Use a small
+  brand. Keep the Contact button in the sans-serif body family so it remains
+  clearly actionable.
+- Keep the Contact label medium-weight rather than bold. Use a small
   northeast arrow that moves slightly on pointer hover and keyboard focus as
   directional feedback. Respect reduced-motion preferences.
 - On desktop, the Sukkahs menu opens on pointer hover or keyboard focus. Tree
@@ -445,6 +445,6 @@ Sukkos.
   smooth motion. Respect the visitor's reduced-motion preference.
 - Normal navigation links use an animated gold underline for hover, focus, and
   the active page. Do not place them on filled green backgrounds; keep the
-  Request a Quote item visually distinct as the filled action button.
+  Contact item visually distinct as the filled action button.
 - Desktop submenus use a flat rail attached to the header. Do not use a
   floating card, rounded dropdown container, or dropdown shadow.

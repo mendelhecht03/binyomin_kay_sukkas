@@ -144,6 +144,9 @@ When adding a task, use this format:
 
 ## Completed
 
+- [x] Add Contact to the shared navigation (2026-08-21)
+  - Result: The shared header now labels its existing `/contact/` action as Contact, with active-state styling on desktop and mobile. Added a homepage regression check; all 29 tests passed and deployment remains deferred.
+
 - [x] Remove the rental photo placeholder (2026-08-21)
   - Result: Removed the obsolete rental placeholder configuration and added a regression check confirming the public rental page keeps its overview without the unfinished photo block. Passed all 29 tests; deployment remains deferred.
 

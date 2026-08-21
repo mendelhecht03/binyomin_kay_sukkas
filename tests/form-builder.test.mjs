@@ -225,4 +225,5 @@ test("the homepage presents Builds as the first service card", async () => {
   assert.ok(buildsIndex > serviceChoicesStart);
   assert.ok(buildsIndex < customIndex);
   assert.ok(buildsIndex < rentalsIndex);
+  assert.match(html, /href="\/contact\/"[^>]*>Contact<\/a>/);
 });
