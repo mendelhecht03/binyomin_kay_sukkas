@@ -207,11 +207,12 @@ tri-state area. This confirmed scope applies specifically to the
 `/custom-sukkahs/` route and does not redefine the separate Builds or Rentals
 request-form neighborhood choices.
 
-The main navigation exposes Builds, Rentals, Buy, Custom Sukkahs, and Pergolas
-as direct Sukkah-service links. Tree Trimming and Eruv Work are grouped under
-an Other dropdown, while About and Contact remain easy to reach. The footer
-uses the same service grouping. Public route paths remain unchanged for saved
-links and search engines.
+The desktop main navigation exposes Builds, Rentals, Buy, Custom Sukkahs, and
+Pergolas as direct Sukkah-service links. On tablet and phone navigation, those
+same links are grouped under a Sukkahs dropdown. Tree Trimming and Eruv Work
+are grouped under an Other dropdown, while About and Contact remain easy to
+reach. The footer uses the same service grouping. Public route paths remain
+unchanged for saved links and search engines.
 
 The shared footer includes a small Admin link to `/admin/` for the owner. It is
 visually quiet but keyboard accessible, and the protected dashboard continues

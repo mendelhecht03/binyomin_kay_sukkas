@@ -222,12 +222,13 @@ layouts. Changing a shared component updates every page that uses it during
 the next build. This replaces the old system where the same navbar HTML had to
 be copied into every page.
 
-`src/components/Header.astro` owns the shared direct Sukkah-service links, the
-Other dropdown for Tree Trimming and Eruv Work, active-page states, and
-responsive menu behavior. The desktop Other menu opens as a flat rail attached
-to the header. At tablet and phone sizes, its links move into a full-height panel. The page body becomes
-temporarily inert while that panel is open so keyboard focus stays inside the
-navigation.
+`src/components/Header.astro` owns the shared direct desktop Sukkah-service
+links, the mobile Sukkahs dropdown, the Other dropdown for Tree Trimming and
+Eruv Work, active-page states, and responsive menu behavior. The desktop Other
+menu opens as a flat rail attached to the header. At tablet and phone sizes,
+the Sukkahs and Other links move into a full-height panel. The page body
+becomes temporarily inert while that panel is open so keyboard focus stays
+inside the navigation.
 
 The header and footer both use the supplied BK Sukkah Builders logo asset and display the
 ”BK Sukkah” brand name. The header descriptor is “Sukkahs & Outdoor Work.” The

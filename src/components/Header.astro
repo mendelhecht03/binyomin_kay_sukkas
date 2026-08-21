@@ -87,13 +87,41 @@ const groupIsActive = (links: typeof sukkahLinks) =>
         href="/"
       ><span>Home</span></a>
 
-      {sukkahLinks.map((link) => (
-        <a
-          class:list={["nav-link", { "is-active": isActive(link.href) }]}
-          aria-current={isActive(link.href) ? "page" : undefined}
-          href={link.href}
-        ><span>{link.label}</span></a>
-      ))}
+      <div class="desktop-sukkah-links">
+        {sukkahLinks.map((link) => (
+          <a
+            class:list={["nav-link", { "is-active": isActive(link.href) }]}
+            aria-current={isActive(link.href) ? "page" : undefined}
+            href={link.href}
+          ><span>{link.label}</span></a>
+        ))}
+      </div>
+
+      <details class="nav-group mobile-sukkah-group" data-nav-group>
+        <summary class:list={["nav-link", { "is-active": groupIsActive(sukkahLinks) }]}>
+          <span>Sukkahs</span>
+        </summary>
+        <div class="nav-dropdown">
+          <div class="nav-dropdown-layout shell">
+            <div class="nav-dropdown-intro" aria-hidden="true">
+              <strong>Sukkah services</strong>
+              <span>Build, rent, buy, or plan a custom structure.</span>
+            </div>
+            <div class="nav-dropdown-inner">
+              {sukkahLinks.map((link) => (
+                <a
+                  class:list={["dropdown-link", { "is-active": isActive(link.href) }]}
+                  aria-current={isActive(link.href) ? "page" : undefined}
+                  href={link.href}
+                >
+                  <span>{link.label}</span>
+                  <small>{link.description}</small>
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+      </details>
 
       <details class="nav-group" data-nav-group>
         <summary class:list={["nav-link", { "is-active": groupIsActive(otherLinks) }]}>

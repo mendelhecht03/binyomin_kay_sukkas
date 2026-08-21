@@ -144,6 +144,13 @@ When adding a task, use this format:
 
 ## Completed
 
+- [x] Restore the mobile Sukkahs navigation dropdown (2026-08-21)
+  - Result: Kept the full Sukkah-service links direct on desktop while grouping
+    Builds, Rentals, Buy, Custom Sukkahs, and Pergolas under a mobile Sukkahs
+    dropdown. The Other dropdown remains for Tree Trimming and Eruv Work.
+    Verified the mobile menu, desktop links, and all 29 tests; deployment
+    remains deferred.
+
 - [x] Fix Custom Sukkahs cards and personalize the About page (2026-08-21)
   - Result: Made project media sizing explicit, prevented compact-card
     intrinsic-height overflow, and switched project rails to one card per row
