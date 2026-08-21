@@ -144,6 +144,12 @@ When adding a task, use this format:
 
 ## Completed
 
+- [x] Fix Pergolas project-card rendering at tablet widths (2026-08-21)
+  - Result: Made project media boxes explicit, removed the compact card's
+    intrinsic-height overflow, and stacked media and copy into separate rows at
+    tablet widths. Verified the cards at the reported narrow viewport and
+    passed all 29 tests; deployment remains deferred.
+
 - [x] Move the Rentals form behind a dedicated overview page (2026-08-21)
   - Result: `/sukkah-rentals/` is now an overview-only page with the package description first, a large rental photo underneath, a tarp gallery, and a button to `/request/?form=rentals`. The guided form remains available on that separate route. All 29 tests passed; deployment remains deferred.
 

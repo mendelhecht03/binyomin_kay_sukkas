@@ -150,6 +150,8 @@ attachment choices, surfaces practical site considerations, and groups a wide
 range of roof, shade, frame, siding, screening, artwork, lighting, and comfort
 options in expandable cards. The primary action near the top and the closing
 action both open the built-in Pergola request at `/request/?form=pergolas`.
+Recent-project cards must keep their media and copy in separate rows at tablet
+and phone widths so project details never overlap the photo.
 
 The `/purchases` route is the customer-facing Buy flow. It uses the shared guided request renderer for customers who
 want to buy a sukkah. It keeps the Rentals contact and location flow, replaces

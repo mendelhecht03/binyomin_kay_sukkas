@@ -257,9 +257,9 @@ const planningSteps = [
   .project-showcase { display: grid; grid-template-columns: minmax(0, 1.22fr) minmax(18rem, .78fr); gap: 1rem; }
   .featured-project, .project-card { overflow: hidden; border: 1px solid var(--border); border-radius: var(--radius); background: var(--white); box-shadow: 0 16px 38px rgba(16,45,37,.06); }
   .featured-project { display: grid; grid-template-rows: minmax(16rem, 1fr) auto; }
-  .featured-project__media, .project-card__media { overflow: hidden; margin: 0; background: var(--forest-100); }
+  .featured-project__media, .project-card__media { position: relative; overflow: hidden; min-width: 0; margin: 0; background: var(--forest-100); }
   .featured-project__media { min-height: 22rem; }
-  .featured-project__media img, .project-card__media img { width: 100%; height: 100%; display: block; object-fit: cover; transition: transform 280ms ease; }
+  .featured-project__media img, .project-card__media img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; object-fit: cover; transition: transform 280ms ease; }
   .featured-project:hover img, .project-card:hover img { transform: scale(1.025); }
   .featured-project__content, .project-card__content { padding: clamp(1.35rem, 3vw, 2rem); }
   .project-kicker { margin: 0 0 .5rem; color: var(--wood-600); font-size: .73rem; font-weight: 850; letter-spacing: .09em; text-transform: uppercase; }
@@ -270,7 +270,7 @@ const planningSteps = [
   .project-tags li, .use-case-list li { min-height: 32px; display: inline-flex; align-items: center; padding: .36rem .66rem; border: 1px solid rgba(23,63,52,.15); border-radius: 999px; color: var(--forest-900); background: rgba(255,255,255,.72); font-size: .76rem; font-weight: 800; line-height: 1.2; }
   .project-showcase__side { display: grid; grid-template-rows: repeat(2, minmax(0, 1fr)); gap: 1rem; }
   .project-card--compact { display: grid; grid-template-columns: minmax(8rem, .82fr) minmax(0, 1.18fr); min-width: 0; }
-  .project-card--compact .project-card__media { min-height: 12rem; }
+  .project-card--compact .project-card__media { min-height: 0; }
   .project-card--compact .project-card__content { min-width: 0; display: flex; flex-direction: column; justify-content: center; padding: 1.2rem; }
   .project-card--compact .project-card__content > p:not(.project-kicker) { display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 4; }
   .project-card--compact .project-tags li:nth-child(n + 3) { display: none; }
@@ -324,7 +324,7 @@ const planningSteps = [
   .custom-cta__phone { border-color: rgba(255,255,255,.72); color: var(--cream-50); background: transparent; }
   .custom-cta__phone:hover { border-color: var(--cream-50); color: var(--forest-950); background: var(--cream-50); }
   @media (max-width: 70rem) { .customization-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-  @media (max-width: 60rem) { .project-showcase, .fit-panel, .planning-panel { grid-template-columns: 1fr; } .project-showcase__side { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: none; } .project-card--compact { grid-template-columns: 1fr; } .project-card--compact .project-card__media { min-height: 0; aspect-ratio: 16 / 10; } .site-fit-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (max-width: 60rem) { .project-showcase, .fit-panel, .planning-panel { grid-template-columns: 1fr; } .project-showcase__side { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: none; } .project-card--compact { grid-template-columns: 1fr; grid-template-rows: auto minmax(0, auto); align-content: start; } .project-card--compact .project-card__media { width: 100%; height: auto; min-height: 0; aspect-ratio: 16 / 10; } .project-card--compact .project-card__content { min-height: 0; overflow: hidden; justify-content: flex-start; } .site-fit-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
   @media (max-width: 46rem) { .custom-hero { padding-block: 1.35rem 2.5rem; } .custom-hero__copy { margin-top: 2rem; } .custom-hero h1 { font-size: clamp(2.55rem, 12vw, 3.7rem); } .project-showcase__side, .project-grid, .site-fit-grid, .customization-grid { grid-template-columns: 1fr; } .featured-project__media, .project-card__media { aspect-ratio: 16 / 10; min-height: 0; } .featured-project__content, .project-card__content { padding: 1.3rem; } .planning-panel { padding: 1.35rem; } }
   @media (max-width: 30rem) { .featured-project, .project-card, .customization-card, .planning-panel { border-radius: var(--radius); } .featured-project__media, .project-card__media { aspect-ratio: 4 / 3; } }
   @media (prefers-reduced-motion: reduce) { .featured-project__media img, .project-card__media img, .customization-card, .customization-card summary::after { transition: none; } }
