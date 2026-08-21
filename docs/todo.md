@@ -144,6 +144,9 @@ When adding a task, use this format:
 
 ## Completed
 
+- [x] Restore the previous header descriptor (2026-08-21)
+  - Result: Restored “Sukkas & Outdoor Work” in the shared header while keeping the BK Sukkah name and logo. Updated the requirements and architecture notes and added a homepage regression check. All 29 tests passed; deployment remains deferred.
+
 - [x] Add Contact to the shared navigation (2026-08-21)
   - Result: The shared header now labels its existing `/contact/` action as Contact, with active-state styling on desktop and mobile. Added a homepage regression check; all 29 tests passed and deployment remains deferred.
 

@@ -226,4 +226,5 @@ test("the homepage presents Builds as the first service card", async () => {
   assert.ok(buildsIndex < customIndex);
   assert.ok(buildsIndex < rentalsIndex);
   assert.match(html, /href="\/contact\/"[^>]*>Contact<\/a>/);
+  assert.match(html, /Sukkas &amp; Outdoor Work/);
 });
