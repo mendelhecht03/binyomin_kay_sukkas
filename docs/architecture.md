@@ -177,8 +177,8 @@ limit for each photo.
 Builds and Rentals import `src/styles/guided-request-form.css` for the shared
 progress, card, fields, choice controls, navigation, review, validation, and
 success presentation. Builds adds only the controls unique to its request,
-including the sukkah-type and schach choices, the photo picker, and the
-Bring-to-storage date. The Builds form is a client-side six-step flow:
+including the sukkah-type and schach choices and the photo picker. The Builds
+form is a client-side six-step flow:
 Contact, Location, Timing, Requested work, Your sukkah, and Review and send.
 Step navigation changes which existing form section is visible without
 replacing controls or submitting, so values and selected files remain in place

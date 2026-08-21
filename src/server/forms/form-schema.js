@@ -218,9 +218,8 @@ export const DEFAULT_BUILD_FORM = {
     },
     {
       id: "requested-work", title: "Requested work", icon: "site", fields: [
-        { id: "service", type: "checkboxes", label: "What do you need help with?", required: true, helpText: "Select everything that applies.", options: ["Bring out of storage", "Build", "Take down", "Bring to storage", "Other"] },
+        { id: "service", type: "checkboxes", label: "What do you need help with?", required: true, helpText: "Select everything that applies.", options: ["Build", "Take down", "Other"] },
         { id: "serviceOther", type: "text", label: "Other requested work", required: true, condition: { fieldId: "service", operator: "includes", value: "Other" } },
-        { id: "bringToStorageDate", type: "date", label: "Bring-to-storage date", required: true, condition: { fieldId: "service", operator: "includes", value: "Bring to storage" } },
         { id: "extraLabor", type: "checkboxes", label: "Special access or extra labor", required: false, helpText: "For example, a rooftop sukkah or unusual access.", options: ["Yes"] },
         { id: "extraServiceDetails", type: "textarea", label: "What extra help is needed?", required: true, condition: { fieldId: "extraLabor", operator: "includes", value: "Yes" } },
       ],

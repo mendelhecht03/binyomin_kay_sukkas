@@ -12,7 +12,7 @@ const TEXT_FIELDS = [
   "serviceOther", "estimatedSize", "estimatedWidth", "estimatedLength", "sukkahType",
   "sukkahTypeOther", "schach", "schachOther", "addOnsOther", "extraServiceRequired",
   "extraServiceDetails", "siteDescription", "buildDate", "preSukkosDate", "customServiceDate",
-  "takeDownDate", "customTakeDownDate", "bringToStorageDate", "customStorageDate", "timingNotes",
+  "takeDownDate", "customTakeDownDate", "customStorageDate", "timingNotes",
   "referral", "comments",
 ];
 
@@ -51,7 +51,6 @@ function missingSubmissionFields(submission, schachChoices) {
   if (schachChoices.includes("Other") && !submission.schachOther) missing.push("schachOther");
   if (submission.addOns.includes("Other") && !submission.addOnsOther) missing.push("addOnsOther");
   if (submission.service.includes("Take down") && !submission.takeDownDate) missing.push("takeDownDate");
-  if (submission.service.includes("Bring to storage") && !submission.bringToStorageDate) missing.push("bringToStorageDate");
   return missing;
 }
 

@@ -199,6 +199,9 @@ test("the live request definitions use editable section icons and the shared pub
     assert.match(customSukkahsHtml, /form-page-actions/);
     assert.match(pergolasHtml, /form-page-actions/);
     assert.match(pergolasHtml, /Start a pergola request/);
+    const requestedWork = DEFAULT_BUILD_FORM.steps.find((step) => step.id === "requested-work").fields.find((field) => field.id === "service");
+    assert.deepEqual(requestedWork.options, ["Build", "Take down", "Other"]);
+    assert.equal(DEFAULT_BUILD_FORM.steps.find((step) => step.id === "requested-work").fields.some((field) => field.id === "bringToStorageDate"), false);
     assert.equal(DEFAULT_RENTAL_FORM.steps.find((step) => step.id === "extras").fields.find((field) => field.id === "tarpStyle").required, true);
     assert.equal(DEFAULT_PURCHASE_FORM.title, "Buy");
     assert.equal(DEFAULT_PURCHASE_FORM.steps.find((step) => step.id === "timing").fields[0].id, "deliveryDate");

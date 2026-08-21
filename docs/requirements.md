@@ -369,8 +369,9 @@ The Contact step collects one required Name field and a required phone number,
 followed by an optional email address. Pair the fields on desktop and stack them
 vertically on phones.
 
-Requested work choices appear as Bring out of storage, Build, Take down, Bring
-to storage, and Other. Visitors may choose more than one.
+Requested work choices appear as Build, Take down, and Other. Storage handling
+is part of the default service and is not presented as a separate choice.
+Visitors may choose more than one of the available choices.
 
 Both forms use a Location step titled `Where will the sukkah be?` with separate
 fields for street address, city, state, and Zip code. State is a required
@@ -402,11 +403,9 @@ Rentals offer different-style lighting, furniture, evergreen schach, and
 pressure washing; Builds offer lighting and pressure washing. Both forms keep
 their location follow-ups in the shared editable schema.
 
-Selecting Bring to storage in Builds' Requested work step reveals its required
-date field and hides it when the service is not selected. The shared Timing
-step always owns the setup and takedown dates. These questions remain editable
-through the form builder while their shared native controls and validation stay
-in place.
+The shared Timing step owns the setup and takedown dates. These questions
+remain editable through the form builder while their shared native controls and
+validation stay in place.
 
 The footer shows office hours as Sunday-Friday, 7:00 AM-10:00 PM, and states
 that the business is closed on Erev Yom Kippur, Motzei Yom Kippur, and Erev

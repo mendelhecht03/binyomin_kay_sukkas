@@ -144,6 +144,12 @@ When adding a task, use this format:
 
 ## Completed
 
+- [x] Remove default storage choices from Builds (2026-08-21)
+  - Result: Removed Bring out of storage and Bring to storage from the Builds
+    Requested work choices, removed the related date follow-up and validation,
+    and updated the requirements and architecture notes. Passed all 29 tests;
+    deployment remains deferred.
+
 - [x] Fix the mobile testimonial consent control (2026-08-21)
   - Result: Reset the consent checkbox's inherited full-input sizing so it stays
     compact, keeps native focus and accent behavior, and aligns cleanly with
