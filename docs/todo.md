@@ -45,11 +45,7 @@ When adding a task, use this format:
 
 ## Now
 
-- [ ] Publish the corrected BK Sukkah Builders logo
-  - Why: The owner requested the circular logo's bottom label use the plural
-    “Builders.”
-  - Done when: The logo asset, generated Worker, documentation, checks, and
-    deployed site all show the corrected label.
+(No active task.)
 
 ## Next
 
@@ -156,6 +152,11 @@ When adding a task, use this format:
   - Unblocks: Publishing multiple testimonial cards in the homepage scroller.
 
 ## Completed
+
+- [x] Correct the BK Sukkah Builders logo label (2026-08-21)
+  - Result: Updated the circular logo artwork so its bottom label reads
+    “BUILDERS,” rebuilt the Worker, passed all 27 automated tests, and verified
+    the corrected asset and 10:00 PM office hours on the live site.
 
 - [x] Update office hours to 10:00 PM (2026-08-21)
   - Result: Updated the shared footer and requirements so Sunday-Friday hours
