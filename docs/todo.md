@@ -144,6 +144,9 @@ When adding a task, use this format:
 
 ## Completed
 
+- [x] Make testimonials responsive to display width (2026-08-21)
+  - Result: The homepage carousel shows one testimonial on narrow screens and up to two side by side on wider screens. Arrows and keyboard navigation move one card at a time, and the final card remains reachable. All 29 tests passed; deployment remains deferred.
+
 - [x] Fix mobile photo-upload layout (2026-08-21)
   - Result: The dynamic photo field now uses a single-column mobile layout with
     shrinkable content, keeping its label, helper text, and file picker inside

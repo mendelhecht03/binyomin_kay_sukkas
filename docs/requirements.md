@@ -57,6 +57,9 @@ layout.
   no visible internal scrollbars, and keyboard/reduced-motion support. Until
   additional reviews are approved, any test card must be clearly labeled as a
   preview and must not read as a customer endorsement.
+- The carousel shows one card on narrow screens and up to two cards side by
+  side when the display is wide enough. Arrows and keyboard navigation move
+  one card at a time, and the final card remains fully reachable.
 - The compact homepage owner section uses the owner's profile photo and a short
   editable company-history statement. Keep the full biography on `/about/`.
 

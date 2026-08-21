@@ -412,14 +412,30 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     if (!(testimonialCarousel instanceof HTMLElement) || !(testimonialTrack instanceof HTMLElement) || testimonialSlides.length === 0) return;
     testimonialSlides.forEach((slide, index) => slide.setAttribute("aria-label", `${index + 1} of ${testimonialSlides.length}`));
     const scrollerHint = document.querySelector(".testimonial-scroller-hint");
-    if (scrollerHint instanceof HTMLElement) scrollerHint.hidden = testimonialSlides.length < 2;
+    const getVisibleCount = () => Math.min(window.matchMedia("(min-width: 761px)").matches ? 2 : 1, testimonialSlides.length);
+    let visibleCount = getVisibleCount();
     let activeTestimonial = 0;
+    testimonialCarousel.dataset.visibleCount = String(visibleCount);
+
+    const maxStartIndex = () => Math.max(0, testimonialSlides.length - visibleCount);
 
     const sizeTestimonialViewport = () => {
-      const activeSlide = testimonialSlides[activeTestimonial];
-      if (testimonialViewport instanceof HTMLElement && activeSlide instanceof HTMLElement) {
-        testimonialViewport.style.height = `${activeSlide.offsetHeight}px`;
+      const visibleSlides = testimonialSlides.slice(activeTestimonial, activeTestimonial + visibleCount);
+      const tallestSlide = visibleSlides.reduce((height, slide) => {
+        return slide instanceof HTMLElement ? Math.max(height, slide.offsetHeight) : height;
+      }, 0);
+      if (testimonialViewport instanceof HTMLElement && tallestSlide > 0) {
+        testimonialViewport.style.height = `${tallestSlide}px`;
       }
+    };
+
+    const updateTrackPosition = () => {
+      const firstSlide = testimonialSlides[0];
+      if (!(firstSlide instanceof HTMLElement)) return;
+      const trackStyles = getComputedStyle(testimonialTrack);
+      const gap = parseFloat(trackStyles.columnGap || trackStyles.gap || "0") || 0;
+      const distance = firstSlide.getBoundingClientRect().width + gap;
+      testimonialTrack.style.transform = `translate3d(-${activeTestimonial * distance}px, 0, 0)`;
     };
 
     if ("ResizeObserver" in window) {
@@ -428,11 +444,11 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     }
 
     const showTestimonial = (nextIndex, shouldFocus = false) => {
-      activeTestimonial = Math.max(0, Math.min(nextIndex, testimonialSlides.length - 1));
-      testimonialTrack.style.transform = `translate3d(-${activeTestimonial * 100}%, 0, 0)`;
+      activeTestimonial = Math.max(0, Math.min(nextIndex, maxStartIndex()));
+      updateTrackPosition();
 
       testimonialSlides.forEach((slide, index) => {
-        const isActive = index === activeTestimonial;
+        const isActive = index >= activeTestimonial && index < activeTestimonial + visibleCount;
         slide.toggleAttribute("aria-hidden", !isActive);
         slide.toggleAttribute("inert", !isActive);
         slide.toggleAttribute("data-active", isActive);
@@ -443,11 +459,14 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         if (!(button instanceof HTMLButtonElement)) return;
         button.disabled = button.dataset.testimonialScroll === "prev"
           ? activeTestimonial === 0
-          : activeTestimonial === testimonialSlides.length - 1;
+          : activeTestimonial === maxStartIndex();
       });
 
       if (testimonialPosition instanceof HTMLElement) {
-        testimonialPosition.textContent = `${activeTestimonial + 1} of ${testimonialSlides.length}`;
+        const lastVisible = Math.min(activeTestimonial + visibleCount, testimonialSlides.length);
+        testimonialPosition.textContent = visibleCount > 1
+          ? `${activeTestimonial + 1}–${lastVisible} of ${testimonialSlides.length}`
+          : `${activeTestimonial + 1} of ${testimonialSlides.length}`;
       }
 
       requestAnimationFrame(sizeTestimonialViewport);
@@ -469,13 +488,28 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         ArrowLeft: activeTestimonial - 1,
         ArrowRight: activeTestimonial + 1,
         Home: 0,
-        End: testimonialSlides.length - 1,
+        End: maxStartIndex(),
       };
       if (!(event.key in keyTargets)) return;
       event.preventDefault();
       showTestimonial(keyTargets[event.key], true);
     });
 
+    window.addEventListener("resize", () => {
+      const nextVisibleCount = getVisibleCount();
+      if (nextVisibleCount !== visibleCount) {
+        visibleCount = nextVisibleCount;
+        testimonialCarousel.dataset.visibleCount = String(visibleCount);
+        activeTestimonial = Math.min(activeTestimonial, maxStartIndex());
+        showTestimonial(activeTestimonial);
+      } else {
+        updateTrackPosition();
+        sizeTestimonialViewport();
+      }
+      if (scrollerHint instanceof HTMLElement) scrollerHint.hidden = testimonialSlides.length <= visibleCount;
+    });
+
+    if (scrollerHint instanceof HTMLElement) scrollerHint.hidden = testimonialSlides.length <= visibleCount;
     showTestimonial(0);
   }
   initializeTestimonialCarousel();
@@ -1378,9 +1412,17 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     display: grid;
     grid-auto-flow: column;
     grid-auto-columns: 100%;
+    column-gap: 0;
     align-items: start;
     width: 100%;
     transition: transform 420ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @media (min-width: 761px) {
+    .testimonial-carousel[data-visible-count="2"] .testimonial-story-track {
+      grid-auto-columns: calc((100% - 0.9rem) / 2);
+      column-gap: 0.9rem;
+    }
   }
 
   .testimonial-story-card {
