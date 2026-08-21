@@ -144,6 +144,12 @@ When adding a task, use this format:
 
 ## Completed
 
+- [x] Use Benyamin for personal builder copy (2026-08-21)
+  - Result: Updated the homepage’s personal-service section and image alt text
+    to refer to Benyamin, while leaving company-level BK Sukkah references
+    unchanged. Added regression coverage and passed all 29 tests; deployment
+    remains deferred.
+
 - [x] Correct the shared header descriptor spelling (2026-08-21)
   - Result: Updated the shared header descriptor to “Sukkahs & Outdoor Work,”
     synchronized the current documentation and regression coverage, and passed

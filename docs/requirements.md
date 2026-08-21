@@ -61,7 +61,8 @@ layout.
   side when the display is wide enough. Arrows and keyboard navigation move
   one card at a time, and the final card remains fully reachable.
 - The compact homepage owner section uses the owner's profile photo and a short
-  editable company-history statement. Keep the full biography on `/about/`.
+  personal introduction that refers to Benyamin as the builder. Keep the full
+  biography and company history on `/about/`.
 
 **Contact information**
 - Email: bkaysukkahbuilders@gmail.com
