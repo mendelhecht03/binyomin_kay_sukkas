@@ -315,10 +315,10 @@ applies. The panel does not contain selectable form controls and does not
 change any submission contract. The reassurance below each submit button
 continues to state that no payment is required when sending a request.
 
-The `/sukkah-rentals` page uses the same schema-driven, site-styled rental
-request form with the approved choices and stable field names. The owner can
-edit its live draft in the protected dashboard. The site Worker validates each
-request and saves it directly to the website-owned submissions database.
+The `/request/?form=rentals` page uses the same schema-driven, site-styled
+rental request form with the approved choices and stable field names. The owner
+can edit its live draft in the protected dashboard. The site Worker validates
+each request and saves it directly to the website-owned submissions database.
 
 The rental form is a five-step guided request flow: Contact, Location, Timing,
 Extras, and Review and send. Only one step is visible at a time on mobile and
@@ -328,18 +328,13 @@ field that needs attention without using alert dialogs. Its Location step uses
 the same responsive address layout as Builds; Street address, City, State, and
 ZIP stack vertically on phone-sized screens.
 
-Before the guided steps, the Rentals page shows a compact product summary with
-a fixed-aspect-ratio image placeholder. It explains that the base package
-includes a basic metal frame, standard schach, and canvas tarp styles, then
-lists optional different-style lighting, furniture and chair choices, and
-evergreen schach for an additional cost. The step progress fill uses the
-site's solid gold accent.
-Before the guided questions, the Rentals page displays a compact rental
-overview with an example setup, representative tarp directions, and a short
-included-versus-optional package summary. It states: “Rental packages start at
-$250. Final pricing is confirmed with BK Sukkah.” The rental form then asks
-the visitor to choose a tarp direction and continues with the contact and
-request details.
+The `/sukkah-rentals/` page is an overview-only page. It places a large example
+rental photo underneath the package description and shows representative tarp
+directions before the visitor enters the form. It states: “Rental packages
+start at $250. Final pricing is confirmed with BK Sukkah.” A clear action links
+to `/request/?form=rentals`, where the rental form asks the visitor to choose a
+tarp direction and continues with the contact and request details. The step
+progress fill uses the site's solid gold accent.
 
 Neighborhood uses a compact native select with a conditional Other field.
 Rental setup and takedown timing use required native date pickers while keeping

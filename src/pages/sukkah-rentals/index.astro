@@ -1,14 +1,13 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import FormPageActions from "../../components/FormPageActions.astro";
-import ManagedRequestForm from "../../components/ManagedRequestForm.astro";
 import RentalOverview from "../../components/RentalOverview.astro";
 ---
 
 <BaseLayout
   title="Sukkah Rentals"
-  description="Request a sukkah rental and share your location, size, setup, and takedown preferences."
-  bodyClass="rentals-page request-form-page"
+  description="Explore the BK Sukkah rental package, setup options, and available tarp directions before starting a request."
+  bodyClass="rentals-page"
 >
   <section class="request-hero sukkah-hero-background">
     <div class="shell">
@@ -17,12 +16,12 @@ import RentalOverview from "../../components/RentalOverview.astro";
       </nav>
       <div class="request-hero-copy">
         <p class="eyebrow">SUKKAH RENTALS</p>
-        <h1>Tell us what you need.</h1>
-        <p class="lead">Share a few details and we’ll follow up with availability and pricing.</p>
+        <h1>A simple seasonal setup.</h1>
+        <p class="lead">Explore what comes with the rental, browse tarp directions, and then share your space when you are ready.</p>
         <FormPageActions
           primaryLabel="Start a rental request"
-          primaryHref="#rental-request"
-          secondaryLabel="See rental details"
+          primaryHref="/request/?form=rentals"
+          secondaryLabel="See rental package"
           secondaryHref="#rental-overview"
           ariaLabel="Rental request actions"
         />
@@ -31,7 +30,6 @@ import RentalOverview from "../../components/RentalOverview.astro";
   </section>
 
   <div id="rental-overview"><RentalOverview /></div>
-  <ManagedRequestForm slug="rentals" sectionId="rental-request" />
 </BaseLayout>
 
 <style>

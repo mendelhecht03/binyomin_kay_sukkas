@@ -166,12 +166,12 @@ test("the live request definitions use editable section icons and the shared pub
 
     const buildsPage = await worker.fetch(new Request("https://example.com/sukka-builder/"), { DB });
     const rentalsPage = await worker.fetch(new Request("https://example.com/sukkah-rentals/"), { DB });
+    const rentalFormPage = await worker.fetch(new Request("https://example.com/request/?form=rentals"), { DB });
     const buyPage = await worker.fetch(new Request("https://example.com/purchases/"), { DB });
     const customPage = await worker.fetch(new Request("https://example.com/request/custom-sukkah/"), { DB });
     const pergolaPage = await worker.fetch(new Request("https://example.com/request/?form=pergolas"), { DB });
     for (const [page, slug, primaryLabel, secondaryLabel, sectionId] of [
       [buildsPage, "builds", "Start a build request", "See recent projects", "build-request"],
-      [rentalsPage, "rentals", "Start a rental request", "See rental details", "rental-request"],
       [buyPage, "purchases", "Start a buy request", "See sukkah options", "buy-request"],
     ]) {
       const html = await page.text();
@@ -181,11 +181,15 @@ test("the live request definitions use editable section icons and the shared pub
       assert.match(html, new RegExp(primaryLabel));
       assert.match(html, new RegExp(secondaryLabel));
       assert.match(html, new RegExp(`id="${sectionId}"`));
-      if (slug === "rentals") {
-        assert.match(html, /rental-overview/);
-        assert.doesNotMatch(html, /rental-package-placeholder|Rental photo coming soon/);
-      }
     }
+    const rentalHtml = await rentalsPage.text();
+    assert.match(rentalHtml, /rental-overview/);
+    assert.match(rentalHtml, /rental-tarp-grid/);
+    assert.match(rentalHtml, /href="\/request\/\?form=rentals"[^>]*>Start a rental request<\/a>/);
+    assert.doesNotMatch(rentalHtml, /data-managed-form-root/);
+    const rentalFormHtml = await rentalFormPage.text();
+    assert.match(rentalFormHtml, /data-managed-form-root/);
+    assert.match(rentalFormHtml, /data-form-slug="auto"/);
     const customHtml = await customPage.text();
     const pergolaHtml = await pergolaPage.text();
     assert.match(customHtml, /data-payment-template/);

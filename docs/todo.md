@@ -144,6 +144,9 @@ When adding a task, use this format:
 
 ## Completed
 
+- [x] Move the Rentals form behind a dedicated overview page (2026-08-21)
+  - Result: `/sukkah-rentals/` is now an overview-only page with the package description first, a large rental photo underneath, a tarp gallery, and a button to `/request/?form=rentals`. The guided form remains available on that separate route. All 29 tests passed; deployment remains deferred.
+
 - [x] Remove the square logo background in the footer (2026-08-21)
   - Result: Added circular clipping to the shared footer logo so the supplied artwork shows as a round mark against the existing background without altering the logo file. All 29 tests passed; deployment remains deferred.
 
