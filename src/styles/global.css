@@ -453,6 +453,7 @@ strong {
   height: 58px;
   flex: 0 0 auto;
   object-fit: contain;
+  border-radius: 50%;
 }
 
 .menu-toggle {

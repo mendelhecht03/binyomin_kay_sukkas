@@ -144,6 +144,9 @@ When adding a task, use this format:
 
 ## Completed
 
+- [x] Remove the square logo background in the footer (2026-08-21)
+  - Result: Added circular clipping to the shared footer logo so the supplied artwork shows as a round mark against the existing background without altering the logo file. All 29 tests passed; deployment remains deferred.
+
 - [x] Align the primary navigation button typography (2026-08-21)
   - Result: The filled Contact action now uses the shared heading typeface with a balanced size and weight, while retaining its filled button treatment and arrow interaction. Updated the navigation requirements and passed all 29 tests; deployment remains deferred.
 
