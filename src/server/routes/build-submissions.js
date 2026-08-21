@@ -95,7 +95,7 @@ export async function handleBuildSubmission(request, env, url) {
       files: uploaded.files,
       sourcePage: submission.sourcePage,
     });
-    return jsonResponse({ ok: true, submissionId, message: "Thank you. Your request was sent to Benyamin." });
+    return jsonResponse({ ok: true, submissionId, message: "Thank you. Your request was sent to BK Sukkah." });
   } catch (error) {
     await deleteUploadedPhotos(env?.SUBMISSION_PHOTOS, uploadedKeys);
     console.error("Sukkah submission failed", error);

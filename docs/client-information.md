@@ -21,7 +21,7 @@ confirmed them in this document.
 
 | Field | Current value | Confirmation needed |
 | --- | --- | --- |
-| Business display name | Benyamin Kay Sukkas | Confirm the preferred spelling of Benyamin or Binyomin. |
+| Business display name | BK Sukkah | Confirm whether this public display name should change again. |
 | Instagram | @bkaysukkahbuilders | Confirm that this is the account customers should use. |
 | WhatsApp | +1 (347) 454-2282 | Confirmed by August 13, 2026 browser feedback. |
 

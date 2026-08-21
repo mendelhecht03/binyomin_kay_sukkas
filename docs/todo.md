@@ -45,7 +45,11 @@ When adding a task, use this format:
 
 ## Now
 
-(No active task.)
+- [ ] Update remaining public brand references to BK Sukkah
+  - Why: The owner wants public and form-facing references to use BK Sukkah;
+    About-page copy and approved testimonials remain intentionally unchanged.
+  - Done when: Public source text, form responses, documentation, checks, and
+    the deployed site use BK Sukkah everywhere outside those exceptions.
 
 ## Next
 

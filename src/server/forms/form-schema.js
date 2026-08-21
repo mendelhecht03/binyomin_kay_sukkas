@@ -20,7 +20,7 @@ export const DEFAULT_CUSTOM_SUKKAH_FORM = {
   description: "Tell us about your space and the custom sukkah you have in mind.",
   submitLabel: "Request a custom quote",
   successTitle: "Your request was sent.",
-  successMessage: "Benyamin will review the details and follow up with you.",
+  successMessage: "BK Sukkah will review the details and follow up with you.",
   steps: [
     {
       id: "contact",
@@ -96,7 +96,7 @@ export const DEFAULT_PERGOLA_FORM = {
   description: "Tell us about the outdoor structure, shade, and finish you have in mind.",
   submitLabel: "Request a pergola quote",
   successTitle: "Your pergola request was sent.",
-  successMessage: "Benyamin will review the details and follow up with you.",
+  successMessage: "BK Sukkah will review the details and follow up with you.",
   steps: [
     {
       id: "contact", title: "Contact", icon: "contact", fields: [
@@ -172,7 +172,7 @@ export const DEFAULT_BUILD_FORM = {
   description: "Share your sukkah setup, location, timing, and site details.",
   submitLabel: "Request a quote",
   successTitle: "Your request was sent.",
-  successMessage: "Benyamin will review the details and follow up with you.",
+  successMessage: "BK Sukkah will review the details and follow up with you.",
   steps: [
     {
       id: "contact", title: "Contact", icon: "contact", fields: [
@@ -251,7 +251,7 @@ export const DEFAULT_RENTAL_FORM = {
   description: "Share a few details and we’ll follow up with availability and pricing.",
   submitLabel: "Request availability",
   successTitle: "Your rental request was sent.",
-  successMessage: "Benyamin will review the details and follow up with you.",
+  successMessage: "BK Sukkah will review the details and follow up with you.",
   steps: [
     {
       id: "contact", title: "Contact", icon: "contact", fields: [

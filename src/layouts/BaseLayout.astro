@@ -11,13 +11,13 @@ interface Props {
 
 const {
   title,
-  description = "Sukkah setup, rentals, custom builds, and practical outdoor services from BK Sukkahs.",
+  description = "Sukkah setup, rentals, custom builds, and practical outdoor services from BK Sukkah.",
   bodyClass,
 } = Astro.props;
 
-const pageTitle = title === "Benyamin Kay Sukkas" || title === "Bkay Sukkahs" || title === "BK Sukkahs"
-  ? "BK Sukkahs"
-  : `${title} | BK Sukkahs`;
+const pageTitle = title === "BK Sukkah"
+  ? "BK Sukkah"
+  : `${title} | BK Sukkah`;
 ---
 
 <!doctype html>

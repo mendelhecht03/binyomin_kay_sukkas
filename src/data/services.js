@@ -5,7 +5,7 @@ const commonSteps = [
   },
   {
     title: "Review the request",
-    text: "Benyamin can follow up to confirm the scope, availability, and price before anything is scheduled.",
+    text: "BK Sukkah can follow up to confirm the scope, availability, and price before anything is scheduled.",
   },
   {
     title: "Agree on the next step",

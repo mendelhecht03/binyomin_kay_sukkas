@@ -1,7 +1,7 @@
 **Assets**
 
 The shared header and footer use the supplied circular BK Sukkah Builders logo,
-the public brand name “BK Sukkahs,” and the header descriptor “Sukkah
+the public brand name “BK Sukkah,” and the header descriptor “Sukkah
 Builders.”
 
 - ☑ Profile photo
@@ -24,8 +24,8 @@ layout.
 
 **Content decisions to confirm**
 
-- The public brand is “BK Sukkahs.” Personal references to Benyamin remain
-  only where the copy is describing the owner.
+- The public brand is “BK Sukkah.” Personal references remain only on the
+  About page and in approved testimonials.
 - The Builds page uses the website's custom form for sukkahs the customer
   already owns. The former Google Form embed has been removed. Submit completed
   requests through the site's server-side Worker to the website-owned
@@ -57,7 +57,7 @@ layout.
   no visible internal scrollbars, and keyboard/reduced-motion support. Until
   additional reviews are approved, any test card must be clearly labeled as a
   preview and must not read as a customer endorsement.
-- The compact homepage owner section uses Benyamin's profile photo and a short
+- The compact homepage owner section uses the owner's profile photo and a short
   editable company-history statement. Keep the full biography on `/about/`.
 
 **Contact information**

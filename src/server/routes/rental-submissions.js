@@ -77,7 +77,7 @@ export async function handleRentalSubmission(request, env, url) {
       files: uploaded.files,
       sourcePage: rental.sourcePage,
     });
-    return jsonResponse({ ok: true, submissionId, message: "Thank you. Your rental request was sent to Benyamin." });
+    return jsonResponse({ ok: true, submissionId, message: "Thank you. Your rental request was sent to BK Sukkah." });
   } catch (error) {
     await deleteUploadedPhotos(env?.SUBMISSION_PHOTOS, uploadedKeys);
     console.error("Rental submission failed", error);
