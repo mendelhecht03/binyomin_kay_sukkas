@@ -166,7 +166,7 @@ navigation as the rest of the public site. Tree Trimming is text-first and
 does not show photo placeholders; its copy explains trimming small branches,
 large branches, or full trees when a sukkah site is not suitable. Eruv Work is
 also text-first and explains working with highly qualified rabbonim. About is
-intentionally compact: one owner photo, the approved BK Sukkah introduction,
+intentionally compact: one owner photo, the approved Benyamin introduction,
 short What We Do and Why Choose Us sections, and a Get in Touch prompt.
 
 The protected owner dashboard includes a schema-driven form builder. An

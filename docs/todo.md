@@ -144,6 +144,14 @@ When adding a task, use this format:
 
 ## Completed
 
+- [x] Fix Custom Sukkahs cards and personalize the About page (2026-08-21)
+  - Result: Made project media sizing explicit, prevented compact-card
+    intrinsic-height overflow, and switched project rails to one card per row
+    on narrow tablets and phones. Updated every personal About-page reference
+    from BK Sukkah to Benyamin while preserving company references elsewhere.
+    Verified Custom Sukkahs at 813px, 755px, and 390px widths, and passed all
+    29 tests; deployment remains deferred.
+
 - [x] Simplify the About page presentation (2026-08-21)
   - Result: Changed the About hero to “A stress-free Yom Tov starts here,”
     removed the At a glance stats section and its unused counter

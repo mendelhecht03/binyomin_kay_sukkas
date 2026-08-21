@@ -477,7 +477,9 @@ const serviceAreas = ["New York", "New Jersey", "Connecticut"];
 
   .featured-project__media,
   .project-card__media {
+    position: relative;
     overflow: hidden;
+    min-width: 0;
     margin: 0;
     background: var(--cream-200);
   }
@@ -488,6 +490,8 @@ const serviceAreas = ["New York", "New Jersey", "Connecticut"];
 
   .featured-project__media img,
   .project-card__media img {
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
     display: block;
@@ -567,6 +571,7 @@ const serviceAreas = ["New York", "New Jersey", "Connecticut"];
   .project-card--compact {
     display: grid;
     grid-template-columns: minmax(9.5rem, 0.82fr) minmax(0, 1.18fr);
+    min-width: 0;
   }
 
   .project-card--compact .project-card__media {
@@ -985,11 +990,21 @@ const serviceAreas = ["New York", "New Jersey", "Connecticut"];
 
     .project-card--compact {
       grid-template-columns: 1fr;
+      grid-template-rows: auto minmax(0, auto);
+      align-content: start;
     }
 
     .project-card--compact .project-card__media {
+      width: 100%;
+      height: auto;
       min-height: 0;
       aspect-ratio: 16 / 10;
+    }
+
+    .project-card--compact .project-card__content {
+      min-height: 0;
+      overflow: hidden;
+      justify-content: flex-start;
     }
 
     .customization-grid {
@@ -1028,6 +1043,13 @@ const serviceAreas = ["New York", "New Jersey", "Connecticut"];
     }
   }
 
+  @media (max-width: 52rem) {
+    .project-showcase__side,
+    .project-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
   @media (max-width: 46rem) {
     .custom-hero {
       padding-block: 1.35rem 2.5rem;
@@ -1044,11 +1066,6 @@ const serviceAreas = ["New York", "New Jersey", "Connecticut"];
 
     .custom-hero .lead {
       font-size: 1rem;
-    }
-
-    .project-showcase__side,
-    .project-grid {
-      grid-template-columns: 1fr;
     }
 
     .project-card__media {
