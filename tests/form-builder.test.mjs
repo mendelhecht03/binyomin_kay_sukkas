@@ -167,9 +167,15 @@ test("the live request definitions use editable section icons and the shared pub
     const buildsPage = await worker.fetch(new Request("https://example.com/sukka-builder/"), { DB });
     const rentalsPage = await worker.fetch(new Request("https://example.com/sukkah-rentals/"), { DB });
     const buyPage = await worker.fetch(new Request("https://example.com/purchases/"), { DB });
-    assert.match(await buildsPage.text(), /data-form-slug="builds"/);
-    assert.match(await rentalsPage.text(), /data-form-slug="rentals"/);
-    assert.match(await buyPage.text(), /data-form-slug="purchases"/);
+    const customPage = await worker.fetch(new Request("https://example.com/request/custom-sukkah/"), { DB });
+    const pergolaPage = await worker.fetch(new Request("https://example.com/request/?form=pergolas"), { DB });
+    for (const [page, slug] of [[buildsPage, "builds"], [rentalsPage, "rentals"], [buyPage, "purchases"]]) {
+      const html = await page.text();
+      assert.match(html, new RegExp(`data-form-slug="${slug}"`));
+      assert.match(html, /data-payment-template/);
+    }
+    assert.match(await customPage.text(), /data-payment-template/);
+    assert.match(await pergolaPage.text(), /data-payment-template/);
     assert.equal(DEFAULT_PURCHASE_FORM.title, "Buy");
     assert.equal(DEFAULT_PURCHASE_FORM.steps.find((step) => step.id === "timing").fields[0].id, "deliveryDate");
     assert.equal(DEFAULT_PURCHASE_FORM.steps.find((step) => step.id === "options").fields.find((field) => field.id === "sukkahType").required, true);

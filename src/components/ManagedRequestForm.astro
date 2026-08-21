@@ -6,7 +6,7 @@ import PaymentMethods from "./PaymentMethods.astro";
 const { slug, rentalSummary = false, priceNote = "", priceNoteMap = {} } = Astro.props;
 const fallbackSlug = slug === "auto" ? "custom-sukkah" : slug;
 const fallbackSchema = DEFAULT_MANAGED_FORMS.find((schema) => schema.slug === fallbackSlug);
-const showPaymentMethods = ["builds", "rentals"].includes(fallbackSlug);
+const showPaymentMethods = true;
 const hasPriceNoteMap = Object.keys(priceNoteMap).length > 0;
 ---
 
@@ -215,6 +215,9 @@ const hasPriceNoteMap = Object.keys(priceNoteMap).length > 0;
       heading.append(element("h4", {}, "Your request"), element("p", {}, "Check the details before sending."));
       review.append(heading, element("dl", { className: "review-list", "data-review-list": "true" }));
       section.append(review);
+    }
+
+    function appendPaymentMethods(section) {
       if (showPaymentMethods) {
         const template = root.querySelector("[data-payment-template]");
         if (template instanceof HTMLTemplateElement) section.append(template.content.cloneNode(true));
@@ -237,6 +240,7 @@ const hasPriceNoteMap = Object.keys(priceNoteMap).length > 0;
         if (index === schema.steps.length - 1) {
           renderReview(section);
           step.fields.forEach((field) => section.append(makeField(field)));
+          appendPaymentMethods(section);
         } else appendStepFields(section, step);
         stepsHost.append(section);
       });

@@ -297,12 +297,13 @@ and phone text inputs use
 The final forest-colored action reads `Request a quote`, with a short
 no-payment reassurance directly below it.
 
-Both request forms show the same informational `Payment options` panel on the
-final review step before the primary submit action. It lists Cash App, PayPal,
-Venmo, Zelle, Cash, Check, and Credit Card. Credit Card clearly states that a
-processing fee applies. The panel does not contain selectable form controls and
-does not change either submission contract. The reassurance below each submit
-button continues to state that no payment is required when sending a request.
+Every managed request form shows the same polished informational `Payment
+options` panel at the end of its final review step before the primary submit
+action. It lists Cash App, PayPal, Venmo, Zelle, Cash, Check, and Credit Card
+with compact visual marks; Credit Card clearly states that a processing fee
+applies. The panel does not contain selectable form controls and does not
+change any submission contract. The reassurance below each submit button
+continues to state that no payment is required when sending a request.
 
 The `/sukkah-rentals` page uses the same schema-driven, site-styled rental
 request form with the approved choices and stable field names. The owner can

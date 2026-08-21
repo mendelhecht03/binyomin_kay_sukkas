@@ -153,6 +153,13 @@ When adding a task, use this format:
 
 ## Completed
 
+- [x] Refresh the accepted-payment panel on every request form (2026-08-21)
+  - Result: Reworked the shared payment panel into a branded card with compact
+    visual marks, clearer hierarchy, responsive tiles, and the Credit Card
+    processing-fee note. It is now appended after the final review fields on
+    every managed form, including Buy, Custom Sukkah, and Pergolas. Passed all
+    28 automated tests; deployment remains deferred.
+
 - [x] Add the Buy request form and navigation entry (2026-08-21)
   - Result: Added the built-in `purchases` schema and `/purchases/` page using
     the shared renderer, with purchase-specific delivery, sukkah, frame,

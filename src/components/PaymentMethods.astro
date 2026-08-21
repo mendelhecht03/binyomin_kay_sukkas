@@ -1,25 +1,27 @@
 ---
 const paymentMethods = [
-  "Cash App",
-  "PayPal",
-  "Venmo",
-  "Zelle",
-  "Cash",
-  "Check",
+  { name: "Cash App", mark: "$", tone: "cash-app" },
+  { name: "PayPal", mark: "P", tone: "paypal" },
+  { name: "Venmo", mark: "V", tone: "venmo" },
+  { name: "Zelle", mark: "Z", tone: "zelle" },
+  { name: "Cash", mark: "$", tone: "cash" },
+  { name: "Check", mark: "✓", tone: "check" },
+  { name: "Credit Card", mark: "▣", tone: "card", detail: "Processing fee applies" },
 ];
 ---
 
 <section class="payment-methods" aria-labelledby="payment-options-heading">
   <div class="payment-methods-heading">
-    <p class="eyebrow">Payment</p>
-    <h4 id="payment-options-heading">Payment options</h4>
-    <p>When it&rsquo;s time to pay, you can use any of the following methods.</p>
+    <p class="eyebrow">Payment options</p>
+    <h4 id="payment-options-heading">Choose the payment method that works best.</h4>
+    <p>Once we confirm your request, payment can be arranged using any of these methods.</p>
   </div>
   <ul class="payment-method-list" aria-label="Accepted payment methods">
-    {paymentMethods.map((method) => <li>{method}</li>)}
-    <li class="payment-method-card">
-      <span>Credit Card</span>
-      <small>Processing fee applies</small>
-    </li>
+    {paymentMethods.map((method) => (
+      <li class:list={["payment-method-tile", method.tone === "card" && "payment-method-tile--featured"]}>
+        <span class:list={["payment-method-icon", `payment-method-icon--${method.tone}`]} aria-hidden="true">{method.mark}</span>
+        <span class="payment-method-copy"><strong>{method.name}</strong>{method.detail && <small>{method.detail}</small>}</span>
+      </li>
+    ))}
   </ul>
 </section>
