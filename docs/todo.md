@@ -144,6 +144,11 @@ When adding a task, use this format:
 
 ## Completed
 
+- [x] Correct the shared header descriptor spelling (2026-08-21)
+  - Result: Updated the shared header descriptor to “Sukkahs & Outdoor Work,”
+    synchronized the current documentation and regression coverage, and passed
+    all 29 tests; deployment remains deferred.
+
 - [x] Reorganize the shared navigation groups (2026-08-21)
   - Result: Builds, Rentals, Buy, Custom Sukkahs, and Pergolas are now direct
     main-nav links. Tree Trimming and Eruv Work live in an accessible Other

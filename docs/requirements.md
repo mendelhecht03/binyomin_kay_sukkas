@@ -1,7 +1,7 @@
 **Assets**
 
 The shared header and footer use the supplied circular BK Sukkah Builders logo,
-the public brand name “BK Sukkah,” and the header descriptor “Sukkas & Outdoor
+the public brand name “BK Sukkah,” and the header descriptor “Sukkahs & Outdoor
 Work.”
 
 - ☑ Profile photo

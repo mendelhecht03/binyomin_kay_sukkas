@@ -230,7 +230,7 @@ test("the homepage presents Builds as the first service card", async () => {
   assert.ok(buildsIndex < customIndex);
   assert.ok(buildsIndex < rentalsIndex);
   assert.match(html, /href="\/contact\/"[^>]*>Contact<\/a>/);
-  assert.match(html, /Sukkas &amp; Outdoor Work/);
+  assert.match(html, /Sukkahs &amp; Outdoor Work/);
   const mainNavStart = html.indexOf('<nav class="site-navigation"');
   const mainNavEnd = html.indexOf('</nav>', mainNavStart);
   const mainNav = html.slice(mainNavStart, mainNavEnd);
