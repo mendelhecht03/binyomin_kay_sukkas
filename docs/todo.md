@@ -144,6 +144,9 @@ When adding a task, use this format:
 
 ## Completed
 
+- [x] Enhance the homepage Buy card photo (2026-08-21)
+  - Result: Added a sharper, AI-enhanced version of the white-tarp sukkah photo with the table bag removed, kept the original asset intact, and updated only the Buy card to use the new image. The build and all 29 tests passed; deployment remains deferred.
+
 - [x] Repair the Rentals overview-to-form flow (2026-08-21)
   - Result: Rental actions now use the real overview section as the package anchor, send visitors directly to the rental form section, and include a matching request button below the package and tarp gallery. The package presentation is unchanged, the build regenerated successfully, and all 29 tests passed; deployment remains deferred.
 

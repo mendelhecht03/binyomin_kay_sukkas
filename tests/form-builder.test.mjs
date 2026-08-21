@@ -238,7 +238,7 @@ test("the homepage presents Builds as the first service card", async () => {
   assert.ok(buildsIndex < rentalsIndex);
   assert.ok(buyIndex > serviceChoicesStart);
   assert.ok(pergolaIndex > serviceChoicesStart);
-  assert.match(html.slice(serviceChoicesStart), /src="\/assets\/images\/custom-white-tarp\.jpg"/);
+  assert.match(html.slice(serviceChoicesStart), /src="\/assets\/images\/custom-white-tarp-enhanced\.jpg"/);
   assert.match(html.slice(serviceChoicesStart), /src="\/assets\/images\/custom-soft-fabric\.jpg"/);
   assert.match(html, /href="\/contact\/"[^>]*>Contact<\/a>/);
   assert.match(html, /Sukkahs &amp; Outdoor Work/);
