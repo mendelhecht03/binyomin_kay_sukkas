@@ -144,6 +144,9 @@ When adding a task, use this format:
 
 ## Completed
 
+- [x] Align the primary navigation button typography (2026-08-21)
+  - Result: The filled Contact action now uses the shared heading typeface with a balanced size and weight, while retaining its filled button treatment and arrow interaction. Updated the navigation requirements and passed all 29 tests; deployment remains deferred.
+
 - [x] Restore the previous header descriptor (2026-08-21)
   - Result: Restored “Sukkas & Outdoor Work” in the shared header while keeping the BK Sukkah name and logo. Updated the requirements and architecture notes and added a homepage regression check. All 29 tests passed; deployment remains deferred.
 

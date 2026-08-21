@@ -431,11 +431,12 @@ Sukkos.
 
 - Use the site's old-style serif heading family for normal navigation and
   dropdown labels so the header feels consistent with the heritage craft
-  brand. Keep the Contact button in the sans-serif body family so it remains
+  brand. Use that same heading family for the filled Contact action so the
+  button feels integrated with the navigation while its background keeps it
   clearly actionable.
-- Keep the Contact label medium-weight rather than bold. Use a small
-  northeast arrow that moves slightly on pointer hover and keyboard focus as
-  directional feedback. Respect reduced-motion preferences.
+- Keep the Contact label balanced rather than oversized. Use a small northeast
+  arrow that moves slightly on pointer hover and keyboard focus as directional
+  feedback. Respect reduced-motion preferences.
 - On desktop, the Sukkahs menu opens on pointer hover or keyboard focus. Tree
   Trimming and Eruv Work remain direct links in the primary navigation.
 - On phones and tablets, the Sukkahs menu opens when tapped.
