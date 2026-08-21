@@ -144,6 +144,12 @@ When adding a task, use this format:
 
 ## Completed
 
+- [x] Fix the mobile testimonial consent control (2026-08-21)
+  - Result: Reset the consent checkbox's inherited full-input sizing so it stays
+    compact, keeps native focus and accent behavior, and aligns cleanly with
+    the consent copy on narrow screens. The production build and all 29
+    automated tests pass; deployment remains deferred.
+
 - [x] Verify Builds is first in the homepage service cards (2026-08-21)
   - Result: Confirmed the homepage service-card markup presents the Builds link
     first, before Custom Sukkahs and Rentals. Added regression coverage for the
