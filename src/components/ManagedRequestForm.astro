@@ -3,14 +3,14 @@ import "../styles/guided-request-form.css";
 import { DEFAULT_MANAGED_FORMS } from "../server/forms/form-schema.js";
 import PaymentMethods from "./PaymentMethods.astro";
 
-const { slug, priceNote = "", priceNoteMap = {} } = Astro.props;
+const { slug, sectionId = undefined, priceNote = "", priceNoteMap = {} } = Astro.props;
 const fallbackSlug = slug === "auto" ? "custom-sukkah" : slug;
 const fallbackSchema = DEFAULT_MANAGED_FORMS.find((schema) => schema.slug === fallbackSlug);
 const showPaymentMethods = true;
 const hasPriceNoteMap = Object.keys(priceNoteMap).length > 0;
 ---
 
-<section class="managed-form-section" data-managed-form-root data-form-slug={slug} data-payment-methods={showPaymentMethods ? "true" : "false"}>
+<section id={sectionId} class="managed-form-section" data-managed-form-root data-form-slug={slug} data-payment-methods={showPaymentMethods ? "true" : "false"}>
   <div class="shell managed-form-shell">
     {(priceNote || hasPriceNoteMap) && <p class="managed-form-price-note" data-price-note data-price-note-map={hasPriceNoteMap ? JSON.stringify(priceNoteMap) : undefined} role="note" hidden={hasPriceNoteMap}>{priceNote}</p>}
     <p class="managed-form-loading" data-form-loading>Preparing the form…</p>

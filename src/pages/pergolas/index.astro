@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import FormPageActions from "../../components/FormPageActions.astro";
 
 const pergolaFormHref = "/request/?form=pergolas";
 
@@ -160,10 +161,13 @@ const planningSteps = [
             From a freestanding backyard shade structure to a house-attached porch,
             each pergola is planned around the site, the connection, and the finish you want.
           </p>
-          <div class="hero-actions" aria-label="Pergola actions">
-            <a class="button" href={pergolaFormHref}>Start a pergola request</a>
-            <a class="button button-secondary" href="#recent-projects">See recent projects</a>
-          </div>
+          <FormPageActions
+            primaryLabel="Start a pergola request"
+            primaryHref={pergolaFormHref}
+            secondaryLabel="See recent projects"
+            secondaryHref="#recent-projects"
+            ariaLabel="Pergola actions"
+          />
         </div>
       </div>
     </section>
@@ -245,8 +249,6 @@ const planningSteps = [
   .custom-hero__copy .eyebrow { justify-content: center; margin-bottom: .8rem; }
   .custom-hero h1 { max-width: 800px; margin: 0 auto 1rem; font-size: clamp(3rem, 6vw, 5rem); line-height: 1; }
   .custom-hero .lead { max-width: 700px; margin: 0 auto; font-size: clamp(1.05rem, 1.7vw, 1.2rem); }
-  .hero-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: .7rem; margin-top: 1.55rem; }
-  .hero-actions .button { min-height: 3rem; }
   .section { padding-block: clamp(4rem, 8vw, 7rem); }
   .projects-section { padding-top: clamp(3rem, 6vw, 5rem); }
   .section-heading { max-width: 52rem; margin-bottom: 2rem; }
@@ -323,7 +325,7 @@ const planningSteps = [
   .custom-cta__phone:hover { border-color: var(--cream-50); color: var(--forest-950); background: var(--cream-50); }
   @media (max-width: 70rem) { .customization-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   @media (max-width: 60rem) { .project-showcase, .fit-panel, .planning-panel { grid-template-columns: 1fr; } .project-showcase__side { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: none; } .project-card--compact { grid-template-columns: 1fr; } .project-card--compact .project-card__media { min-height: 0; aspect-ratio: 16 / 10; } .site-fit-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-  @media (max-width: 46rem) { .custom-hero { padding-block: 1.35rem 2.5rem; } .custom-hero__copy { margin-top: 2rem; } .custom-hero h1 { font-size: clamp(2.55rem, 12vw, 3.7rem); } .hero-actions, .project-showcase__side, .project-grid, .site-fit-grid, .customization-grid { grid-template-columns: 1fr; } .hero-actions { display: grid; } .hero-actions .button { width: 100%; } .featured-project__media, .project-card__media { aspect-ratio: 16 / 10; min-height: 0; } .featured-project__content, .project-card__content { padding: 1.3rem; } .planning-panel { padding: 1.35rem; } }
+  @media (max-width: 46rem) { .custom-hero { padding-block: 1.35rem 2.5rem; } .custom-hero__copy { margin-top: 2rem; } .custom-hero h1 { font-size: clamp(2.55rem, 12vw, 3.7rem); } .project-showcase__side, .project-grid, .site-fit-grid, .customization-grid { grid-template-columns: 1fr; } .featured-project__media, .project-card__media { aspect-ratio: 16 / 10; min-height: 0; } .featured-project__content, .project-card__content { padding: 1.3rem; } .planning-panel { padding: 1.35rem; } }
   @media (max-width: 30rem) { .featured-project, .project-card, .customization-card, .planning-panel { border-radius: var(--radius); } .featured-project__media, .project-card__media { aspect-ratio: 4 / 3; } }
   @media (prefers-reduced-motion: reduce) { .featured-project__media img, .project-card__media img, .customization-card, .customization-card summary::after { transition: none; } }
 </style>

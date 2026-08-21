@@ -235,11 +235,18 @@ confirmed during the quote.
 
 The Custom Sukkahs hero uses the same centered, image-free service composition
 as Builds and Rentals: left-aligned breadcrumb with a centered eyebrow, heading,
-and supporting copy on the shared warm sukkah background. It has no hero actions;
-the quote and phone actions remain in the closing CTA. Project
-photography begins below the hero. The rest of the page may remain more visual
-than the forms, but it uses the same shell, section spacing, typography, button,
-surface, border, radius, accent, CTA, and responsive systems.
+supporting copy, and the shared two-button request/explore action row on the
+warm sukkah background. Project photography begins below the hero. The rest of
+the page may remain more visual than the forms, but it uses the same shell,
+section spacing, typography, button, surface, border, radius, accent, CTA, and
+responsive systems.
+
+Builds, Rentals, Buy, Custom Sukkah requests, and the generic request route use
+the same responsive two-button hero treatment. The primary action scrolls to or
+opens the relevant request form; the secondary action takes visitors to useful
+service details or recent project examples. The Pergolas hero uses the same
+component and destinations so every form-led service page has a consistent
+start-or-explore choice.
 The top of the Custom Sukkah request form displays: “Custom sukkah projects
 start at $700. Final pricing is confirmed with BK Sukkah.”
 

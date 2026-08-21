@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import FormPageActions from "../../components/FormPageActions.astro";
 
 const featuredProject = {
   title: "A finished gathering space",
@@ -166,6 +167,13 @@ const serviceAreas = ["New York", "New Jersey", "Connecticut"];
             Each custom sukkah is planned around the property, available space,
             materials, and the way you want to use it.
           </p>
+          <FormPageActions
+            primaryLabel="Start a custom sukkah request"
+            primaryHref="/request/custom-sukkah/"
+            secondaryLabel="See recent projects"
+            secondaryHref="#recent-projects"
+            ariaLabel="Custom sukkah actions"
+          />
         </div>
       </div>
     </section>

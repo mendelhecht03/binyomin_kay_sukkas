@@ -1,0 +1,47 @@
+---
+interface Props {
+  primaryLabel: string;
+  primaryHref: string;
+  secondaryLabel: string;
+  secondaryHref: string;
+  ariaLabel?: string;
+}
+
+const {
+  primaryLabel,
+  primaryHref,
+  secondaryLabel,
+  secondaryHref,
+  ariaLabel = "Request actions",
+} = Astro.props;
+---
+
+<div class="form-page-actions" aria-label={ariaLabel}>
+  <a class="button" href={primaryHref}>{primaryLabel}</a>
+  <a class="button button-secondary" href={secondaryHref}>{secondaryLabel}</a>
+</div>
+
+<style>
+  .form-page-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: .75rem;
+    margin-top: 1.55rem;
+  }
+
+  .form-page-actions .button {
+    min-height: 3.1rem;
+  }
+
+  @media (max-width: 46rem) {
+    .form-page-actions {
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+
+    .form-page-actions .button {
+      width: 100%;
+    }
+  }
+</style>

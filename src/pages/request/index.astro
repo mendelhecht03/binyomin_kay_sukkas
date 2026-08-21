@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import FormPageActions from "../../components/FormPageActions.astro";
 import ManagedRequestForm from "../../components/ManagedRequestForm.astro";
 ---
 
@@ -17,12 +18,20 @@ import ManagedRequestForm from "../../components/ManagedRequestForm.astro";
         <p class="eyebrow">Project request</p>
         <h1 data-form-title>Tell us what you need.</h1>
         <p class="lead" data-form-description>Share a few details and we’ll follow up.</p>
+        <FormPageActions
+          primaryLabel="Start a request"
+          primaryHref="#request-form"
+          secondaryLabel="Explore services"
+          secondaryHref="/#services"
+          ariaLabel="Project request actions"
+        />
       </div>
     </div>
   </section>
 
   <ManagedRequestForm
     slug="auto"
+    sectionId="request-form"
     priceNoteMap={{
       pergolas: "Custom pergola projects start at $900. Final pricing is confirmed with BK Sukkah.",
       "custom-sukkah": "Custom sukkah projects start at $700. Final pricing is confirmed with BK Sukkah."

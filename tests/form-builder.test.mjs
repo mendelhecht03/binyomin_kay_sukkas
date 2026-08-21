@@ -169,13 +169,36 @@ test("the live request definitions use editable section icons and the shared pub
     const buyPage = await worker.fetch(new Request("https://example.com/purchases/"), { DB });
     const customPage = await worker.fetch(new Request("https://example.com/request/custom-sukkah/"), { DB });
     const pergolaPage = await worker.fetch(new Request("https://example.com/request/?form=pergolas"), { DB });
-    for (const [page, slug] of [[buildsPage, "builds"], [rentalsPage, "rentals"], [buyPage, "purchases"]]) {
+    for (const [page, slug, primaryLabel, secondaryLabel, sectionId] of [
+      [buildsPage, "builds", "Start a build request", "See recent projects", "build-request"],
+      [rentalsPage, "rentals", "Start a rental request", "See rental details", "rental-request"],
+      [buyPage, "purchases", "Start a buy request", "See sukkah options", "buy-request"],
+    ]) {
       const html = await page.text();
       assert.match(html, new RegExp(`data-form-slug="${slug}"`));
       assert.match(html, /data-payment-template/);
+      assert.match(html, /form-page-actions/);
+      assert.match(html, new RegExp(primaryLabel));
+      assert.match(html, new RegExp(secondaryLabel));
+      assert.match(html, new RegExp(`id="${sectionId}"`));
     }
-    assert.match(await customPage.text(), /data-payment-template/);
-    assert.match(await pergolaPage.text(), /data-payment-template/);
+    const customHtml = await customPage.text();
+    const pergolaHtml = await pergolaPage.text();
+    assert.match(customHtml, /data-payment-template/);
+    assert.match(customHtml, /form-page-actions/);
+    assert.match(customHtml, /Start a request/);
+    assert.match(customHtml, /Explore services/);
+    assert.match(customHtml, /id="request-form"/);
+    assert.match(pergolaHtml, /data-payment-template/);
+    assert.match(pergolaHtml, /Start a request/);
+    assert.match(pergolaHtml, /Explore services/);
+    const customSukkahsPage = await worker.fetch(new Request("https://example.com/custom-sukkahs/"), { DB });
+    const pergolasPage = await worker.fetch(new Request("https://example.com/pergolas/"), { DB });
+    const customSukkahsHtml = await customSukkahsPage.text();
+    const pergolasHtml = await pergolasPage.text();
+    assert.match(customSukkahsHtml, /form-page-actions/);
+    assert.match(pergolasHtml, /form-page-actions/);
+    assert.match(pergolasHtml, /Start a pergola request/);
     assert.equal(DEFAULT_RENTAL_FORM.steps.find((step) => step.id === "extras").fields.find((field) => field.id === "tarpStyle").required, true);
     assert.equal(DEFAULT_PURCHASE_FORM.title, "Buy");
     assert.equal(DEFAULT_PURCHASE_FORM.steps.find((step) => step.id === "timing").fields[0].id, "deliveryDate");

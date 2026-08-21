@@ -45,7 +45,12 @@ When adding a task, use this format:
 
 ## Now
 
-(No active task.)
+- [ ] Add uniform request-page hero actions
+  - Why: Visitors should have the same clear start-and-explore choices on every
+    service page that leads into a request form.
+  - Done when: Builds, Rentals, Buy, Custom Sukkahs, and Pergolas use the same
+    responsive two-button hero treatment with useful page-specific destinations,
+    and all automated checks pass.
 
 ## Next
 
@@ -143,6 +148,13 @@ When adding a task, use this format:
   - Unblocks: Publishing multiple testimonial cards in the homepage scroller.
 
 ## Completed
+
+- [x] Add uniform request-page hero actions (2026-08-21)
+  - Result: Added one shared responsive start-or-explore action row to Builds,
+    Rentals, Buy, Custom Sukkah requests, the generic request route, Custom
+    Sukkahs, and Pergolas. Each primary action targets the relevant form and
+    each secondary action opens useful details or recent projects. Verified in
+    the production build and automated test suite; deployment remains deferred.
 
 - [x] Add a compact rental overview before the Rentals form (2026-08-21)
   - Result: Added a compact rental introduction with an example setup photo,

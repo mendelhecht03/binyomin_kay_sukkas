@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import FormPageActions from "../../components/FormPageActions.astro";
 import ManagedRequestForm from "../../components/ManagedRequestForm.astro";
 ---
 
@@ -17,11 +18,18 @@ import ManagedRequestForm from "../../components/ManagedRequestForm.astro";
         <p class="eyebrow">BUY</p>
         <h1>Find the right sukkah for your space.</h1>
         <p class="lead">Share a few details and we’ll follow up with available options, delivery, setup, and pricing.</p>
+        <FormPageActions
+          primaryLabel="Start a buy request"
+          primaryHref="#buy-request"
+          secondaryLabel="See sukkah options"
+          secondaryHref="/sukkah-packages/"
+          ariaLabel="Buy request actions"
+        />
       </div>
     </div>
   </section>
 
-  <ManagedRequestForm slug="purchases" />
+  <ManagedRequestForm slug="purchases" sectionId="buy-request" />
 </BaseLayout>
 
 <style>

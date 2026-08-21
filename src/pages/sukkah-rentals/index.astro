@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import FormPageActions from "../../components/FormPageActions.astro";
 import ManagedRequestForm from "../../components/ManagedRequestForm.astro";
 import RentalOverview from "../../components/RentalOverview.astro";
 ---
@@ -18,12 +19,19 @@ import RentalOverview from "../../components/RentalOverview.astro";
         <p class="eyebrow">SUKKAH RENTALS</p>
         <h1>Tell us what you need.</h1>
         <p class="lead">Share a few details and we’ll follow up with availability and pricing.</p>
+        <FormPageActions
+          primaryLabel="Start a rental request"
+          primaryHref="#rental-request"
+          secondaryLabel="See rental details"
+          secondaryHref="#rental-overview"
+          ariaLabel="Rental request actions"
+        />
       </div>
     </div>
   </section>
 
-  <RentalOverview />
-  <ManagedRequestForm slug="rentals" />
+  <div id="rental-overview"><RentalOverview /></div>
+  <ManagedRequestForm slug="rentals" sectionId="rental-request" />
 </BaseLayout>
 
 <style>
