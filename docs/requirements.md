@@ -1,12 +1,12 @@
 **Assets**
 
-The shared header and footer use the supplied circular BK Sukkah Builder logo,
+The shared header and footer use the supplied circular BK Sukkah Builders logo,
 the public brand name “BK Sukkahs,” and the header descriptor “Sukkah
 Builders.”
 
 - ☑ Profile photo
 - ☑ Forest, cream, and wood color palette
-- ☑ Supplied BK Sukkah Builder logo in the shared header, footer, and favicon
+- ☑ Supplied BK Sukkah Builders logo in the shared header, footer, and favicon
 - ☑ Five illustrative sukkah images and one sukkah detail image
 - ☑ Real sukkah hero photo approved for the homepage
 - ☑ Real sukkah project photos selected from the owner's supplied photo folder

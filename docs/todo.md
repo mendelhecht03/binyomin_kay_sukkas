@@ -45,7 +45,11 @@ When adding a task, use this format:
 
 ## Now
 
-(No active task.)
+- [ ] Publish the corrected BK Sukkah Builders logo
+  - Why: The owner requested the circular logo's bottom label use the plural
+    “Builders.”
+  - Done when: The logo asset, generated Worker, documentation, checks, and
+    deployed site all show the corrected label.
 
 ## Next
 
