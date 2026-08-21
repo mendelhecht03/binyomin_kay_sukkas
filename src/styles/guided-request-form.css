@@ -725,7 +725,16 @@
   }
 
   .guided-request-form .photo-upload-card {
-    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.65rem;
+    align-items: start;
+  }
+
+  .guided-request-form .photo-upload-card > label,
+  .guided-request-form .photo-upload-card > .field-hint,
+  .guided-request-form .photo-upload-card > input[type="file"] {
+    grid-column: 1;
+    min-width: 0;
   }
 
   .guided-request-form .photo-upload-card .upload-button {

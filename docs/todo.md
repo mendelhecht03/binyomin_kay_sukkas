@@ -144,6 +144,11 @@ When adding a task, use this format:
 
 ## Completed
 
+- [x] Fix mobile photo-upload layout (2026-08-21)
+  - Result: The dynamic photo field now uses a single-column mobile layout with
+    shrinkable content, keeping its label, helper text, and file picker inside
+    the card. Passed all 29 automated tests; deployment remains deferred.
+
 - [x] Remove default storage choices from Builds (2026-08-21)
   - Result: Removed Bring out of storage and Bring to storage from the Builds
     Requested work choices, removed the related date follow-up and validation,
