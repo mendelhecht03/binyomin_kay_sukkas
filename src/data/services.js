@@ -23,7 +23,6 @@ export const servicesBySlug = {
       "Ask about sukkah rental availability, sizing, delivery, setup, and takedown.",
     summary:
       "Ask about seasonal rental options, available sizes, delivery, setup, and takedown. Exact choices and pricing are confirmed directly before scheduling.",
-    heroPlaceholder: "Rental sukkah photo coming soon",
     primaryAction: { label: "Ask about rentals", href: "/contact/" },
     secondaryAction: { label: "Builds", href: "/sukka-builder/" },
     highlights: [

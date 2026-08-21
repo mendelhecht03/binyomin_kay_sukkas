@@ -181,6 +181,10 @@ test("the live request definitions use editable section icons and the shared pub
       assert.match(html, new RegExp(primaryLabel));
       assert.match(html, new RegExp(secondaryLabel));
       assert.match(html, new RegExp(`id="${sectionId}"`));
+      if (slug === "rentals") {
+        assert.match(html, /rental-overview/);
+        assert.doesNotMatch(html, /rental-package-placeholder|Rental photo coming soon/);
+      }
     }
     const customHtml = await customPage.text();
     const pergolaHtml = await pergolaPage.text();
