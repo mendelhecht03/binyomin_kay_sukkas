@@ -297,6 +297,7 @@ export const DEFAULT_RENTAL_FORM = {
     },
     {
       id: "extras", title: "Extras", icon: "sukkah", fields: [
+        { id: "tarpStyle", type: "radio", label: "Which tarp style would you like to discuss?", required: true, helpText: "Choose a direction from the rental examples above.", options: ["White", "Blue", "Beige woven", "Soft fabric", "Not sure yet"] },
         { id: "addOns", type: "checkboxes", label: "Additional services", required: false, options: ["Different style lighting", "Furniture", "Evergreen schach", "Pressure wash area day before", "Other"] },
         { id: "furnitureDetails", type: "textarea", label: "Which furniture and chairs would you like?", required: true, placeholder: "For example, folding chairs for 12 guests and one table.", condition: { fieldId: "addOns", operator: "includes", value: "Furniture" } },
         { id: "addOnsOther", type: "text", label: "Other service", required: true, placeholder: "Tell us what you need", condition: { fieldId: "addOns", operator: "includes", value: "Other" } },

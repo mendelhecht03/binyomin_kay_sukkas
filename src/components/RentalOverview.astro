@@ -1,0 +1,83 @@
+---
+const tarpStyles = [
+  { name: "White", image: "/assets/images/custom-white-tarp.jpg", alt: "Example sukkah with white tarp walls" },
+  { name: "Blue", image: "/assets/images/custom-blue-tarp.jpg", alt: "Example sukkah with blue tarp walls" },
+  { name: "Beige woven", image: "/assets/images/custom-beige-woven-wall.jpg", alt: "Example sukkah with beige woven walls" },
+  { name: "Soft fabric", image: "/assets/images/custom-soft-fabric.jpg", alt: "Example sukkah with soft fabric walls" },
+];
+---
+
+<section class="rental-overview" aria-labelledby="rental-overview-heading">
+  <div class="shell">
+    <div class="rental-overview-card">
+      <figure class="rental-overview-photo">
+        <img src="/assets/images/home-rental-schach.jpg" alt="Example rental sukkah with schach, tarp walls, and lighting" width="1200" height="1600" loading="eager" />
+        <figcaption>Example rental setup</figcaption>
+      </figure>
+
+      <div class="rental-overview-body">
+        <div class="rental-overview-copy">
+          <p class="eyebrow">Rental sukkah</p>
+          <h2 id="rental-overview-heading">A simple seasonal setup.</h2>
+          <p class="rental-overview-lead">A ready-to-enjoy sukkah with the practical details handled for you.</p>
+          <p class="rental-overview-price">Rental packages start at <strong>$250</strong>. Final pricing is confirmed with BK Sukkah.</p>
+          <ul class="rental-overview-points">
+            <li><strong>Included</strong><span>Metal or wooden frame, installation, takedown, and standard schach.</span></li>
+            <li><strong>Optional</strong><span>Evergreen schach, furniture, and different lighting styles are available for an additional cost.</span></li>
+          </ul>
+        </div>
+
+        <div class="rental-tarp-gallery" aria-labelledby="rental-tarp-heading">
+          <div class="rental-tarp-heading">
+            <h3 id="rental-tarp-heading">Browse tarp directions</h3>
+            <p>Choose a look to discuss in the request below. Exact availability is confirmed with BK Sukkah.</p>
+          </div>
+          <div class="rental-tarp-grid">
+            {tarpStyles.map((tarp) => (
+              <figure class="rental-tarp-card">
+                <img src={tarp.image} alt={tarp.alt} width="1200" height="900" loading="lazy" />
+                <figcaption>{tarp.name}</figcaption>
+              </figure>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .rental-overview { padding-block: clamp(1.75rem, 4vw, 3rem); background: var(--cream-50); }
+  .rental-overview-card { display: grid; grid-template-columns: minmax(12rem, .72fr) minmax(0, 1.28fr); gap: clamp(1rem, 2.4vw, 1.5rem); align-items: stretch; padding: clamp(.8rem, 2vw, 1.15rem); border: 1px solid var(--border); border-radius: var(--radius-large); background: var(--white); box-shadow: var(--shadow-small); }
+  .rental-overview-photo { position: relative; min-height: 18rem; overflow: hidden; margin: 0; border-radius: calc(var(--radius-large) - 8px); background: var(--forest-100); }
+  .rental-overview-photo img { width: 100%; height: 100%; display: block; object-fit: cover; object-position: center 58%; }
+  .rental-overview-photo figcaption { position: absolute; right: .7rem; bottom: .7rem; padding: .35rem .6rem; border: 1px solid rgba(255,255,255,.5); border-radius: 999px; color: var(--forest-950); background: rgba(255,253,248,.88); font-size: .7rem; font-weight: 800; }
+  .rental-overview-body { display: grid; grid-template-columns: minmax(0, 1fr) minmax(13rem, .92fr); gap: clamp(1rem, 2.5vw, 1.5rem); align-items: center; min-width: 0; padding: .35rem .25rem .35rem 0; }
+  .rental-overview-copy .eyebrow { margin-bottom: .3rem; }
+  .rental-overview-copy h2 { margin-bottom: .35rem; font-size: clamp(1.6rem, 3vw, 2.25rem); line-height: 1.05; }
+  .rental-overview-lead { margin: 0 0 .65rem; color: var(--ink-500); font-size: .9rem; line-height: 1.45; }
+  .rental-overview-price { margin: 0 0 .7rem; color: var(--forest-900); font-size: .86rem; line-height: 1.4; }
+  .rental-overview-price strong { color: var(--wood-600); }
+  .rental-overview-points { display: grid; gap: .48rem; margin: 0; padding: 0; list-style: none; }
+  .rental-overview-points li { display: grid; gap: .08rem; padding-left: .7rem; border-left: 2px solid var(--wood-500); }
+  .rental-overview-points strong { color: var(--forest-900); font-size: .76rem; letter-spacing: .04em; text-transform: uppercase; }
+  .rental-overview-points span { color: var(--ink-500); font-size: .8rem; line-height: 1.38; }
+  .rental-tarp-gallery { min-width: 0; }
+  .rental-tarp-heading { margin-bottom: .6rem; }
+  .rental-tarp-heading h3 { margin: 0 0 .2rem; color: var(--forest-900); font-family: var(--font-nav); font-size: .96rem; }
+  .rental-tarp-heading p { margin: 0; color: var(--ink-500); font-size: .76rem; line-height: 1.4; }
+  .rental-tarp-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .42rem; }
+  .rental-tarp-card { overflow: hidden; margin: 0; border: 1px solid var(--border); border-radius: 10px; background: var(--cream-100); }
+  .rental-tarp-card img { width: 100%; aspect-ratio: 1 / 1; display: block; object-fit: cover; }
+  .rental-tarp-card figcaption { padding: .35rem .4rem .4rem; color: var(--forest-900); font-size: .68rem; font-weight: 800; line-height: 1.1; }
+  @media (max-width: 820px) {
+    .rental-overview-card { grid-template-columns: minmax(10rem, .6fr) minmax(0, 1.4fr); }
+    .rental-overview-body { grid-template-columns: 1fr; align-content: center; }
+    .rental-tarp-grid { grid-template-columns: repeat(4, minmax(3.4rem, 1fr)); }
+  }
+  @media (max-width: 600px) {
+    .rental-overview-card { grid-template-columns: 1fr; }
+    .rental-overview-photo { min-height: 12rem; max-height: 15rem; }
+    .rental-overview-body { padding: .1rem 0 .2rem; }
+  }
+</style>

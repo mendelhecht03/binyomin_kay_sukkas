@@ -3,7 +3,7 @@ import "../styles/guided-request-form.css";
 import { DEFAULT_MANAGED_FORMS } from "../server/forms/form-schema.js";
 import PaymentMethods from "./PaymentMethods.astro";
 
-const { slug, rentalSummary = false, priceNote = "", priceNoteMap = {} } = Astro.props;
+const { slug, priceNote = "", priceNoteMap = {} } = Astro.props;
 const fallbackSlug = slug === "auto" ? "custom-sukkah" : slug;
 const fallbackSchema = DEFAULT_MANAGED_FORMS.find((schema) => schema.slug === fallbackSlug);
 const showPaymentMethods = true;
@@ -18,18 +18,6 @@ const hasPriceNoteMap = Object.keys(priceNoteMap).length > 0;
       <div class="form-honeypot" aria-hidden="true">
         <label>Leave this field empty<input name="website" type="text" tabindex="-1" autocomplete="off" /></label>
       </div>
-
-      {rentalSummary && (
-        <section class="rental-package-summary" aria-labelledby="rental-package-heading">
-          <div class="rental-package-placeholder" role="img" aria-label="Rental sukkah photo coming soon"><span>Rental photo coming soon</span></div>
-          <div class="rental-package-copy">
-            <p class="eyebrow">Rental sukkah</p>
-            <h2 id="rental-package-heading">A simple seasonal setup</h2>
-            <p>Our base package includes a basic metal frame, standard schach, and a choice of canvas tarp styles.</p>
-            <p class="rental-package-addons"><strong>Optional add-ons:</strong> different style lighting, furniture (including the chairs you need), and evergreen schach for an additional cost.</p>
-          </div>
-        </section>
-      )}
 
       <div class="wizard-progress" data-progress-region aria-live="polite">
         <p><span>Step <strong data-current-step>1</strong> of <span data-total-steps>1</span></span><span class="progress-separator" aria-hidden="true">·</span><strong data-current-label>Contact</strong></p>
@@ -347,13 +335,4 @@ const hasPriceNoteMap = Object.keys(priceNoteMap).length > 0;
   .managed-form-loading, .managed-form-error { padding: 2rem; border: 1px solid var(--border); border-radius: var(--radius-large); background: white; text-align: center; }
   .managed-form-error h2 { margin-bottom: .5rem; }
   .managed-form-error p { margin: 0; }
-  .rental-package-summary { display: grid; grid-template-columns: 8rem minmax(0, 1fr); gap: 1.15rem; align-items: center; margin-bottom: 1.5rem; padding: 1rem; border: 1px solid var(--border); border-radius: 14px; background: white; }
-  .rental-package-placeholder { display: grid; aspect-ratio: 4 / 3; place-items: center; padding: .5rem; border-radius: 9px; color: var(--ink-500); background: var(--cream-100); text-align: center; }
-  .rental-package-placeholder span { font-size: .7rem; font-weight: 750; }
-  .rental-package-copy .eyebrow { margin-bottom: .25rem; }
-  .rental-package-copy h2 { margin-bottom: .25rem; font-size: 1.45rem; }
-  .rental-package-copy > p { margin: 0; color: var(--ink-500); font-size: .88rem; line-height: 1.45; }
-  .rental-package-copy > p + p { margin-top: .45rem; }
-  .rental-package-addons strong { color: var(--forest-800); }
-  @media (max-width: 700px) { .rental-package-summary { grid-template-columns: 6.5rem minmax(0, 1fr); gap: .9rem; } }
 </style>

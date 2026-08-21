@@ -176,6 +176,7 @@ test("the live request definitions use editable section icons and the shared pub
     }
     assert.match(await customPage.text(), /data-payment-template/);
     assert.match(await pergolaPage.text(), /data-payment-template/);
+    assert.equal(DEFAULT_RENTAL_FORM.steps.find((step) => step.id === "extras").fields.find((field) => field.id === "tarpStyle").required, true);
     assert.equal(DEFAULT_PURCHASE_FORM.title, "Buy");
     assert.equal(DEFAULT_PURCHASE_FORM.steps.find((step) => step.id === "timing").fields[0].id, "deliveryDate");
     assert.equal(DEFAULT_PURCHASE_FORM.steps.find((step) => step.id === "options").fields.find((field) => field.id === "sukkahType").required, true);

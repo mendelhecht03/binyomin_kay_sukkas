@@ -324,8 +324,12 @@ includes a basic metal frame, standard schach, and canvas tarp styles, then
 lists optional different-style lighting, furniture and chair choices, and
 evergreen schach for an additional cost. The step progress fill uses the
 site's solid gold accent.
-The top of the Rentals form displays: “Rental packages start at $600. Final
-pricing is confirmed with BK Sukkah.”
+Before the guided questions, the Rentals page displays a compact rental
+overview with an example setup, representative tarp directions, and a short
+included-versus-optional package summary. It states: “Rental packages start at
+$250. Final pricing is confirmed with BK Sukkah.” The rental form then asks
+the visitor to choose a tarp direction and continues with the contact and
+request details.
 
 Neighborhood uses a compact native select with a conditional Other field.
 Rental setup and takedown timing use required native date pickers while keeping

@@ -71,15 +71,6 @@ When adding a task, use this format:
 
 ## Later
 
-- [ ] Turn the Rentals page into an informational page plus request form
-  - Why: The current page feels too form-based and does not explain the rental
-    choices before asking the visitor for information.
-  - Include: Basic wood or metal structures, available sizes, tarp styles,
-    thicknesses and colors, price ranges, and optional lights, tables, chairs,
-    and greenery.
-  - Done when: Visitors can understand the available rental package before
-    reaching a clearly separated rental-request form.
-
 - [ ] Strengthen the About page with approved business history
   - Why: The requested About copy includes customer-volume, worldwide-service,
     and company-relationship claims that could build trust if they are accurate.
@@ -153,6 +144,13 @@ When adding a task, use this format:
 
 ## Completed
 
+- [x] Add a compact rental overview before the Rentals form (2026-08-21)
+  - Result: Added a compact rental introduction with an example setup photo,
+    four representative tarp directions, included-versus-optional package
+    details, and a $250 starting-price caveat. Rentals now asks visitors to
+    choose a tarp direction in the guided form after the overview. Passed all
+    28 automated tests; deployment remains deferred.
+
 - [x] Refresh the accepted-payment panel on every request form (2026-08-21)
   - Result: Reworked the shared payment panel into a branded card with compact
     visual marks, clearer hierarchy, responsive tiles, and the Credit Card
@@ -169,7 +167,7 @@ When adding a task, use this format:
     “Buy.” Passed all 28 automated tests; deployment remains deferred.
 
 - [x] Add official starting-price notices to the request forms (2026-08-21)
-  - Result: Added consistent notices for Builds ($250), Rentals ($600), Custom
+  - Result: Added consistent notices for Builds ($250), Rentals ($250 overview), Custom
     Sukkah ($700), and Custom Pergolas ($900), each stating that final pricing
     is confirmed with BK Sukkah. The generic request route selects its notice
     from the active form slug. Passed all 27 automated tests; deployment is
