@@ -5,9 +5,11 @@ const tarpStyles = [
   { name: "Beige woven", image: "/assets/images/custom-beige-woven-wall.jpg", alt: "Example sukkah with beige woven walls" },
   { name: "Soft fabric", image: "/assets/images/custom-soft-fabric.jpg", alt: "Example sukkah with soft fabric walls" },
 ];
+
+const { formHref = "/request/?form=rentals#request-form" } = Astro.props;
 ---
 
-<section class="rental-overview" aria-labelledby="rental-overview-heading">
+<section id="rental-overview" class="rental-overview" aria-labelledby="rental-overview-heading">
   <div class="shell">
     <div class="rental-overview-card">
       <div class="rental-overview-copy">
@@ -40,12 +42,20 @@ const tarpStyles = [
           ))}
         </div>
       </div>
+
+      <div class="rental-overview-actions">
+        <div>
+          <p class="eyebrow">Ready when you are</p>
+          <p>Share your space and we’ll confirm availability, options, and final pricing.</p>
+        </div>
+        <a class="button" href={formHref}>Start a rental request</a>
+      </div>
     </div>
   </div>
 </section>
 
 <style>
-  .rental-overview { padding-block: clamp(1.75rem, 4vw, 3rem); background: var(--cream-50); }
+  .rental-overview { scroll-margin-top: 6rem; padding-block: clamp(1.75rem, 4vw, 3rem); background: var(--cream-50); }
   .rental-overview-card { display: grid; gap: clamp(1.15rem, 3vw, 2rem); padding: clamp(1rem, 2.5vw, 1.5rem); border: 1px solid var(--border); border-radius: var(--radius-large); background: var(--white); box-shadow: var(--shadow-small); }
   .rental-overview-photo { position: relative; min-height: clamp(18rem, 48vw, 34rem); overflow: hidden; margin: 0; border-radius: calc(var(--radius-large) - 8px); background: var(--forest-100); }
   .rental-overview-photo img { width: 100%; height: 100%; display: block; object-fit: cover; object-position: center 58%; }
@@ -68,8 +78,14 @@ const tarpStyles = [
   .rental-tarp-card { overflow: hidden; margin: 0; border: 1px solid var(--border); border-radius: 10px; background: var(--cream-100); }
   .rental-tarp-card img { width: 100%; aspect-ratio: 1 / 1; display: block; object-fit: cover; }
   .rental-tarp-card figcaption { padding: .35rem .4rem .4rem; color: var(--forest-900); font-size: .68rem; font-weight: 800; line-height: 1.1; }
+  .rental-overview-actions { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem 0 0; border-top: 1px solid var(--border); }
+  .rental-overview-actions .eyebrow { margin: 0 0 .2rem; }
+  .rental-overview-actions p:last-child { margin: 0; color: var(--ink-500); font-size: .82rem; line-height: 1.4; }
+  .rental-overview-actions .button { flex: 0 0 auto; }
   @media (max-width: 600px) {
     .rental-overview-photo { min-height: 16rem; max-height: 24rem; }
     .rental-tarp-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .55rem; }
+    .rental-overview-actions { align-items: stretch; flex-direction: column; }
+    .rental-overview-actions .button { width: 100%; }
   }
 </style>

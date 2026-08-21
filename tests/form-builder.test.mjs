@@ -185,7 +185,10 @@ test("the live request definitions use editable section icons and the shared pub
     const rentalHtml = await rentalsPage.text();
     assert.match(rentalHtml, /rental-overview/);
     assert.match(rentalHtml, /rental-tarp-grid/);
-    assert.match(rentalHtml, /href="\/request\/\?form=rentals"[^>]*>Start a rental request<\/a>/);
+    assert.match(rentalHtml, /href="\/request\/\?form=rentals#request-form"[^>]*>Start a rental request<\/a>/);
+    assert.match(rentalHtml, /href="#rental-overview"[^>]*>See rental package<\/a>/);
+    assert.match(rentalHtml, /<section id="rental-overview"/);
+    assert.equal((rentalHtml.match(/href="\/request\/\?form=rentals#request-form"/g) || []).length, 2);
     assert.doesNotMatch(rentalHtml, /data-managed-form-root/);
     const rentalFormHtml = await rentalFormPage.text();
     assert.match(rentalFormHtml, /data-managed-form-root/);

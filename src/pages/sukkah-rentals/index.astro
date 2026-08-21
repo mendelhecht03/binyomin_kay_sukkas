@@ -2,6 +2,8 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import FormPageActions from "../../components/FormPageActions.astro";
 import RentalOverview from "../../components/RentalOverview.astro";
+
+const rentalFormHref = "/request/?form=rentals#request-form";
 ---
 
 <BaseLayout
@@ -20,7 +22,7 @@ import RentalOverview from "../../components/RentalOverview.astro";
         <p class="lead">Explore what comes with the rental, browse tarp directions, and then share your space when you are ready.</p>
         <FormPageActions
           primaryLabel="Start a rental request"
-          primaryHref="/request/?form=rentals"
+          primaryHref={rentalFormHref}
           secondaryLabel="See rental package"
           secondaryHref="#rental-overview"
           ariaLabel="Rental request actions"
@@ -29,7 +31,7 @@ import RentalOverview from "../../components/RentalOverview.astro";
     </div>
   </section>
 
-  <div id="rental-overview"><RentalOverview /></div>
+  <RentalOverview formHref={rentalFormHref} />
 </BaseLayout>
 
 <style>

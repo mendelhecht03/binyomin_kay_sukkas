@@ -144,6 +144,9 @@ When adding a task, use this format:
 
 ## Completed
 
+- [x] Repair the Rentals overview-to-form flow (2026-08-21)
+  - Result: Rental actions now use the real overview section as the package anchor, send visitors directly to the rental form section, and include a matching request button below the package and tarp gallery. The package presentation is unchanged, the build regenerated successfully, and all 29 tests passed; deployment remains deferred.
+
 - [x] Add Buy and Pergolas cards to the homepage service grid (2026-08-21)
   - Result: Expanded the homepage service grid to five paths while keeping
     Builds first. Added a standard tarp-wall Buy card linked to `/purchases/`

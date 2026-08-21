@@ -335,10 +335,12 @@ ZIP stack vertically on phone-sized screens.
 The `/sukkah-rentals/` page is an overview-only page. It places a large example
 rental photo underneath the package description and shows representative tarp
 directions before the visitor enters the form. It states: “Rental packages
-start at $250. Final pricing is confirmed with BK Sukkah.” A clear action links
-to `/request/?form=rentals`, where the rental form asks the visitor to choose a
-tarp direction and continues with the contact and request details. The step
-progress fill uses the site's solid gold accent.
+start at $250. Final pricing is confirmed with BK Sukkah.” The package action
+scrolls to the overview section, while each “Start a rental request” action
+opens `/request/?form=rentals#request-form` so the visitor lands directly on
+the rental form. The rental form asks the visitor to choose a tarp direction
+and continues with the contact and request details. The step progress fill
+uses the site's solid gold accent.
 
 Neighborhood uses a compact native select with a conditional Other field.
 Rental setup and takedown timing use required native date pickers while keeping
