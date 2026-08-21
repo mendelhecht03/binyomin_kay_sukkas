@@ -45,13 +45,7 @@ When adding a task, use this format:
 
 ## Now
 
-- [ ] Publish the current public-site and form refresh
-  - Why: The latest feedback adds the approved About copy, rental add-on
-    changes, Builds-first homepage ordering, Sukkah Builders wordmark, and
-    location-specific follow-up questions. The prior publish also hit the
-    Worker size limit and needs a smaller asset bundle.
-  - Done when: The content, forms, documentation, optimized assets, full
-    checks, and deployed site all reflect the current request.
+(No active task.)
 
 ## Next
 
@@ -158,6 +152,14 @@ When adding a task, use this format:
   - Unblocks: Publishing multiple testimonial cards in the homepage scroller.
 
 ## Completed
+
+- [x] Publish the BK Sukkahs content and form refresh (2026-08-21)
+  - Result: Published the BK Sukkahs branding, compact About page and approved
+    business copy, Builds-first homepage, tightened service pages, rental
+    add-on and location follow-up changes, responsive form fixes, testimonial
+    rendering, and optimized photo bundle. Confirmed the public routes, live
+    form schemas, testimonial endpoint, and production deployment all respond
+    successfully.
 
 - [x] Simplify Google Sheets submission syncing feedback (2026-08-19)
   - Result: Removed redundant per-row Add to Sheet actions and kept the
