@@ -225,10 +225,16 @@ test("the homepage presents Builds as the first service card", async () => {
   const buildsIndex = html.indexOf('href="/sukka-builder/"', serviceChoicesStart);
   const customIndex = html.indexOf('href="/custom-sukkahs/"', serviceChoicesStart);
   const rentalsIndex = html.indexOf('href="/sukkah-rentals/"', serviceChoicesStart);
+  const buyIndex = html.indexOf('href="/purchases/"', serviceChoicesStart);
+  const pergolaIndex = html.indexOf('href="/pergolas/"', serviceChoicesStart);
   assert.ok(serviceChoicesStart >= 0);
   assert.ok(buildsIndex > serviceChoicesStart);
   assert.ok(buildsIndex < customIndex);
   assert.ok(buildsIndex < rentalsIndex);
+  assert.ok(buyIndex > serviceChoicesStart);
+  assert.ok(pergolaIndex > serviceChoicesStart);
+  assert.match(html.slice(serviceChoicesStart), /src="\/assets\/images\/custom-white-tarp\.jpg"/);
+  assert.match(html.slice(serviceChoicesStart), /src="\/assets\/images\/custom-soft-fabric\.jpg"/);
   assert.match(html, /href="\/contact\/"[^>]*>Contact<\/a>/);
   assert.match(html, /Sukkahs &amp; Outdoor Work/);
   assert.match(html, /Benyamin works directly with families/);

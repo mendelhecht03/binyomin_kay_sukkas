@@ -144,6 +144,13 @@ When adding a task, use this format:
 
 ## Completed
 
+- [x] Add Buy and Pergolas cards to the homepage service grid (2026-08-21)
+  - Result: Expanded the homepage service grid to five paths while keeping
+    Builds first. Added a standard tarp-wall Buy card linked to `/purchases/`
+    and a cloth-frontyard image Pergolas card linked to `/pergolas/`, with
+    responsive stacking on phones. Added regression assertions, passed all 29
+    tests, and left deployment deferred.
+
 - [x] Restore the mobile Sukkahs navigation dropdown (2026-08-21)
   - Result: Kept the full Sukkah-service links direct on desktop while grouping
     Builds, Rentals, Buy, Custom Sukkahs, and Pergolas under a mobile Sukkahs

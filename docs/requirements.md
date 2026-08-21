@@ -31,8 +31,8 @@ layout.
   requests through the site's server-side Worker to the website-owned
   submissions database. Google Forms and Sheets must not be part of the
   submission storage path.
-- Keep the homepage focused on a full-bleed hero, three primary sukkah paths
-  with Builds first,
+- Keep the homepage focused on a full-bleed hero and five primary service paths
+  (Builds, Rentals, Buy, Custom Sukkahs, and Pergolas) with Builds first,
   an image-led real-work section, a compact owner introduction, testimonials,
   and a final contact prompt.
 - Style the homepage as one light, spacious page using the existing forest
