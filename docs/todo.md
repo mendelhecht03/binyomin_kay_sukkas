@@ -153,6 +153,13 @@ When adding a task, use this format:
 
 ## Completed
 
+- [x] Add official starting-price notices to the request forms (2026-08-21)
+  - Result: Added consistent notices for Builds ($250), Rentals ($600), Custom
+    Sukkah ($700), and Custom Pergolas ($900), each stating that final pricing
+    is confirmed with BK Sukkah. The generic request route selects its notice
+    from the active form slug. Passed all 27 automated tests; deployment is
+    intentionally deferred until the remaining queued prompts are complete.
+
 - [x] Update remaining public brand references to BK Sukkah (2026-08-21)
   - Result: Updated public page copy, shared branding, form confirmations,
     contact text, documentation, and hosted site metadata to BK Sukkah while

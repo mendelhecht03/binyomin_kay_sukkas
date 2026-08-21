@@ -231,6 +231,12 @@ the quote and phone actions remain in the closing CTA. Project
 photography begins below the hero. The rest of the page may remain more visual
 than the forms, but it uses the same shell, section spacing, typography, button,
 surface, border, radius, accent, CTA, and responsive systems.
+The top of the Custom Sukkah request form displays: “Custom sukkah projects
+start at $700. Final pricing is confirmed with BK Sukkah.”
+
+The Pergolas page links to the managed request at `/request/?form=pergolas`.
+When that form is selected, its top displays: “Custom pergola projects start at
+$900. Final pricing is confirmed with BK Sukkah.”
 
 Do not show a separate wood-versus-metal feature section. Keep porch and
 flooring details concise and secondary to the project portfolio.
@@ -254,6 +260,9 @@ schema-driven, native-styled form for work on a sukkah the customer already owns
 Its Submit button saves every enabled answer as a Build submission in the
 website-owned database. Optional site photos are stored in the site's upload
 storage and related to that database submission by stable file records.
+The top of the Builds form displays an official starting-price notice:
+“Projects start at $250. Final pricing is confirmed with BK Sukkah.” This is a
+starting point only and does not replace the quote process.
 Show a clear sending, animated success, or retry message beneath the button,
 and disable nonessential motion for visitors who prefer reduced motion.
 
@@ -305,6 +314,8 @@ includes a basic metal frame, standard schach, and canvas tarp styles, then
 lists optional different-style lighting, furniture and chair choices, and
 evergreen schach for an additional cost. The step progress fill uses the
 site's solid gold accent.
+The top of the Rentals form displays: “Rental packages start at $600. Final
+pricing is confirmed with BK Sukkah.”
 
 Neighborhood uses a compact native select with a conditional Other field.
 Rental setup and takedown timing use required native date pickers while keeping

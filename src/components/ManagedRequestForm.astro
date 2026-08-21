@@ -3,14 +3,16 @@ import "../styles/guided-request-form.css";
 import { DEFAULT_MANAGED_FORMS } from "../server/forms/form-schema.js";
 import PaymentMethods from "./PaymentMethods.astro";
 
-const { slug, rentalSummary = false } = Astro.props;
+const { slug, rentalSummary = false, priceNote = "", priceNoteMap = {} } = Astro.props;
 const fallbackSlug = slug === "auto" ? "custom-sukkah" : slug;
 const fallbackSchema = DEFAULT_MANAGED_FORMS.find((schema) => schema.slug === fallbackSlug);
 const showPaymentMethods = ["builds", "rentals"].includes(fallbackSlug);
+const hasPriceNoteMap = Object.keys(priceNoteMap).length > 0;
 ---
 
 <section class="managed-form-section" data-managed-form-root data-form-slug={slug} data-payment-methods={showPaymentMethods ? "true" : "false"}>
   <div class="shell managed-form-shell">
+    {(priceNote || hasPriceNoteMap) && <p class="managed-form-price-note" data-price-note data-price-note-map={hasPriceNoteMap ? JSON.stringify(priceNoteMap) : undefined} role="note" hidden={hasPriceNoteMap}>{priceNote}</p>}
     <p class="managed-form-loading" data-form-loading>Preparing the form…</p>
     <form class="guided-request-form" data-dynamic-form novalidate hidden>
       <div class="form-honeypot" aria-hidden="true">
@@ -70,6 +72,14 @@ const showPaymentMethods = ["builds", "rentals"].includes(fallbackSlug);
     const configuredSlug = root.dataset.formSlug;
     const pathSlug = location.pathname.split("/").filter(Boolean).at(-1) || "";
     const slug = configuredSlug === "auto" ? (pathSlug === "request" ? (new URLSearchParams(location.search).get("form") || "custom-sukkah") : pathSlug) : configuredSlug;
+    const priceNote = root.querySelector("[data-price-note]");
+    if (priceNote?.dataset.priceNoteMap) {
+      try {
+        const note = JSON.parse(priceNote.dataset.priceNoteMap)[slug] || "";
+        priceNote.textContent = note;
+        priceNote.hidden = !note;
+      } catch { priceNote.hidden = true; }
+    }
     const showPaymentMethods = root.dataset.paymentMethods === "true";
     let formSchema;
     let activeStep = 0;
@@ -329,6 +339,7 @@ const showPaymentMethods = ["builds", "rentals"].includes(fallbackSlug);
 <style>
   .managed-form-section { padding-block: clamp(2.5rem, 6vw, 5rem); background: var(--cream-50); }
   .managed-form-shell { max-width: 850px; }
+  .managed-form-price-note { margin: 0 0 1rem; padding: .85rem 1rem; border: 1px solid rgba(23,63,52,.16); border-left: .28rem solid var(--wood-600); border-radius: 12px; color: var(--forest-900); background: var(--forest-100); font-size: .92rem; font-weight: 700; line-height: 1.45; }
   .managed-form-loading, .managed-form-error { padding: 2rem; border: 1px solid var(--border); border-radius: var(--radius-large); background: white; text-align: center; }
   .managed-form-error h2 { margin-bottom: .5rem; }
   .managed-form-error p { margin: 0; }

@@ -21,7 +21,13 @@ import ManagedRequestForm from "../../components/ManagedRequestForm.astro";
     </div>
   </section>
 
-  <ManagedRequestForm slug="auto" />
+  <ManagedRequestForm
+    slug="auto"
+    priceNoteMap={{
+      pergolas: "Custom pergola projects start at $900. Final pricing is confirmed with BK Sukkah.",
+      "custom-sukkah": "Custom sukkah projects start at $700. Final pricing is confirmed with BK Sukkah."
+    }}
+  />
 </BaseLayout>
 
 <style>
