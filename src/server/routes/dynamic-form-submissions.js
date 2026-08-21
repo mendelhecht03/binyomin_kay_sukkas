@@ -35,6 +35,7 @@ function submissionIdentity(slug, origin) {
   if (slug === "builds") return { type: "build", sourcePage: `${origin}/sukka-builder/` };
   if (slug === "rentals") return { type: "rental", sourcePage: `${origin}/sukkah-rentals/` };
   if (slug === "pergolas") return { type: "pergola", sourcePage: `${origin}/pergolas/` };
+  if (slug === "purchases") return { type: "purchase", sourcePage: `${origin}/purchases/` };
   return { type: "custom", sourcePage: `${origin}/request/${slug}/` };
 }
 

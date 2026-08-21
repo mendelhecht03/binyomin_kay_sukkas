@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import worker from "../index.mjs";
-import { DEFAULT_BUILD_FORM, DEFAULT_RENTAL_FORM, SUPPORTED_FORM_STEP_ICONS, normalizeFormSchema } from "../src/server/forms/form-schema.js";
+import { DEFAULT_BUILD_FORM, DEFAULT_PURCHASE_FORM, DEFAULT_RENTAL_FORM, SUPPORTED_FORM_STEP_ICONS, normalizeFormSchema } from "../src/server/forms/form-schema.js";
 import {
   createFormDraft, getPublishedFormBySlug, listFormVersions, publishForm, saveFormDraft,
 } from "../src/server/storage/form-repository.js";
@@ -103,6 +103,31 @@ test("dynamic forms enforce published conditions and save label snapshots", asyn
   } finally { DB.close(); }
 });
 
+test("Buy submissions are saved in the purchase dashboard category", async () => {
+  const DB = createTestDatabase();
+  try {
+    const submitted = new FormData();
+    submitted.set("name", "Buy Customer");
+    submitted.set("phone", "347-555-0111");
+    submitted.set("addressLine1", "10 Main Street");
+    submitted.set("city", "Brooklyn");
+    submitted.set("state", "New York (NY)");
+    submitted.set("postalCode", "11213");
+    submitted.set("neighborhood", "Crown Heights");
+    submitted.set("estimatedSize", "10 × 12 ft");
+    submitted.set("deliveryDate", "2026-09-20");
+    submitted.set("sukkahType", "Canvas");
+    submitted.set("framePreference", "Wood");
+    submitted.append("schach", "Bamboo mat");
+    const response = await worker.fetch(new Request("https://example.com/api/form-submissions/purchases", { method: "POST", body: submitted }), { DB });
+    assert.equal(response.status, 200);
+    const page = await listSubmissions({ env: { DB }, type: "purchase", origin: "https://example.com" });
+    assert.equal(page.submissions.length, 1);
+    assert.equal(page.submissions[0].source.key, "purchases");
+    assert.equal(page.submissions[0].answers.formSlug, "purchases");
+  } finally { DB.close(); }
+});
+
 test("form management APIs require an approved owner and public form pages use the shared shell", async () => {
   const DB = createTestDatabase();
   try {
@@ -115,6 +140,7 @@ test("form management APIs require an approved owner and public form pages use t
     assert.equal(allowed.status, 200);
     const forms = (await allowed.json()).forms;
     assert.deepEqual(forms.slice(0, 3).map((form) => form.slug), ["builds", "rentals", "custom-sukkah"]);
+    assert.equal(forms.find((form) => form.slug === "purchases").title, "Buy");
 
     const publicConfig = await worker.fetch(new Request("https://example.com/api/forms/custom-sukkah"), { DB });
     assert.equal(publicConfig.status, 200);
@@ -126,10 +152,10 @@ test("form management APIs require an approved owner and public form pages use t
   } finally { DB.close(); }
 });
 
-test("the live Builds and Rentals definitions use editable section icons and the shared public renderer", async () => {
+test("the live request definitions use editable section icons and the shared public renderer", async () => {
   const DB = createTestDatabase();
   try {
-    for (const schema of [DEFAULT_BUILD_FORM, DEFAULT_RENTAL_FORM]) {
+    for (const schema of [DEFAULT_BUILD_FORM, DEFAULT_RENTAL_FORM, DEFAULT_PURCHASE_FORM]) {
       const config = await worker.fetch(new Request(`https://example.com/api/forms/${schema.slug}`), { DB });
       assert.equal(config.status, 200);
       const body = await config.json();
@@ -140,7 +166,12 @@ test("the live Builds and Rentals definitions use editable section icons and the
 
     const buildsPage = await worker.fetch(new Request("https://example.com/sukka-builder/"), { DB });
     const rentalsPage = await worker.fetch(new Request("https://example.com/sukkah-rentals/"), { DB });
+    const buyPage = await worker.fetch(new Request("https://example.com/purchases/"), { DB });
     assert.match(await buildsPage.text(), /data-form-slug="builds"/);
     assert.match(await rentalsPage.text(), /data-form-slug="rentals"/);
+    assert.match(await buyPage.text(), /data-form-slug="purchases"/);
+    assert.equal(DEFAULT_PURCHASE_FORM.title, "Buy");
+    assert.equal(DEFAULT_PURCHASE_FORM.steps.find((step) => step.id === "timing").fields[0].id, "deliveryDate");
+    assert.equal(DEFAULT_PURCHASE_FORM.steps.find((step) => step.id === "options").fields.find((field) => field.id === "sukkahType").required, true);
   } finally { DB.close(); }
 });

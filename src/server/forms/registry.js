@@ -28,6 +28,13 @@ const definitions = [
     endpoint: "/api/rental-submissions",
   },
   {
+    type: "purchase",
+    sourceKey: "purchases",
+    label: "Buy",
+    singularLabel: "Purchase",
+    endpoint: "/api/form-submissions/purchases",
+  },
+  {
     type: "testimonial",
     sourceKey: "testimonials",
     label: "Testimonials",

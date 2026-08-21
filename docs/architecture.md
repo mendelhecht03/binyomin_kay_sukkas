@@ -112,6 +112,7 @@ Astro builds these routes as directory-style HTML files. For example,
 /contact/
 /sukka-builder/
 /sukkah-rentals/
+/purchases/
 /custom-sukkahs/
 /pergolas/
 /tree-trimming/
@@ -126,13 +127,14 @@ without a trailing slash, such as `/about`, can load the `/about/` page.
 The former package overview, buy, and sample URLs are generated as compatibility
 redirect pages that send visitors to `/sukka-builder/`.
 
-`/sukka-builder/`, `/sukkah-rentals/`, and `/request/<published-form-slug>/`
+`/sukka-builder/`, `/sukkah-rentals/`, `/purchases/`, and `/request/<published-form-slug>/`
 all use the same `ManagedRequestForm` renderer. The browser requests the active
 published definition from `GET /api/forms/<slug>`, and the Worker validates the
-same definition before saving a submission. Builds and Rentals are built-in
-managed schemas with stable slugs (`builds` and `rentals`), so the owner can
-edit the live forms from the dashboard without changing page code. Their
-submissions still use the existing `build` and `rental` dashboard categories.
+same definition before saving a submission. Builds, Rentals, and the Buy flow are
+built-in managed schemas with stable slugs (`builds`, `rentals`, and
+`purchases`), so the owner can edit the live forms from the dashboard without
+changing page code. Their submissions use the `build`, `rental`, and `purchase`
+dashboard categories.
 
 Every step stores a selectable section icon (`contact`, `location`, `timing`,
 `sukkah`, `site`, `final`, `phone`, `home`, `ruler`, `tools`, `message`, or

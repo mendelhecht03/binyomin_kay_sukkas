@@ -1,0 +1,38 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ManagedRequestForm from "../../components/ManagedRequestForm.astro";
+---
+
+<BaseLayout
+  title="Buy a Sukkah"
+  description="Tell BK Sukkah what you are looking to purchase and share your delivery, setup, and sukkah preferences."
+  bodyClass="purchases-page request-form-page"
+>
+  <section class="request-hero sukkah-hero-background">
+    <div class="shell">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="/">Home</a><span aria-hidden="true">/</span><span aria-current="page">Buy</span>
+      </nav>
+      <div class="request-hero-copy">
+        <p class="eyebrow">BUY</p>
+        <h1>Find the right sukkah for your space.</h1>
+        <p class="lead">Share a few details and we’ll follow up with available options, delivery, setup, and pricing.</p>
+      </div>
+    </div>
+  </section>
+
+  <ManagedRequestForm slug="purchases" />
+</BaseLayout>
+
+<style>
+  .request-hero { padding-block: clamp(2rem, 4vw, 3rem) clamp(3rem, 6vw, 5rem); }
+  .request-hero-copy { width: min(100%, 880px); margin: clamp(2.5rem, 5vw, 4rem) auto 0; text-align: center; }
+  .request-hero-copy .eyebrow { justify-content: center; margin-bottom: .8rem; }
+  .request-hero h1 { max-width: 850px; margin: 0 auto 1rem; font-size: clamp(3.15rem, 6vw, 5rem); line-height: 1; }
+  .request-hero .lead { max-width: 700px; margin: 0 auto; }
+  @media (max-width: 700px) {
+    .request-hero { padding-block: 1.35rem 2.5rem; }
+    .request-hero-copy { margin-top: 2rem; }
+    .request-hero h1 { font-size: clamp(2.55rem, 12vw, 3.7rem); }
+  }
+</style>

@@ -113,7 +113,7 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
         <div class="sheets-export-card__copy">
           <p class="eyebrow">Optional reporting</p>
           <h2 id="sheets-export-heading">Google Sheets export</h2>
-          <p>Send Builds, Rentals, Custom Sukkah, and Pergola requests to separate tabs. Testimonials are always excluded.</p>
+          <p>Send Builds, Rentals, Buy, Custom Sukkah, and Pergola requests to separate tabs. Testimonials are always excluded.</p>
         </div>
         <form class="sheets-settings-form" data-sheets-settings-form>
           <label><span>Google Sheet URL or ID</span><input data-sheets-spreadsheet placeholder="Paste a Google Sheet link" autocomplete="off" /></label>
@@ -722,6 +722,7 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
     function publicFormPath(schema) {
       if (schema.id === "builds") return "/sukka-builder/";
       if (schema.id === "rentals") return "/sukkah-rentals/";
+      if (schema.id === "purchases") return "/purchases/";
       return `/request/${encodeURIComponent(schema.slug)}/`;
     }
     function editorFields() { return editor.schema?.steps.flatMap((step) => step.fields || []) || []; }

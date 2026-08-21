@@ -311,11 +311,68 @@ export const DEFAULT_RENTAL_FORM = {
   ],
 };
 
+function cloneSchema(schema) {
+  return JSON.parse(JSON.stringify(schema));
+}
+
+export const DEFAULT_PURCHASE_FORM = (() => {
+  const form = cloneSchema(DEFAULT_RENTAL_FORM);
+  form.id = "purchases";
+  form.slug = "purchases";
+  form.title = "Buy";
+  form.description = "Tell us what you are looking to purchase and we’ll follow up with availability and pricing.";
+  form.submitLabel = "Request a purchase quote";
+  form.successTitle = "Your purchase request was sent.";
+  form.steps = form.steps.map((step) => {
+    if (step.id === "timing") {
+      return {
+        ...step,
+        title: "Delivery and setup",
+        fields: [
+          { id: "deliveryDate", type: "date", label: "Preferred delivery or setup date", required: true },
+          { id: "timingNotes", type: "text", label: "Timing notes", required: false, placeholder: "Any delivery, setup, or scheduling preferences" },
+        ],
+      };
+    }
+    if (step.id === "extras") {
+      return {
+        ...step,
+        id: "options",
+        title: "Purchase options",
+        fields: [
+          {
+            id: "sukkahType", type: "select", label: "What type of sukkah are you looking to purchase?", required: true,
+            options: ["Canvas", "Canvas Bingo", "Snap / panel", "Wood boards with bolts", "Schach and beams only", "Not sure yet", "Other"],
+          },
+          { id: "sukkahTypeOther", type: "text", label: "Tell us about the sukkah type you have in mind", required: true, condition: { fieldId: "sukkahType", operator: "equals", value: "Other" } },
+          { id: "framePreference", type: "radio", label: "Which frame material interests you?", required: true, options: ["Wood", "Metal", "Not sure yet"] },
+          { id: "schach", type: "checkboxes", label: "Which schach options interest you?", required: true, helpText: "Select everything you would like us to consider.", options: ["Bamboo mat", "Bamboo sticks", "Evergreen", "Not sure yet"] },
+          { id: "addOns", type: "checkboxes", label: "Which additions should we include in the conversation?", required: false, options: ["Different style lighting", "Furniture", "Evergreen schach", "Floor covering", "Storage", "Other"] },
+          { id: "furnitureDetails", type: "textarea", label: "Which furniture and chairs would you like?", required: true, placeholder: "For example, folding chairs for 12 guests and one table.", condition: { fieldId: "addOns", operator: "includes", value: "Furniture" } },
+          { id: "addOnsOther", type: "text", label: "Tell us about another addition", required: true, placeholder: "Tell us what you need", condition: { fieldId: "addOns", operator: "includes", value: "Other" } },
+        ],
+      };
+    }
+    if (step.id === "review") {
+      return {
+        ...step,
+        fields: [
+          { id: "comments", type: "textarea", label: "Comments or special requests", required: false, placeholder: "Add any details that did not fit above." },
+          { id: "questions", type: "textarea", label: "Your question", required: false, placeholder: "What would you like to know about purchasing a sukkah?" },
+        ],
+      };
+    }
+    return step;
+  });
+  return form;
+})();
+
 export const DEFAULT_MANAGED_FORMS = Object.freeze([
   DEFAULT_BUILD_FORM,
   DEFAULT_RENTAL_FORM,
   DEFAULT_CUSTOM_SUKKAH_FORM,
   DEFAULT_PERGOLA_FORM,
+  DEFAULT_PURCHASE_FORM,
 ]);
 
 function clean(value, maximum = 4000) {

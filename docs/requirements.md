@@ -88,6 +88,8 @@ built as directory-style files, so `/about` is represented by
 
 /sukkah-rentals
 
+/purchases
+
 /custom-sukkahs
 
 /pergolas
@@ -102,7 +104,7 @@ The private owner route `/admin/` is also built by Astro, but it is not a public
 navigation destination. The Worker must require a Sites-authenticated email on
 the owner allowlist before returning the page or its data.
 
-The dashboard combines Builds, Rentals, and Testimonials in responsive rows
+The dashboard combines Builds, Rentals, Buy, and Testimonials in responsive rows
 that match the public site's forest, cream, and wood theme. It must support
 source filtering, search, pagination, newest-first ordering, responsive detail
 views, and per-source error states. Each row has View and Delete actions. Delete
@@ -145,6 +147,13 @@ attachment choices, surfaces practical site considerations, and groups a wide
 range of roof, shade, frame, siding, screening, artwork, lighting, and comfort
 options in expandable cards. The primary action near the top and the closing
 action both open the built-in Pergola request at `/request/?form=pergolas`.
+
+The `/purchases` route is the customer-facing Buy flow. It uses the shared guided request renderer for customers who
+want to buy a sukkah. It keeps the Rentals contact and location flow, replaces
+rental takedown timing with a preferred delivery or setup date, and adds
+purchase-specific choices for sukkah type, frame material, schach, lighting,
+furniture, flooring, storage, and other additions. Purchase submissions are
+stored in their own Buy dashboard category.
 
 Tree Trimming, Eruv Work, and About use the same shared service shell and
 navigation as the rest of the public site. Tree Trimming is text-first and
@@ -194,8 +203,8 @@ tri-state area. This confirmed scope applies specifically to the
 `/custom-sukkahs/` route and does not redefine the separate Builds or Rentals
 request-form neighborhood choices.
 
-The Sukkahs navigation group contains Builds, Rentals, Custom Sukkahs, and
-Pergolas. The footer uses the same grouping. Public route paths remain
+The Sukkahs navigation group contains Builds, Rentals, Buy, Custom
+Sukkahs, and Pergolas. The footer uses the same grouping. Public route paths remain
 unchanged for saved links and search engines.
 
 The shared footer includes a small Admin link to `/admin/` for the owner. It is

@@ -153,6 +153,14 @@ When adding a task, use this format:
 
 ## Completed
 
+- [x] Add the Buy request form and navigation entry (2026-08-21)
+  - Result: Added the built-in `purchases` schema and `/purchases/` page using
+    the shared renderer, with purchase-specific delivery, sukkah, frame,
+    schach, furniture, flooring, storage, and other-option questions. Buy
+    submissions are stored in a dedicated `purchase` dashboard category, and
+    the shared header, footer, and dashboard use the customer-facing name
+    “Buy.” Passed all 28 automated tests; deployment remains deferred.
+
 - [x] Add official starting-price notices to the request forms (2026-08-21)
   - Result: Added consistent notices for Builds ($250), Rentals ($600), Custom
     Sukkah ($700), and Custom Pergolas ($900), each stating that final pricing
