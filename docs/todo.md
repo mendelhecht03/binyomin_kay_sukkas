@@ -45,11 +45,7 @@ When adding a task, use this format:
 
 ## Now
 
-- [ ] Update remaining public brand references to BK Sukkah
-  - Why: The owner wants public and form-facing references to use BK Sukkah;
-    About-page copy and approved testimonials remain intentionally unchanged.
-  - Done when: Public source text, form responses, documentation, checks, and
-    the deployed site use BK Sukkah everywhere outside those exceptions.
+(No active task.)
 
 ## Next
 
@@ -156,6 +152,12 @@ When adding a task, use this format:
   - Unblocks: Publishing multiple testimonial cards in the homepage scroller.
 
 ## Completed
+
+- [x] Update remaining public brand references to BK Sukkah (2026-08-21)
+  - Result: Updated public page copy, shared branding, form confirmations,
+    contact text, documentation, and hosted site metadata to BK Sukkah while
+    preserving About-page and testimonial personal references. Passed all 27
+    automated tests and verified the live pages and form endpoints.
 
 - [x] Correct the BK Sukkah Builders logo label (2026-08-21)
   - Result: Updated the circular logo artwork so its bottom label reads
