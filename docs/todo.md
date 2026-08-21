@@ -153,6 +153,11 @@ When adding a task, use this format:
 
 ## Completed
 
+- [x] Update office hours to 10:00 PM (2026-08-21)
+  - Result: Updated the shared footer and requirements so Sunday-Friday hours
+    now read 7:00 AM-10:00 PM, passed all 27 automated tests, and published
+    the change to the live site.
+
 - [x] Publish the BK Sukkahs content and form refresh (2026-08-21)
   - Result: Published the BK Sukkahs branding, compact About page and approved
     business copy, Builds-first homepage, tightened service pages, rental

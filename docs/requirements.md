@@ -376,7 +376,7 @@ step always owns the setup and takedown dates. These questions remain editable
 through the form builder while their shared native controls and validation stay
 in place.
 
-The footer shows office hours as Sunday-Friday, 7:00 AM-5:00 PM, and states
+The footer shows office hours as Sunday-Friday, 7:00 AM-10:00 PM, and states
 that the business is closed on Erev Yom Kippur, Motzei Yom Kippur, and Erev
 Sukkos.
 
