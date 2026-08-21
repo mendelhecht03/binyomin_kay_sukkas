@@ -144,6 +144,12 @@ When adding a task, use this format:
 
 ## Completed
 
+- [x] Enhance the freestanding pergola project photo (2026-08-21)
+  - Result: Added a 1448×1086 AI-enhanced JPEG sibling asset, kept the original
+    588×441 source untouched, and updated the Pergolas card to use the sharper
+    version. The site build and automated tests passed; deployment remains
+    deferred.
+
 - [x] Fix Pergolas project-card rendering at tablet widths (2026-08-21)
   - Result: Made project media boxes explicit, removed the compact card's
     intrinsic-height overflow, and stacked media and copy into separate rows at
