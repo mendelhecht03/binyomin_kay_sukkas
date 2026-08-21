@@ -222,10 +222,10 @@ layouts. Changing a shared component updates every page that uses it during
 the next build. This replaces the old system where the same navbar HTML had to
 be copied into every page.
 
-`src/components/Header.astro` owns the shared Sukkahs menu, direct Tree
-Trimming and Eruv Work links, active-page states, and responsive menu behavior.
-The desktop Sukkahs menu opens as a flat rail attached to the header. At tablet
-and phone sizes, its links move into a full-height panel. The page body becomes
+`src/components/Header.astro` owns the shared direct Sukkah-service links, the
+Other dropdown for Tree Trimming and Eruv Work, active-page states, and
+responsive menu behavior. The desktop Other menu opens as a flat rail attached
+to the header. At tablet and phone sizes, its links move into a full-height panel. The page body becomes
 temporarily inert while that panel is open so keyboard focus stays inside the
 navigation.
 

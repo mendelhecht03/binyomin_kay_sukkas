@@ -208,9 +208,11 @@ tri-state area. This confirmed scope applies specifically to the
 `/custom-sukkahs/` route and does not redefine the separate Builds or Rentals
 request-form neighborhood choices.
 
-The Sukkahs navigation group contains Builds, Rentals, Buy, Custom
-Sukkahs, and Pergolas. The footer uses the same grouping. Public route paths remain
-unchanged for saved links and search engines.
+The main navigation exposes Builds, Rentals, Buy, Custom Sukkahs, and Pergolas
+as direct Sukkah-service links. Tree Trimming and Eruv Work are grouped under
+an Other dropdown, while About and Contact remain easy to reach. The footer
+uses the same service grouping. Public route paths remain unchanged for saved
+links and search engines.
 
 The shared footer includes a small Admin link to `/admin/` for the owner. It is
 visually quiet but keyboard accessible, and the protected dashboard continues
@@ -434,12 +436,13 @@ Sukkos.
 - Keep the Contact label balanced rather than oversized. Use a small northeast
   arrow that moves slightly on pointer hover and keyboard focus as directional
   feedback. Respect reduced-motion preferences.
-- On desktop, the Sukkahs menu opens on pointer hover or keyboard focus. Tree
-  Trimming and Eruv Work remain direct links in the primary navigation.
-- On phones and tablets, the Sukkahs menu opens when tapped.
+- On desktop, the Other menu opens on pointer hover or keyboard focus. Builds,
+  Rentals, Buy, Custom Sukkahs, and Pergolas remain direct links in the primary
+  navigation.
+- On phones and tablets, the Other menu opens when tapped.
 - On phones and tablets, navigation uses a full-height panel. The close button,
   Escape key, and selecting a link close the panel and its expanded nested menus.
-- The mobile navigation panel and the nested Sukkahs menu open and close with
+- The mobile navigation panel and the nested Other menu open and close with
   smooth motion. Respect the visitor's reduced-motion preference.
 - Normal navigation links use an animated gold underline for hover, focus, and
   the active page. Do not place them on filled green backgrounds; keep the

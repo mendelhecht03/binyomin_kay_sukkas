@@ -231,4 +231,17 @@ test("the homepage presents Builds as the first service card", async () => {
   assert.ok(buildsIndex < rentalsIndex);
   assert.match(html, /href="\/contact\/"[^>]*>Contact<\/a>/);
   assert.match(html, /Sukkas &amp; Outdoor Work/);
+  const mainNavStart = html.indexOf('<nav class="site-navigation"');
+  const mainNavEnd = html.indexOf('</nav>', mainNavStart);
+  const mainNav = html.slice(mainNavStart, mainNavEnd);
+  const otherGroupIndex = mainNav.indexOf('<details class="nav-group"');
+  assert.ok(mainNavStart >= 0);
+  assert.ok(otherGroupIndex > 0);
+  assert.ok(mainNav.indexOf('href="/sukka-builder/"') < otherGroupIndex);
+  assert.ok(mainNav.indexOf('href="/sukkah-rentals/"') < otherGroupIndex);
+  assert.ok(mainNav.indexOf('href="/purchases/"') < otherGroupIndex);
+  assert.ok(mainNav.indexOf('href="/custom-sukkahs/"') < otherGroupIndex);
+  assert.ok(mainNav.indexOf('href="/pergolas/"') < otherGroupIndex);
+  assert.ok(mainNav.indexOf('href="/tree-trimming/"', otherGroupIndex) > otherGroupIndex);
+  assert.ok(mainNav.indexOf('href="/eruv-work/"', otherGroupIndex) > otherGroupIndex);
 });

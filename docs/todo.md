@@ -144,6 +144,12 @@ When adding a task, use this format:
 
 ## Completed
 
+- [x] Reorganize the shared navigation groups (2026-08-21)
+  - Result: Builds, Rentals, Buy, Custom Sukkahs, and Pergolas are now direct
+    main-nav links. Tree Trimming and Eruv Work live in an accessible Other
+    dropdown on desktop and mobile. Added regression coverage, verified both
+    layouts, and passed all 29 tests; deployment remains deferred.
+
 - [x] Enhance the freestanding pergola project photo (2026-08-21)
   - Result: Added a 1448×1086 AI-enhanced JPEG sibling asset, kept the original
     588×441 source untouched, and updated the Pergolas card to use the sharper
