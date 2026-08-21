@@ -45,12 +45,7 @@ When adding a task, use this format:
 
 ## Now
 
-- [ ] Add uniform request-page hero actions
-  - Why: Visitors should have the same clear start-and-explore choices on every
-    service page that leads into a request form.
-  - Done when: Builds, Rentals, Buy, Custom Sukkahs, and Pergolas use the same
-    responsive two-button hero treatment with useful page-specific destinations,
-    and all automated checks pass.
+(No active task.)
 
 ## Next
 
@@ -148,6 +143,11 @@ When adding a task, use this format:
   - Unblocks: Publishing multiple testimonial cards in the homepage scroller.
 
 ## Completed
+
+- [x] Verify Builds is first in the homepage service cards (2026-08-21)
+  - Result: Confirmed the homepage service-card markup presents the Builds link
+    first, before Custom Sukkahs and Rentals. Added regression coverage for the
+    rendered homepage order; deployment remains deferred.
 
 - [x] Add uniform request-page hero actions (2026-08-21)
   - Result: Added one shared responsive start-or-explore action row to Builds,

@@ -205,3 +205,17 @@ test("the live request definitions use editable section icons and the shared pub
     assert.equal(DEFAULT_PURCHASE_FORM.steps.find((step) => step.id === "options").fields.find((field) => field.id === "sukkahType").required, true);
   } finally { DB.close(); }
 });
+
+test("the homepage presents Builds as the first service card", async () => {
+  const homePage = await worker.fetch(new Request("https://example.com/"));
+  assert.equal(homePage.status, 200);
+  const html = await homePage.text();
+  const serviceChoicesStart = html.indexOf('class="service-choices"');
+  const buildsIndex = html.indexOf('href="/sukka-builder/"', serviceChoicesStart);
+  const customIndex = html.indexOf('href="/custom-sukkahs/"', serviceChoicesStart);
+  const rentalsIndex = html.indexOf('href="/sukkah-rentals/"', serviceChoicesStart);
+  assert.ok(serviceChoicesStart >= 0);
+  assert.ok(buildsIndex > serviceChoicesStart);
+  assert.ok(buildsIndex < customIndex);
+  assert.ok(buildsIndex < rentalsIndex);
+});
