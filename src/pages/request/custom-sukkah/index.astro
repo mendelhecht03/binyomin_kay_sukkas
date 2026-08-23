@@ -9,7 +9,7 @@ import ManagedRequestForm from "../../../components/ManagedRequestForm.astro";
   description="Share the details of your custom sukkah project with BK Sukkah."
   bodyClass="request-form-page dynamic-request-page"
 >
-  <section class="dynamic-form-hero sukkah-hero-background">
+  <section id="form-overview" class="dynamic-form-hero sukkah-hero-background">
     <div class="shell dynamic-form-hero__inner">
       <nav class="breadcrumb" aria-label="Breadcrumb">
         <a href="/">Home</a><span aria-hidden="true">/</span><span>Custom Sukkah request</span>
@@ -21,7 +21,7 @@ import ManagedRequestForm from "../../../components/ManagedRequestForm.astro";
         <FormPageActions
           primaryLabel="Start a custom sukkah request"
           primaryHref="#custom-sukkah-request"
-          secondaryLabel="See recent projects"
+          secondaryLabel="Back to overview"
           secondaryHref="/custom-sukkahs/#recent-projects"
           ariaLabel="Custom sukkah request actions"
         />

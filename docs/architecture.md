@@ -127,14 +127,21 @@ without a trailing slash, such as `/about`, can load the `/about/` page.
 The former package overview, buy, and sample URLs are generated as compatibility
 redirect pages that send visitors to `/sukka-builder/`.
 
-`/sukka-builder/`, `/sukkah-rentals/`, `/purchases/`, and `/request/<published-form-slug>/`
-all use the same `ManagedRequestForm` renderer. The browser requests the active
-published definition from `GET /api/forms/<slug>`, and the Worker validates the
-same definition before saving a submission. Builds, Rentals, and the Buy flow are
-built-in managed schemas with stable slugs (`builds`, `rentals`, and
-`purchases`), so the owner can edit the live forms from the dashboard without
-changing page code. Their submissions use the `build`, `rental`, and `purchase`
-dashboard categories.
+`/sukka-builder/` uses the `ManagedRequestForm` renderer directly, while
+`/sukkah-rentals/` and `/purchases/` are overview-only pages whose CTAs open the
+shared `/request/?form=<slug>` route. The request route and
+`/request/<published-form-slug>/` use the same `ManagedRequestForm` renderer.
+The browser requests the active published definition from `GET
+/api/forms/<slug>`, and the Worker validates the same definition before saving a
+submission. Builds, Rentals, and the Buy flow are built-in managed schemas with
+stable slugs (`builds`, `rentals`, and `purchases`), so the owner can edit the
+live forms from the dashboard without changing page code. Their submissions
+use the `build`, `rental`, and `purchase` dashboard categories. The shared
+request page changes its secondary overview link from the `form` query:
+Rentals return to `/sukkah-rentals/#rental-overview`, Buy to
+`/purchases/#buy-overview`, and Pergolas to `/pergolas/#recent-projects`; the
+dedicated Custom Sukkah request route uses the same recent-projects destination
+directly.
 
 Every step stores a selectable section icon (`contact`, `location`, `timing`,
 `sukkah`, `site`, `final`, `phone`, `home`, `ruler`, `tools`, `message`, or
@@ -222,18 +229,20 @@ layouts. Changing a shared component updates every page that uses it during
 the next build. This replaces the old system where the same navbar HTML had to
 be copied into every page.
 
-`src/components/Header.astro` owns the shared direct desktop Sukkah-service
-links, the mobile Sukkahs dropdown, the Other dropdown for Tree Trimming and
-Eruv Work, active-page states, and responsive menu behavior. The desktop Other
-menu opens as a flat rail attached to the header. At tablet and phone sizes,
-the Sukkahs and Other links move into a full-height panel. The page body
-becomes temporarily inert while that panel is open so keyboard focus stays
+`src/components/Header.astro` owns the shared Home, Sukkahs, Services, About,
+and Request a Quote navigation hierarchy, active-page states, and responsive
+menu behavior. The Sukkahs dropdown contains Builds, Custom Sukkahs, Rentals,
+Buy, and Pergolas. The Services dropdown contains Tree Trimming and Eruv
+Making. Both desktop dropdowns open as flat rails attached to the header. At
+tablet and phone sizes, both groups open inside a full-height panel. The page
+body becomes temporarily inert while that panel is open so keyboard focus stays
 inside the navigation.
 
-The header and footer both use the supplied BK Sukkah Builders logo asset and display the
-”BK Sukkah” brand name. The header descriptor is “Sukkahs & Outdoor Work.” The
-inline hut mark is not duplicated in individual pages; the shared components
-keep the logo and accessibility labels consistent.
+The header and footer both use the supplied BK Sukkah Builders logo asset. The
+header displays the “BK Sukkah” brand name and “Sukkahs & Outdoor Work”
+descriptor; the footer keeps the logo mark by itself so it does not compete
+with the footer navigation. The inline hut mark is not duplicated in individual
+pages; the shared components keep the logo and accessibility labels consistent.
 
 Tree Trimming and Eruv Work use the shared `ServicePage` template with an
 optional text-first mode (`showMedia: false`) so pages without approved photos
@@ -250,6 +259,13 @@ authentication.
 description surface used by the Custom Sukkahs Siding and Schach grids. Both
 sections pass content into the same component so their image ratio, borders,
 radius, and spacing stay synchronized across breakpoints.
+
+`src/components/RentalOverview.astro` is the shared package overview for the
+Rentals and Buy routes. A small `variant` prop changes the copy, image, section
+anchor, and form CTA while keeping the responsive package details and tarp
+gallery in one place. At desktop widths its package copy and photo share the
+first grid row to avoid unused side whitespace; the phone layout remains
+stacked.
 
 ## Worker Generation
 

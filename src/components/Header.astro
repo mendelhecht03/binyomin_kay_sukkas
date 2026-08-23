@@ -9,6 +9,11 @@ const sukkahLinks = [
     description: "Arrange installation for a sukkah you own.",
   },
   {
+    href: "/custom-sukkahs/",
+    label: "Custom Sukkahs",
+    description: "Build around an unusual space or need.",
+  },
+  {
     href: "/sukkah-rentals/",
     label: "Rentals",
     description: "Arrange a seasonal sukkah and service.",
@@ -19,18 +24,13 @@ const sukkahLinks = [
     description: "Find a sukkah to purchase and set up.",
   },
   {
-    href: "/custom-sukkahs/",
-    label: "Custom Sukkahs",
-    description: "Build around an unusual space or need.",
-  },
-  {
     href: "/pergolas/",
     label: "Pergolas",
     description: "Create a practical outdoor structure.",
   },
 ];
 
-const otherLinks = [
+const servicesLinks = [
   {
     href: "/tree-trimming/",
     label: "Tree Trimming",
@@ -38,7 +38,7 @@ const otherLinks = [
   },
   {
     href: "/eruv-work/",
-    label: "Eruv Work",
+    label: "Eruv Making",
     description: "Keep your sukkah area enclosed to a high standard.",
   },
 ];
@@ -87,17 +87,7 @@ const groupIsActive = (links: typeof sukkahLinks) =>
         href="/"
       ><span>Home</span></a>
 
-      <div class="desktop-sukkah-links">
-        {sukkahLinks.map((link) => (
-          <a
-            class:list={["nav-link", { "is-active": isActive(link.href) }]}
-            aria-current={isActive(link.href) ? "page" : undefined}
-            href={link.href}
-          ><span>{link.label}</span></a>
-        ))}
-      </div>
-
-      <details class="nav-group mobile-sukkah-group" data-nav-group>
+      <details class="nav-group" data-nav-group>
         <summary class:list={["nav-link", { "is-active": groupIsActive(sukkahLinks) }]}>
           <span>Sukkahs</span>
         </summary>
@@ -124,17 +114,17 @@ const groupIsActive = (links: typeof sukkahLinks) =>
       </details>
 
       <details class="nav-group" data-nav-group>
-        <summary class:list={["nav-link", { "is-active": groupIsActive(otherLinks) }]}>
-          <span>Other</span>
+        <summary class:list={["nav-link", { "is-active": groupIsActive(servicesLinks) }]}>
+          <span>Services</span>
         </summary>
         <div class="nav-dropdown">
           <div class="nav-dropdown-layout shell">
             <div class="nav-dropdown-intro" aria-hidden="true">
-              <strong>Other services</strong>
+              <strong>Services</strong>
               <span>Practical help beyond sukkah services.</span>
             </div>
-            <div class="nav-dropdown-inner nav-dropdown-inner-other">
-              {otherLinks.map((link) => (
+            <div class="nav-dropdown-inner nav-dropdown-inner-services">
+              {servicesLinks.map((link) => (
                 <a
                   class:list={["dropdown-link", { "is-active": isActive(link.href) }]}
                   aria-current={isActive(link.href) ? "page" : undefined}
@@ -158,7 +148,7 @@ const groupIsActive = (links: typeof sukkahLinks) =>
         class:list={["button button-small nav-button", { "is-active": isActive("/contact/") }]}
         aria-current={isActive("/contact/") ? "page" : undefined}
         href="/contact/"
-      >Contact</a>
+      >Request a Quote</a>
 
       <div class="mobile-nav-contact">
         <span>Prefer to speak directly?</span>

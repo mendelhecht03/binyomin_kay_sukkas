@@ -154,8 +154,12 @@ action both open the built-in Pergola request at `/request/?form=pergolas`.
 Recent-project cards must keep their media and copy in separate rows at tablet
 and phone widths so project details never overlap the photo.
 
-The `/purchases` route is the customer-facing Buy flow. It uses the shared guided request renderer for customers who
-want to buy a sukkah. It keeps the Rentals contact and location flow, replaces
+The `/purchases` route is the customer-facing Buy overview. Before the guided
+form, it shows the same responsive package overview and tarp gallery used by
+Rentals, with Buy-specific copy and a clear CTA into
+`/request/?form=purchases#request-form`. The tarp galleries are sample looks;
+visitors should be invited to ask about other options and confirm availability.
+The separate request route uses the shared guided request renderer for customers who want to buy a sukkah. It keeps the Rentals contact and location flow, replaces
 rental takedown timing with a preferred delivery or setup date, and adds
 purchase-specific choices for sukkah type, frame material, schach, lighting,
 furniture, flooring, storage, and other additions. Purchase submissions are
@@ -207,12 +211,15 @@ tri-state area. This confirmed scope applies specifically to the
 `/custom-sukkahs/` route and does not redefine the separate Builds or Rentals
 request-form neighborhood choices.
 
-The desktop main navigation exposes Builds, Rentals, Buy, Custom Sukkahs, and
-Pergolas as direct Sukkah-service links. On tablet and phone navigation, those
-same links are grouped under a Sukkahs dropdown. Tree Trimming and Eruv Work
-are grouped under an Other dropdown, while About and Contact remain easy to
-reach. The footer uses the same service grouping. Public route paths remain
-unchanged for saved links and search engines.
+The main navigation keeps a clear, compact hierarchy: Home, Sukkahs, Services,
+About, and the existing Request a Quote action, in that order. Sukkahs is a
+dropdown containing Builds, Custom Sukkahs, Rentals, Buy, and Pergolas. Builds
+and Custom Sukkahs remain separate offerings: Builds covers installation or
+service for a sukkah the customer owns, while Custom Sukkahs covers a new
+design/build around a particular space or need. Services is a dropdown
+containing Tree Trimming and Eruv Making. The footer uses the same service
+grouping. Public route paths remain unchanged for saved links and search
+engines.
 
 The shared footer includes a small Admin link to `/admin/` for the owner. It is
 visually quiet but keyboard accessible, and the protected dashboard continues
@@ -249,11 +256,14 @@ section spacing, typography, button, surface, border, radius, accent, CTA, and
 responsive systems.
 
 Builds, Rentals, Buy, Custom Sukkah requests, and the generic request route use
-the same responsive two-button hero treatment. The primary action scrolls to or
-opens the relevant request form; the secondary action takes visitors to useful
-service details or recent project examples. The Pergolas hero uses the same
-component and destinations so every form-led service page has a consistent
-start-or-explore choice.
+the same responsive hero treatment. On a standalone request route, the primary
+action scrolls to that page's form section and the secondary action returns to
+the matching service overview: Custom Sukkah returns to
+`/custom-sukkahs/#recent-projects`, Pergolas to `/pergolas/#recent-projects`,
+Buy to `/purchases/#buy-overview`, and Rentals to
+`/sukkah-rentals/#rental-overview`. Service overview pages may still use their
+primary action to open the separate request route, while their secondary action
+stays on the overview page.
 The top of the Custom Sukkah request form displays: “Custom sukkah projects
 start at $700. Final pricing is confirmed with BK Sukkah.”
 
@@ -332,9 +342,11 @@ field that needs attention without using alert dialogs. Its Location step uses
 the same responsive address layout as Builds; Street address, City, State, and
 ZIP stack vertically on phone-sized screens.
 
-The `/sukkah-rentals/` page is an overview-only page. It places a large example
-rental photo underneath the package description and shows representative tarp
-directions before the visitor enters the form. It states: “Rental packages
+The `/sukkah-rentals/` page is an overview-only page. On desktop, the package
+description and example rental photo share a compact two-column introduction;
+on phone-sized screens they stack vertically. The page shows sample tarp
+directions, invites visitors to ask about other options, and confirms
+availability before the visitor enters the form. It states: “Rental packages
 start at $250. Final pricing is confirmed with BK Sukkah.” The package action
 scrolls to the overview section, while each “Start a rental request” action
 opens `/request/?form=rentals#request-form` so the visitor lands directly on
@@ -430,24 +442,25 @@ Sukkos.
 
 **Navigation behavior**
 
-- Use the site's old-style serif heading family for normal navigation and
-  dropdown labels so the header feels consistent with the heritage craft
-  brand. Use that same heading family for the filled Contact action so the
-  button feels integrated with the navigation while its background keeps it
-  clearly actionable.
-- Keep the Contact label balanced rather than oversized. Use a small northeast
+- Use the humanist Cabin navigation typeface for normal navigation and dropdown
+  labels so it has more character than a plain system sans while pairing with
+  the serif logo. Give top-level items a slightly heavier weight and positive
+  letter spacing, and keep dropdown children a little lighter and tighter.
+  Keep the type readable at roughly 14–16px on desktop.
+- Keep the Request a Quote label balanced rather than oversized. Use a small northeast
   arrow that moves slightly on pointer hover and keyboard focus as directional
-  feedback. Respect reduced-motion preferences.
-- On desktop, the Other menu opens on pointer hover or keyboard focus. Builds,
-  Rentals, Buy, Custom Sukkahs, and Pergolas remain direct links in the primary
-  navigation.
-- On phones and tablets, the Other menu opens when tapped.
+  feedback. The action uses the same transparent treatment as the hero's Call
+  BK action rather than a filled background. Respect reduced-motion preferences.
+- On desktop, the Sukkahs and Services menus open on pointer hover or keyboard
+  focus.
+- On phones and tablets, the Sukkahs and Services menus open when tapped.
 - On phones and tablets, navigation uses a full-height panel. The close button,
   Escape key, and selecting a link close the panel and its expanded nested menus.
-- The mobile navigation panel and the nested Other menu open and close with
+- The mobile navigation panel and its nested menus open and close with
   smooth motion. Respect the visitor's reduced-motion preference.
 - Normal navigation links use an animated gold underline for hover, focus, and
   the active page. Do not place them on filled green backgrounds; keep the
-  Contact item visually distinct as the filled action button.
+  transparent Request a Quote item visually distinct through its arrow and
+  typography.
 - Desktop submenus use a flat rail attached to the header. Do not use a
   floating card, rounded dropdown container, or dropdown shadow.

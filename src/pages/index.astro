@@ -10,10 +10,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     <section class="home-hero" aria-labelledby="home-hero-heading">
       <img
         class="home-hero-image"
-        src="/assets/images/home-hero-decorated-sukkah.jpg"
-        alt="A finished sukkah prepared with schach, greenery, lighting and a set table"
-        width="1800"
-        height="1350"
+        src="/assets/images/home-hero-wooden-sukkah.jpg"
+        alt="A wooden sukkah with bamboo schach"
+        width="1200"
+        height="675"
         loading="eager"
         fetchpriority="high"
       />
@@ -45,6 +45,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           <h2 id="services-heading">How can we help?</h2>
           <p>Choose the option below that matches your sukkah needs</p>
         </div>
+
+        <p class="service-swipe-hint" aria-hidden="true">Swipe to see more <span>→</span></p>
 
         <nav class="service-choices" aria-label="Choose a sukkah service">
           <a class="service-choice service-choice-service" href="/sukka-builder/" data-reveal>
@@ -297,7 +299,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             aria-label="Customer testimonials"
             tabindex="0"
           >
-            <div class="testimonial-carousel-viewport">
+            <div class="testimonial-carousel-viewport" data-testimonial-swipe>
               <div class="testimonial-story-track" data-testimonial-track>
               <article class="testimonial-story-card" data-testimonial-slide data-reveal aria-roledescription="slide" aria-label="1 of 1">
             <blockquote>
@@ -401,10 +403,14 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         article.setAttribute("aria-roledescription", "slide");
 
         const blockquote = document.createElement("blockquote");
+        const quoteMark = document.createElement("span");
+        quoteMark.className = "testimonial-quote-mark";
+        quoteMark.setAttribute("aria-hidden", "true");
+        quoteMark.textContent = "“";
         const copy = document.createElement("p");
-        copy.className = "testimonial-approved-copy";
+        copy.className = "testimonial-story-preview testimonial-approved-copy";
         copy.textContent = `“${testimonial.testimonial}”`;
-        blockquote.append(copy);
+        blockquote.append(quoteMark, copy);
 
         const footer = document.createElement("footer");
         const citation = document.createElement("cite");
@@ -427,6 +433,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     const getVisibleCount = () => Math.min(window.matchMedia("(min-width: 761px)").matches ? 2 : 1, testimonialSlides.length);
     let visibleCount = getVisibleCount();
     let activeTestimonial = 0;
+    let swipeMode = window.matchMedia("(max-width: 760px)").matches;
+    let scrollFrame = 0;
     testimonialCarousel.dataset.visibleCount = String(visibleCount);
 
     const maxStartIndex = () => Math.max(0, testimonialSlides.length - visibleCount);
@@ -441,12 +449,20 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       }
     };
 
-    const updateTrackPosition = () => {
+    const updateTrackPosition = (smooth = false) => {
       const firstSlide = testimonialSlides[0];
       if (!(firstSlide instanceof HTMLElement)) return;
       const trackStyles = getComputedStyle(testimonialTrack);
       const gap = parseFloat(trackStyles.columnGap || trackStyles.gap || "0") || 0;
       const distance = firstSlide.getBoundingClientRect().width + gap;
+      if (swipeMode && testimonialViewport instanceof HTMLElement) {
+        testimonialTrack.style.transform = "none";
+        testimonialViewport.scrollTo({
+          left: activeTestimonial * distance,
+          behavior: smooth ? "smooth" : "auto",
+        });
+        return;
+      }
       testimonialTrack.style.transform = `translate3d(-${activeTestimonial * distance}px, 0, 0)`;
     };
 
@@ -455,9 +471,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       testimonialSlides.forEach((slide) => slideSizeObserver.observe(slide));
     }
 
-    const showTestimonial = (nextIndex, shouldFocus = false) => {
+    const showTestimonial = (nextIndex, shouldFocus = false, { skipPosition = false } = {}) => {
       activeTestimonial = Math.max(0, Math.min(nextIndex, maxStartIndex()));
-      updateTrackPosition();
+      if (!skipPosition) updateTrackPosition(true);
 
       testimonialSlides.forEach((slide, index) => {
         const isActive = index >= activeTestimonial && index < activeTestimonial + visibleCount;
@@ -486,6 +502,26 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       if (shouldFocus) testimonialCarousel.focus({ preventScroll: true });
     };
 
+    const syncActiveTestimonialFromSwipe = () => {
+      if (!swipeMode || !(testimonialViewport instanceof HTMLElement)) return;
+      const firstSlide = testimonialSlides[0];
+      if (!(firstSlide instanceof HTMLElement)) return;
+      const trackStyles = getComputedStyle(testimonialTrack);
+      const gap = parseFloat(trackStyles.columnGap || trackStyles.gap || "0") || 0;
+      const distance = firstSlide.getBoundingClientRect().width + gap;
+      if (distance <= 0) return;
+      const nextIndex = Math.max(0, Math.min(Math.round(testimonialViewport.scrollLeft / distance), maxStartIndex()));
+      if (nextIndex !== activeTestimonial) showTestimonial(nextIndex, false, { skipPosition: true });
+    };
+
+    testimonialViewport?.addEventListener("scroll", () => {
+      if (!swipeMode || scrollFrame) return;
+      scrollFrame = requestAnimationFrame(() => {
+        scrollFrame = 0;
+        syncActiveTestimonialFromSwipe();
+      });
+    }, { passive: true });
+
     testimonialScrollButtons.forEach((button) => {
       button.addEventListener("click", () => {
         if (!(button instanceof HTMLButtonElement)) return;
@@ -508,6 +544,12 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     });
 
     window.addEventListener("resize", () => {
+      const nextSwipeMode = window.matchMedia("(max-width: 760px)").matches;
+      if (nextSwipeMode !== swipeMode) {
+        swipeMode = nextSwipeMode;
+        if (swipeMode) testimonialTrack.style.transform = "none";
+        if (!swipeMode && testimonialViewport instanceof HTMLElement) testimonialViewport.scrollLeft = 0;
+      }
       const nextVisibleCount = getVisibleCount();
       if (nextVisibleCount !== visibleCount) {
         visibleCount = nextVisibleCount;
@@ -805,6 +847,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       "buy pergola";
     grid-template-rows: repeat(3, minmax(300px, auto));
     gap: clamp(1rem, 2vw, 1.5rem);
+  }
+
+  .service-swipe-hint {
+    display: none;
   }
 
   .service-choice {
@@ -1467,7 +1513,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     }
   }
 
-  .testimonial-story-card {
+  :global(.testimonial-story-card) {
     width: 100%;
     min-width: 0;
     display: grid;
@@ -1479,7 +1525,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     box-shadow: 0 18px 42px rgba(16, 45, 37, 0.08);
   }
 
-  .testimonial-story-card-preview {
+  :global(.testimonial-story-card-preview) {
     border-style: dashed;
     background: var(--cream-50);
     box-shadow: none;
@@ -1510,19 +1556,19 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     line-height: 1.28;
   }
 
-  .testimonial-story-card blockquote {
+  :global(.testimonial-story-card blockquote) {
     width: 100%;
     min-width: 0;
     margin: 0;
   }
 
-  .testimonial-story-card-approved {
+  :global(.testimonial-story-card-approved) {
     grid-template-columns: minmax(0, 1fr);
     justify-items: stretch;
   }
 
-  .testimonial-story-card-approved > blockquote,
-  .testimonial-story-card-approved > footer {
+  :global(.testimonial-story-card-approved > blockquote),
+  :global(.testimonial-story-card-approved > footer) {
     min-width: 0;
     max-width: none;
   }
@@ -1545,7 +1591,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     line-height: 0.75;
   }
 
-  .testimonial-story-preview {
+  :global(.testimonial-story-preview) {
     max-width: 28ch;
     color: var(--forest-950);
     font-family: var(--font-heading);
@@ -1594,7 +1640,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     line-height: 1.68;
   }
 
-  .testimonial-story-card footer {
+  :global(.testimonial-story-card footer) {
     width: 100%;
     min-width: 0;
     margin-top: 1.45rem;
@@ -1605,26 +1651,30 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     font-weight: 800;
   }
 
-  .testimonial-story-card cite {
+  :global(.testimonial-story-card cite) {
     display: block;
     overflow-wrap: break-word;
     word-break: normal;
     font-style: normal;
   }
 
-  .testimonial-approved-copy {
+  :global(.testimonial-approved-copy) {
     display: block;
     width: 100%;
-    max-width: 56ch;
+    max-width: 28ch;
     margin: 0;
-    color: var(--forest-950);
-    font-family: var(--font-heading);
-    font-size: clamp(1.35rem, 2.5vw, 2rem);
-    letter-spacing: -0.02em;
-    line-height: 1.4;
     overflow-wrap: break-word;
     word-break: normal;
     white-space: pre-wrap;
+  }
+
+  :global(.testimonial-quote-mark) {
+    display: block;
+    height: 1.2rem;
+    color: var(--wood-500);
+    font-family: var(--font-heading);
+    font-size: 3.4rem;
+    line-height: 0.75;
   }
 
   @keyframes testimonial-form-enter {
@@ -1883,12 +1933,39 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       font-size: clamp(2.15rem, 11vw, 3.25rem);
     }
 
+    .service-swipe-hint {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      margin: -1.5rem 0 1rem;
+      color: var(--ink-700);
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .service-choices {
+      width: calc(100% + 16px);
+      display: flex;
+      gap: 1rem;
+      overflow-x: auto;
+      padding: 0 16px 1.2rem 0;
+      scroll-snap-type: x mandatory;
+      scrollbar-color: var(--wood-500) var(--cream-200);
+      scrollbar-width: thin;
+    }
+
+    .service-choice,
     .service-choice-custom,
     .service-choice-rent,
     .service-choice-service,
     .service-choice-purchase,
     .service-choice-pergola {
+      width: min(86vw, 24rem);
+      flex: 0 0 min(86vw, 24rem);
+      grid-area: auto;
       grid-template-columns: 1fr;
+      grid-template-rows: none;
+      scroll-snap-align: start;
     }
 
     .service-choice-custom .service-choice-media,
@@ -1910,6 +1987,32 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
     .testimonial-field-grid {
       grid-template-columns: 1fr;
+    }
+
+    .testimonial-carousel-viewport {
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding-bottom: 0.75rem;
+      overscroll-behavior-inline: contain;
+      scroll-snap-type: x mandatory;
+      scrollbar-color: var(--wood-500) var(--cream-200);
+      scrollbar-width: thin;
+    }
+
+    .testimonial-story-track {
+      display: flex;
+      gap: 1rem;
+      width: 100%;
+      transform: none !important;
+    }
+
+    :global(.testimonial-story-card) {
+      flex: 0 0 min(88vw, 30rem);
+      scroll-snap-align: start;
+    }
+
+    .testimonial-scroll-button {
+      display: none;
     }
 
     .owner-photo::after {

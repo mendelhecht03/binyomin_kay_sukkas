@@ -144,6 +144,87 @@ When adding a task, use this format:
 
 ## Completed
 
+- [x] Refactor header navigation hierarchy and typography (2026-08-22)
+  - Reorganized the shared header into Home, Sukkahs, Services, About, and
+    Request a Quote; kept Builds and Custom Sukkahs as distinct offerings;
+    grouped the five Sukkahs links and two Services links in their dropdowns;
+    applied Cabin-based weight and tracking hierarchy; and made Request a
+    Quote transparent like the hero call action. `npm test` passed all 29 tests.
+
+- [x] Fix overview routing and simplify footer branding (2026-08-22)
+  - Result: Request-page “Back to overview” actions now use the selected form
+    to return to Custom Sukkah recent projects, Pergola recent projects, the
+    Buy overview, or the Rentals overview. The dedicated Custom Sukkah route
+    uses its recent-projects destination directly. Removed the footer text
+    lockup so only the round logo remains beside the footer content.
+  - Checked: `npm test` (29 tests passed; Astro build and Worker generation passed). Not deployed.
+
+- [x] Clarify the sample tarp gallery note (2026-08-22)
+  - Result: The shared Rentals and Buy gallery copy now identifies the images
+    as sample looks and invites visitors to ask about other tarp options and
+    confirm availability.
+  - Checked: `npm test` (29 tests passed; Astro build and Worker generation passed). Not deployed.
+
+- [x] Separate the Buy overview from its request form (2026-08-22)
+  - Result: `/purchases/` is now overview-only, with Buy-specific package copy,
+    tarp directions, and CTAs into `/request/?form=purchases#request-form`.
+    The shared request page renders the existing Buy form when that query is
+    selected, matching the Rentals flow.
+  - Checked: `npm test` (29 tests passed; Astro build and Worker generation passed). Not deployed.
+
+- [x] Refine navbar typography and tighten the desktop rental overview (2026-08-22)
+  - Result: Kept the heritage serif treatment for ordinary navigation labels,
+    tuned their scale and weight, and changed the filled Request a Quote action
+    to the same sans-serif family as the hero buttons. The shared Rentals/Buy
+    overview now places package copy and the example photo side by side on
+    desktop, with the tarp gallery and CTA spanning below while phones remain
+    stacked.
+  - Checked: `npm test` (29 tests passed; Astro build and Worker generation passed). Not deployed.
+
+- [x] Fix the Rentals CTA fallback route (2026-08-22)
+  - Result: The shared request page now selects the requested local fallback schema, so `/request/?form=rentals` renders the rental form instead of defaulting to Custom Sukkah when the forms API is unavailable.
+  - Checked: `npm test` (29 tests passed; Astro build and Worker generation passed). Not deployed.
+
+- [x] Make testimonials swipeable (2026-08-22)
+  - Result: Added a native snap-scrolling testimonial track on phone widths, synchronized the active story and counter while swiping, and kept buttons/keyboard navigation available for larger screens and accessibility.
+  - Checked: `npm test` (29 tests passed; Astro build and Worker generation passed). Not deployed.
+
+- [x] Try the new homepage hero image (2026-08-22)
+  - Result: Replaced the homepage hero photo with the supplied wooden sukkah and bamboo schach image while preserving the existing overlay, responsive crop, and headline contrast.
+  - Checked: `npm test` (29 tests passed; Astro build and Worker generation passed). Not deployed.
+
+- [x] Normalize dynamically approved testimonial cards (2026-08-22)
+  - Result: Made shared testimonial-card styles global for API-inserted reviews, added matching heading and gold-quote markup, and kept the carousel citation treatment consistent.
+  - Checked: `npm test` (29 tests passed; Astro build and Worker generation passed). Not deployed.
+
+- [x] Make homepage service cards swipeable on mobile (2026-08-22)
+  - Result: Converted the five homepage service cards into a horizontal snap-scrolling row below 560px, added a “Swipe to see more” hint, and preserved the existing desktop grid.
+  - Checked: `npm test` (29 tests passed; Astro build and Worker generation passed). Not deployed.
+
+- [x] Show the footer brand text on mobile (2026-08-22)
+  - Result: Added the BK Sukkah name and “Sukkahs & Outdoor Work” descriptor beside the footer logo, with a mobile-specific override so the descriptor remains visible at phone widths.
+  - Checked: `npm test` (29 tests passed; Astro build and Worker generation passed). Not deployed.
+
+- [x] Keep form-page hero buttons on the form route (2026-08-22)
+  - Result: Standalone generic, Rentals, Pergola, and Custom Sukkah request routes now use local overview/form anchors; cross-page “Explore services” and recent-project links were removed from the form headers. Overview landing pages keep their intentional links into the separate forms.
+  - Checked: `npm test` (29 tests passed; Astro build and Worker generation passed). Not deployed.
+
+- [x] Restore the previous quote-button label (2026-08-22)
+  - Result: Restored “Request a Quote” on the existing `/contact/` header link while keeping the current heading font, size, weight, spacing, arrow, and button styling.
+  - Checked: `npm test` (29 tests passed; Astro build and Worker generation passed). Not deployed.
+
+- [x] Remove the extra Builds hero action (2026-08-22)
+  - Result: Builds now shows only the primary request button; the shared action component supports optional secondary actions for other pages.
+  - Checked: `npm test` (29 tests passed; Astro build and Worker generation passed). Not deployed.
+
+- [x] Reduce package overview image size (2026-08-22)
+  - Result: Capped the shared Rentals/Buy overview photo to a centered 32rem frame with a substantially shorter height and a tighter mobile size.
+  - Checked: `npm test` (29 tests passed; Astro build and Worker generation passed). Not deployed.
+
+- [x] Add the shared package overview to Buy (2026-08-21)
+  - Result: Reused the responsive Rentals overview component for `/purchases/` with Buy-specific copy, imagery, anchor links, and a CTA into the Buy form; Rental flow remains unchanged. Updated requirements and architecture notes.
+  - Checked: `npm test` (29 tests passed; Astro build and Worker generation passed). Not deployed.
+
 - [x] Enhance the homepage Buy card photo (2026-08-21)
   - Result: Added a sharper, AI-enhanced version of the white-tarp sukkah photo with the table bag removed, kept the original asset intact, and updated only the Buy card to use the new image. The build and all 29 tests passed; deployment remains deferred.
 

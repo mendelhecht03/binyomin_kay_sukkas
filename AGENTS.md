@@ -75,13 +75,6 @@ This applies to work involving:
 - Navigation should be simple and easy to use.
 - Forms should be clear, with labels for each input.
 
-### Images
-
-- If a real image is not available yet, keep the image area in the page and use a clear placeholder.
-- Image placeholders should have a fixed size or aspect ratio so the page layout does not jump later.
-- Placeholders should clearly show that an image will go there.
-- Do not remove planned image sections just because the final image file is missing.
-
 ### Colors
 
 - Use a small number of colors.

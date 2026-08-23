@@ -6,17 +6,48 @@ const tarpStyles = [
   { name: "Soft fabric", image: "/assets/images/custom-soft-fabric.jpg", alt: "Example sukkah with soft fabric walls" },
 ];
 
-const { formHref = "/request/?form=rentals#request-form" } = Astro.props;
+const props = Astro.props;
+const variant = props.variant === "buy" ? "buy" : "rental";
+const isBuy = variant === "buy";
+const sectionId = isBuy ? "buy-overview" : "rental-overview";
+const headingId = `${sectionId}-heading`;
+const tarpHeadingId = `${sectionId}-tarp-heading`;
+const formHref = props.formHref ?? (isBuy ? "#buy-request" : "/request/?form=rentals#request-form");
+const packageCopy = isBuy
+  ? {
+      eyebrow: "Buy a sukkah",
+      heading: "A practical sukkah to keep.",
+      lead: "Choose a ready-to-own sukkah with the practical details handled for you.",
+      pricing: "Purchase options are tailored to your space. Final pricing is confirmed with BK Sukkah.",
+      photo: "/assets/images/custom-white-tarp-enhanced.jpg",
+      photoAlt: "Example sukkah with clean white tarp walls",
+      photoCaption: "Example buy setup",
+      actionEyebrow: "Ready to choose yours?",
+      actionText: "Share your space and we’ll confirm available options, setup, and final pricing.",
+      actionLabel: "Start a buy request",
+    }
+  : {
+      eyebrow: "Rental sukkah",
+      heading: "A simple seasonal setup.",
+      lead: "A ready-to-enjoy sukkah with the practical details handled for you.",
+      pricing: "Rental packages start at $250. Final pricing is confirmed with BK Sukkah.",
+      photo: "/assets/images/home-rental-schach.jpg",
+      photoAlt: "Example rental sukkah with schach, tarp walls, and lighting",
+      photoCaption: "Example rental setup",
+      actionEyebrow: "Ready when you are",
+      actionText: "Share your space and we’ll confirm availability, options, and final pricing.",
+      actionLabel: "Start a rental request",
+    };
 ---
 
-<section id="rental-overview" class="rental-overview" aria-labelledby="rental-overview-heading">
+<section id={sectionId} class="rental-overview" aria-labelledby={headingId}>
   <div class="shell">
     <div class="rental-overview-card">
       <div class="rental-overview-copy">
-        <p class="eyebrow">Rental sukkah</p>
-        <h2 id="rental-overview-heading">A simple seasonal setup.</h2>
-        <p class="rental-overview-lead">A ready-to-enjoy sukkah with the practical details handled for you.</p>
-        <p class="rental-overview-price">Rental packages start at <strong>$250</strong>. Final pricing is confirmed with BK Sukkah.</p>
+        <p class="eyebrow">{packageCopy.eyebrow}</p>
+        <h2 id={headingId}>{packageCopy.heading}</h2>
+        <p class="rental-overview-lead">{packageCopy.lead}</p>
+        <p class="rental-overview-price">{packageCopy.pricing}</p>
         <ul class="rental-overview-points">
           <li><strong>Included</strong><span>Metal or wooden frame, installation, takedown, and bamboo schach.</span></li>
           <li><strong>Optional</strong><span>Evergreen schach, furniture, and different lighting styles are available for an additional cost.</span></li>
@@ -24,14 +55,14 @@ const { formHref = "/request/?form=rentals#request-form" } = Astro.props;
       </div>
 
       <figure class="rental-overview-photo">
-        <img src="/assets/images/home-rental-schach.jpg" alt="Example rental sukkah with schach, tarp walls, and lighting" width="1200" height="1600" loading="eager" />
-        <figcaption>Example rental setup</figcaption>
+        <img src={packageCopy.photo} alt={packageCopy.photoAlt} width="1200" height="1600" loading="eager" />
+        <figcaption>{packageCopy.photoCaption}</figcaption>
       </figure>
 
-      <div class="rental-tarp-gallery" aria-labelledby="rental-tarp-heading">
+      <div class="rental-tarp-gallery" aria-labelledby={tarpHeadingId}>
         <div class="rental-tarp-heading">
-          <h3 id="rental-tarp-heading">Browse tarp directions</h3>
-          <p>Choose a look to discuss in the request. Exact availability is confirmed with BK Sukkah.</p>
+          <h3 id={tarpHeadingId}>Browse tarp directions</h3>
+          <p>These images are sample looks. Reach out to BK Sukkah to ask about other tarp options and confirm availability.</p>
         </div>
         <div class="rental-tarp-grid">
           {tarpStyles.map((tarp) => (
@@ -45,10 +76,10 @@ const { formHref = "/request/?form=rentals#request-form" } = Astro.props;
 
       <div class="rental-overview-actions">
         <div>
-          <p class="eyebrow">Ready when you are</p>
-          <p>Share your space and we’ll confirm availability, options, and final pricing.</p>
+          <p class="eyebrow">{packageCopy.actionEyebrow}</p>
+          <p>{packageCopy.actionText}</p>
         </div>
-        <a class="button" href={formHref}>Start a rental request</a>
+        <a class="button" href={formHref}>{packageCopy.actionLabel}</a>
       </div>
     </div>
   </div>
@@ -57,7 +88,7 @@ const { formHref = "/request/?form=rentals#request-form" } = Astro.props;
 <style>
   .rental-overview { scroll-margin-top: 6rem; padding-block: clamp(1.75rem, 4vw, 3rem); background: var(--cream-50); }
   .rental-overview-card { display: grid; gap: clamp(1.15rem, 3vw, 2rem); padding: clamp(1rem, 2.5vw, 1.5rem); border: 1px solid var(--border); border-radius: var(--radius-large); background: var(--white); box-shadow: var(--shadow-small); }
-  .rental-overview-photo { position: relative; min-height: clamp(18rem, 48vw, 34rem); overflow: hidden; margin: 0; border-radius: calc(var(--radius-large) - 8px); background: var(--forest-100); }
+  .rental-overview-photo { position: relative; width: min(100%, 32rem); min-height: clamp(10rem, 23vw, 18rem); max-height: 18rem; justify-self: center; overflow: hidden; margin: 0; border-radius: calc(var(--radius-large) - 8px); background: var(--forest-100); }
   .rental-overview-photo img { width: 100%; height: 100%; display: block; object-fit: cover; object-position: center 58%; }
   .rental-overview-photo figcaption { position: absolute; right: .7rem; bottom: .7rem; padding: .35rem .6rem; border: 1px solid rgba(255,255,255,.5); border-radius: 999px; color: var(--forest-950); background: rgba(255,253,248,.88); font-size: .7rem; font-weight: 800; }
   .rental-overview-copy { max-width: 70rem; padding-inline: clamp(.1rem, 1vw, .4rem); }
@@ -82,8 +113,27 @@ const { formHref = "/request/?form=rentals#request-form" } = Astro.props;
   .rental-overview-actions .eyebrow { margin: 0 0 .2rem; }
   .rental-overview-actions p:last-child { margin: 0; color: var(--ink-500); font-size: .82rem; line-height: 1.4; }
   .rental-overview-actions .button { flex: 0 0 auto; }
+  @media (min-width: 761px) {
+    .rental-overview-card {
+      grid-template-columns: minmax(0, 1.08fr) minmax(18rem, .92fr);
+      align-items: center;
+      column-gap: clamp(1.5rem, 3vw, 2.5rem);
+    }
+    .rental-overview-copy { grid-column: 1; grid-row: 1; }
+    .rental-overview-photo {
+      grid-column: 2;
+      grid-row: 1;
+      width: 100%;
+      min-height: 0;
+      max-height: none;
+      aspect-ratio: 4 / 3;
+      justify-self: stretch;
+    }
+    .rental-tarp-gallery,
+    .rental-overview-actions { grid-column: 1 / -1; }
+  }
   @media (max-width: 600px) {
-    .rental-overview-photo { min-height: 16rem; max-height: 24rem; }
+    .rental-overview-photo { min-height: 9rem; max-height: 12rem; }
     .rental-tarp-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .55rem; }
     .rental-overview-actions { align-items: stretch; flex-direction: column; }
     .rental-overview-actions .button { width: 100%; }

@@ -2,8 +2,8 @@
 interface Props {
   primaryLabel: string;
   primaryHref: string;
-  secondaryLabel: string;
-  secondaryHref: string;
+  secondaryLabel?: string;
+  secondaryHref?: string;
   ariaLabel?: string;
 }
 
@@ -18,7 +18,7 @@ const {
 
 <div class="form-page-actions" aria-label={ariaLabel}>
   <a class="button" href={primaryHref}>{primaryLabel}</a>
-  <a class="button button-secondary" href={secondaryHref}>{secondaryLabel}</a>
+  {secondaryLabel && secondaryHref ? <a class="button button-secondary" href={secondaryHref} data-form-overview-link={secondaryLabel === "Back to overview" ? true : undefined}>{secondaryLabel}</a> : null}
 </div>
 
 <style>

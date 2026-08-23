@@ -495,14 +495,6 @@ strong {
   gap: 0.05rem;
 }
 
-.desktop-sukkah-links {
-  display: contents;
-}
-
-.mobile-sukkah-group {
-  display: none;
-}
-
 .nav-link {
   display: inline-flex;
   min-height: 42px;
@@ -511,10 +503,10 @@ strong {
   border-radius: var(--radius-small);
   color: var(--ink-700);
   background: transparent;
-  font-family: var(--font-heading);
-  font-size: 0.98rem;
+  font-family: var(--font-nav);
+  font-size: 0.95rem;
   font-weight: 700;
-  letter-spacing: -0.008em;
+  letter-spacing: 0.025em;
   line-height: 1.2;
   text-decoration: none;
   white-space: nowrap;
@@ -647,7 +639,7 @@ strong {
   align-items: stretch;
 }
 
-.nav-dropdown-inner-other {
+.nav-dropdown-inner-services {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
@@ -678,10 +670,10 @@ strong {
 
 .dropdown-link > span {
   width: fit-content;
-  font-family: var(--font-heading);
-  font-size: 1.08rem;
-  font-weight: 700;
-  letter-spacing: -0.01em;
+  font-family: var(--font-nav);
+  font-size: 0.96rem;
+  font-weight: 600;
+  letter-spacing: 0.018em;
 }
 
 .dropdown-link small {
@@ -705,18 +697,21 @@ strong {
   padding: 0.58rem 1rem;
   border-width: 1px;
   border-radius: 9px;
-  font-family: var(--font-heading);
+  font-family: var(--font-nav);
   font-size: 0.94rem;
   font-weight: 700;
-  letter-spacing: -0.008em;
-  box-shadow: 0 3px 10px rgba(16, 45, 37, 0.1);
+  letter-spacing: 0.025em;
+  border-color: transparent;
+  color: var(--forest-950);
+  background: transparent;
+  box-shadow: none;
 }
 
 .site-header.is-home-header:not([data-scrolled]):not([data-menu-open]):not([data-submenu-open]) .nav-button {
-  border-color: rgba(255, 255, 255, 0.82);
-  color: var(--forest-950);
-  background: rgba(255, 253, 248, 0.94);
-  box-shadow: 0 10px 24px rgba(7, 27, 21, 0.18);
+  border-color: transparent;
+  color: rgba(255, 255, 255, 0.88);
+  background: transparent;
+  box-shadow: none;
 }
 
 .nav-button::after {
@@ -731,10 +726,14 @@ strong {
 }
 
 .nav-button:hover {
-  border-color: var(--forest-950);
-  background: var(--forest-950);
-  box-shadow: 0 7px 18px rgba(16, 45, 37, 0.16);
-  transform: translateY(-1px);
+  border-color: transparent;
+  color: var(--forest-950);
+  background: transparent;
+  box-shadow: none;
+}
+
+.site-header.is-home-header:not([data-scrolled]):not([data-menu-open]):not([data-submenu-open]) .nav-button:hover {
+  color: white;
 }
 
 .nav-button:hover::after {
@@ -748,13 +747,13 @@ strong {
 }
 
 .nav-button:active {
-  box-shadow: 0 2px 7px rgba(16, 45, 37, 0.12);
   transform: scale(0.98);
 }
 
 .nav-button.is-active {
-  border-color: var(--forest-950);
-  background: var(--forest-950);
+  border-color: transparent;
+  color: var(--forest-950);
+  background: transparent;
 }
 
 .mobile-nav-contact {
@@ -1297,15 +1296,6 @@ input[type="range"]:focus-visible {
       visibility 0s linear 380ms;
   }
 
-  .desktop-sukkah-links {
-    display: none;
-  }
-
-  .mobile-sukkah-group {
-    display: block;
-    width: 100%;
-  }
-
   .site-header[data-menu-open] .site-navigation {
     opacity: 1;
     pointer-events: auto;
@@ -1330,7 +1320,9 @@ input[type="range"]:focus-visible {
     border-bottom: 1px solid var(--border);
     border-radius: 0;
     color: var(--forest-950);
-    font-size: clamp(1.28rem, 4vw, 1.6rem);
+    font-size: clamp(1.22rem, 4vw, 1.52rem);
+    font-weight: 700;
+    letter-spacing: 0.025em;
   }
 
   .site-header.is-home-header:not([data-scrolled]) .nav-link {
@@ -1393,7 +1385,9 @@ input[type="range"]:focus-visible {
   }
 
   .dropdown-link > span {
-    font-size: 1.05rem;
+    font-size: 1.02rem;
+    font-weight: 600;
+    letter-spacing: 0.018em;
   }
 
   .dropdown-link small {
@@ -1405,12 +1399,16 @@ input[type="range"]:focus-visible {
     min-height: 52px;
     margin: 1rem 0 0;
     font-size: 0.96rem;
+    border-color: transparent;
+    color: var(--forest-950);
+    background: transparent;
+    box-shadow: none;
   }
 
-  .site-header.is-home-header:not([data-scrolled]) .nav-button {
-    border-color: var(--forest-900);
+  .site-header.is-home-header:not([data-scrolled]):not([data-menu-open]) .nav-button {
+    border-color: transparent;
     color: white;
-    background: var(--forest-900);
+    background: transparent;
   }
 
   .mobile-nav-contact {

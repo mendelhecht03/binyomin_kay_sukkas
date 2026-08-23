@@ -9,7 +9,7 @@ import ManagedRequestForm from "../../components/ManagedRequestForm.astro";
   description="Share the details of your sukkah project with BK Sukkah."
   bodyClass="request-form-page dynamic-request-page"
 >
-  <section class="dynamic-form-hero sukkah-hero-background">
+  <section id="form-overview" class="dynamic-form-hero sukkah-hero-background">
     <div class="shell dynamic-form-hero__inner">
       <nav class="breadcrumb" aria-label="Breadcrumb">
         <a href="/">Home</a><span aria-hidden="true">/</span><span>Request</span>
@@ -21,8 +21,8 @@ import ManagedRequestForm from "../../components/ManagedRequestForm.astro";
         <FormPageActions
           primaryLabel="Start a request"
           primaryHref="#request-form"
-          secondaryLabel="Explore services"
-          secondaryHref="/#services"
+          secondaryLabel="Back to overview"
+          secondaryHref="#form-overview"
           ariaLabel="Project request actions"
         />
       </div>
@@ -38,6 +38,20 @@ import ManagedRequestForm from "../../components/ManagedRequestForm.astro";
     }}
   />
 </BaseLayout>
+
+<script>
+  const overviewByForm = {
+    "custom-sukkah": "/custom-sukkahs/#recent-projects",
+    pergolas: "/pergolas/#recent-projects",
+    purchases: "/purchases/#buy-overview",
+    rentals: "/sukkah-rentals/#rental-overview",
+  };
+  const requestedForm = new URLSearchParams(window.location.search).get("form") || "custom-sukkah";
+  const overviewLink = document.querySelector("[data-form-overview-link]");
+  if (overviewLink instanceof HTMLAnchorElement) {
+    overviewLink.href = overviewByForm[requestedForm] || overviewByForm["custom-sukkah"];
+  }
+</script>
 
 <style>
   .dynamic-form-hero { padding-block: clamp(2rem, 4vw, 3rem) clamp(3rem, 6vw, 5rem); }

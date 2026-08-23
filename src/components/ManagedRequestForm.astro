@@ -6,6 +6,7 @@ import PaymentMethods from "./PaymentMethods.astro";
 const { slug, sectionId = undefined, priceNote = "", priceNoteMap = {} } = Astro.props;
 const fallbackSlug = slug === "auto" ? "custom-sukkah" : slug;
 const fallbackSchema = DEFAULT_MANAGED_FORMS.find((schema) => schema.slug === fallbackSlug);
+const fallbackSchemas = slug === "auto" ? DEFAULT_MANAGED_FORMS : (fallbackSchema ? [fallbackSchema] : []);
 const showPaymentMethods = true;
 const hasPriceNoteMap = Object.keys(priceNoteMap).length > 0;
 ---
@@ -44,7 +45,7 @@ const hasPriceNoteMap = Object.keys(priceNoteMap).length > 0;
       <p>Please try again later or call <a href="tel:+13474542282">(347) 454-2282</a>.</p>
     </div>
     <noscript><p class="managed-form-error">JavaScript is needed to use this form. Please call <a href="tel:+13474542282">(347) 454-2282</a>.</p></noscript>
-    {fallbackSchema && <script type="application/json" data-local-fallback-schema set:html={JSON.stringify(fallbackSchema)}></script>}
+    {fallbackSchemas.length > 0 && <script type="application/json" data-local-fallback-schema set:html={JSON.stringify(fallbackSchemas)}></script>}
     {showPaymentMethods && <template data-payment-template><PaymentMethods /></template>}
   </div>
 </section>
@@ -321,8 +322,14 @@ const hasPriceNoteMap = Object.keys(priceNoteMap).length > 0;
         renderForm(body.schema);
       } catch {
         const fallback = root.querySelector("[data-local-fallback-schema]");
-        if (["localhost", "127.0.0.1"].includes(location.hostname) && fallback?.textContent) renderForm(JSON.parse(fallback.textContent));
-        else { loadingMessage.hidden = true; loadError.hidden = false; }
+        if (["localhost", "127.0.0.1"].includes(location.hostname) && fallback?.textContent) {
+          const localSchemas = JSON.parse(fallback.textContent);
+          const localSchema = Array.isArray(localSchemas)
+            ? localSchemas.find((schema) => schema?.slug === slug)
+            : localSchemas;
+          if (localSchema) renderForm(localSchema);
+          else { loadingMessage.hidden = true; loadError.hidden = false; }
+        } else { loadingMessage.hidden = true; loadError.hidden = false; }
       }
     })();
   })();

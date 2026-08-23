@@ -168,20 +168,31 @@ test("the live request definitions use editable section icons and the shared pub
     const rentalsPage = await worker.fetch(new Request("https://example.com/sukkah-rentals/"), { DB });
     const rentalFormPage = await worker.fetch(new Request("https://example.com/request/?form=rentals"), { DB });
     const buyPage = await worker.fetch(new Request("https://example.com/purchases/"), { DB });
+    const buyFormPage = await worker.fetch(new Request("https://example.com/request/?form=purchases"), { DB });
     const customPage = await worker.fetch(new Request("https://example.com/request/custom-sukkah/"), { DB });
     const pergolaPage = await worker.fetch(new Request("https://example.com/request/?form=pergolas"), { DB });
-    for (const [page, slug, primaryLabel, secondaryLabel, sectionId] of [
-      [buildsPage, "builds", "Start a build request", "See recent projects", "build-request"],
-      [buyPage, "purchases", "Start a buy request", "See sukkah options", "buy-request"],
-    ]) {
-      const html = await page.text();
-      assert.match(html, new RegExp(`data-form-slug="${slug}"`));
-      assert.match(html, /data-payment-template/);
-      assert.match(html, /form-page-actions/);
-      assert.match(html, new RegExp(primaryLabel));
-      assert.match(html, new RegExp(secondaryLabel));
-      assert.match(html, new RegExp(`id="${sectionId}"`));
-    }
+    const buildsHtml = await buildsPage.text();
+    const buyHtml = await buyPage.text();
+    const buyFormHtml = await buyFormPage.text();
+    assert.match(buildsHtml, /data-form-slug="builds"/);
+    assert.match(buildsHtml, /data-payment-template/);
+    assert.match(buildsHtml, /form-page-actions/);
+    assert.match(buildsHtml, /Start a build request/);
+    assert.match(buildsHtml, /id="build-request"/);
+    assert.doesNotMatch(buildsHtml, /See recent projects/);
+    assert.match(buyHtml, /See sukkah options/);
+    assert.match(buyHtml, /<section id="buy-overview"/);
+    assert.match(buyHtml, /A practical sukkah to keep/);
+    assert.match(buyHtml, /Browse tarp directions/);
+    assert.match(buyHtml, /href="\/request\/\?form=purchases#request-form"[^>]*>Start a buy request<\/a>/);
+    assert.equal((buyHtml.match(/href="\/request\/\?form=purchases#request-form"/g) || []).length, 2);
+    assert.doesNotMatch(buyHtml, /data-managed-form-root/);
+    assert.match(buyFormHtml, /data-managed-form-root/);
+    assert.match(buyFormHtml, /data-form-slug="auto"/);
+    assert.match(buyFormHtml, /id="form-overview"/);
+    assert.match(buyFormHtml, /href="#form-overview"[^>]*>Back to overview<\/a>/);
+    assert.match(buyFormHtml, /data-local-fallback-schema[\s\S]*"slug":"purchases"/);
+    assert.match(buyFormHtml, /\/purchases\/#buy-overview/);
     const rentalHtml = await rentalsPage.text();
     assert.match(rentalHtml, /rental-overview/);
     assert.match(rentalHtml, /rental-tarp-grid/);
@@ -195,16 +206,25 @@ test("the live request definitions use editable section icons and the shared pub
     const rentalFormHtml = await rentalFormPage.text();
     assert.match(rentalFormHtml, /data-managed-form-root/);
     assert.match(rentalFormHtml, /data-form-slug="auto"/);
+    assert.match(rentalFormHtml, /id="form-overview"/);
+    assert.match(rentalFormHtml, /href="#form-overview"[^>]*>Back to overview<\/a>/);
+    assert.match(rentalFormHtml, /data-local-fallback-schema[\s\S]*"slug":"rentals"/);
+    assert.match(rentalFormHtml, /\/sukkah-rentals\/#rental-overview/);
+    assert.doesNotMatch(rentalFormHtml, /href="\/#services"/);
     const customHtml = await customPage.text();
     const pergolaHtml = await pergolaPage.text();
     assert.match(customHtml, /data-payment-template/);
     assert.match(customHtml, /form-page-actions/);
     assert.match(customHtml, /Start a request/);
-    assert.match(customHtml, /Explore services/);
+    assert.match(customHtml, /Back to overview/);
     assert.match(customHtml, /id="request-form"/);
+    assert.match(customHtml, /id="form-overview"/);
+    assert.match(customHtml, /data-form-overview-link/);
+    assert.match(customHtml, /\/custom-sukkahs\/#recent-projects/);
     assert.match(pergolaHtml, /data-payment-template/);
     assert.match(pergolaHtml, /Start a request/);
-    assert.match(pergolaHtml, /Explore services/);
+    assert.match(pergolaHtml, /Back to overview/);
+    assert.match(pergolaHtml, /\/pergolas\/#recent-projects/);
     const customSukkahsPage = await worker.fetch(new Request("https://example.com/custom-sukkahs/"), { DB });
     const pergolasPage = await worker.fetch(new Request("https://example.com/pergolas/"), { DB });
     const customSukkahsHtml = await customSukkahsPage.text();
@@ -240,22 +260,42 @@ test("the homepage presents Builds as the first service card", async () => {
   assert.ok(pergolaIndex > serviceChoicesStart);
   assert.match(html.slice(serviceChoicesStart), /src="\/assets\/images\/custom-white-tarp-enhanced\.jpg"/);
   assert.match(html.slice(serviceChoicesStart), /src="\/assets\/images\/custom-soft-fabric\.jpg"/);
-  assert.match(html, /href="\/contact\/"[^>]*>Contact<\/a>/);
+  assert.match(html, /src="\/assets\/images\/home-hero-wooden-sukkah\.jpg"/);
+  assert.match(html, /alt="A wooden sukkah with bamboo schach"/);
+  assert.match(html, /href="\/contact\/"[^>]*>Request a Quote<\/a>/);
+  assert.match(html, /class="brand-copy"/);
+  assert.doesNotMatch(html, /class="brand-copy footer-brand-copy"/);
+  assert.match(html, /<footer class="site-footer">[\s\S]*class="brand-logo"/);
   assert.match(html, /Sukkahs &amp; Outdoor Work/);
+  assert.match(html, /class="service-swipe-hint"/);
+  assert.match(html, /class="testimonial-carousel-viewport" data-testimonial-swipe/);
   assert.match(html, /Benyamin works directly with families/);
   assert.match(html, />More about Benyamin<\/a>/);
   assert.doesNotMatch(html, /BK Sukkah works directly with families/);
   const mainNavStart = html.indexOf('<nav class="site-navigation"');
   const mainNavEnd = html.indexOf('</nav>', mainNavStart);
   const mainNav = html.slice(mainNavStart, mainNavEnd);
-  const otherGroupIndex = mainNav.indexOf('<details class="nav-group"');
   assert.ok(mainNavStart >= 0);
-  assert.ok(otherGroupIndex > 0);
-  assert.ok(mainNav.indexOf('href="/sukka-builder/"') < otherGroupIndex);
-  assert.ok(mainNav.indexOf('href="/sukkah-rentals/"') < otherGroupIndex);
-  assert.ok(mainNav.indexOf('href="/purchases/"') < otherGroupIndex);
-  assert.ok(mainNav.indexOf('href="/custom-sukkahs/"') < otherGroupIndex);
-  assert.ok(mainNav.indexOf('href="/pergolas/"') < otherGroupIndex);
-  assert.ok(mainNav.indexOf('href="/tree-trimming/"', otherGroupIndex) > otherGroupIndex);
-  assert.ok(mainNav.indexOf('href="/eruv-work/"', otherGroupIndex) > otherGroupIndex);
+  const sukkahsIndex = mainNav.indexOf('<span>Sukkahs</span>');
+  const servicesIndex = mainNav.indexOf('<span>Services</span>');
+  const aboutIndex = mainNav.indexOf('<span>About</span>');
+  const quoteIndex = mainNav.indexOf('>Request a Quote</a>');
+  assert.ok(sukkahsIndex > 0);
+  assert.ok(servicesIndex > sukkahsIndex);
+  assert.ok(aboutIndex > servicesIndex);
+  assert.ok(quoteIndex > aboutIndex);
+  for (const href of [
+    "/sukka-builder/",
+    "/custom-sukkahs/",
+    "/sukkah-rentals/",
+    "/purchases/",
+    "/pergolas/",
+  ]) {
+    const linkIndex = mainNav.indexOf(`href="${href}"`, sukkahsIndex);
+    assert.ok(linkIndex > sukkahsIndex && linkIndex < servicesIndex);
+  }
+  assert.ok(mainNav.indexOf('href="/tree-trimming/"', servicesIndex) > servicesIndex);
+  assert.ok(mainNav.indexOf('href="/eruv-work/"', servicesIndex) > servicesIndex);
+  assert.match(mainNav, /<span>About<\/span>/);
+  assert.match(mainNav, /href="\/contact\/"[^>]*>Request a Quote<\/a>/);
 });

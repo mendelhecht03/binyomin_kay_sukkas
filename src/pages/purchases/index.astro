@@ -1,13 +1,15 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import FormPageActions from "../../components/FormPageActions.astro";
-import ManagedRequestForm from "../../components/ManagedRequestForm.astro";
+import RentalOverview from "../../components/RentalOverview.astro";
+
+const buyFormHref = "/request/?form=purchases#request-form";
 ---
 
 <BaseLayout
   title="Buy a Sukkah"
-  description="Tell BK Sukkah what you are looking to purchase and share your delivery, setup, and sukkah preferences."
-  bodyClass="purchases-page request-form-page"
+  description="Explore the BK Sukkah purchase package and available tarp directions before starting a request."
+  bodyClass="purchases-page"
 >
   <section class="request-hero sukkah-hero-background">
     <div class="shell">
@@ -16,20 +18,20 @@ import ManagedRequestForm from "../../components/ManagedRequestForm.astro";
       </nav>
       <div class="request-hero-copy">
         <p class="eyebrow">BUY</p>
-        <h1>Find the right sukkah for your space.</h1>
-        <p class="lead">Share a few details and we’ll follow up with available options, delivery, setup, and pricing.</p>
+        <h1>Find a sukkah to keep.</h1>
+        <p class="lead">Explore the package, browse tarp directions, and then share your space when you are ready.</p>
         <FormPageActions
           primaryLabel="Start a buy request"
-          primaryHref="#buy-request"
+          primaryHref={buyFormHref}
           secondaryLabel="See sukkah options"
-          secondaryHref="/sukkah-packages/"
+          secondaryHref="#buy-overview"
           ariaLabel="Buy request actions"
         />
       </div>
     </div>
   </section>
 
-  <ManagedRequestForm slug="purchases" sectionId="buy-request" />
+  <RentalOverview variant="buy" formHref={buyFormHref} />
 </BaseLayout>
 
 <style>
