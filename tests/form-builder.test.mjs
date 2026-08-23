@@ -262,6 +262,7 @@ test("the homepage presents Builds as the first service card", async () => {
   assert.match(html.slice(serviceChoicesStart), /src="\/assets\/images\/custom-white-tarp-enhanced\.jpg"/);
   assert.match(html.slice(serviceChoicesStart), /src="\/assets\/images\/custom-soft-fabric\.jpg"/);
   assert.match(html, /src="\/assets\/images\/home-hero-wooden-sukkah\.jpg"/);
+  assert.match(html, /media="\(max-width: 760px\)"[\s\S]*home-hero-wooden-sukkah-mobile\.jpg/);
   assert.match(html, /alt="A wooden sukkah with bamboo schach"/);
   assert.match(html, /href="\/contact\/"[^>]*>Request a Quote<\/a>/);
   assert.match(html, /class="brand-copy"/);

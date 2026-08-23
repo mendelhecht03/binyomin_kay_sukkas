@@ -8,15 +8,21 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 >
   <div class="home-page">
     <section class="home-hero" aria-labelledby="home-hero-heading">
-      <img
-        class="home-hero-image"
-        src="/assets/images/home-hero-wooden-sukkah.jpg"
-        alt="A wooden sukkah with bamboo schach"
-        width="1200"
-        height="675"
-        loading="eager"
-        fetchpriority="high"
-      />
+      <picture>
+        <source
+          media="(max-width: 760px)"
+          srcset="/assets/images/home-hero-wooden-sukkah-mobile.jpg"
+        />
+        <img
+          class="home-hero-image"
+          src="/assets/images/home-hero-wooden-sukkah.jpg"
+          alt="A wooden sukkah with bamboo schach"
+          width="1200"
+          height="675"
+          loading="eager"
+          fetchpriority="high"
+        />
+      </picture>
       <div class="home-hero-shade" aria-hidden="true"></div>
       <div class="home-hero-inner shell">
         <div class="home-hero-copy">
@@ -652,8 +658,13 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     height: 100%;
   }
 
-  .home-hero-image {
+  .home-hero > picture {
+    position: absolute;
+    inset: 0;
     z-index: -2;
+  }
+
+  .home-hero-image {
     object-fit: cover;
     object-position: 58% center;
     animation: hero-image-enter 1.4s cubic-bezier(0.16, 1, 0.3, 1) both;
@@ -1804,7 +1815,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     }
 
     .home-hero-image {
-      object-position: 62% center;
+      object-position: 50% center;
     }
 
     .home-hero-shade {
