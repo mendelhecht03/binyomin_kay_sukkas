@@ -243,24 +243,21 @@ test("the live request definitions use editable section icons and the shared pub
   } finally { DB.close(); }
 });
 
-test("the homepage presents Builds as the first service card", async () => {
+test("the homepage presents the streamlined service cards", async () => {
   const homePage = await worker.fetch(new Request("https://example.com/"));
   assert.equal(homePage.status, 200);
   const html = await homePage.text();
   const serviceChoicesStart = html.indexOf('class="service-choices"');
+  const serviceChoicesEnd = html.indexOf("</nav>", serviceChoicesStart);
   const buildsIndex = html.indexOf('href="/sukka-builder/"', serviceChoicesStart);
   const customIndex = html.indexOf('href="/custom-sukkahs/"', serviceChoicesStart);
   const rentalsIndex = html.indexOf('href="/sukkah-rentals/"', serviceChoicesStart);
-  const buyIndex = html.indexOf('href="/purchases/"', serviceChoicesStart);
-  const pergolaIndex = html.indexOf('href="/pergolas/"', serviceChoicesStart);
   assert.ok(serviceChoicesStart >= 0);
   assert.ok(buildsIndex > serviceChoicesStart);
   assert.ok(buildsIndex < customIndex);
   assert.ok(buildsIndex < rentalsIndex);
-  assert.ok(buyIndex > serviceChoicesStart);
-  assert.ok(pergolaIndex > serviceChoicesStart);
-  assert.match(html.slice(serviceChoicesStart), /src="\/assets\/images\/custom-white-tarp-enhanced\.jpg"/);
-  assert.match(html.slice(serviceChoicesStart), /src="\/assets\/images\/custom-soft-fabric\.jpg"/);
+  assert.doesNotMatch(html.slice(serviceChoicesStart, serviceChoicesEnd), /href="\/purchases\/"/);
+  assert.doesNotMatch(html.slice(serviceChoicesStart, serviceChoicesEnd), /href="\/pergolas\/"/);
   assert.match(html, /src="\/assets\/images\/home-hero-wooden-sukkah\.jpg"/);
   assert.match(html, /media="\(max-width: 760px\)"[\s\S]*home-hero-wooden-sukkah-mobile\.jpg/);
   assert.match(html, /alt="A wooden sukkah with bamboo schach"/);
@@ -271,9 +268,9 @@ test("the homepage presents Builds as the first service card", async () => {
   assert.match(html, /Sukkahs &amp; Outdoor Work/);
   assert.match(html, /class="service-swipe-hint"/);
   assert.match(html, /class="testimonial-carousel-viewport" data-testimonial-swipe/);
-  assert.match(html, /Benyamin works directly with families/);
+  assert.match(html, /Started at just 15 years old with a handful of clients/);
   assert.match(html, />More about Benyamin<\/a>/);
-  assert.doesNotMatch(html, /BK Sukkah works directly with families/);
+  assert.doesNotMatch(html, /Benyamin works directly with families/);
   const mainNavStart = html.indexOf('<nav class="site-navigation"');
   const mainNavEnd = html.indexOf('</nav>', mainNavStart);
   const mainNav = html.slice(mainNavStart, mainNavEnd);
