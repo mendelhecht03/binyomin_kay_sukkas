@@ -230,6 +230,7 @@ test("the live request definitions use editable section icons and the shared pub
     const customSukkahsHtml = await customSukkahsPage.text();
     const pergolasHtml = await pergolasPage.text();
     assert.match(customSukkahsHtml, /form-page-actions/);
+    assert.match(customSukkahsHtml, /id="recent-projects"/);
     assert.match(pergolasHtml, /form-page-actions/);
     assert.match(pergolasHtml, /Start a pergola request/);
     const requestedWork = DEFAULT_BUILD_FORM.steps.find((step) => step.id === "requested-work").fields.find((field) => field.id === "service");
