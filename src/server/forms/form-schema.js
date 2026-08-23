@@ -49,6 +49,22 @@ export const DEFAULT_CUSTOM_SUKKAH_FORM = {
           condition: { fieldId: "state", operator: "equals", value: "New Jersey" },
         },
         { id: "postalCode", type: "text", label: "Zip code", required: true, autocomplete: "postal-code" },
+        { id: "neighborhood", type: "select", label: "Neighborhood", required: true, options: neighborhoodOptions },
+        {
+          id: "newJerseyNeighborhoodDetails", type: "textarea", label: "Tell us more about this New Jersey location", required: true,
+          placeholder: "Share the town, neighborhood, or any nearby landmarks that will help us plan.",
+          condition: { fieldId: "neighborhood", operator: "equals", value: "New Jersey" },
+        },
+        {
+          id: "southFloridaDetails", type: "textarea", label: "Tell us more about this South Florida location", required: true,
+          placeholder: "Share the city, neighborhood, or any nearby landmarks that will help us plan.",
+          condition: { fieldId: "neighborhood", operator: "equals", value: "South Florida" },
+        },
+        {
+          id: "losAngelesDetails", type: "textarea", label: "Tell us more about this Los Angeles location", required: true,
+          placeholder: "Share the neighborhood, city area, or any nearby landmarks that will help us plan.",
+          condition: { fieldId: "neighborhood", operator: "equals", value: "Los Angeles" },
+        },
         {
           id: "setting", type: "select", label: "Where will the sukkah be built?", required: true,
           options: ["Backyard", "Porch", "Courtyard", "Rooftop", "Other"],
