@@ -31,6 +31,20 @@ Use `docs/todo.md` as the default work queue for this project.
   website requirements remain documented in `docs/requirements.md`, while
   structure and hosting decisions remain documented in `docs/architecture.md`.
 
+### Quick Correction Mode
+
+When the user asks for a small, clearly scoped correction (such as a text,
+spacing, color, or single responsive CSS fix), use the shortest safe workflow:
+
+- Inspect only the relevant component and stylesheet.
+- Make the focused edit without broad refactoring.
+- Run a focused check or build only if needed to catch a real regression.
+- Do not run a full audit, browser walkthrough, or deployment unless the user
+  asks for it or the change affects routing, data, authentication, or hosting.
+
+If the request is ambiguous or could affect several pages, explain the small
+assumption being made before editing rather than expanding the task silently.
+
 ## User Skill Level
 
 The project owner is a beginner-level programmer.
