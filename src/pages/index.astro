@@ -389,6 +389,37 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
   const testimonialForm = document.querySelector("[data-testimonial-form]");
 
+  // Keep vertical swipes moving the page when a horizontal card rail is under
+  // the user's finger. Horizontal swipes still scroll the rail intentionally.
+  const touchRails = document.querySelectorAll(".service-choices, .process-gallery, .testimonial-carousel-viewport");
+  touchRails.forEach((rail) => {
+    if (!(rail instanceof HTMLElement)) return;
+    let startX = 0;
+    let startY = 0;
+    let startScrollLeft = 0;
+    let horizontalGesture = false;
+
+    rail.addEventListener("touchstart", (event) => {
+      const touch = event.touches[0];
+      if (!touch) return;
+      startX = touch.clientX;
+      startY = touch.clientY;
+      startScrollLeft = rail.scrollLeft;
+      horizontalGesture = false;
+    }, { passive: true });
+
+    rail.addEventListener("touchmove", (event) => {
+      const touch = event.touches[0];
+      if (!touch) return;
+      const deltaX = touch.clientX - startX;
+      const deltaY = touch.clientY - startY;
+      if (!horizontalGesture && Math.abs(deltaX) > Math.abs(deltaY) + 8) horizontalGesture = true;
+      if (!horizontalGesture) return;
+      event.preventDefault();
+      rail.scrollLeft = startScrollLeft - deltaX;
+    }, { passive: false });
+  });
+
   const testimonialCarousel = document.querySelector("[data-testimonial-carousel]");
   const testimonialViewport = testimonialCarousel?.querySelector(".testimonial-carousel-viewport");
   const testimonialTrack = document.querySelector("[data-testimonial-track]");
@@ -1895,6 +1926,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       grid-template-columns: repeat(3, minmax(76vw, 1fr));
       gap: 1rem;
       overflow-x: auto;
+      overflow-y: hidden;
+      touch-action: pan-y;
       padding: 0 16px 1.2rem 0;
       scroll-snap-type: x mandatory;
       scrollbar-width: thin;
@@ -1997,6 +2030,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       display: flex;
       gap: 1rem;
       overflow-x: auto;
+      overflow-y: hidden;
+      touch-action: pan-y;
       padding: 0 16px 1.2rem 0;
       scroll-snap-type: x mandatory;
       scrollbar-color: var(--wood-500) var(--cream-200);
@@ -2041,6 +2076,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     .testimonial-carousel-viewport {
       overflow-x: auto;
       overflow-y: hidden;
+      touch-action: pan-y;
       padding-bottom: 0.75rem;
       overscroll-behavior-inline: contain;
       scroll-snap-type: x mandatory;
