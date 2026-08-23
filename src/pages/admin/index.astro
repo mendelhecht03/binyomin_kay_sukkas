@@ -1333,16 +1333,22 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
   .source-status .is-error { color: var(--danger); background: #f9e8e4; }
   .admin-message { margin: 1rem 0; color: var(--ink-500); font-weight: 700; }
   .submission-table-shell { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius-large); background: white; box-shadow: var(--shadow-small); }
-  .submission-table { width: 100%; border-collapse: collapse; text-align: left; }
+  .submission-table { width: 100%; border-collapse: collapse; table-layout: fixed; text-align: left; }
   .submission-table th { padding: .9rem 1rem; border-bottom: 1px solid var(--border-strong); color: var(--ink-500); background: var(--cream-100); font-size: .75rem; letter-spacing: .07em; text-transform: uppercase; }
-  .submission-table td { padding: 1rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  .submission-table th:nth-child(1), .submission-table td:nth-child(1) { width: 14%; }
+  .submission-table th:nth-child(2), .submission-table td:nth-child(2) { width: 20%; }
+  .submission-table th:nth-child(3), .submission-table td:nth-child(3) { width: 42%; }
+  .submission-table th:nth-child(4), .submission-table td:nth-child(4) { width: 14%; }
+  .submission-table th:nth-child(5), .submission-table td:nth-child(5) { width: 220px; }
+  .submission-table td { min-width: 0; padding: 1rem; border-bottom: 1px solid var(--border); vertical-align: middle; overflow: hidden; }
   .submission-table tbody tr:last-child td { border-bottom: 0; }
   .submission-table tbody tr:hover { background: rgba(229,238,232,.35); }
   .submission-table td strong, .submission-table td small { display: block; }
   .submission-table td strong { color: var(--forest-950); }
   .submission-table td small { margin-top: .15rem; color: var(--ink-500); }
   .submission-table time { display: block; max-width: 14ch; color: var(--ink-700); font-size: .86rem; }
-  .row-summary { display: block; max-width: 34rem; color: var(--ink-900); }
+  .row-summary { display: -webkit-box; max-width: none; overflow: hidden; overflow-wrap: anywhere; color: var(--ink-900); -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+  .submission-table td > * { min-width: 0; max-width: 100%; }
   .submission-type { display: inline-flex; padding: .3rem .55rem; border-radius: 999px; color: var(--forest-900); background: var(--forest-100); font-size: .7rem; font-weight: 850; letter-spacing: .04em; text-transform: uppercase; }
   .submission-type--rental { color: #76501e; background: #f6e8d4; }
   .submission-type--testimonial { color: #57467d; background: #ece7f7; }

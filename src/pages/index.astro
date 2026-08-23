@@ -394,6 +394,58 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   const testimonialTrack = document.querySelector("[data-testimonial-track]");
   const testimonialScrollButtons = document.querySelectorAll("[data-testimonial-scroll]");
   const testimonialPosition = document.querySelector("[data-testimonial-position]");
+  const testimonialPreviewLimit = 180;
+
+  function createApprovedTestimonialCard(testimonial) {
+    const fullText = String(testimonial.testimonial || "").trim();
+    const article = document.createElement("article");
+    article.className = "testimonial-story-card testimonial-story-card-approved";
+    article.dataset.testimonialSlide = "";
+    article.setAttribute("aria-roledescription", "slide");
+
+    const blockquote = document.createElement("blockquote");
+    const isLong = fullText.length > testimonialPreviewLimit;
+
+    if (isLong) {
+      const details = document.createElement("details");
+      details.className = "testimonial-story";
+      const summary = document.createElement("summary");
+      const preview = document.createElement("span");
+      preview.className = "testimonial-story-preview testimonial-approved-copy";
+      preview.textContent = `“${fullText}”`;
+      const closedToggle = document.createElement("span");
+      closedToggle.className = "testimonial-story-toggle testimonial-story-toggle-closed";
+      closedToggle.textContent = "Read the full testimonial";
+      const openToggle = document.createElement("span");
+      openToggle.className = "testimonial-story-toggle testimonial-story-toggle-open";
+      openToggle.textContent = "Close the full testimonial";
+      summary.append(preview, closedToggle, openToggle);
+
+      const full = document.createElement("div");
+      full.className = "testimonial-story-full";
+      const paragraph = document.createElement("p");
+      paragraph.textContent = fullText;
+      full.append(paragraph);
+      details.append(summary, full);
+      blockquote.append(details);
+    } else {
+      const quoteMark = document.createElement("span");
+      quoteMark.className = "testimonial-quote-mark";
+      quoteMark.setAttribute("aria-hidden", "true");
+      quoteMark.textContent = "“";
+      const copy = document.createElement("p");
+      copy.className = "testimonial-story-preview testimonial-approved-copy";
+      copy.textContent = `“${fullText}”`;
+      blockquote.append(quoteMark, copy);
+    }
+
+    const footer = document.createElement("footer");
+    const citation = document.createElement("cite");
+    citation.textContent = [testimonial.organization, testimonial.name].filter(Boolean).join(", ");
+    footer.append(citation);
+    article.append(blockquote, footer);
+    return article;
+  }
 
   async function addApprovedTestimonials() {
     if (!(testimonialTrack instanceof HTMLElement)) return;
@@ -403,27 +455,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       if (!response.ok || result?.ok !== true || !Array.isArray(result.testimonials)) return;
       result.testimonials.forEach((testimonial) => {
         if (!testimonial?.testimonial || !testimonial?.name) return;
-        const article = document.createElement("article");
-        article.className = "testimonial-story-card testimonial-story-card-approved";
-        article.dataset.testimonialSlide = "";
-        article.setAttribute("aria-roledescription", "slide");
-
-        const blockquote = document.createElement("blockquote");
-        const quoteMark = document.createElement("span");
-        quoteMark.className = "testimonial-quote-mark";
-        quoteMark.setAttribute("aria-hidden", "true");
-        quoteMark.textContent = "“";
-        const copy = document.createElement("p");
-        copy.className = "testimonial-story-preview testimonial-approved-copy";
-        copy.textContent = `“${testimonial.testimonial}”`;
-        blockquote.append(quoteMark, copy);
-
-        const footer = document.createElement("footer");
-        const citation = document.createElement("cite");
-        citation.textContent = [testimonial.organization, testimonial.name].filter(Boolean).join(", ");
-        footer.append(citation);
-        article.append(blockquote, footer);
-        testimonialTrack.append(article);
+        testimonialTrack.append(createApprovedTestimonialCard(testimonial));
       });
     } catch {
       // The approved customer story already in the page remains available.
@@ -1527,8 +1559,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   :global(.testimonial-story-card) {
     width: 100%;
     min-width: 0;
-    display: grid;
-    align-content: start;
+    min-height: clamp(390px, 32vw, 460px);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
     padding: clamp(1.45rem, 3.3vw, 2.4rem);
     border: 1px solid var(--border-strong);
     border-radius: var(--radius-large);
@@ -1604,6 +1638,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
   :global(.testimonial-story-preview) {
     max-width: 28ch;
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 7;
     color: var(--forest-950);
     font-family: var(--font-heading);
     font-size: clamp(1.45rem, 2.7vw, 2.15rem);
@@ -2019,6 +2057,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
     :global(.testimonial-story-card) {
       flex: 0 0 min(88vw, 30rem);
+      min-height: 380px;
       scroll-snap-align: start;
     }
 
