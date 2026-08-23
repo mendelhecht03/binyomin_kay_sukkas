@@ -85,18 +85,6 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             </div>
           </a>
 
-          <a class="service-choice service-choice-purchase" href="/purchases/" data-reveal>
-            <figure class="service-choice-media">
-              <img src="/assets/images/custom-white-tarp-enhanced.jpg" alt="Standard sukkah with clean white tarp walls" width="1086" height="1448" loading="lazy" />
-            </figure>
-            <div class="service-choice-copy">
-              <span class="service-choice-type">Buy</span>
-              <h3>Find a sukkah to buy</h3>
-              <p>Choose a practical sukkah with standard tarp walls and a straightforward setup.</p>
-              <span class="service-choice-link">Explore Buy</span>
-            </div>
-          </a>
-
           <a class="service-choice service-choice-custom" href="/custom-sukkahs/" data-reveal>
             <figure class="service-choice-media">
               <img src="/assets/images/home-craftsmanship.jpg" alt="A team member cutting lumber for a custom sukkah build" width="1200" height="2133" loading="lazy" />
@@ -109,17 +97,6 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             </div>
           </a>
 
-          <a class="service-choice service-choice-pergola" href="/pergolas/" data-reveal>
-            <figure class="service-choice-media">
-              <img src="/assets/images/custom-soft-fabric.jpg" alt="Cloth-screen outdoor structure in a front yard" width="1600" height="900" loading="lazy" />
-            </figure>
-            <div class="service-choice-copy">
-              <span class="service-choice-type">Pergolas</span>
-              <h3>Create an outdoor space</h3>
-              <p>Plan a freestanding or attached pergola around the way you use your yard.</p>
-              <span class="service-choice-link">Explore pergolas</span>
-            </div>
-          </a>
         </nav>
       </div>
     </section>
@@ -914,9 +891,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
     grid-template-areas:
       "build custom"
-      "rent custom"
-      "buy pergola";
-    grid-template-rows: repeat(3, minmax(300px, auto));
+      "rent custom";
+    grid-template-rows: repeat(2, minmax(300px, auto));
     gap: clamp(1rem, 2vw, 1.5rem);
   }
 
@@ -1847,9 +1823,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       grid-template-areas:
         "build"
         "rent"
-        "buy"
-        "custom"
-        "pergola";
+        "custom";
       grid-template-rows: none;
     }
 
