@@ -45,7 +45,13 @@ When adding a task, use this format:
 
 ## Now
 
-(No active task.)
+- [ ] Audit form submissions and fix recent-work card rendering
+  - Why: Verify every live form can submit all supported fields after a clean
+    test-data reset, and remove the empty image area in compact Pergola project
+    cards shown in the latest review.
+  - Done when: The deployed forms have successful end-to-end test submissions,
+    the site-wide audit is complete, and compact project media fills its card
+    row without leaving a blank lower-left area.
 
 ## Next
 
