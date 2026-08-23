@@ -9,6 +9,7 @@ export const neighborhoods = [
   "Manhattan",
   "Queens",
   "Monsey",
+  "New Jersey",
   "South Florida",
   "Los Angeles",
 ];
