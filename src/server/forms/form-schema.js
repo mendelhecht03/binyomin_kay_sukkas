@@ -1,4 +1,5 @@
 import { neighborhoods, states } from "../../data/form-options.js";
+import { wallMaterialOptions } from "../../data/wall-materials.js";
 
 const FIELD_TYPES = new Set([
   "text", "email", "phone", "date", "textarea", "select", "radio", "checkboxes", "photos",
@@ -333,7 +334,7 @@ export const DEFAULT_RENTAL_FORM = {
     },
     {
       id: "extras", title: "Extras", icon: "sukkah", fields: [
-        { id: "tarpStyle", type: "radio", label: "Which tarp style would you like to discuss?", required: true, helpText: "Choose a direction from the rental examples above.", options: ["White", "Blue", "Beige woven", "Soft fabric", "Not sure yet"] },
+        { id: "tarpStyle", type: "select", label: "Which wall option would you like to discuss?", required: true, helpText: "Choose from the wall options shown on the package page.", options: [...wallMaterialOptions] },
         { id: "addOns", type: "checkboxes", label: "Additional services", required: false, options: ["Different style lighting", "Furniture", "Evergreen schach", "Pressure wash area day before", "Other"] },
         { id: "furnitureDetails", type: "textarea", label: "Which furniture and chairs would you like?", required: true, placeholder: "For example, folding chairs for 12 guests and one table.", condition: { fieldId: "addOns", operator: "includes", value: "Furniture" } },
         { id: "addOnsOther", type: "text", label: "Other service", required: true, placeholder: "Tell us what you need", condition: { fieldId: "addOns", operator: "includes", value: "Other" } },
@@ -378,6 +379,7 @@ export const DEFAULT_PURCHASE_FORM = (() => {
         title: "Purchase options",
         fields: [
           { id: "framePreference", type: "radio", label: "Which frame material interests you?", required: true, options: ["Wood", "Metal", "Not sure yet"] },
+          { id: "tarpStyle", type: "select", label: "Which wall option would you like to discuss?", required: true, helpText: "Choose from the wall options shown on the package page.", options: [...wallMaterialOptions] },
           { id: "schach", type: "checkboxes", label: "Which schach options interest you?", required: true, helpText: "Select everything you would like us to consider.", options: ["Bamboo mat", "Bamboo sticks", "Evergreen", "Not sure yet"] },
           { id: "addOns", type: "checkboxes", label: "Which additions should we include in the conversation?", required: false, options: ["Different style lighting", "Furniture", "Evergreen schach", "Floor covering", "Storage", "Other"] },
           { id: "furnitureDetails", type: "textarea", label: "Which furniture and chairs would you like?", required: true, placeholder: "For example, folding chairs for 12 guests and one table.", condition: { fieldId: "addOns", operator: "includes", value: "Furniture" } },

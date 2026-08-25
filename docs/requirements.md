@@ -170,6 +170,9 @@ Rentals and Buy use the same ordered material images, names, descriptions,
 four-card desktop presentation, native horizontal overflow, accessible arrow
 controls, keyboard navigation, and responsive styling. Touching either gallery
 must never trap normal vertical page scrolling.
+Their request forms use the same required wall-option dropdown, populated
+from this shared gallery list plus a final `Not sure yet` option, so the package
+page and both forms cannot drift apart.
 The separate request route uses the shared guided request renderer for customers who want to buy a sukkah. It keeps the Rentals contact and location flow, replaces
 rental takedown timing with a preferred delivery or setup date, and adds
 purchase-specific choices for frame material, schach, lighting,
@@ -293,10 +296,10 @@ Buy to `/purchases/#buy-overview`, and Rentals to
 primary action to open the separate request route, while their secondary action
 stays on the overview page.
 The top of the Custom Sukkah request form displays: “Custom sukkah projects
-start at $700. Final pricing is confirmed with BK Sukkah.”
+start as low as $700. Final pricing is confirmed with BK Sukkah.”
 
 The Pergolas page links to the managed request at `/request/?form=pergolas`.
-When that form is selected, its top displays: “Custom pergola projects start at
+When that form is selected, its top displays: “Custom pergola projects start as low as
 $900. Final pricing is confirmed with BK Sukkah.”
 
 Do not show a separate wood-versus-metal feature section. Keep porch and
@@ -322,7 +325,7 @@ Its Submit button saves every enabled answer as a Build submission in the
 website-owned database. Optional site photos are stored in the site's upload
 storage and related to that database submission by stable file records.
 The top of the Builds form displays an official starting-price notice:
-“Projects start at $250. Final pricing is confirmed with BK Sukkah.” This is a
+“Projects start as low as $250. Final pricing is confirmed with BK Sukkah.” This is a
 starting point only and does not replace the quote process.
 Show a clear sending, animated success, or retry message beneath the button,
 and disable nonessential motion for visitors who prefer reduced motion.

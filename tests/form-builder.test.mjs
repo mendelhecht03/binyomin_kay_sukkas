@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import worker from "../index.mjs";
+import { wallMaterialOptions } from "../src/data/wall-materials.js";
 import { DEFAULT_BUILD_FORM, DEFAULT_PURCHASE_FORM, DEFAULT_RENTAL_FORM, SUPPORTED_FORM_STEP_ICONS, normalizeFormSchema } from "../src/server/forms/form-schema.js";
 import {
   createFormDraft, getFormById, getPublishedFormBySlug, listFormVersions, publishForm,
@@ -99,12 +100,22 @@ test("approved built-in updates publish once and preserve separate owner draft c
     await saveFormDraft({ env: { DB }, id: "builds", schema: ownerDraft, updatedBy: "owner@example.com" });
 
     const legacyPurchase = structuredClone(DEFAULT_PURCHASE_FORM);
+    legacyPurchase.steps.find((step) => step.id === "options").fields = legacyPurchase.steps.find((step) => step.id === "options").fields.filter((field) => field.id !== "tarpStyle");
     legacyPurchase.steps.find((step) => step.id === "options").fields.unshift(
       { id: "sukkahType", type: "select", label: "What type of sukkah are you looking to purchase?", required: true, options: ["Canvas", "Other"] },
       { id: "sukkahTypeOther", type: "text", label: "Other sukkah type", required: true, condition: { fieldId: "sukkahType", operator: "equals", value: "Other" } },
     );
     await createFormDraft({ env: { DB }, schema: legacyPurchase, updatedBy: "owner@example.com" });
     await publishForm({ env: { DB }, id: "purchases", updatedBy: "owner@example.com" });
+
+    const legacyRental = structuredClone(DEFAULT_RENTAL_FORM);
+    const legacyRentalMaterial = legacyRental.steps.find((step) => step.id === "extras").fields.find((field) => field.id === "tarpStyle");
+    legacyRentalMaterial.type = "radio";
+    legacyRentalMaterial.label = "Which tarp style would you like to discuss?";
+    legacyRentalMaterial.options = ["White", "Blue", "Beige woven", "Soft fabric"];
+    delete legacyRentalMaterial.helpText;
+    await createFormDraft({ env: { DB }, schema: legacyRental, updatedBy: "owner@example.com" });
+    await publishForm({ env: { DB }, id: "rentals", updatedBy: "owner@example.com" });
 
     const first = await publishRequestedBuiltInUpdates({ env: { DB }, updatedBy: "owner@example.com" });
     assert.equal(first.ok, true);
@@ -118,6 +129,14 @@ test("approved built-in updates publish once and preserve separate owner draft c
     assert.ok(savedDraft.steps.find((step) => step.id === "requested-work").fields.find((field) => field.id === "service").options.includes("Take out of storage"));
     const publishedPurchase = (await getPublishedFormBySlug({ env: { DB }, slug: "purchases" })).schema;
     assert.equal(publishedPurchase.steps.flatMap((step) => step.fields).some((field) => ["sukkahType", "sukkahTypeOther"].includes(field.id)), false);
+    const publishedPurchaseMaterial = publishedPurchase.steps.find((step) => step.id === "options").fields.find((field) => field.id === "tarpStyle");
+    assert.equal(publishedPurchaseMaterial.type, "select");
+    assert.deepEqual(publishedPurchaseMaterial.options, wallMaterialOptions);
+    const publishedRental = (await getPublishedFormBySlug({ env: { DB }, slug: "rentals" })).schema;
+    const publishedRentalMaterial = publishedRental.steps.find((step) => step.id === "extras").fields.find((field) => field.id === "tarpStyle");
+    assert.equal(publishedRentalMaterial.type, "select");
+    assert.equal(publishedRentalMaterial.label, "Which wall option would you like to discuss?");
+    assert.deepEqual(publishedRentalMaterial.options, wallMaterialOptions);
 
     const second = await publishRequestedBuiltInUpdates({ env: { DB }, updatedBy: "owner@example.com" });
     assert.equal(second.forms.find((form) => form.id === "builds").changed, false);
@@ -165,6 +184,7 @@ test("Buy submissions are saved in the purchase dashboard category", async () =>
     submitted.set("estimatedSize", "10 × 12 ft");
     submitted.set("deliveryDate", "2026-09-20");
     submitted.set("framePreference", "Wood");
+    submitted.set("tarpStyle", "Reinforced canvas");
     submitted.append("schach", "Bamboo mat");
     const response = await worker.fetch(new Request("https://example.com/api/form-submissions/purchases", { method: "POST", body: submitted }), { DB });
     assert.equal(response.status, 200);
@@ -226,6 +246,7 @@ test("the live request definitions use editable section icons and the shared pub
     assert.match(buildsHtml, /form-page-actions/);
     assert.match(buildsHtml, /Start a build request/);
     assert.match(buildsHtml, /id="build-request"/);
+    assert.match(buildsHtml, /Projects start as low as \$250/);
     assert.doesNotMatch(buildsHtml, /See recent projects/);
     assert.match(buyHtml, /See sukkah options/);
     assert.match(buyHtml, /<section id="buy-overview"/);
@@ -267,10 +288,12 @@ test("the live request definitions use editable section icons and the shared pub
     assert.match(customHtml, /id="request-form"/);
     assert.match(customHtml, /id="form-overview"/);
     assert.match(customHtml, /data-form-overview-link/);
+    assert.match(customHtml, /Custom sukkah projects start as low as \$700/);
     assert.match(customHtml, /\/custom-sukkahs\/#recent-projects/);
     assert.match(pergolaHtml, /data-payment-template/);
     assert.match(pergolaHtml, /Start a request/);
     assert.match(pergolaHtml, /Back to overview/);
+    assert.match(pergolaHtml, /Custom pergola projects start as low as \$900/);
     assert.match(pergolaHtml, /\/pergolas\/#recent-projects/);
     const customSukkahsPage = await worker.fetch(new Request("https://example.com/custom-sukkahs/"), { DB });
     const pergolasPage = await worker.fetch(new Request("https://example.com/pergolas/"), { DB });
@@ -283,10 +306,16 @@ test("the live request definitions use editable section icons and the shared pub
     const requestedWork = DEFAULT_BUILD_FORM.steps.find((step) => step.id === "requested-work").fields.find((field) => field.id === "service");
     assert.deepEqual(requestedWork.options, ["Build", "Take down", "Take out of storage", "Other"]);
     assert.equal(DEFAULT_BUILD_FORM.steps.find((step) => step.id === "requested-work").fields.some((field) => field.id === "bringToStorageDate"), false);
-    assert.equal(DEFAULT_RENTAL_FORM.steps.find((step) => step.id === "extras").fields.find((field) => field.id === "tarpStyle").required, true);
+    const rentalMaterial = DEFAULT_RENTAL_FORM.steps.find((step) => step.id === "extras").fields.find((field) => field.id === "tarpStyle");
+    assert.equal(rentalMaterial.required, true);
+    assert.equal(rentalMaterial.type, "select");
+    assert.deepEqual(rentalMaterial.options, wallMaterialOptions);
     assert.equal(DEFAULT_PURCHASE_FORM.title, "Buy");
     assert.equal(DEFAULT_PURCHASE_FORM.steps.find((step) => step.id === "timing").fields[0].id, "deliveryDate");
     assert.equal(DEFAULT_PURCHASE_FORM.steps.find((step) => step.id === "options").fields.some((field) => field.id === "sukkahType"), false);
+    const purchaseMaterial = DEFAULT_PURCHASE_FORM.steps.find((step) => step.id === "options").fields.find((field) => field.id === "tarpStyle");
+    assert.equal(purchaseMaterial.type, "select");
+    assert.deepEqual(purchaseMaterial.options, wallMaterialOptions);
     const buildSukkahType = DEFAULT_BUILD_FORM.steps.find((step) => step.id === "sukkah").fields.find((field) => field.id === "sukkahType");
     assert.ok(buildSukkahType.options.includes("Classical white poles"));
     assert.ok(buildSukkahType.options.includes("Round conduit canvas"));

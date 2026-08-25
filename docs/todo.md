@@ -150,6 +150,14 @@ No active task.
 
 ## Completed
 
+- [x] Standardize pricing banners and wall-option form choices (2026-08-25)
+  - Result: Updated every confirmed-price banner to use “start as low as,” and
+    replaced the Rentals and Buy tarp-style question with a shared wall-option
+    dropdown containing every material in the package gallery plus “Not sure
+    yet.” Added an idempotent update for existing published managed forms.
+  - Checked: Astro build, generated Worker, migration coverage for both forms,
+    and all 33 automated tests passed.
+
 - [x] Add the newly supplied wall-material images to the shared gallery (2026-08-25)
   - Result: Reviewed the new Tarps-folder files, excluded duplicate and
     browser-interface versions, and added optimized two-tone fabric sukkah,

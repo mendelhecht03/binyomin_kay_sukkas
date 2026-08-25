@@ -1,4 +1,5 @@
 import { DEFAULT_MANAGED_FORMS, normalizeFormSchema } from "../forms/form-schema.js";
+import { wallMaterialOptions } from "../../data/wall-materials.js";
 
 function requireDatabase(env) {
   if (!env?.DB || typeof env.DB.prepare !== "function") {
@@ -159,6 +160,14 @@ export async function restoreFormVersion({ env, id, versionId, updatedBy, now = 
 }
 
 const REFERRAL_HELP_TEXT = "This information helps us understand which advertising channels are most effective.";
+const WALL_MATERIAL_FIELD = Object.freeze({
+  id: "tarpStyle",
+  type: "select",
+  label: "Which wall option would you like to discuss?",
+  required: true,
+  helpText: "Choose from the wall options shown on the package page.",
+  options: [...wallMaterialOptions],
+});
 
 function addBeforeOther(options, values) {
   const next = [...(Array.isArray(options) ? options : [])];
@@ -179,12 +188,25 @@ function applyRequestedFormUpdates(schema) {
     if (next.id === "purchases") {
       step.fields = originalFields.filter((field) => !["sukkahType", "sukkahTypeOther"].includes(field.id));
       if (step.fields.length !== originalFields.length) changed = true;
+      if (step.id === "options" && !step.fields.some((field) => field.id === WALL_MATERIAL_FIELD.id)) {
+        const frameIndex = step.fields.findIndex((field) => field.id === "framePreference");
+        step.fields.splice(frameIndex >= 0 ? frameIndex + 1 : 0, 0, { ...WALL_MATERIAL_FIELD, options: [...WALL_MATERIAL_FIELD.options] });
+        changed = true;
+      }
     }
 
     for (const field of step.fields || []) {
       if (field.label === "How did you hear about us?" && field.helpText !== REFERRAL_HELP_TEXT) {
         field.helpText = REFERRAL_HELP_TEXT;
         changed = true;
+      }
+      if (["rentals", "purchases"].includes(next.id) && field.id === WALL_MATERIAL_FIELD.id) {
+        for (const [key, value] of Object.entries(WALL_MATERIAL_FIELD)) {
+          const expected = Array.isArray(value) ? [...value] : value;
+          if (JSON.stringify(field[key]) === JSON.stringify(expected)) continue;
+          field[key] = expected;
+          changed = true;
+        }
       }
       if (next.id !== "builds") continue;
       if (field.id === "service") {
