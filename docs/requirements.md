@@ -121,6 +121,13 @@ Script must not be required by the finished backend. Database and storage
 configuration must remain server-side and must never appear in generated
 browser HTML or JavaScript.
 
+An authenticated allowlisted owner can edit an existing submission from its
+detail dialog. Edit mode exposes the saved contact, location, and response
+values with explicit Save and Cancel controls. The private Worker validates the
+patch, rejects unknown response keys, merges only supplied changes into the
+existing D1 record, preserves untouched values and files, and returns the
+refreshed record. Saved edits must remain visible after a dashboard refresh.
+
 Pending testimonial rows additionally show Approve and Disapprove actions.
 Approve changes the record to `Approved` and makes its safe publication fields
 available to the homepage. Disapprove uses the permanent-delete confirmation.
@@ -145,8 +152,8 @@ with the business phone number as a secondary option. Its closing primary
 action opens the managed Custom Sukkah request at
 `/request/custom-sukkah/`.
 
-The `/pergolas` route uses the Custom Sukkahs portfolio template with five
-approved pergola project photos. It explains ground connection and house
+The `/pergolas` route uses the Custom Sukkahs portfolio template with approved
+pergola project photos, including two paired split-image project cards. It explains ground connection and house
 attachment choices, surfaces practical site considerations, and groups a wide
 range of roof, shade, frame, siding, screening, artwork, lighting, and comfort
 options in expandable cards. The primary action near the top and the closing
@@ -158,20 +165,35 @@ The `/purchases` route is the customer-facing Buy overview. Before the guided
 form, it shows the same responsive package overview and tarp gallery used by
 Rentals, with Buy-specific copy and a clear CTA into
 `/request/?form=purchases#request-form`. The tarp galleries are sample looks;
-visitors should be invited to ask about other options and confirm availability.
+visitors should be invited to ask about other options, colors, and availability.
+Rentals and Buy use the same ordered material images, names, descriptions,
+four-card desktop presentation, native horizontal overflow, accessible arrow
+controls, keyboard navigation, and responsive styling. Touching either gallery
+must never trap normal vertical page scrolling.
 The separate request route uses the shared guided request renderer for customers who want to buy a sukkah. It keeps the Rentals contact and location flow, replaces
 rental takedown timing with a preferred delivery or setup date, and adds
-purchase-specific choices for sukkah type, frame material, schach, lighting,
+purchase-specific choices for frame material, schach, lighting,
 furniture, flooring, storage, and other additions. Purchase submissions are
 stored in their own Buy dashboard category.
+
+The Buy overview lists metal or wood framing, a choice of walls, fasteners or
+reusable zip ties, and halachic straps as included. Its optional add-ons are
+evergreen schach, bamboo mats, 2×4 sticks, bamboo sticks, lighting, furniture,
+build service, and takedown service.
 
 Tree Trimming, Eruv Work, and About use the same shared service shell and
 navigation as the rest of the public site. Tree Trimming is text-first and
 does not show photo placeholders; its copy explains trimming small branches,
-large branches, or full trees when a sukkah site is not suitable. Eruv Work is
-also text-first and explains working with highly qualified rabbonim. About is
-intentionally compact: one owner photo, the approved Benyamin introduction,
-short What We Do and Why Choose Us sections, and a Get in Touch prompt.
+large branches, or full trees when a sukkah site is not suitable. A Quote
+section explains that a customer can send a video for an initial assessment or
+request an on-site visit when an in-person assessment is more appropriate. Eruv Work is
+also text-first and explains working with highly qualified rabbonim. About is a
+focused interactive story: one owner portrait introduces Benyamin, then a
+sticky editorial photo frame crossfades through four real project images as
+four concise biography and service milestones pass. The frame remains compact
+on desktop and shorter on mobile. A compact disclosure section explains the
+A-to-Z approach, and the page ends with quote and phone actions. Motion must
+preserve normal mobile scrolling and provide a reduced-motion presentation.
 
 The protected owner dashboard includes a schema-driven form builder. An
 allowlisted owner can create a form, edit its name, URL, introduction, submit
@@ -198,6 +220,12 @@ validate the complete definition, reject unsupported or duplicate fields and
 invalid options or conditions, and enforce the published definition when a
 customer submits. Saved submissions retain the form version and the label
 shown with each answer so later edits do not damage earlier records.
+
+Approved updates to built-in forms use an authenticated, idempotent migration.
+It applies only the requested field-level differences to the current published
+snapshot, creates one new immutable version, and preserves unrelated published
+customizations. Any separate owner draft remains a draft and receives the same
+targeted changes instead of being accidentally published or discarded.
 
 The owner dashboard presents the form editor and submission manager as separate
 tabs. The builder preview accepts the supported controls as a safe, unsent
@@ -310,6 +338,15 @@ Home, Measurements, Tools, Message, and Photo.
 Entered values and selected photos remain attached to the same form controls
 while visitors move Back, Continue, or Edit a review row.
 
+Builds Requested work includes Build, Take down, Take out of storage, and
+Other. Its Sukkah type choices include Classical white poles (the current label
+for the former Canvas option), Canvas Bingo, Round conduit canvas, Schach, beam
+and canvas, Snap / panel, Wood boards with bolts, Schach and beams only, and
+Other. Existing saved submissions keep their historical labels and values.
+Every shared “How did you hear about us?” question shows the secondary helper:
+“This information helps us understand which advertising channels are most
+effective.”
+
 The progress row becomes sticky on phone-sized screens. Multi-column choices,
 dates, and uploads must reflow before they can overflow. Native date controls
 must be shrinkable and capped at 100% width so iOS Safari keeps them inside
@@ -347,7 +384,7 @@ description and example rental photo share a compact two-column introduction;
 on phone-sized screens they stack vertically. The page shows sample tarp
 directions, invites visitors to ask about other options, and confirms
 availability before the visitor enters the form. It states: “Rental packages
-start at $250. Final pricing is confirmed with BK Sukkah.” The package action
+start as low as $550. Final pricing is confirmed with BK Sukkah.” The package action
 scrolls to the overview section, while each “Start a rental request” action
 opens `/request/?form=rentals#request-form` so the visitor lands directly on
 the rental form. The rental form asks the visitor to choose a tarp direction
@@ -372,6 +409,14 @@ The shared Location section accepts a site description and up to three optional
 area photos on both forms. Each photo may be a JPG, PNG, or HEIC file and must
 be no larger than 10 MB. Enforce these limits in both the browser and the
 server-side Worker.
+
+On phone-sized screens, the homepage service, process, and testimonial rails
+use native horizontal scrolling and snapping without JavaScript touch handlers
+that cancel browser gestures. They clip internal vertical overflow while
+allowing ordinary page scrolling on iOS Safari and Android Chrome. The mobile
+hero uses a slightly tighter, sharper crop that feels inside the sukkah, hides
+the forward wall edges, and retains a small strip of sky; desktop framing is
+unchanged.
 
 The shared Location section collects the approximate sukkah size in one text
 field, using a format such as `10 × 12 ft`.

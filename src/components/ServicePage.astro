@@ -28,6 +28,7 @@ interface Service {
   requestItems: string[];
   mediaPlaceholders: string[];
   steps: TextItem[];
+  quote?: TextItem;
 }
 
 interface Props {
@@ -92,6 +93,20 @@ const heroHeadingId = `${service.slug}-heading`;
         </div>
       </div>
     </section>
+
+    {
+      service.quote && (
+        <section class="section service-quote" aria-labelledby={`${service.slug}-quote-heading`}>
+          <div class="shell">
+            <div class="section-heading service-quote__copy">
+              <p class="eyebrow">{service.quote.title}</p>
+              <h2 id={`${service.slug}-quote-heading`}>A clear way to start.</h2>
+              <p>{service.quote.text}</p>
+            </div>
+          </div>
+        </section>
+      )
+    }
 
     <section class="section" aria-labelledby={`${service.slug}-details-heading`}>
       <div class="shell">
@@ -307,6 +322,27 @@ const heroHeadingId = `${service.slug}-heading`;
 
   .service-request-grid .feature-list {
     margin-top: 0;
+  }
+
+  .service-quote {
+    padding-top: 0;
+  }
+
+  .service-quote__copy {
+    max-width: 48rem;
+    padding: clamp(1.25rem, 3vw, 1.75rem);
+    border-left: 2px solid var(--wood-500);
+    background: var(--cream-100);
+  }
+
+  .service-quote__copy .eyebrow,
+  .service-quote__copy h2,
+  .service-quote__copy p {
+    margin-bottom: 0.5rem;
+  }
+
+  .service-quote__copy p:last-child {
+    margin-bottom: 0;
   }
 
   .service-process-grid {

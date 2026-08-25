@@ -261,11 +261,13 @@ sections pass content into the same component so their image ratio, borders,
 radius, and spacing stay synchronized across breakpoints.
 
 `src/components/RentalOverview.astro` is the shared package overview for the
-Rentals and Buy routes. A small `variant` prop changes the copy, image, section
-anchor, and form CTA while keeping the responsive package details and tarp
-gallery in one place. At desktop widths its package copy and photo share the
-first grid row to avoid unused side whitespace; the phone layout remains
-stacked.
+Rentals and Buy routes. A small `variant` prop changes the package copy, image,
+section anchor, and form CTA while keeping one ordered material dataset and one
+gallery implementation. Four cards are visible at desktop widths; native
+horizontal overflow, scroll snapping, arrow controls, and keyboard navigation
+expose the remaining cards. Browser-native touch behavior keeps ordinary
+vertical scrolling available on iOS and Android. At desktop widths its package
+copy and photo share the first grid row; the phone layout remains stacked.
 
 ## Worker Generation
 
@@ -293,6 +295,7 @@ PUT  /api/admin/forms/<form-id>
 POST /api/admin/forms/<form-id>/publish
 GET  /api/admin/forms/<form-id>/versions
 POST /api/admin/forms/<form-id>/restore
+POST /api/admin/forms/sync-built-in-updates
 ```
 
 The POST endpoints accept and validate their form data, store selected photos
@@ -302,8 +305,12 @@ removed so partial submissions are not left behind.
 
 `GET /api/testimonials` is public but returns only approved publication fields;
 private verification contact details never leave the protected dashboard.
-`PATCH /api/admin/submissions` is the authenticated approval action, while
-`DELETE /api/admin/submissions` handles both ordinary deletion and testimonial
+`PATCH /api/admin/submissions` handles authenticated testimonial approval and
+validated edits to an existing submission. Edit requests contain changed
+contact, location, and response groups; the repository merges them into the
+existing D1 row, rejects unknown answer keys, preserves untouched JSON, status,
+and file records, and returns the refreshed record. `DELETE
+/api/admin/submissions` handles both ordinary deletion and testimonial
 disapproval.
 
 The Worker also preserves the existing placeholder endpoint:
@@ -332,6 +339,13 @@ form. Publishing creates an immutable numbered version; restoring an older
 version copies it back into the draft for review rather than silently changing
 the public form.
 
+`POST /api/admin/forms/sync-built-in-updates` is the authenticated,
+deployment-time migration for approved changes to the built-in forms. It starts
+from each current published snapshot, applies only the named field-level
+changes, publishes a new immutable version when needed, and then restores the
+owner's separately edited draft with the same targeted changes applied. The
+operation is idempotent, so repeating it does not create duplicate versions.
+
 The dashboard separates these tools into Form builder and Submissions tabs, so
 the editing workspace does not compete visually with the submission rows. The
 builder preview uses the same field types and section icons as a live form. Its
@@ -358,7 +372,9 @@ with private, no-store headers. Common searchable values use normal database
 columns, while each form's unique answers live in a JSON field.
 
 The dashboard shows each submission as a responsive row with View and Delete
-actions. Delete is permanent and therefore uses a separate confirmation dialog.
+actions. The detail dialog also provides an Edit action that switches saved
+contact, location, and response values into validated controls with explicit
+Save and Cancel states. Delete is permanent and therefore uses a separate confirmation dialog.
 The authenticated Worker validates the entry type and ID, removes the D1 record
 and its related file metadata, then removes the corresponding R2 photo objects.
 The foreign-key relationship prevents orphaned database file records.

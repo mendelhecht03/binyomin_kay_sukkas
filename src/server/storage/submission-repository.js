@@ -41,6 +41,10 @@ function clean(value) {
   return String(value == null ? "" : value).trim();
 }
 
+function own(object, key) {
+  return Boolean(object && typeof object === "object" && Object.prototype.hasOwnProperty.call(object, key));
+}
+
 function hasValue(value) {
   if (Array.isArray(value)) return value.length > 0;
   return clean(value) !== "";
@@ -75,20 +79,21 @@ function fileUrl(origin, key) {
 
 function rowToRecord(row, files, origin) {
   const data = safeJson(row.data_json);
+  const answers = data.answers && typeof data.answers === "object" && !Array.isArray(data.answers) ? data.answers : {};
   const customer = Object.fromEntries(Object.entries({
     name: row.customer_name,
     email: row.customer_email,
     phone: row.customer_phone,
   }).filter(([, value]) => clean(value)));
   const location = Object.fromEntries(Object.entries({
-    address: data.addressLine1 || data.address,
-    city: data.city,
-    state: data.state,
-    zip: data.postalCode,
-    neighborhood: row.neighborhood || data.neighborhoodOther || data.neighborhood,
+    address: data.addressLine1 || data.address || answers.addressLine1 || answers.address,
+    city: data.city || answers.city,
+    state: data.state || answers.state,
+    zip: data.postalCode || data.zip || answers.postalCode || answers.zip,
+    neighborhood: row.neighborhood || data.neighborhoodOther || data.neighborhood || answers.neighborhoodOther || answers.neighborhood,
   }).filter(([, value]) => clean(value)));
   const savedAnswerDetails = Array.isArray(data.answerDetails)
-    ? data.answerDetails.filter((detail) => detail && hasValue(detail.value)).map((detail) => ({
+    ? data.answerDetails.filter((detail) => detail && !OMITTED_DETAIL_FIELDS.has(clean(detail.id)) && hasValue(detail.value)).map((detail) => ({
         key: clean(detail.id), label: clean(detail.label) || labelForField(detail.id), value: detail.value,
       }))
     : [];
@@ -235,6 +240,132 @@ export async function getSubmissionRecord({ env, id, origin }) {
     FROM submission_files WHERE submission_id = ? ORDER BY created_at, id`).bind(cleanId).all();
   const files = new Map([[cleanId, filePage.results || []]]);
   return rowToRecord(row, files, origin);
+}
+
+function editableAnswerKeys(data) {
+  const keys = new Set();
+  if (Array.isArray(data.answerDetails)) {
+    data.answerDetails.forEach((detail) => {
+      const key = clean(detail?.id);
+      if (key) keys.add(key);
+    });
+  }
+  if (data.answers && typeof data.answers === "object" && !Array.isArray(data.answers)) {
+    Object.keys(data.answers).forEach((key) => keys.add(key));
+  }
+  Object.keys(data).forEach((key) => {
+    if (!OMITTED_DETAIL_FIELDS.has(key)) keys.add(key);
+  });
+  return keys;
+}
+
+function updateSavedAnswer(data, key, value) {
+  if (own(data.answers, key)) data.answers[key] = value;
+  if (own(data, key)) data[key] = value;
+  if (Array.isArray(data.answerDetails)) {
+    data.answerDetails = data.answerDetails.map((detail) => clean(detail?.id) === key ? { ...detail, value } : detail);
+  }
+}
+
+function syncKnownDataField(data, keys, value) {
+  keys.forEach((key) => {
+    if (own(data, key)) data[key] = value;
+    if (own(data.answers, key)) data.answers[key] = value;
+  });
+}
+
+function updatedSummary(type, data, currentSummary) {
+  const answers = data.answers && typeof data.answers === "object" ? data.answers : data;
+  if (type === "testimonial") {
+    const testimonial = clean(data.testimonial);
+    return testimonial.length > 110 ? `${testimonial.slice(0, 107)}…` : testimonial || currentSummary;
+  }
+  if (data.formTitle) return [data.formTitle, answers.estimatedSize].filter(hasValue).join(" · ") || currentSummary;
+  if (type === "build") {
+    const service = Array.isArray(data.service) ? data.service.join(", ") : clean(data.service);
+    return [service || "Build request", data.estimatedSize].filter(hasValue).join(" · ");
+  }
+  if (type === "rental") return [data.estimatedSize || "Rental request", data.buildDay].filter(hasValue).join(" · ");
+  return currentSummary;
+}
+
+export async function updateSubmissionRecord({ env, type, id, changes, origin }) {
+  const cleanId = clean(id);
+  if (!FORM_TYPES.has(type) || !cleanId || cleanId.length > 300 || !changes || typeof changes !== "object" || Array.isArray(changes)) {
+    const error = new Error("The submission update could not be identified.");
+    error.code = "INVALID_SUBMISSION_UPDATE";
+    throw error;
+  }
+  const db = requireDatabase(env);
+  const row = await db.prepare("SELECT * FROM submissions WHERE id = ? AND type = ?").bind(cleanId, type).first();
+  if (!row) {
+    const error = new Error("The submission was not found.");
+    error.code = "SUBMISSION_NOT_FOUND";
+    throw error;
+  }
+
+  const data = safeJson(row.data_json);
+  const allowedAnswerKeys = editableAnswerKeys(data);
+  const customer = changes.customer && typeof changes.customer === "object" && !Array.isArray(changes.customer) ? changes.customer : {};
+  const location = changes.location && typeof changes.location === "object" && !Array.isArray(changes.location) ? changes.location : {};
+  const answers = changes.answers && typeof changes.answers === "object" && !Array.isArray(changes.answers) ? changes.answers : {};
+
+  for (const [key, value] of Object.entries(answers)) {
+    if (!allowedAnswerKeys.has(key)) {
+      const error = new Error("The submission contains an unknown response field.");
+      error.code = "UNKNOWN_SUBMISSION_FIELD";
+      throw error;
+    }
+    updateSavedAnswer(data, key, value);
+  }
+
+  const customerName = own(customer, "name") ? customer.name : row.customer_name;
+  const customerEmail = own(customer, "email") ? customer.email : row.customer_email;
+  const customerPhone = own(customer, "phone") ? customer.phone : row.customer_phone;
+  const neighborhood = own(location, "neighborhood") ? location.neighborhood : row.neighborhood;
+  if (own(customer, "name")) syncKnownDataField(data, ["name", "reviewerName"], customerName);
+  if (own(customer, "email")) syncKnownDataField(data, ["email"], customerEmail);
+  if (own(customer, "phone")) syncKnownDataField(data, ["phone"], customerPhone);
+  if (type === "testimonial" && (own(customer, "email") || own(customer, "phone"))) {
+    syncKnownDataField(data, ["reviewerContact"], customerEmail || customerPhone);
+  }
+  if (own(location, "address")) {
+    const addressKey = own(data, "addressLine1") || own(data.answers, "addressLine1") ? "addressLine1" : "address";
+    syncKnownDataField(data, [addressKey], location.address);
+  }
+  if (own(location, "city")) syncKnownDataField(data, ["city"], location.city);
+  if (own(location, "state")) syncKnownDataField(data, ["state"], location.state);
+  if (own(location, "zip")) {
+    const zipKey = own(data, "postalCode") || own(data.answers, "postalCode") ? "postalCode" : "zip";
+    syncKnownDataField(data, [zipKey], location.zip);
+  }
+  if (own(location, "neighborhood")) {
+    const hasSpecificNeighborhood = clean(data.neighborhoodOther || data.answers?.neighborhoodOther);
+    syncKnownDataField(data, [hasSpecificNeighborhood ? "neighborhoodOther" : "neighborhood"], neighborhood);
+  }
+
+  if (type === "testimonial") {
+    const testimonial = clean(data.testimonial);
+    const consent = clean(data.publicationConsent).toLowerCase();
+    if (!clean(customerName) || testimonial.length < 20 || consent !== "yes") {
+      const error = new Error("The edited testimonial is missing required publication information.");
+      error.code = "INVALID_TESTIMONIAL_CONTENT";
+      throw error;
+    }
+  }
+
+  const summary = updatedSummary(type, data, row.summary);
+  const result = await db.prepare(`UPDATE submissions SET
+    customer_name = ?, customer_email = ?, customer_phone = ?, neighborhood = ?, summary = ?, data_json = ?
+    WHERE id = ? AND type = ?`)
+    .bind(customerName, customerEmail, customerPhone, neighborhood, summary, JSON.stringify(data), cleanId, type)
+    .run();
+  if (!Number(result?.meta?.changes || 0)) {
+    const error = new Error("The submission was not found.");
+    error.code = "SUBMISSION_NOT_FOUND";
+    throw error;
+  }
+  return getSubmissionRecord({ env, id: cleanId, origin });
 }
 
 export async function deleteSubmissionRecord({ env, type, id }) {

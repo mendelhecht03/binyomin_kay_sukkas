@@ -183,7 +183,11 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
   <dialog id="submission-dialog" class="admin-dialog submission-dialog" aria-labelledby="submission-dialog-title">
     <button class="dialog-close" type="button" aria-label="Close submission details">×</button>
     <div id="dialog-content"></div>
+    <p class="submission-edit-status" data-edit-status role="status"></p>
     <div class="dialog-actions">
+      <button class="button button-edit" type="button" data-edit-current><span aria-hidden="true">✎</span> Edit responses</button>
+      <button class="button" type="button" data-save-current hidden>Save changes</button>
+      <button class="button button-secondary" type="button" data-cancel-edit hidden>Cancel</button>
       <button class="button button-approve" type="button" data-approve-current hidden>Approve and publish</button>
       <button class="button button-danger" type="button" data-delete-current>Delete submission</button>
       <button class="button button-secondary" type="button" data-close-details>Close</button>
@@ -260,7 +264,7 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
       ],
     };
 
-    const state = { type: "all", search: "", nextCursor: "", submissions: [], loading: false, selectedId: "", pendingDeleteId: "" };
+    const state = { type: "all", search: "", nextCursor: "", submissions: [], loading: false, selectedId: "", pendingDeleteId: "", editing: false };
     const sheetsState = { configured: false, ready: false, loading: false, sync: null };
     const list = document.querySelector("#submission-list");
     const tableShell = document.querySelector("#submission-table-shell");
@@ -476,28 +480,145 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
       return `<section class="detail-section"><h3>${escapeHtml(title)}</h3><dl>${visible.map(([label, value]) => `<div><dt>${escapeHtml(label)}</dt><dd>${displayValue(value)}</dd></div>`).join("")}</dl></section>`;
     }
 
-    function openDetails(record) {
-      state.selectedId = record.id;
+    function editableControl({ scope, key, label, value }) {
+      const isArray = Array.isArray(value);
+      const valueType = isArray ? "array" : typeof value;
+      const textValue = isArray ? value.join("\n") : String(value ?? "");
+      const longAnswer = isArray || textValue.length > 120 || /testimonial|comments?|description|details?|notes?/i.test(`${key} ${label}`);
+      const inputType = /email/i.test(`${key} ${label}`) ? "email"
+        : /phone|mobile|tel/i.test(`${key} ${label}`) ? "tel"
+        : /date|day/i.test(key) && /^\d{4}-\d{2}-\d{2}$/.test(textValue) ? "date"
+        : "text";
+      const attributes = `data-edit-scope="${escapeHtml(scope)}" data-edit-key="${escapeHtml(key)}" data-value-type="${escapeHtml(valueType)}"`;
+      const control = longAnswer
+        ? `<textarea ${attributes} rows="${isArray ? 4 : 3}">${escapeHtml(textValue)}</textarea>`
+        : `<input ${attributes} type="${inputType}" value="${escapeHtml(textValue)}" />`;
+      return `<label class="submission-edit-field"><span>${escapeHtml(label)}</span>${control}${isArray ? "<small>Enter one choice per line.</small>" : ""}</label>`;
+    }
+
+    function editableSection(title, fields) {
+      if (!fields.length) return "";
+      return `<section class="detail-section submission-edit-section"><h3>${escapeHtml(title)}</h3><div class="submission-edit-grid">${fields.map(editableControl).join("")}</div></section>`;
+    }
+
+    function renderDetails(record, { editing = false } = {}) {
+      state.editing = editing;
       const details = (record.details || []).map((detail) => [detail.label, detail.value]);
       const photos = (record.photos || []).map((photo) => `<a href="${escapeHtml(photo.url)}" target="_blank" rel="noopener"><img src="${escapeHtml(photo.url)}" alt="${escapeHtml(photo.label || "Submission photo")}" /></a>`).join("");
-      document.querySelector("#dialog-content").innerHTML = `
-        <p class="eyebrow">${escapeHtml(typeLabel(record.type))} submission</p>
-        <h2 id="submission-dialog-title">${escapeHtml(customerName(record))}</h2>
-        <p class="detail-date">${escapeHtml(formatDate(record.submittedAt))} · ${escapeHtml(statusLabel(record))}</p>
+      const content = editing ? `
+        ${editableSection("Contact", [
+          { scope: "customer", key: "name", label: "Name", value: customerName(record) === "Name not provided" ? "" : customerName(record) },
+          { scope: "customer", key: "phone", label: "Phone", value: record.customer?.phone || "" },
+          { scope: "customer", key: "email", label: "Email", value: record.customer?.email || "" },
+        ])}
+        ${editableSection("Location", [
+          { scope: "location", key: "address", label: "Address", value: record.location?.address || "" },
+          { scope: "location", key: "city", label: "City", value: record.location?.city || "" },
+          { scope: "location", key: "state", label: "State", value: record.location?.state || "" },
+          { scope: "location", key: "zip", label: "ZIP Code", value: record.location?.zip || "" },
+          { scope: "location", key: "neighborhood", label: "Neighborhood", value: record.location?.neighborhood || "" },
+        ])}
+        ${editableSection(record.type === "testimonial" ? "Testimonial" : "Request details", (record.details || []).map((detail) => ({ scope: "answers", key: detail.key, label: detail.label, value: detail.value })))}
+      ` : `
         ${detailSection("Contact", [["Phone", record.customer?.phone], ["Email", record.customer?.email]])}
         ${detailSection("Location", [["Address", record.location?.address], ["City", record.location?.city], ["State", record.location?.state], ["ZIP Code", record.location?.zip], ["Neighborhood", record.location?.neighborhood]])}
         ${detailSection(record.type === "testimonial" ? "Testimonial" : "Request details", details)}
         ${photos ? `<section class="detail-section"><h3>Photos</h3><div class="detail-photos">${photos}</div></section>` : ""}
       `;
+      document.querySelector("#dialog-content").innerHTML = `
+        <p class="eyebrow">${escapeHtml(typeLabel(record.type))} submission</p>
+        <h2 id="submission-dialog-title">${escapeHtml(customerName(record))}</h2>
+        <p class="detail-date">${escapeHtml(formatDate(record.submittedAt))} · ${escapeHtml(statusLabel(record))}</p>
+        ${content}
+      `;
+      const editButton = detailsDialog.querySelector("[data-edit-current]");
+      const saveButton = detailsDialog.querySelector("[data-save-current]");
+      const cancelButton = detailsDialog.querySelector("[data-cancel-edit]");
       const approveButton = detailsDialog.querySelector("[data-approve-current]");
       const deleteButton = detailsDialog.querySelector("[data-delete-current]");
-      approveButton.hidden = !isPendingTestimonial(record);
+      const closeButton = detailsDialog.querySelector("[data-close-details]");
+      editButton.hidden = editing;
+      saveButton.hidden = !editing;
+      cancelButton.hidden = !editing;
+      approveButton.hidden = editing || !isPendingTestimonial(record);
+      deleteButton.hidden = editing;
+      closeButton.hidden = editing;
       deleteButton.textContent = isPendingTestimonial(record)
         ? "Disapprove and delete"
         : record.type === "testimonial" && record.status === "Approved"
           ? "Remove from site"
           : "Delete submission";
+      const editStatus = detailsDialog.querySelector("[data-edit-status]");
+      editStatus.textContent = editing ? "Edit the responses below, then save or cancel." : "";
+      editStatus.dataset.state = "";
+    }
+
+    function openDetails(record) {
+      state.selectedId = record.id;
+      renderDetails(record);
       detailsDialog.showModal();
+    }
+
+    function currentSubmission() {
+      return state.submissions.find((item) => item.id === state.selectedId);
+    }
+
+    function readEditedChanges() {
+      const changes = { customer: {}, location: {}, answers: {} };
+      detailsDialog.querySelectorAll("[data-edit-scope][data-edit-key]").forEach((control) => {
+        const scope = control.dataset.editScope;
+        const key = control.dataset.editKey;
+        let value = control.value;
+        if (control.dataset.valueType === "array") value = value.split(/\r?\n/).map((item) => item.trim()).filter(Boolean);
+        else if (control.dataset.valueType === "boolean") value = value === "true";
+        else if (control.dataset.valueType === "number") value = Number(value);
+        changes[scope][key] = value;
+      });
+      return changes;
+    }
+
+    async function saveSubmissionEdits() {
+      const record = currentSubmission();
+      if (!record || !state.editing) return;
+      const saveButton = detailsDialog.querySelector("[data-save-current]");
+      const cancelButton = detailsDialog.querySelector("[data-cancel-edit]");
+      const editStatus = detailsDialog.querySelector("[data-edit-status]");
+      saveButton.disabled = true;
+      cancelButton.disabled = true;
+      editStatus.textContent = "Saving changes…";
+      editStatus.dataset.state = "";
+      try {
+        let updatedRecord;
+        if (isLocalFixture) {
+          updatedRecord = structuredClone(record);
+          const changes = readEditedChanges();
+          updatedRecord.customer = { ...updatedRecord.customer, ...changes.customer };
+          updatedRecord.location = { ...updatedRecord.location, ...changes.location };
+          updatedRecord.details = (updatedRecord.details || []).map((detail) => Object.prototype.hasOwnProperty.call(changes.answers, detail.key) ? { ...detail, value: changes.answers[detail.key] } : detail);
+        } else {
+          const response = await fetch("/api/admin/submissions", {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ action: "edit-submission", type: record.type, id: record.id, changes: readEditedChanges() }),
+          });
+          const body = await response.json().catch(() => null);
+          if (!response.ok) throw new Error(body?.message || "The submission changes could not be saved.");
+          updatedRecord = body.submission;
+        }
+        state.submissions = state.submissions.map((item) => item.id === updatedRecord.id ? updatedRecord : item);
+        renderList();
+        renderDetails(updatedRecord);
+        editStatus.textContent = "Changes saved. They will remain after the dashboard is refreshed.";
+        editStatus.dataset.state = "success";
+        message.hidden = false;
+        message.textContent = `${typeLabel(updatedRecord.type)} submission from ${customerName(updatedRecord)} was updated.`;
+      } catch (error) {
+        editStatus.textContent = error.message || "The submission changes could not be saved.";
+        editStatus.dataset.state = "error";
+      } finally {
+        saveButton.disabled = false;
+        cancelButton.disabled = false;
+      }
     }
 
     function askToDelete(record, disapprove = false) {
@@ -620,8 +741,17 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
       if (event.target.closest("[data-view]")) openDetails(record);
     });
     loadMore.addEventListener("click", () => load({ append: true }));
-    detailsDialog.querySelector(".dialog-close").addEventListener("click", () => detailsDialog.close());
-    detailsDialog.querySelector("[data-close-details]").addEventListener("click", () => detailsDialog.close());
+    detailsDialog.querySelector(".dialog-close").addEventListener("click", () => { state.editing = false; detailsDialog.close(); });
+    detailsDialog.querySelector("[data-close-details]").addEventListener("click", () => { state.editing = false; detailsDialog.close(); });
+    detailsDialog.querySelector("[data-edit-current]").addEventListener("click", () => {
+      const record = currentSubmission();
+      if (record) renderDetails(record, { editing: true });
+    });
+    detailsDialog.querySelector("[data-save-current]").addEventListener("click", saveSubmissionEdits);
+    detailsDialog.querySelector("[data-cancel-edit]").addEventListener("click", () => {
+      const record = currentSubmission();
+      if (record) renderDetails(record);
+    });
     detailsDialog.querySelector("[data-delete-current]").addEventListener("click", () => {
       const record = state.submissions.find((item) => item.id === state.selectedId);
       if (record) askToDelete(record, isPendingTestimonial(record));
@@ -630,7 +760,7 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
       const record = state.submissions.find((item) => item.id === state.selectedId);
       if (record) approveTestimonial(record, event.currentTarget);
     });
-    detailsDialog.addEventListener("click", (event) => { if (event.target === detailsDialog) detailsDialog.close(); });
+    detailsDialog.addEventListener("click", (event) => { if (event.target === detailsDialog && !state.editing) detailsDialog.close(); });
     deleteDialog.querySelector("[data-cancel-delete]").addEventListener("click", () => deleteDialog.close());
     deleteDialog.addEventListener("click", (event) => { if (event.target === deleteDialog && !confirmDelete.disabled) deleteDialog.close(); });
     confirmDelete.addEventListener("click", deletePendingSubmission);
@@ -1379,7 +1509,18 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
   .detail-section dd { margin: .15rem 0 0; white-space: pre-wrap; overflow-wrap: anywhere; }
   .detail-photos { display: grid; grid-template-columns: repeat(3, 1fr); gap: .75rem; }
   .detail-photos img { width: 100%; aspect-ratio: 4 / 3; border-radius: var(--radius-small); object-fit: cover; }
+  .submission-edit-status { min-height: 1.4rem; margin: 1rem 0 0; color: var(--ink-500); font-size: .84rem; font-weight: 750; }
+  .submission-edit-status[data-state="success"] { color: var(--forest-800); }
+  .submission-edit-status[data-state="error"] { color: var(--danger); }
+  .submission-edit-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .9rem 1rem; }
+  .submission-edit-field { display: grid; align-content: start; gap: .35rem; min-width: 0; color: var(--ink-700); font-size: .78rem; font-weight: 800; }
+  .submission-edit-field input, .submission-edit-field textarea { width: 100%; min-height: 44px; padding: .65rem .7rem; border: 1px solid var(--border-strong); border-radius: 8px; color: var(--ink-900); background: white; font: inherit; font-size: .9rem; font-weight: 500; }
+  .submission-edit-field textarea { min-height: 90px; resize: vertical; }
+  .submission-edit-field input:focus-visible, .submission-edit-field textarea:focus-visible { border-color: var(--forest-700); outline: 0; box-shadow: 0 0 0 3px rgba(45,104,85,.16); }
+  .submission-edit-field small { color: var(--ink-500); font-size: .7rem; font-weight: 600; }
   .dialog-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: .75rem; padding-top: 1.5rem; margin-top: 1.5rem; border-top: 1px solid var(--border); }
+  .button-edit { border-color: var(--forest-800); color: var(--forest-800); background: var(--forest-100); }
+  .button-edit span { margin-right: .25rem; font-size: 1rem; }
   .button-danger { border-color: var(--danger); color: white; background: var(--danger); }
   .button-danger:hover { border-color: #762424; background: #762424; }
   .button-approve { border-color: var(--forest-800); color: white; background: var(--forest-800); }
@@ -1435,7 +1576,7 @@ const dashboardForms = FORM_DEFINITIONS.map(({ type, sourceKey, label, singularL
     .field-editor-card__top { align-items: flex-start; flex-direction: column; }
     .submission-table tr { grid-template-columns: 1fr; }
     .submission-table td { grid-template-columns: 5.5rem minmax(0, 1fr); grid-column: 1 !important; }
-    .detail-section dl, .detail-photos { grid-template-columns: 1fr; }
+    .detail-section dl, .detail-photos, .submission-edit-grid { grid-template-columns: 1fr; }
     .dialog-actions { align-items: stretch; flex-direction: column-reverse; }
     .dialog-actions .button { width: 100%; }
   }

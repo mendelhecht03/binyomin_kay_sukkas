@@ -1,7 +1,7 @@
 import { authorizeAdminRequest, adminErrorResponse } from "./admin-auth.js";
 import {
   createFormDraft, getFormById, listForms, listFormVersions, publishForm,
-  restoreFormVersion, saveFormDraft,
+  publishRequestedBuiltInUpdates, restoreFormVersion, saveFormDraft,
 } from "../storage/form-repository.js";
 
 const HEADERS = { "Cache-Control": "private, no-store", "X-Content-Type-Options": "nosniff" };
@@ -27,7 +27,10 @@ export async function handleAdminFormsRequest(request, env, pathname) {
     }
     const body = await request.json().catch(() => null);
     let result;
-    if (request.method === "POST" && !id) result = await createFormDraft({ env, schema: body?.schema, updatedBy: access.email });
+    if (request.method === "POST" && id === "sync-built-in-updates" && !action) {
+      result = await publishRequestedBuiltInUpdates({ env, updatedBy: access.email });
+    }
+    else if (request.method === "POST" && !id) result = await createFormDraft({ env, schema: body?.schema, updatedBy: access.email });
     else if (request.method === "PUT" && id && !action) result = await saveFormDraft({ env, id, schema: body?.schema, updatedBy: access.email });
     else if (request.method === "POST" && id && action === "publish") result = await publishForm({ env, id, updatedBy: access.email });
     else if (request.method === "POST" && id && action === "restore") result = await restoreFormVersion({ env, id, versionId: body?.versionId, updatedBy: access.email });

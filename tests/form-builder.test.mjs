@@ -3,7 +3,8 @@ import assert from "node:assert/strict";
 import worker from "../index.mjs";
 import { DEFAULT_BUILD_FORM, DEFAULT_PURCHASE_FORM, DEFAULT_RENTAL_FORM, SUPPORTED_FORM_STEP_ICONS, normalizeFormSchema } from "../src/server/forms/form-schema.js";
 import {
-  createFormDraft, getPublishedFormBySlug, listFormVersions, publishForm, saveFormDraft,
+  createFormDraft, getFormById, getPublishedFormBySlug, listFormVersions, publishForm,
+  publishRequestedBuiltInUpdates, saveFormDraft,
 } from "../src/server/storage/form-repository.js";
 import { listSubmissions } from "../src/server/storage/submission-repository.js";
 import { createTestDatabase } from "./helpers/d1-test-database.mjs";
@@ -78,6 +79,53 @@ test("form drafts publish immutable versions and keep later edits private", asyn
   } finally { DB.close(); }
 });
 
+test("approved built-in updates publish once and preserve separate owner draft changes", async () => {
+  const DB = createTestDatabase();
+  try {
+    const legacyBuild = structuredClone(DEFAULT_BUILD_FORM);
+    const work = legacyBuild.steps.find((step) => step.id === "requested-work").fields.find((field) => field.id === "service");
+    work.options = work.options.filter((option) => option !== "Take out of storage");
+    const type = legacyBuild.steps.find((step) => step.id === "sukkah").fields.find((field) => field.id === "sukkahType");
+    type.options = type.options.filter((option) => !["Round conduit canvas", "Schach, beam and canvas"].includes(option)).map((option) => option === "Classical white poles" ? "Canvas" : option);
+    delete legacyBuild.steps.find((step) => step.id === "review").fields.find((field) => field.id === "referral").helpText;
+    const createdBuild = await createFormDraft({ env: { DB }, schema: legacyBuild, updatedBy: "owner@example.com" });
+    const publishedBuild = await publishForm({ env: { DB }, id: "builds", updatedBy: "owner@example.com" });
+    assert.equal(createdBuild.ok, true);
+    assert.equal(publishedBuild.ok, true);
+
+    const ownerDraft = structuredClone(legacyBuild);
+    ownerDraft.title = "Owner custom Builds draft";
+    ownerDraft.steps.find((step) => step.id === "review").fields.find((field) => field.id === "comments").label = "Owner notes";
+    await saveFormDraft({ env: { DB }, id: "builds", schema: ownerDraft, updatedBy: "owner@example.com" });
+
+    const legacyPurchase = structuredClone(DEFAULT_PURCHASE_FORM);
+    legacyPurchase.steps.find((step) => step.id === "options").fields.unshift(
+      { id: "sukkahType", type: "select", label: "What type of sukkah are you looking to purchase?", required: true, options: ["Canvas", "Other"] },
+      { id: "sukkahTypeOther", type: "text", label: "Other sukkah type", required: true, condition: { fieldId: "sukkahType", operator: "equals", value: "Other" } },
+    );
+    await createFormDraft({ env: { DB }, schema: legacyPurchase, updatedBy: "owner@example.com" });
+    await publishForm({ env: { DB }, id: "purchases", updatedBy: "owner@example.com" });
+
+    const first = await publishRequestedBuiltInUpdates({ env: { DB }, updatedBy: "owner@example.com" });
+    assert.equal(first.ok, true);
+    assert.equal(first.forms.find((form) => form.id === "builds").changed, true);
+    const published = (await getPublishedFormBySlug({ env: { DB }, slug: "builds" })).schema;
+    assert.ok(published.steps.find((step) => step.id === "requested-work").fields.find((field) => field.id === "service").options.includes("Take out of storage"));
+    assert.ok(published.steps.find((step) => step.id === "sukkah").fields.find((field) => field.id === "sukkahType").options.includes("Classical white poles"));
+    const savedDraft = (await getFormById({ env: { DB }, id: "builds" })).draft;
+    assert.equal(savedDraft.title, "Owner custom Builds draft");
+    assert.equal(savedDraft.steps.find((step) => step.id === "review").fields.find((field) => field.id === "comments").label, "Owner notes");
+    assert.ok(savedDraft.steps.find((step) => step.id === "requested-work").fields.find((field) => field.id === "service").options.includes("Take out of storage"));
+    const publishedPurchase = (await getPublishedFormBySlug({ env: { DB }, slug: "purchases" })).schema;
+    assert.equal(publishedPurchase.steps.flatMap((step) => step.fields).some((field) => ["sukkahType", "sukkahTypeOther"].includes(field.id)), false);
+
+    const second = await publishRequestedBuiltInUpdates({ env: { DB }, updatedBy: "owner@example.com" });
+    assert.equal(second.forms.find((form) => form.id === "builds").changed, false);
+    assert.equal((await listFormVersions({ env: { DB }, id: "builds" })).length, 2);
+    assert.equal((await listFormVersions({ env: { DB }, id: "purchases" })).length, 2);
+  } finally { DB.close(); }
+});
+
 test("dynamic forms enforce published conditions and save label snapshots", async () => {
   const DB = createTestDatabase();
   try {
@@ -116,7 +164,6 @@ test("Buy submissions are saved in the purchase dashboard category", async () =>
     submitted.set("neighborhood", "Crown Heights");
     submitted.set("estimatedSize", "10 × 12 ft");
     submitted.set("deliveryDate", "2026-09-20");
-    submitted.set("sukkahType", "Canvas");
     submitted.set("framePreference", "Wood");
     submitted.append("schach", "Bamboo mat");
     const response = await worker.fetch(new Request("https://example.com/api/form-submissions/purchases", { method: "POST", body: submitted }), { DB });
@@ -183,7 +230,7 @@ test("the live request definitions use editable section icons and the shared pub
     assert.match(buyHtml, /See sukkah options/);
     assert.match(buyHtml, /<section id="buy-overview"/);
     assert.match(buyHtml, /A practical sukkah to keep/);
-    assert.match(buyHtml, /Browse tarp directions/);
+    assert.match(buyHtml, /Browse wall materials/);
     assert.match(buyHtml, /href="\/request\/\?form=purchases#request-form"[^>]*>Start a buy request<\/a>/);
     assert.equal((buyHtml.match(/href="\/request\/\?form=purchases#request-form"/g) || []).length, 2);
     assert.doesNotMatch(buyHtml, /data-managed-form-root/);
@@ -234,12 +281,18 @@ test("the live request definitions use editable section icons and the shared pub
     assert.match(pergolasHtml, /form-page-actions/);
     assert.match(pergolasHtml, /Start a pergola request/);
     const requestedWork = DEFAULT_BUILD_FORM.steps.find((step) => step.id === "requested-work").fields.find((field) => field.id === "service");
-    assert.deepEqual(requestedWork.options, ["Build", "Take down", "Other"]);
+    assert.deepEqual(requestedWork.options, ["Build", "Take down", "Take out of storage", "Other"]);
     assert.equal(DEFAULT_BUILD_FORM.steps.find((step) => step.id === "requested-work").fields.some((field) => field.id === "bringToStorageDate"), false);
     assert.equal(DEFAULT_RENTAL_FORM.steps.find((step) => step.id === "extras").fields.find((field) => field.id === "tarpStyle").required, true);
     assert.equal(DEFAULT_PURCHASE_FORM.title, "Buy");
     assert.equal(DEFAULT_PURCHASE_FORM.steps.find((step) => step.id === "timing").fields[0].id, "deliveryDate");
-    assert.equal(DEFAULT_PURCHASE_FORM.steps.find((step) => step.id === "options").fields.find((field) => field.id === "sukkahType").required, true);
+    assert.equal(DEFAULT_PURCHASE_FORM.steps.find((step) => step.id === "options").fields.some((field) => field.id === "sukkahType"), false);
+    const buildSukkahType = DEFAULT_BUILD_FORM.steps.find((step) => step.id === "sukkah").fields.find((field) => field.id === "sukkahType");
+    assert.ok(buildSukkahType.options.includes("Classical white poles"));
+    assert.ok(buildSukkahType.options.includes("Round conduit canvas"));
+    assert.ok(buildSukkahType.options.includes("Schach, beam and canvas"));
+    const referral = DEFAULT_BUILD_FORM.steps.find((step) => step.id === "review").fields.find((field) => field.id === "referral");
+    assert.equal(referral.helpText, "This information helps us understand which advertising channels are most effective.");
   } finally { DB.close(); }
 });
 

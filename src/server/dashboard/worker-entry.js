@@ -2,6 +2,7 @@ import { adminErrorResponse, authorizeAdminRequest } from "./admin-auth.js";
 import { deleteDashboardSubmission } from "./deletion-service.js";
 import { getDashboardSubmissions } from "./service.js";
 import { approveDashboardTestimonial } from "./testimonial-review-service.js";
+import { editDashboardSubmission } from "./submission-edit-service.js";
 import {
   exportGoogleSheetSubmissions,
   getGoogleSheetsSettings,
@@ -98,11 +99,21 @@ export async function handleAdminSubmissionsRequest(request, env) {
       return Response.json({ ok: false, message: "The dashboard request could not be read." }, { status: 400, headers: PRIVATE_HEADERS });
     }
     if (request.method === "PATCH") {
-      if (body?.action !== "approve-testimonial") {
-        return Response.json({ ok: false, message: "Unknown testimonial review action." }, { status: 400, headers: PRIVATE_HEADERS });
+      if (body?.action === "edit-submission") {
+        const result = await editDashboardSubmission({
+          env,
+          type: body?.type,
+          id: body?.id,
+          changes: body?.changes,
+          origin: new URL(request.url).origin,
+        });
+        return Response.json(result, { status: result.ok ? 200 : result.status, headers: PRIVATE_HEADERS });
       }
-      const result = await approveDashboardTestimonial({ env, id: body?.id, approvedBy: access.email });
-      return Response.json(result, { status: result.ok ? 200 : result.status, headers: PRIVATE_HEADERS });
+      if (body?.action === "approve-testimonial") {
+        const result = await approveDashboardTestimonial({ env, id: body?.id, approvedBy: access.email });
+        return Response.json(result, { status: result.ok ? 200 : result.status, headers: PRIVATE_HEADERS });
+      }
+      return Response.json({ ok: false, message: "Unknown submission action." }, { status: 400, headers: PRIVATE_HEADERS });
     }
     const result = await deleteDashboardSubmission({ env, type: body?.type, id: body?.id });
     return Response.json(result, { status: result.ok ? 200 : result.status, headers: PRIVATE_HEADERS });

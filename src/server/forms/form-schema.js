@@ -244,7 +244,7 @@ export const DEFAULT_BUILD_FORM = {
     },
     {
       id: "requested-work", title: "Requested work", icon: "site", fields: [
-        { id: "service", type: "checkboxes", label: "What do you need help with?", required: true, helpText: "Select everything that applies.", options: ["Build", "Take down", "Other"] },
+        { id: "service", type: "checkboxes", label: "What do you need help with?", required: true, helpText: "Select everything that applies.", options: ["Build", "Take down", "Take out of storage", "Other"] },
         { id: "serviceOther", type: "text", label: "Other requested work", required: true, condition: { fieldId: "service", operator: "includes", value: "Other" } },
         { id: "extraLabor", type: "checkboxes", label: "Special access or extra labor", required: false, helpText: "For example, a rooftop sukkah or unusual access.", options: ["Yes"] },
         { id: "extraServiceDetails", type: "textarea", label: "What extra help is needed?", required: true, condition: { fieldId: "extraLabor", operator: "includes", value: "Yes" } },
@@ -252,7 +252,10 @@ export const DEFAULT_BUILD_FORM = {
     },
     {
       id: "sukkah", title: "Your sukkah", icon: "sukkah", fields: [
-        { id: "sukkahType", type: "select", label: "Sukkah type", required: true, options: ["Canvas", "Canvas Bingo", "Snap / panel", "Wood boards with bolts", "Schach and beams only", "Other"] },
+        {
+          id: "sukkahType", type: "select", label: "Sukkah type", required: true,
+          options: ["Classical white poles", "Canvas Bingo", "Round conduit canvas", "Schach, beam and canvas", "Snap / panel", "Wood boards with bolts", "Schach and beams only", "Other"],
+        },
         { id: "sukkahTypeOther", type: "text", label: "Other sukkah type", required: true, condition: { fieldId: "sukkahType", operator: "equals", value: "Other" } },
         { id: "schach", type: "checkboxes", label: "Schach type", required: true, helpText: "Select one or more options.", options: ["Bamboo mat", "Bamboo sticks", "Evergreen", "Other"] },
         { id: "schachOther", type: "text", label: "Other schach type", required: true, condition: { fieldId: "schach", operator: "includes", value: "Other" } },
@@ -262,7 +265,10 @@ export const DEFAULT_BUILD_FORM = {
     },
     {
       id: "review", title: "Review and send", icon: "final", fields: [
-        { id: "referral", type: "text", label: "How did you hear about us?", required: true },
+        {
+          id: "referral", type: "text", label: "How did you hear about us?", required: true,
+          helpText: "This information helps us understand which advertising channels are most effective.",
+        },
         { id: "comments", type: "textarea", label: "Comments or questions", required: false, placeholder: "Add any details that did not fit above." },
       ],
     },
@@ -371,11 +377,6 @@ export const DEFAULT_PURCHASE_FORM = (() => {
         id: "options",
         title: "Purchase options",
         fields: [
-          {
-            id: "sukkahType", type: "select", label: "What type of sukkah are you looking to purchase?", required: true,
-            options: ["Canvas", "Canvas Bingo", "Snap / panel", "Wood boards with bolts", "Schach and beams only", "Not sure yet", "Other"],
-          },
-          { id: "sukkahTypeOther", type: "text", label: "Tell us about the sukkah type you have in mind", required: true, condition: { fieldId: "sukkahType", operator: "equals", value: "Other" } },
           { id: "framePreference", type: "radio", label: "Which frame material interests you?", required: true, options: ["Wood", "Metal", "Not sure yet"] },
           { id: "schach", type: "checkboxes", label: "Which schach options interest you?", required: true, helpText: "Select everything you would like us to consider.", options: ["Bamboo mat", "Bamboo sticks", "Evergreen", "Not sure yet"] },
           { id: "addOns", type: "checkboxes", label: "Which additions should we include in the conversation?", required: false, options: ["Different style lighting", "Furniture", "Evergreen schach", "Floor covering", "Storage", "Other"] },
@@ -487,7 +488,7 @@ export function normalizeFormSchema(input, { allowMissingIdentity = false } = {}
       if (OPTION_FIELD_TYPES.has(type)) {
         const options = [...new Set((Array.isArray(rawField.options) ? rawField.options : [])
           .map((option) => clean(option, 160)).filter(Boolean))];
-        if (options.length < 1 || options.length > 40) return { ok: false, message: `“${label}” needs between 1 and 40 unique options.` };
+        if (options.length < 1 || options.length > 80) return { ok: false, message: `“${label}” needs between 1 and 80 unique options.` };
         field.options = options;
       }
       const condition = normalizeCondition(rawField.condition, knownIds, sourceTypes);

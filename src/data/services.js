@@ -160,6 +160,10 @@ export const servicesBySlug = {
       "The access and clearance around the site",
       "Any rabbinic guidance already provided",
     ],
+    quote: {
+      title: "Quote",
+      text: "Send a video of the tree for an initial assessment, or request an on-site visit when an in-person assessment is more appropriate.",
+    },
     mediaPlaceholders: [],
     steps: [
       { title: "Share the location", text: "Tell us where the sukkah is planned and what currently makes the space unsuitable." },

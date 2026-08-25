@@ -157,3 +157,84 @@ export async function restoreFormVersion({ env, id, versionId, updatedBy, now = 
   if (!schema) return { ok: false, status: 404, message: "That form version was not found." };
   return saveFormDraft({ env, id, schema, updatedBy, now });
 }
+
+const REFERRAL_HELP_TEXT = "This information helps us understand which advertising channels are most effective.";
+
+function addBeforeOther(options, values) {
+  const next = [...(Array.isArray(options) ? options : [])];
+  for (const value of values) {
+    if (next.includes(value)) continue;
+    const otherIndex = next.indexOf("Other");
+    next.splice(otherIndex >= 0 ? otherIndex : next.length, 0, value);
+  }
+  return next;
+}
+
+function applyRequestedFormUpdates(schema) {
+  const next = JSON.parse(JSON.stringify(schema));
+  let changed = false;
+
+  for (const step of next.steps || []) {
+    const originalFields = step.fields || [];
+    if (next.id === "purchases") {
+      step.fields = originalFields.filter((field) => !["sukkahType", "sukkahTypeOther"].includes(field.id));
+      if (step.fields.length !== originalFields.length) changed = true;
+    }
+
+    for (const field of step.fields || []) {
+      if (field.label === "How did you hear about us?" && field.helpText !== REFERRAL_HELP_TEXT) {
+        field.helpText = REFERRAL_HELP_TEXT;
+        changed = true;
+      }
+      if (next.id !== "builds") continue;
+      if (field.id === "service") {
+        const options = addBeforeOther(field.options, ["Take out of storage"]);
+        if (JSON.stringify(options) !== JSON.stringify(field.options || [])) {
+          field.options = options;
+          changed = true;
+        }
+      }
+      if (field.id === "sukkahType") {
+        const renamed = (field.options || []).map((option) => option === "Canvas" ? "Classical white poles" : option);
+        let options = addBeforeOther(renamed, ["Round conduit canvas", "Schach, beam and canvas"]);
+        options = [...new Set(options)];
+        if (JSON.stringify(options) !== JSON.stringify(field.options || [])) {
+          field.options = options;
+          changed = true;
+        }
+      }
+    }
+  }
+  return { schema: next, changed };
+}
+
+export async function publishRequestedBuiltInUpdates({ env, updatedBy, now = new Date().toISOString() }) {
+  const results = [];
+  for (const builtIn of DEFAULT_MANAGED_FORMS) {
+    const savedForm = await getFormById({ env, id: builtIn.id });
+    if (!savedForm || !savedForm.publishedVersionId) {
+      results.push({ id: builtIn.id, changed: false, reason: "built-in-default" });
+      continue;
+    }
+
+    const published = await getPublishedFormBySlug({ env, slug: savedForm.slug });
+    const publishedUpdate = applyRequestedFormUpdates(published?.schema);
+    const draftUpdate = applyRequestedFormUpdates(savedForm.draft);
+    if (!publishedUpdate.changed) {
+      if (draftUpdate.changed) await saveFormDraft({ env, id: builtIn.id, schema: draftUpdate.schema, updatedBy, now });
+      results.push({ id: builtIn.id, changed: false, reason: "already-current" });
+      continue;
+    }
+
+    const prepared = await saveFormDraft({ env, id: builtIn.id, schema: publishedUpdate.schema, updatedBy, now });
+    if (!prepared.ok) return prepared;
+    const publishedResult = await publishForm({ env, id: builtIn.id, updatedBy, now });
+    if (!publishedResult.ok) return publishedResult;
+    if (JSON.stringify(draftUpdate.schema) !== JSON.stringify(publishedUpdate.schema)) {
+      const restoredDraft = await saveFormDraft({ env, id: builtIn.id, schema: draftUpdate.schema, updatedBy, now });
+      if (!restoredDraft.ok) return restoredDraft;
+    }
+    results.push({ id: builtIn.id, changed: true, versionNumber: publishedResult.versionNumber });
+  }
+  return { ok: true, forms: results };
+}

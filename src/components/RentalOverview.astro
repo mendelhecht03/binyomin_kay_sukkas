@@ -1,9 +1,59 @@
 ---
-const tarpStyles = [
-  { name: "White", image: "/assets/images/custom-white-tarp.jpg", alt: "Example sukkah with white tarp walls" },
-  { name: "Blue", image: "/assets/images/custom-blue-tarp.jpg", alt: "Example sukkah with blue tarp walls" },
-  { name: "Beige woven", image: "/assets/images/custom-beige-woven-wall.jpg", alt: "Example sukkah with beige woven walls" },
-  { name: "Soft fabric", image: "/assets/images/custom-soft-fabric.jpg", alt: "Example sukkah with soft fabric walls" },
+const materialStyles = [
+  {
+    name: "Reinforced polyethylene",
+    description: "A woven utility tarp with a finished hem and metal grommets.",
+    image: "/assets/images/material-reinforced-polyethylene.jpg",
+    alt: "Close view of reinforced woven polyethylene tarp material with metal grommets",
+  },
+  {
+    name: "Two-tone canvas walls",
+    description: "A completed canvas-wall sukkah with a framed doorway.",
+    image: "/assets/images/material-two-tone-canvas-walls.jpg",
+    alt: "Completed sukkah with two-tone canvas walls and a framed entrance",
+  },
+  {
+    name: "Woven polyethylene",
+    description: "A tightly woven wall material with reinforced corners and grommets.",
+    image: "/assets/images/material-woven-polyethylene.jpg",
+    alt: "Close view of woven polyethylene material with a reinforced corner and grommets",
+  },
+  {
+    name: "Reinforced canvas",
+    description: "A dense canvas weave with stitched hems and a metal grommet.",
+    image: "/assets/images/material-reinforced-canvas.jpg",
+    alt: "Close view of reinforced canvas with stitched hems and a metal grommet",
+  },
+  {
+    name: "Heavy-duty vinyl",
+    description: "A smooth coated wall material with reinforced edges.",
+    image: "/assets/images/material-heavy-duty-vinyl.jpg",
+    alt: "Close view of smooth heavy-duty vinyl wall material with a reinforced edge",
+  },
+  {
+    name: "Knitted mesh",
+    description: "An open knitted screen material that allows filtered light and airflow.",
+    image: "/assets/images/material-knitted-mesh.jpg",
+    alt: "Close view of open knitted mesh material with metal grommets",
+  },
+  {
+    name: "Two-tone fabric sukkah",
+    description: "A complete fabric-wall sukkah with a tied-back doorway and contrasting lower panels.",
+    image: "/assets/images/material-two-tone-fabric-sukkah.jpg",
+    alt: "Completed fabric sukkah with a tied-back doorway and contrasting lower wall panels",
+  },
+  {
+    name: "Windowed fabric walls",
+    description: "Fabric wall panels with framed window and doorway details.",
+    image: "/assets/images/material-window-panel-walls.jpg",
+    alt: "Fabric sukkah walls with framed window and doorway details",
+  },
+  {
+    name: "Wood lattice panels",
+    description: "Open crossed-wood panels that provide airflow and partial screening.",
+    image: "/assets/images/material-wood-lattice-panel.jpg",
+    alt: "Close view of open crossed-wood lattice wall panels",
+  },
 ];
 
 const props = Astro.props;
@@ -30,7 +80,7 @@ const packageCopy = isBuy
       eyebrow: "Rental sukkah",
       heading: "A simple seasonal setup.",
       lead: "A ready-to-enjoy sukkah with the practical details handled for you.",
-      pricing: "Rental packages start at $250. Final pricing is confirmed with BK Sukkah.",
+      pricing: "Rental packages start as low as $550. Final pricing is confirmed with BK Sukkah.",
       photo: "/assets/images/home-rental-schach.jpg",
       photoAlt: "Example rental sukkah with schach, tarp walls, and lighting",
       photoCaption: "Example rental setup",
@@ -48,10 +98,37 @@ const packageCopy = isBuy
         <h2 id={headingId}>{packageCopy.heading}</h2>
         <p class="rental-overview-lead">{packageCopy.lead}</p>
         <p class="rental-overview-price">{packageCopy.pricing}</p>
-        <ul class="rental-overview-points">
-          <li><strong>Included</strong><span>Metal or wooden frame, installation, takedown, and bamboo schach.</span></li>
-          <li><strong>Optional</strong><span>Evergreen schach, furniture, and different lighting styles are available for an additional cost.</span></li>
-        </ul>
+        {isBuy ? (
+          <div class="rental-overview-package-lists">
+            <section aria-labelledby={`${sectionId}-included-heading`}>
+              <h3 id={`${sectionId}-included-heading`}>Included</h3>
+              <ul>
+                <li>Metal or wood framing</li>
+                <li>Choice of walls</li>
+                <li>Fasteners or reusable zip ties</li>
+                <li>Halachic straps</li>
+              </ul>
+            </section>
+            <section aria-labelledby={`${sectionId}-optional-heading`}>
+              <h3 id={`${sectionId}-optional-heading`}>Optional add-ons</h3>
+              <ul>
+                <li>Evergreen schach</li>
+                <li>Bamboo mats</li>
+                <li>2×4 sticks</li>
+                <li>Bamboo sticks</li>
+                <li>Lighting</li>
+                <li>Furniture</li>
+                <li>Build service</li>
+                <li>Takedown service</li>
+              </ul>
+            </section>
+          </div>
+        ) : (
+          <ul class="rental-overview-points">
+            <li><strong>Included</strong><span>Metal or wooden frame, installation, takedown, and bamboo schach.</span></li>
+            <li><strong>Optional</strong><span>Evergreen schach, furniture, and different lighting styles are available for an additional cost.</span></li>
+          </ul>
+        )}
       </div>
 
       <figure class="rental-overview-photo">
@@ -61,14 +138,23 @@ const packageCopy = isBuy
 
       <div class="rental-tarp-gallery" aria-labelledby={tarpHeadingId}>
         <div class="rental-tarp-heading">
-          <h3 id={tarpHeadingId}>Browse tarp directions</h3>
-          <p>These images are sample looks. Reach out to BK Sukkah to ask about other tarp options and confirm availability.</p>
+          <div>
+            <h3 id={tarpHeadingId}>Browse wall materials</h3>
+            <p>These are sample materials available in multiple colors. Reach out to BK Sukkah to ask about other options and confirm availability.</p>
+          </div>
+          <div class="rental-tarp-controls" aria-label="Material gallery controls">
+            <button type="button" data-material-previous aria-label="Show previous materials">←</button>
+            <button type="button" data-material-next aria-label="Show next materials">→</button>
+          </div>
         </div>
-        <div class="rental-tarp-grid">
-          {tarpStyles.map((tarp) => (
+        <div class="rental-tarp-grid" data-material-gallery tabindex="0" aria-label="Wall material samples">
+          {materialStyles.map((material) => (
             <figure class="rental-tarp-card">
-              <img src={tarp.image} alt={tarp.alt} width="1200" height="900" loading="lazy" />
-              <figcaption>{tarp.name}</figcaption>
+              <img src={material.image} alt={material.alt} width="1200" height="900" loading="lazy" />
+              <figcaption>
+                <strong>{material.name}</strong>
+                <span>{material.description}</span>
+              </figcaption>
             </figure>
           ))}
         </div>
@@ -84,6 +170,35 @@ const packageCopy = isBuy
     </div>
   </div>
 </section>
+
+<script>
+  document.querySelectorAll(".rental-tarp-gallery").forEach((gallery) => {
+    const rail = gallery.querySelector("[data-material-gallery]");
+    const previous = gallery.querySelector("[data-material-previous]");
+    const next = gallery.querySelector("[data-material-next]");
+    if (!(rail instanceof HTMLElement)) return;
+
+    const move = (direction: number) => {
+      const card = rail.querySelector(".rental-tarp-card");
+      if (!(card instanceof HTMLElement)) return;
+      const gap = Number.parseFloat(getComputedStyle(rail).columnGap || "0");
+      rail.scrollBy({ left: direction * (card.offsetWidth + gap), behavior: "smooth" });
+    };
+
+    previous?.addEventListener("click", () => move(-1));
+    next?.addEventListener("click", () => move(1));
+    rail.addEventListener("keydown", (event: KeyboardEvent) => {
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        move(-1);
+      }
+      if (event.key === "ArrowRight") {
+        event.preventDefault();
+        move(1);
+      }
+    });
+  });
+</script>
 
 <style>
   .rental-overview { scroll-margin-top: 6rem; padding-block: clamp(1.75rem, 4vw, 3rem); background: var(--cream-50); }
@@ -101,14 +216,23 @@ const packageCopy = isBuy
   .rental-overview-points li { display: grid; gap: .08rem; padding-left: .7rem; border-left: 2px solid var(--wood-500); }
   .rental-overview-points strong { color: var(--forest-900); font-size: .76rem; letter-spacing: .04em; text-transform: uppercase; }
   .rental-overview-points span { color: var(--ink-500); font-size: .8rem; line-height: 1.38; }
+  .rental-overview-package-lists { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; }
+  .rental-overview-package-lists section { padding-left: .7rem; border-left: 2px solid var(--wood-500); }
+  .rental-overview-package-lists h3 { margin: 0 0 .35rem; color: var(--forest-900); font-family: var(--font-nav); font-size: .76rem; letter-spacing: .04em; text-transform: uppercase; }
+  .rental-overview-package-lists ul { display: grid; gap: .2rem; margin: 0; padding-left: 1.05rem; color: var(--ink-500); font-size: .78rem; line-height: 1.35; }
   .rental-tarp-gallery { min-width: 0; }
-  .rental-tarp-heading { margin-bottom: .6rem; }
+  .rental-tarp-heading { display: flex; align-items: end; justify-content: space-between; gap: 1rem; margin-bottom: .6rem; }
   .rental-tarp-heading h3 { margin: 0 0 .2rem; color: var(--forest-900); font-family: var(--font-nav); font-size: .96rem; }
   .rental-tarp-heading p { margin: 0; color: var(--ink-500); font-size: .76rem; line-height: 1.4; }
-  .rental-tarp-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .42rem; }
-  .rental-tarp-card { overflow: hidden; margin: 0; border: 1px solid var(--border); border-radius: 10px; background: var(--cream-100); }
+  .rental-tarp-controls { display: flex; gap: .4rem; }
+  .rental-tarp-controls button { width: 2.25rem; height: 2.25rem; display: grid; flex: 0 0 auto; place-items: center; border: 1px solid var(--border-strong); border-radius: 999px; color: var(--forest-900); background: var(--white); cursor: pointer; font: inherit; }
+  .rental-tarp-controls button:hover, .rental-tarp-controls button:focus-visible { color: var(--white); background: var(--forest-900); }
+  .rental-tarp-grid { display: grid; grid-auto-flow: column; grid-auto-columns: calc((100% - 1.26rem) / 4); gap: .42rem; overflow-x: auto; overflow-y: clip; padding: 0 0 .5rem; scroll-behavior: smooth; scroll-snap-type: x mandatory; touch-action: pan-x pan-y; overscroll-behavior-x: contain; overscroll-behavior-y: auto; scrollbar-width: thin; scrollbar-color: var(--wood-500) var(--cream-200); }
+  .rental-tarp-card { min-width: 0; overflow: hidden; margin: 0; border: 1px solid var(--border); border-radius: 10px; background: var(--cream-100); scroll-snap-align: start; }
   .rental-tarp-card img { width: 100%; aspect-ratio: 1 / 1; display: block; object-fit: cover; }
-  .rental-tarp-card figcaption { padding: .35rem .4rem .4rem; color: var(--forest-900); font-size: .68rem; font-weight: 800; line-height: 1.1; }
+  .rental-tarp-card figcaption { display: grid; gap: .2rem; padding: .45rem .5rem .55rem; color: var(--forest-900); line-height: 1.2; }
+  .rental-tarp-card figcaption strong { font-size: .7rem; }
+  .rental-tarp-card figcaption span { color: var(--ink-500); font-size: .62rem; font-weight: 600; line-height: 1.35; }
   .rental-overview-actions { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem 0 0; border-top: 1px solid var(--border); }
   .rental-overview-actions .eyebrow { margin: 0 0 .2rem; }
   .rental-overview-actions p:last-child { margin: 0; color: var(--ink-500); font-size: .82rem; line-height: 1.4; }
@@ -134,7 +258,9 @@ const packageCopy = isBuy
   }
   @media (max-width: 600px) {
     .rental-overview-photo { min-height: 9rem; max-height: 12rem; }
-    .rental-tarp-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .55rem; }
+    .rental-overview-package-lists { grid-template-columns: 1fr; }
+    .rental-tarp-heading { align-items: start; }
+    .rental-tarp-grid { grid-auto-columns: min(76vw, 15rem); gap: .55rem; }
     .rental-overview-actions { align-items: stretch; flex-direction: column; }
     .rental-overview-actions .button { width: 100%; }
   }

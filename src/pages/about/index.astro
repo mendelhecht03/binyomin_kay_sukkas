@@ -1,285 +1,468 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
-const biography =
-  "Started at just 15 years old as a humble side hustle with only a handful of clients, Benyamin has grown year after year. Working alongside multiple name-brand sukkah companies, he now serves hundreds of satisfied customers from multiple locations across multiple states.";
-
-const whatWeDo =
-  "We offer a comprehensive range of services tailored to bring any vision to life. Whether you need regular sukkah builds, custom sukkah designs, elegant pergolas, rentals, or anything in between, we handle it all. If a project needs a specific item you do not have on hand, we track it down and get it for you so you never have to worry about a thing.";
-
-const whyChooseUs = [
+const storySteps = [
   {
-    title: "Industry partnerships",
-    body: "We collaborate with multiple name-brand sukkah companies to bring top-tier products and expertise to our clients.",
+    number: "01",
+    stage: "The first frame",
+    title: "It started at 15.",
+    body: "Benyamin began with a handful of clients and a willingness to do the work carefully. What started as a side hustle grew one project at a time.",
+    image: "/assets/images/home-schach-preparation.jpg",
+    alt: "Schach mats and lumber being prepared at a sukkah site",
   },
   {
-    title: "End-to-end service",
-    body: "We manage every detail from start to finish with the highest level of professionalism for a seamless experience.",
+    number: "02",
+    stage: "Built by showing up",
+    title: "Hands-on from the beginning.",
+    body: "Every new setup added practical experience: how to plan around a real space, solve the unexpected, and keep families informed along the way.",
+    image: "/assets/images/home-craftsmanship.jpg",
+    alt: "A craftsperson carefully cutting lumber for an outdoor structure",
   },
   {
-    title: "Zero stress",
-    body: "We handle every hurdle and supply missing materials so you can enjoy a genuinely stress-free holiday.",
+    number: "03",
+    stage: "More ways to help",
+    title: "The work grew with the need.",
+    body: "Today the work spans regular builds, rentals, custom sukkahs, pergolas, and the details in between—including finding materials a project still needs.",
+    image: "/assets/images/home-process-planning.jpg",
+    alt: "A custom wood wall and natural schach materials being arranged on site",
   },
   {
-    title: "Expert team",
-    body: "Our qualified, responsible, and dedicated professionals treat every structure with the utmost care.",
+    number: "04",
+    stage: "Ready for Yom Tov",
+    title: "The mission stayed simple.",
+    body: "Handle the planning, materials, build, and follow-through from A to Z, so the sukkah is one less thing a family has to carry into Yom Tov.",
+    image: "/assets/images/home-rental-schach.jpg",
+    alt: "A finished sukkah interior beneath neatly installed bamboo schach",
   },
 ];
 
+const serviceDetails = [
+  {
+    title: "Plan around the real space",
+    body: "Every project starts with the site, the structure, and what will make the finished setup practical for the people using it.",
+  },
+  {
+    title: "Find what the project needs",
+    body: "If a required item is missing, BK Sukkah helps track it down instead of leaving the customer to solve the gap alone.",
+  },
+  {
+    title: "Carry it through",
+    body: "Clear communication and hands-on follow-through keep the work moving from the first conversation to the finished setup.",
+  },
+];
 ---
 
 <BaseLayout
-  title="About"
-  description="A short introduction to Benyamin Kay and his practical approach to sukkah and outdoor work."
+  title="About Benyamin"
+  description="Meet Benyamin and see how a hands-on sukkah side hustle grew into complete, practical service from A to Z."
 >
-  <div class="about-page">
-    <section class="about-hero sukkah-hero-background" aria-labelledby="about-heading">
-      <div class="shell about-hero__inner">
-        <div class="about-hero__copy">
-          <nav class="breadcrumb" aria-label="Breadcrumb">
-            <a href="/">Home</a>
-            <span aria-hidden="true">/</span>
-            <span aria-current="page">About</span>
-          </nav>
-          <p class="eyebrow">About Benyamin</p>
-          <h1 id="about-heading">A stress-free Yom Tov starts here.</h1>
-          <p class="lead">From the first conversation through the finished work, we take care of the details from A to Z.</p>
-          <p class="about-hero__bio">{biography}</p>
-          <div class="button-row">
-            <a class="button" href="/contact/">Request a quote</a>
+  <div class="about-page" data-about-experience>
+    <section class="about-intro sukkah-hero-background" aria-labelledby="about-heading">
+      <div class="shell">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <a href="/">Home</a>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page">About</span>
+        </nav>
+
+        <div class="about-intro__grid">
+          <div class="about-intro__copy">
+            <p class="eyebrow">Meet Benyamin</p>
+            <h1 id="about-heading">Built hands-on.<br /><em>Handled from A to Z.</em></h1>
+            <p class="lead">
+              Benyamin began building sukkahs at 15. Today, he brings that same
+              personal attention to every space, every detail, and every family.
+            </p>
+            <div class="about-intro__actions">
+              <a class="button" href="#build-story">See how it took shape</a>
+              <a class="text-link" href="/contact/">Start a conversation</a>
+            </div>
           </div>
+
+          <figure class="about-portrait" data-reveal>
+            <div class="about-portrait__frame">
+              <img
+                src="/assets/images/profile-photo1.jpg"
+                alt="Benyamin Kay smiling as he crosses the finish line of a road race"
+                width="1448"
+                height="1086"
+                loading="eager"
+              />
+              <span class="about-portrait__line" aria-hidden="true"></span>
+            </div>
+            <figcaption>
+              <strong>Benyamin Kay</strong>
+              <span>The person behind the details</span>
+            </figcaption>
+          </figure>
         </div>
 
-        <figure class="about-photo">
-          <img
-            src="/assets/images/profile-photo1.jpg"
-            alt="Benyamin Kay smiling as he crosses the finish line of a road race"
-            width="1448"
-            height="1086"
-            loading="eager"
-          />
-          <figcaption>Benyamin Kay</figcaption>
-        </figure>
+        <a class="about-scroll-cue" href="#build-story">
+          <span>Scroll to build the story</span>
+          <span aria-hidden="true">↓</span>
+        </a>
       </div>
     </section>
 
-    <section class="about-details" aria-labelledby="about-details-heading">
-      <div class="shell about-details__inner">
-        <article class="about-detail about-detail-wide">
-          <p class="eyebrow">What we do</p>
-          <h2 id="about-details-heading">Bring your vision to life.</h2>
-          <p>{whatWeDo}</p>
-        </article>
+    <section class="build-story" id="build-story" aria-labelledby="story-heading">
+      <div class="shell">
+        <div class="build-story__heading" data-reveal>
+          <p class="eyebrow">The build journey</p>
+          <h2 id="story-heading">Watch the approach take shape.</h2>
+          <p>Four moments. One practical way of working.</p>
+        </div>
 
-        <article class="about-detail about-detail-wide">
-          <p class="eyebrow">Why choose us</p>
-          <div class="about-reasons">
-            {whyChooseUs.map((reason) => (
-              <div class="about-reason">
-                <h3>{reason.title}</h3>
-                <p>{reason.body}</p>
+        <div class="build-story__grid">
+          <div class="photo-story-pin">
+            <div class="photo-story-card" aria-label="Project photographs that change with each chapter of Benyamin's story">
+              <div class="photo-story__images">
+                {storySteps.map((step, index) => (
+                  <figure class:list={["photo-story__layer", { "is-current": index === 0 }]} data-photo-layer={index + 1}>
+                    <img src={step.image} alt={step.alt} width="1200" height="1600" loading={index === 0 ? "eager" : "lazy"} />
+                  </figure>
+                ))}
+                <div class="photo-story__shade" aria-hidden="true"></div>
+                <div class="photo-story__grain" aria-hidden="true"></div>
+                <div class="photo-story__caption">
+                  <span class="photo-story__chapter">Chapter 01 / 04</span>
+                  <strong class="photo-story__label">The first frame</strong>
+                </div>
               </div>
+
+              <ol class="photo-story__progress" aria-label="Choose a story chapter">
+                {storySteps.map((step, index) => (
+                  <li>
+                    <button
+                      type="button"
+                      class:list={{ "is-current": index === 0 }}
+                      data-story-jump={index + 1}
+                      aria-current={index === 0 ? "step" : undefined}
+                      aria-label={`Go to chapter ${index + 1}: ${step.stage}`}
+                    >
+                      <span>0{index + 1}</span>
+                      <span>{step.stage}</span>
+                    </button>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </div>
+
+          <div class="story-steps">
+            {storySteps.map((step, index) => (
+              <article
+                class:list={["story-step", { "is-active": index === 0 }]}
+                data-story-step={index + 1}
+                data-stage-label={step.stage}
+              >
+                <div class="story-step__number" aria-hidden="true">{step.number}</div>
+                <div>
+                  <p class="story-step__stage">{step.stage}</p>
+                  <h3>{step.title}</h3>
+                  <p>{step.body}</p>
+                </div>
+              </article>
             ))}
           </div>
-        </article>
-
-        <article class="about-detail about-contact-detail">
-          <p class="eyebrow">Get in touch</p>
-          <h2>Ready for a completely stress-free holiday?</h2>
-          <p>Contact us today to book your build, custom project, or rental and let Benyamin take care of the rest.</p>
-          <a class="button" href="/contact/">Contact us</a>
-        </article>
+        </div>
       </div>
     </section>
 
+    <section class="about-method" aria-labelledby="method-heading">
+      <div class="shell about-method__grid">
+        <div class="about-method__heading" data-reveal>
+          <p class="eyebrow">What A to Z means</p>
+          <h2 id="method-heading">Fewer handoffs.<br />More peace of mind.</h2>
+          <p>
+            The value is not just the finished structure. It is having someone
+            take responsibility for the practical details that get it there.
+          </p>
+        </div>
+
+        <div class="about-method__details" data-reveal>
+          {serviceDetails.map((detail, index) => (
+            <details class="method-detail" open={index === 0}>
+              <summary>
+                <span>0{index + 1}</span>
+                <strong>{detail.title}</strong>
+                <span class="method-detail__icon" aria-hidden="true"></span>
+              </summary>
+              <div class="method-detail__body">
+                <p>{detail.body}</p>
+              </div>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="about-cta" aria-labelledby="about-cta-heading">
+      <div class="shell about-cta__inner" data-reveal>
+        <div>
+          <p class="eyebrow">Your turn</p>
+          <h2 id="about-cta-heading">Tell Benyamin what you are planning.</h2>
+          <p>Share the space, the timing, and what you need. We will take it from there.</p>
+        </div>
+        <div class="about-cta__actions">
+          <a class="button button-light" href="/contact/">Request a quote</a>
+          <a class="about-cta__call" href="tel:+13474542282">
+            <span>Prefer to talk?</span>
+            <strong>(347) 454-2282</strong>
+          </a>
+        </div>
+      </div>
+    </section>
   </div>
 </BaseLayout>
 
+<script>
+  const root = document.querySelector<HTMLElement>("[data-about-experience]");
+  const steps = root ? Array.from(root.querySelectorAll<HTMLElement>("[data-story-step]")) : [];
+  const photoLayers = root ? Array.from(root.querySelectorAll<HTMLElement>("[data-photo-layer]")) : [];
+  const jumpButtons = root ? Array.from(root.querySelectorAll<HTMLButtonElement>("[data-story-jump]")) : [];
+  const chapterLabel = root?.querySelector<HTMLElement>(".photo-story__chapter");
+  const photoLabel = root?.querySelector<HTMLElement>(".photo-story__label");
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const setStage = (step: HTMLElement) => {
+    const stage = step.dataset.storyStep ?? "1";
+    const currentIndex = Number(stage) - 1;
+    photoLayers.forEach((layer, index) => layer.classList.toggle("is-current", index === currentIndex));
+    jumpButtons.forEach((button, index) => {
+      button.classList.toggle("is-current", index === currentIndex);
+      if (index === currentIndex) button.setAttribute("aria-current", "step");
+      else button.removeAttribute("aria-current");
+    });
+    if (chapterLabel) chapterLabel.textContent = `Chapter ${stage.padStart(2, "0")} / 04`;
+    if (photoLabel) photoLabel.textContent = step.dataset.stageLabel ?? "The build journey";
+    steps.forEach((item) => item.classList.toggle("is-active", item === step));
+  };
+
+  if (root && steps.length) {
+    setStage(steps[0]);
+    const storyObserver = new IntersectionObserver(
+      (entries) => {
+        const visible = entries.filter((entry) => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (visible?.target instanceof HTMLElement) setStage(visible.target);
+      },
+      { rootMargin: "-28% 0px -45%", threshold: [0.1, 0.35, 0.65] },
+    );
+    steps.forEach((step) => storyObserver.observe(step));
+    jumpButtons.forEach((button, index) => {
+      button.addEventListener("click", () => {
+        steps[index]?.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "center" });
+      });
+    });
+  }
+
+  if (root && !reduceMotion) {
+    const reveals = Array.from(root.querySelectorAll<HTMLElement>("[data-reveal]"));
+    root.classList.add("reveal-ready");
+    const revealObserver = new IntersectionObserver(
+      (entries, observer) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting || !(entry.target instanceof HTMLElement)) return;
+          entry.target.classList.add("is-revealed");
+          observer.unobserve(entry.target);
+        });
+      },
+      { rootMargin: "0px 0px -10%", threshold: 0.12 },
+    );
+    reveals.forEach((item) => revealObserver.observe(item));
+  }
+</script>
+
 <style>
-  .about-page {
-    overflow: clip;
-    padding-bottom: 1.5rem;
-  }
+  .about-page { overflow: clip; background: var(--cream-50); }
 
-  .about-hero {
-    padding-block: 1.15rem clamp(1.75rem, 4vw, 3rem);
-  }
-
-  .about-hero__inner {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.72fr);
-    gap: clamp(1.5rem, 5vw, 3.5rem);
-    align-items: center;
-    margin-top: clamp(1.5rem, 3vw, 2.5rem);
-  }
-
-  .about-hero__copy,
-  .about-photo {
-    min-width: 0;
-  }
-
-  .about-hero__copy h1 {
-    max-width: 11ch;
-    margin-bottom: 1.1rem;
-    font-size: clamp(3rem, 7vw, 5.4rem);
-    line-height: 0.96;
-  }
-
-  .about-hero__copy .lead {
-    max-width: 34rem;
-    margin-bottom: 0.75rem;
-  }
-
-  .about-hero__bio {
-    max-width: 34rem;
-    margin-bottom: 1rem;
-    color: var(--ink-700);
-    font-size: 0.95rem;
-    line-height: 1.55;
-  }
-
-  .about-photo {
+  .about-intro {
     position: relative;
-    margin: 0;
-    padding: 0 0 1rem 1rem;
+    min-height: calc(100svh - var(--header-height));
+    padding-block: 1.1rem clamp(3.5rem, 7vw, 6.25rem);
+    isolation: isolate;
   }
 
-  .about-photo::before {
+  .about-intro::after {
     position: absolute;
-    inset: 1rem 1rem 0 0;
-    z-index: 0;
-    border-radius: var(--radius-large);
+    right: -12rem;
+    bottom: -17rem;
+    z-index: -1;
+    width: 38rem;
+    height: 38rem;
+    border: 1px solid rgba(23, 63, 52, 0.13);
+    border-radius: 50%;
     content: "";
-    background: var(--wood-500);
   }
 
-  .about-photo img {
-    position: relative;
-    z-index: 1;
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    border-radius: var(--radius-large);
-    box-shadow: var(--shadow-medium);
-    object-fit: cover;
-    object-position: 42% center;
+  .about-intro__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.08fr) minmax(20rem, 0.72fr);
+    gap: clamp(2.5rem, 7vw, 6rem);
+    align-items: center;
+    padding-top: clamp(2.5rem, 6vw, 5rem);
   }
 
-  .about-photo figcaption {
+  .about-intro__copy h1 {
+    max-width: 12ch;
+    margin-bottom: 1.4rem;
+    font-size: clamp(3.7rem, 7.2vw, 6.7rem);
+    line-height: 0.9;
+  }
+
+  .about-intro__copy h1 em { color: var(--wood-600); font-style: italic; font-weight: 600; }
+  .about-intro__copy .lead { max-width: 35rem; margin-bottom: 1.8rem; font-size: clamp(1.08rem, 1.8vw, 1.28rem); }
+  .about-intro__actions { display: flex; flex-wrap: wrap; gap: 1rem 1.35rem; align-items: center; }
+
+  .about-portrait { position: relative; margin: 0; padding: 0 0 1.4rem 1.4rem; }
+  .about-portrait::before { position: absolute; inset: 1.4rem 1.4rem 0 0; border-radius: 45% 45% var(--radius-large) var(--radius-large); content: ""; background: var(--forest-100); }
+  .about-portrait__frame { position: relative; z-index: 1; overflow: hidden; border-radius: 48% 48% var(--radius-large) var(--radius-large); box-shadow: var(--shadow-medium); }
+  .about-portrait img { width: 100%; aspect-ratio: 0.87; object-fit: cover; object-position: 42% center; transition: transform 700ms cubic-bezier(0.2, 0.75, 0.25, 1); }
+  .about-portrait:hover img { transform: scale(1.025); }
+  .about-portrait__frame::after { position: absolute; inset: 0; content: ""; background: linear-gradient(180deg, transparent 62%, rgba(16, 45, 37, 0.48)); pointer-events: none; }
+  .about-portrait__line { position: absolute; right: 1.15rem; bottom: 1.15rem; left: 1.15rem; z-index: 2; height: 2px; background: rgba(255, 255, 255, 0.72); }
+
+  .about-portrait figcaption {
     position: absolute;
-    right: 1.6rem;
-    bottom: 1.8rem;
-    z-index: 2;
-    padding: 0.45rem 0.75rem;
-    border-radius: var(--radius-small);
+    right: 1.9rem;
+    bottom: 2.1rem;
+    z-index: 3;
+    display: grid;
+    min-width: 12rem;
+    gap: 0.05rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    border-radius: var(--radius);
     color: var(--forest-950);
     background: rgba(255, 253, 248, 0.9);
-    font-size: 0.86rem;
-    font-weight: 800;
-    backdrop-filter: blur(8px);
+    box-shadow: var(--shadow-small);
+    backdrop-filter: blur(12px);
   }
 
-  .about-details {
-    padding-block: 1.5rem 2.5rem;
-    background: var(--cream-50);
+  .about-portrait figcaption strong { font-family: var(--font-heading); font-size: 1.05rem; }
+  .about-portrait figcaption span { color: var(--ink-700); font-size: 0.75rem; }
+
+  .about-scroll-cue { display: inline-flex; gap: 0.75rem; align-items: center; margin-top: clamp(2rem, 5vw, 4rem); color: var(--forest-700); font-size: 0.78rem; font-weight: 800; letter-spacing: 0.12em; text-decoration: none; text-transform: uppercase; }
+  .about-scroll-cue span:last-child { display: grid; width: 2.25rem; height: 2.25rem; place-items: center; border: 1px solid var(--border-strong); border-radius: 50%; animation: scroll-cue 1.8s ease-in-out infinite; }
+
+  .build-story { position: relative; padding-block: clamp(4rem, 9vw, 8rem); color: white; background: var(--forest-950); }
+  .build-story::before { position: absolute; inset: 0; content: ""; opacity: 0.12; background-image: linear-gradient(rgba(255,255,255,.16) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.16) 1px, transparent 1px); background-size: 34px 34px; pointer-events: none; }
+  .build-story > .shell { position: relative; }
+  .build-story__heading { max-width: 44rem; margin-bottom: clamp(3rem, 7vw, 5rem); }
+  .build-story__heading h2, .build-story__heading p { color: white; }
+  .build-story__heading h2 { margin-bottom: 0.75rem; }
+  .build-story__heading > p:last-child { color: rgba(255,255,255,.64); }
+  .build-story__grid { display: grid; grid-template-columns: minmax(20rem, .92fr) minmax(0, 1fr); gap: clamp(3rem, 8vw, 7.5rem); align-items: start; }
+  .photo-story-pin { position: sticky; top: calc(var(--header-height) + 1.5rem); }
+  .photo-story-card { position: relative; width: min(100%, 26rem); margin-inline: auto; }
+  .photo-story__images { position: relative; overflow: hidden; aspect-ratio: .88; border: 1px solid rgba(255,255,255,.2); border-radius: clamp(1.25rem,3vw,2rem); background: #0a211b; box-shadow: 0 32px 80px rgba(0,0,0,.32); isolation: isolate; }
+  .photo-story__images::before { position: absolute; inset: .75rem; z-index: 4; border: 1px solid rgba(255,255,255,.24); border-radius: calc(clamp(1.25rem,3vw,2rem) - .45rem); content: ""; pointer-events: none; }
+  .photo-story__layer { position: absolute; inset: 0; margin: 0; opacity: 0; transform: scale(1.075); transition: opacity 850ms ease, transform 1.2s cubic-bezier(.2,.75,.25,1); }
+  .photo-story__layer.is-current { opacity: 1; transform: scale(1); }
+  .photo-story__layer img { width: 100%; height: 100%; object-fit: cover; }
+  .photo-story__layer:nth-child(1) img { object-position: 50% 56%; }
+  .photo-story__layer:nth-child(2) img { object-position: 48% 50%; }
+  .photo-story__layer:nth-child(3) img { object-position: 52% 50%; }
+  .photo-story__layer:nth-child(4) img { object-position: 53% 34%; }
+  .photo-story__shade { position: absolute; inset: 0; z-index: 2; background: linear-gradient(180deg, rgba(6,25,20,.04) 40%, rgba(6,25,20,.88) 100%); pointer-events: none; }
+  .photo-story__grain { position: absolute; inset: 0; z-index: 3; opacity: .14; background-image: repeating-radial-gradient(circle at 30% 20%, rgba(255,255,255,.35) 0 1px, transparent 1px 4px); background-size: 9px 9px; mix-blend-mode: soft-light; pointer-events: none; }
+  .photo-story__caption { position: absolute; right: 2rem; bottom: 1.8rem; left: 2rem; z-index: 5; display: grid; gap: .2rem; color: white; }
+  .photo-story__chapter { color: #f0bd7e; font-size: .68rem; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; }
+  .photo-story__label { color: white; font-family: var(--font-heading); font-size: clamp(1.65rem,3.3vw,2.5rem); line-height: 1.05; }
+  .photo-story__progress { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: .5rem; padding: 1rem 0 0; margin: 0; list-style: none; }
+  .photo-story__progress button { display: grid; width: 100%; gap: .25rem; padding: .7rem .25rem .35rem; border: 0; border-top: 2px solid rgba(255,255,255,.18); color: rgba(255,255,255,.45); background: transparent; text-align: left; transition: border-color 250ms ease, color 250ms ease; }
+  .photo-story__progress button span:first-child { font-size: .65rem; font-weight: 800; letter-spacing: .08em; }
+  .photo-story__progress button span:last-child { overflow: hidden; font-size: .67rem; font-weight: 700; line-height: 1.2; text-overflow: ellipsis; white-space: nowrap; }
+  .photo-story__progress button.is-current { border-color: #f0bd7e; color: white; }
+  .photo-story__progress button:hover { color: white; }
+
+  .story-step { display: grid; min-height: clamp(20rem,56vh,32rem); grid-template-columns: 3.5rem minmax(0,1fr); gap: 1.25rem; align-content: center; padding-block: 2rem; opacity: .36; transition: opacity 350ms ease, transform 350ms ease; transform: translateY(.75rem); }
+  .story-step.is-active { opacity: 1; transform: translateY(0); }
+  .story-step__number { color: #f0bd7e; font-family: var(--font-heading); font-size: 1.15rem; font-style: italic; }
+  .story-step__stage { margin-bottom: .7rem; color: #f0bd7e; font-size: .72rem; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; }
+  .story-step h3 { max-width: 12ch; margin-bottom: 1rem; color: white; font-size: clamp(2.25rem,5vw,4.25rem); line-height: .98; }
+  .story-step p:last-child { max-width: 31rem; margin-bottom: 0; color: rgba(255,255,255,.68); font-size: clamp(1rem,1.6vw,1.14rem); }
+
+  .about-method { padding-block: clamp(4.5rem,9vw,8rem); background: var(--cream-100); }
+  .about-method__grid { display: grid; grid-template-columns: minmax(0,.85fr) minmax(24rem,1fr); gap: clamp(3rem,9vw,8rem); align-items: start; }
+  .about-method__heading { position: sticky; top: calc(var(--header-height) + 2rem); }
+  .about-method__heading h2 { max-width: 14ch; }
+  .about-method__heading > p:last-child { max-width: 31rem; margin-bottom: 0; }
+  .about-method__details { border-top: 1px solid var(--border-strong); }
+  .method-detail { border-bottom: 1px solid var(--border-strong); }
+  .method-detail summary { display: grid; grid-template-columns: 2.5rem minmax(0,1fr) 2rem; gap: 1rem; align-items: center; padding-block: 1.4rem; list-style: none; }
+  .method-detail summary::-webkit-details-marker { display: none; }
+  .method-detail summary > span:first-child { color: var(--wood-600); font-size: .74rem; font-weight: 800; }
+  .method-detail summary strong { color: var(--forest-950); font-family: var(--font-heading); font-size: clamp(1.35rem,2.4vw,1.9rem); }
+  .method-detail__icon { position: relative; display: block; width: 1.6rem; height: 1.6rem; border: 1px solid var(--border-strong); border-radius: 50%; }
+  .method-detail__icon::before, .method-detail__icon::after { position: absolute; top: 50%; left: 50%; width: .65rem; height: 1px; content: ""; background: var(--forest-700); transform: translate(-50%,-50%); }
+  .method-detail__icon::after { transform: translate(-50%,-50%) rotate(90deg); transition: transform 180ms ease; }
+  .method-detail[open] .method-detail__icon::after { transform: translate(-50%,-50%) rotate(0); }
+  .method-detail__body { padding: 0 3rem 1.45rem 3.5rem; }
+  .method-detail__body p { max-width: 37rem; margin: 0; }
+
+  .about-cta { position: relative; overflow: hidden; padding-block: clamp(4rem,8vw,6.5rem); color: white; background: var(--forest-900); }
+  .about-cta::before, .about-cta::after { position: absolute; border: 1px solid rgba(255,255,255,.12); border-radius: 50%; content: ""; }
+  .about-cta::before { top: -15rem; right: -8rem; width: 32rem; height: 32rem; }
+  .about-cta::after { right: 3rem; bottom: -14rem; width: 24rem; height: 24rem; }
+  .about-cta__inner { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 2rem 4rem; align-items: end; }
+  .about-cta h2 { max-width: 15ch; color: white; }
+  .about-cta p:not(.eyebrow) { max-width: 38rem; margin-bottom: 0; color: rgba(255,255,255,.7); }
+  .about-cta__actions { display: grid; min-width: 14rem; gap: 1rem; }
+  .about-cta__call { display: grid; color: white; text-decoration: none; }
+  .about-cta__call span { color: rgba(255,255,255,.62); font-size: .74rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+
+  .reveal-ready [data-reveal] { opacity: 0; transform: translateY(1.25rem); transition: opacity 700ms ease, transform 700ms cubic-bezier(.2,.75,.25,1); }
+  .reveal-ready [data-reveal].is-revealed { opacity: 1; transform: translateY(0); }
+  @keyframes scroll-cue { 0%,100% { transform: translateY(0); } 50% { transform: translateY(.3rem); } }
+
+  @media (max-width: 62rem) {
+    .about-intro__grid { grid-template-columns: minmax(0,1fr) minmax(17rem,.65fr); gap: 2.5rem; }
+    .about-intro__copy h1 { font-size: clamp(3.3rem,7vw,5rem); }
+    .build-story__grid { grid-template-columns: minmax(17rem,.85fr) minmax(0,1fr); gap: 3rem; }
   }
 
-  .about-details__inner {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1.5rem 2.5rem;
+  @media (max-width: 50rem) {
+    .about-intro { min-height: auto; }
+    .about-intro__grid, .about-method__grid, .about-cta__inner { grid-template-columns: 1fr; }
+    .about-intro__copy { max-width: 42rem; }
+    .about-portrait { width: min(100%,31rem); margin-inline: auto; }
+    .build-story__grid { grid-template-columns: 1fr; gap: 1.5rem; }
+    .photo-story-pin { top: calc(var(--header-height) + .75rem); z-index: 3; }
+    .photo-story__images { aspect-ratio: 4 / 3; box-shadow: 0 18px 48px rgba(0,0,0,.3); }
+    .photo-story__layer:nth-child(1) img { object-position: 50% 60%; }
+    .photo-story__layer:nth-child(2) img { object-position: 48% 46%; }
+    .photo-story__layer:nth-child(3) img { object-position: 52% 46%; }
+    .photo-story__layer:nth-child(4) img { object-position: 53% 28%; }
+    .story-step { min-height: clamp(18rem,58vh,26rem); padding: 4rem 0 2rem; }
+    .about-method__heading { position: static; }
+    .about-cta__actions { width: min(100%,22rem); }
   }
 
-  .about-detail {
-    min-width: 0;
-    padding-top: 1.25rem;
-    border-top: 1px solid rgba(23, 63, 52, 0.18);
+  @media (max-width: 35rem) {
+    .about-intro { padding-bottom: 3.25rem; }
+    .about-intro__grid { gap: 2rem; padding-top: 2rem; }
+    .about-intro__copy h1 { font-size: clamp(3rem,14.7vw,4.4rem); }
+    .about-intro__actions { display: grid; align-items: stretch; }
+    .about-intro__actions .button { width: 100%; }
+    .about-intro__actions .text-link { justify-self: start; }
+    .about-scroll-cue { display: none; }
+    .about-portrait { padding: 0 0 .85rem .85rem; }
+    .about-portrait figcaption { right: 1.2rem; bottom: 1.35rem; min-width: 10.5rem; padding: .6rem .75rem; }
+    .build-story { padding-top: 3.5rem; }
+    .build-story__heading { margin-bottom: 2rem; }
+    .photo-story__caption { right: 1.4rem; bottom: 1.25rem; left: 1.4rem; }
+    .photo-story__progress button span:last-child { display: none; }
+    .photo-story__progress button { justify-items: center; text-align: center; }
+    .story-step { grid-template-columns: 2.25rem minmax(0,1fr); gap: .65rem; }
+    .story-step h3 { font-size: clamp(2.15rem,12vw,3.2rem); }
+    .method-detail summary { grid-template-columns: 1.75rem minmax(0,1fr) 1.75rem; gap: .6rem; }
+    .method-detail__body { padding-right: .5rem; padding-left: 2.35rem; }
+    .about-cta__actions, .about-cta__actions .button { width: 100%; }
   }
 
-  .about-detail-wide {
-    grid-column: 1 / -1;
-  }
-
-  .about-detail h2 {
-    max-width: 24ch;
-    margin-bottom: 0.65rem;
-    font-size: clamp(1.65rem, 3vw, 2.35rem);
-  }
-
-  .about-detail p {
-    max-width: 72ch;
-    margin-bottom: 0;
-    color: var(--ink-700);
-    line-height: 1.55;
-  }
-
-  .about-reasons {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1rem 2rem;
-  }
-
-  .about-reason h3 {
-    margin-bottom: 0.25rem;
-    color: var(--forest-900);
-    font-size: 1rem;
-    text-transform: none;
-  }
-
-  .about-reason p {
-    font-size: 0.93rem;
-  }
-
-  .about-contact-detail {
-    align-self: start;
-  }
-
-  .about-contact-detail .button {
-    margin-top: 1rem;
-  }
-
-  @media (max-width: 58rem) {
-    .about-hero__inner {
-      grid-template-columns: 1fr;
-    }
-
-    .about-photo {
-      max-width: 32rem;
-    }
-  }
-
-  @media (max-width: 42rem) {
-    .about-hero {
-      padding-block: 1rem 2rem;
-    }
-
-    .about-hero__inner {
-      gap: 1.25rem;
-      margin-top: 1.75rem;
-    }
-
-    .about-hero__copy h1 {
-      font-size: clamp(2.65rem, 13vw, 3.9rem);
-    }
-
-    .about-hero__copy .button {
-      width: 100%;
-    }
-
-    .about-hero__copy .button-row {
-      display: grid;
-    }
-
-    .about-details__inner,
-    .about-reasons {
-      grid-template-columns: 1fr;
-    }
-
-    .about-detail-wide {
-      grid-column: auto;
-    }
-
-    .about-contact-detail .button {
-      width: 100%;
-    }
+  @media (prefers-reduced-motion: reduce) {
+    .about-scroll-cue span:last-child { animation: none; }
+    .about-portrait img, .photo-story__layer, .story-step, .method-detail__icon::after, .reveal-ready [data-reveal] { transition: none; }
+    .story-step, .reveal-ready [data-reveal] { opacity: 1; transform: none; }
   }
 </style>

@@ -45,13 +45,7 @@ When adding a task, use this format:
 
 ## Now
 
-- [ ] Audit form submissions and fix recent-work card rendering
-  - Why: Verify every live form can submit all supported fields after a clean
-    test-data reset, and remove the empty image area in compact Pergola project
-    cards shown in the latest review.
-  - Done when: The deployed forms have successful end-to-end test submissions,
-    the site-wide audit is complete, and compact project media fills its card
-    row without leaving a blank lower-left area.
+No active task.
 
 ## Next
 
@@ -87,6 +81,12 @@ When adding a task, use this format:
     not imply a partnership or endorsement that does not exist.
 
 ## Waiting
+
+- [ ] Add the `custom-sukkah-6` project card
+  - Waiting for: The requested `custom-sukkah-6` image file. It is not present
+    in the repository or under the supplied Benyamin Kay Website OneDrive tree.
+  - Done when: The real image is optimized and added with a factual title,
+    description, and construction/material pills matching the project cards.
 
 - [ ] Replace the testimonial email notification without Google Apps Script
   - Ready: Testimonial submissions are stored safely in D1 with `Pending
@@ -149,6 +149,61 @@ When adding a task, use this format:
   - Unblocks: Publishing multiple testimonial cards in the homepage scroller.
 
 ## Completed
+
+- [x] Add the newly supplied wall-material images to the shared gallery (2026-08-25)
+  - Result: Reviewed the new Tarps-folder files, excluded duplicate and
+    browser-interface versions, and added optimized two-tone fabric sukkah,
+    windowed fabric wall, and wood lattice examples to the one shared Rentals
+    and Buy gallery with material-focused labels and descriptions.
+  - Checked: Astro build, generated Worker, and all 33 automated tests passed.
+
+- [x] Replace the About-page illustration with cinematic photo chapters (2026-08-25)
+  - Result: Removed the constructed sukkah graphic and replaced it with a
+    compact sticky editorial frame that crossfades through four real work and
+    finished-project photographs. Added clickable chapter progress, mobile
+    crops, accessible reduced motion, and a restrained desktop image scale.
+  - Checked: Astro build, generated Worker, and all automated tests passed; no
+    deployment was performed.
+
+- [x] Redesign the About page as an interactive build journey (2026-08-25)
+  - Result: Replaced the long static biography with a portrait-led introduction,
+    a four-stage scroll-responsive sukkah assembly, concise story milestones,
+    compact A-to-Z disclosures, and a focused contact close. Added responsive,
+    no-JavaScript, and reduced-motion presentations without changing shared
+    navigation or publishing the site.
+  - Checked: Astro build, generated Worker, and all 33 automated tests passed.
+
+- [x] Show more of the featured Pergola roof (2026-08-25)
+  - Result: Adjusted the featured project image crop toward the top of the
+    source photo so the full roof structure remains visible in the wide card.
+  - Checked: Astro build, Worker generation, and all 33 tests passed; no
+    deployment was performed.
+
+- [x] Correct Pergola project-card photography and copy (2026-08-25)
+  - Result: Repositioned the rooftop interior crop to keep a support post in
+    view, replaced the duplicated front-yard image with Pergola-4, and removed
+    time-of-day wording from the project titles and descriptions.
+  - Checked: Astro build, Worker generation, and all 33 tests passed; no
+    deployment was performed.
+
+- [x] Add a safe managed-form update migration (2026-08-25)
+  - Result: Added an authenticated, idempotent update that patches the current
+    published Builds and Buy schemas plus shared referral helper text, creates
+    one new immutable version, and keeps unrelated published customizations and
+    separate draft edits intact. Also raised the option validation ceiling so
+    the complete state dropdown can be saved and published correctly.
+  - Checked: Migration tests cover Builds, Buy, preserved draft edits, version
+    history, and a repeated no-op run. No deployment was performed.
+
+- [x] Implement the August 24 admin, forms, gallery, and mobile refinements (2026-08-25)
+  - Result: Added authenticated persisted submission editing; updated the
+    Builds and Buy schemas, referral helper, rental price, Buy package copy,
+    and Tree Trimming quote guidance; built one shared Rentals/Buy material
+    slider; added two paired Pergola project cards with repaired photography;
+    and corrected homepage mobile slider gestures and hero framing.
+  - Verification: Full build and Worker generation completed; focused admin,
+    repository, and form tests passed. The separate `custom-sukkah-6` card is
+    waiting only for its missing source image. No deployment was performed.
 
 - [x] Refactor header navigation hierarchy and typography (2026-08-22)
   - Reorganized the shared header into Home, Sukkahs, Services, About, and
