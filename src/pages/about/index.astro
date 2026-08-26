@@ -426,14 +426,20 @@ const serviceDetails = [
     .about-intro__grid, .about-method__grid, .about-cta__inner { grid-template-columns: 1fr; }
     .about-intro__copy { max-width: 42rem; }
     .about-portrait { width: min(100%,31rem); margin-inline: auto; }
-    .build-story__grid { grid-template-columns: 1fr; gap: 1.5rem; }
-    .photo-story-pin { top: calc(var(--header-height) + .75rem); z-index: 3; }
-    .photo-story__images { aspect-ratio: 4 / 3; box-shadow: 0 18px 48px rgba(0,0,0,.3); }
-    .photo-story__layer:nth-child(1) img { object-position: 50% 60%; }
-    .photo-story__layer:nth-child(2) img { object-position: 48% 46%; }
-    .photo-story__layer:nth-child(3) img { object-position: 52% 46%; }
-    .photo-story__layer:nth-child(4) img { object-position: 53% 28%; }
-    .story-step { min-height: clamp(18rem,58vh,26rem); padding: 4rem 0 2rem; }
+    .build-story__grid { grid-template-columns: 1fr; gap: 0; }
+    .photo-story-pin { display: none; }
+    .story-steps { display: grid; }
+    .story-step,
+    .story-step.is-active {
+      min-height: 0;
+      padding: 1.75rem 0;
+      border-top: 1px solid rgba(255,255,255,.18);
+      opacity: 1;
+      transform: none;
+    }
+    .story-step:first-child { border-top: 0; }
+    .story-step h3 { max-width: 15ch; font-size: clamp(2rem,8vw,3rem); }
+    .story-step p:last-child { max-width: 36rem; }
     .about-method__heading { position: static; }
     .about-cta__actions { width: min(100%,22rem); }
   }

@@ -82,6 +82,15 @@ No active task.
 
 ## Waiting
 
+- [ ] Finish cleaning the remaining Wall Materials photography
+  - Ready: Rental included copy now says “your choice of fabric or wall,” and
+    the reinforced polyethylene, woven polyethylene, and knitted mesh images
+    have clean replacements.
+  - Waiting for: Clean replacements for reinforced canvas, heavy-duty vinyl,
+    and two-tone canvas walls.
+  - Done when: Every gallery image is free of vendor watermarks and embedded
+    promotional text, and the site build and automated tests pass.
+
 - [ ] Add the `custom-sukkah-6` project card
   - Waiting for: The requested `custom-sukkah-6` image file. It is not present
     in the repository or under the supplied Benyamin Kay Website OneDrive tree.
@@ -149,6 +158,13 @@ No active task.
   - Unblocks: Publishing multiple testimonial cards in the homepage scroller.
 
 ## Completed
+
+- [x] Simplify the About build journey on mobile (2026-08-26)
+  - Result: Removed the synchronized photo panel at phone and tablet widths and
+    converted the four build chapters into a compact, fully visible text-first
+    sequence. The existing interactive photography remains unchanged on
+    desktop.
+  - Checked: The complete site and generated Worker build passed.
 
 - [x] Standardize pricing banners and wall-option form choices (2026-08-25)
   - Result: Updated every confirmed-price banner to use “start as low as,” and

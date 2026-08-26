@@ -15,7 +15,7 @@ export const wallMaterials = Object.freeze([
     name: "Woven polyethylene",
     description: "A tightly woven wall material with reinforced corners and grommets.",
     image: "/assets/images/material-woven-polyethylene.jpg",
-    alt: "Close view of woven polyethylene material with a reinforced corner and grommets",
+    alt: "Close view of woven polyethylene material with a reinforced corner and grommet",
   },
   {
     name: "Reinforced canvas",
@@ -33,13 +33,7 @@ export const wallMaterials = Object.freeze([
     name: "Knitted mesh",
     description: "An open knitted screen material that allows filtered light and airflow.",
     image: "/assets/images/material-knitted-mesh.jpg",
-    alt: "Close view of open knitted mesh material with metal grommets",
-  },
-  {
-    name: "Two-tone fabric sukkah",
-    description: "A complete fabric-wall sukkah with a tied-back doorway and contrasting lower panels.",
-    image: "/assets/images/material-two-tone-fabric-sukkah.jpg",
-    alt: "Completed fabric sukkah with a tied-back doorway and contrasting lower wall panels",
+    alt: "Close view of open knitted mesh material with a metal grommet",
   },
   {
     name: "Windowed fabric walls",

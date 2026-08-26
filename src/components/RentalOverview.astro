@@ -70,7 +70,7 @@ const packageCopy = isBuy
           </div>
         ) : (
           <ul class="rental-overview-points">
-            <li><strong>Included</strong><span>Metal or wooden frame, installation, takedown, and bamboo schach.</span></li>
+            <li><strong>Included</strong><span>Metal or wooden frame, your choice of fabric or wall, installation, takedown, and bamboo schach.</span></li>
             <li><strong>Optional</strong><span>Evergreen schach, furniture, and different lighting styles are available for an additional cost.</span></li>
           </ul>
         )}
@@ -95,7 +95,13 @@ const packageCopy = isBuy
         <div class="rental-tarp-grid" data-material-gallery tabindex="0" aria-label="Wall material samples">
           {materialStyles.map((material) => (
             <figure class="rental-tarp-card">
-              <img src={material.image} alt={material.alt} width="1200" height="900" loading="lazy" />
+              <img
+                src={material.image}
+                alt={material.alt}
+                width="1200"
+                height="900"
+                loading="lazy"
+              />
               <figcaption>
                 <strong>{material.name}</strong>
                 <span>{material.description}</span>
