@@ -160,7 +160,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       <div class="owner-layout shell">
         <figure class="owner-photo" data-reveal>
           <img
-            src="/assets/images/profile-photo1.jpg"
+            src="/assets/images/confident_fence_worker_portrait-cropped.png"
             alt="Benyamin smiling while running in a community race"
             width="1448"
             height="1086"
@@ -1111,6 +1111,13 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   .owner-photo {
     position: relative;
     margin: 0;
+    width: min(100%, 18rem);
+    justify-self: center;
+    padding: 0.65rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-large);
+    background: var(--cream-50);
+    box-shadow: 0 16px 34px rgba(16, 45, 37, 0.08);
   }
 
   .owner-photo::after {
@@ -2050,6 +2057,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     .owner-photo::after {
       right: -0.65rem;
       bottom: -0.65rem;
+    }
+
+    .owner-photo {
+      width: min(100%, 16rem);
     }
   }
 

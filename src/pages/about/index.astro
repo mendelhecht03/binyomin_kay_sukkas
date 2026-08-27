@@ -82,7 +82,7 @@ const serviceDetails = [
           <figure class="about-portrait" data-reveal>
             <div class="about-portrait__frame">
               <img
-                src="/assets/images/profile-photo1.jpg"
+                src="/assets/images/confident_fence_worker_portrait-cropped.png"
                 alt="Benyamin Kay smiling as he crosses the finish line of a road race"
                 width="1448"
                 height="1086"
@@ -313,7 +313,7 @@ const serviceDetails = [
   .about-intro__copy .lead { max-width: 35rem; margin-bottom: 1.8rem; font-size: clamp(1.08rem, 1.8vw, 1.28rem); }
   .about-intro__actions { display: flex; flex-wrap: wrap; gap: 1rem 1.35rem; align-items: center; }
 
-  .about-portrait { position: relative; margin: 0; padding: 0 0 1.4rem 1.4rem; }
+  .about-portrait { position: relative; width: min(100%, 18rem); justify-self: center; margin: 0; padding: 0 0 1.4rem 1.4rem; }
   .about-portrait::before { position: absolute; inset: 1.4rem 1.4rem 0 0; border-radius: 45% 45% var(--radius-large) var(--radius-large); content: ""; background: var(--forest-100); }
   .about-portrait__frame { position: relative; z-index: 1; overflow: hidden; border-radius: 48% 48% var(--radius-large) var(--radius-large); box-shadow: var(--shadow-medium); }
   .about-portrait img { width: 100%; aspect-ratio: 0.87; object-fit: cover; object-position: 42% center; transition: transform 700ms cubic-bezier(0.2, 0.75, 0.25, 1); }
@@ -425,7 +425,7 @@ const serviceDetails = [
     .about-intro { min-height: auto; }
     .about-intro__grid, .about-method__grid, .about-cta__inner { grid-template-columns: 1fr; }
     .about-intro__copy { max-width: 42rem; }
-    .about-portrait { width: min(100%,31rem); margin-inline: auto; }
+    .about-portrait { width: min(100%, 16rem); margin-inline: auto; }
     .build-story__grid { grid-template-columns: 1fr; gap: 0; }
     .photo-story-pin { display: none; }
     .story-steps { display: grid; }
@@ -452,7 +452,7 @@ const serviceDetails = [
     .about-intro__actions .button { width: 100%; }
     .about-intro__actions .text-link { justify-self: start; }
     .about-scroll-cue { display: none; }
-    .about-portrait { padding: 0 0 .85rem .85rem; }
+    .about-portrait { width: min(100%, 15rem); padding: 0 0 .85rem .85rem; }
     .about-portrait figcaption { right: 1.2rem; bottom: 1.35rem; min-width: 10.5rem; padding: .6rem .75rem; }
     .build-story { padding-top: 3.5rem; }
     .build-story__heading { margin-bottom: 2rem; }
