@@ -32,10 +32,12 @@ store filenames, types, sizes, and R2 keys.
 
 ## Protection
 
-`/admin/` and `/api/admin/*` are protected on the server. Sites supplies the
-signed-in account email in `oai-authenticated-user-email`; the Worker then
-requires that address to appear in `DASHBOARD_ADMIN_EMAILS`. Missing
-configuration fails closed.
+`/admin/`, `/api/admin/*`, and stored submission photos are protected on the
+server. In the Cloudflare deployment, the Worker reads the verified identity
+from Cloudflare Access and requires that email address to appear in
+`DASHBOARD_ADMIN_EMAILS`. Missing configuration fails closed. The earlier
+ChatGPT-hosted deployment keeps its legacy header-based mode only while it
+remains the live site; it is not used by the Cloudflare staging configuration.
 
 The browser never receives the D1 binding or unrestricted database access. All
 queries use prepared SQL statements inside the Worker. Responses use private,
@@ -43,7 +45,7 @@ no-store headers.
 
 ## Database setup
 
-The logical database and photo bindings are declared in `.openai/hosting.json`:
+The Cloudflare staging bindings are declared in `wrangler.jsonc`:
 
 - `DB` is the D1 relational database.
 - `SUBMISSION_PHOTOS` is the R2 upload bucket.
@@ -68,8 +70,8 @@ stores only the spreadsheet ID in D1, and keeps Google Sheets outside the
 submission storage path. If the secrets are not configured, the rest of the
 dashboard continues to work and the export card explains that setup is needed.
 
-No database credentials are placed in `.env`; Sites supplies the DB and R2
-bindings at runtime.
+No database credentials are placed in `.env`; Cloudflare supplies the DB and
+R2 bindings at runtime.
 
 ## Adding another form
 

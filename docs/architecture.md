@@ -430,9 +430,8 @@ npm run db:generate
 The full build runs these two steps in order:
 
 1. `npm run build:site` creates `dist/`.
-2. `npm run build:worker` reads `dist/`, regenerates `index.mjs`, and creates
-   `dist/server/index.js` plus the hosting metadata and D1 migrations required
-   for deployment.
+2. `npm run build:worker` regenerates the small `index.mjs` Worker router.
+   Cloudflare deploys `dist/` separately through its assets binding.
 
 `npm run preview` previews the static Astro output. It does not reproduce the
 Worker-only API endpoints.
@@ -446,9 +445,10 @@ Worker-only API endpoints.
 5. Check the reported generated Worker size.
 6. Update this file when routes, folders, or hosting behavior change.
 7. Commit the Astro source, migration, lockfile, and regenerated `index.mjs`.
-8. Push the commit to the Sites source repository.
-9. Save a new Sites version and deploy it.
+8. Push the commit to the connected GitHub branch.
+9. Review the isolated Cloudflare staging Worker before any deliberate
+   production release.
 
 `dist/` and `node_modules/` are local build folders and should not be
-committed. `index.mjs` must remain committed because it is the Sites deployment
-artifact.
+committed. `index.mjs` must remain committed because it is the Cloudflare
+Worker deployment artifact.
