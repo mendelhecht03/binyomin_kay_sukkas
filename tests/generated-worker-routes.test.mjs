@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import worker from "../index.mjs";
 import { createSubmission, listSubmissions } from "../src/server/storage/submission-repository.js";
 import { createTestDatabase } from "./helpers/d1-test-database.mjs";
+import { withStaticAssets } from "./helpers/static-assets.mjs";
 
 test("the admin page and API both fail closed", async () => {
   const unconfiguredPage = await worker.fetch(new Request("https://example.com/admin/"), {});
@@ -26,11 +27,22 @@ test("the admin page and API both fail closed", async () => {
     new Request("https://example.com/admin/", {
       headers: { "oai-authenticated-user-email": "owner@example.com" },
     }),
-    { DASHBOARD_ADMIN_EMAILS: "owner@example.com" },
+    withStaticAssets({ DASHBOARD_ADMIN_EMAILS: "owner@example.com" }),
   );
   assert.equal(allowedPage.status, 200);
   assert.match(await allowedPage.text(), /Website submissions/);
   assert.equal(allowedPage.headers.get("cache-control"), "private, no-store");
+});
+
+test("static pages, dynamic request compatibility paths, and missing pages use the assets binding", async () => {
+  const env = withStaticAssets();
+  const requestPage = await worker.fetch(new Request("https://example.com/request/rentals/"), env);
+  assert.equal(requestPage.status, 200);
+  assert.match(await requestPage.text(), /data-dynamic-form/);
+
+  const missingPage = await worker.fetch(new Request("https://example.com/not-a-real-page/"), env);
+  assert.equal(missingPage.status, 404);
+  assert.match(await missingPage.text(), /Page not found/i);
 });
 
 test("dashboard deletion remains protected and deletes from D1", async () => {

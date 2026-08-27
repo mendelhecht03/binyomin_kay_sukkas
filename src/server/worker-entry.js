@@ -12,13 +12,13 @@ import { handleAdminFormsRequest } from "./dashboard/form-editor-service.js";
 import { handleDynamicFormSubmission } from "./routes/dynamic-form-submissions.js";
 import { createStaticFileService, normalizePath } from "./static-files.js";
 
-export function createWorker(fileRecords) {
-  const staticFiles = createStaticFileService(fileRecords);
+export function createWorker() {
   return {
-    async fetch(request, env) {
+    async fetch(request, env = {}, ctx) {
       const url = new URL(request.url);
+      const staticFiles = createStaticFileService(env.ASSETS);
       if (url.pathname === "/api/admin/forms" || url.pathname.startsWith("/api/admin/forms/")) {
-        return handleAdminFormsRequest(request, env, url.pathname);
+        return handleAdminFormsRequest(request, env, url.pathname, ctx);
       }
       if (url.pathname.startsWith("/api/forms/") && request.method === "GET") {
         return handlePublicFormRequest(env, decodeURIComponent(url.pathname.slice("/api/forms/".length)));
@@ -30,17 +30,17 @@ export function createWorker(fileRecords) {
         if (request.method !== "GET" && request.method !== "DELETE" && request.method !== "PATCH") {
           return new Response("Method not allowed", { status: 405, headers: { "Content-Type": "text/plain; charset=utf-8" } });
         }
-        return handleAdminSubmissionsRequest(request, env);
+        return handleAdminSubmissionsRequest(request, env, ctx);
       }
       if (url.pathname.startsWith("/api/admin/google-sheets/")) {
-        return handleAdminGoogleSheetsRequest(request, env, url.pathname);
+        return handleAdminGoogleSheetsRequest(request, env, url.pathname, ctx);
       }
       if (url.pathname === "/api/testimonials" && request.method === "GET") {
         return handlePublicTestimonialsRequest(env);
       }
       const submissionHandler = request.method === "POST" ? submissionHandlerForPath(url.pathname) : undefined;
       if (submissionHandler) return submissionHandler(request, env, url);
-      if (request.method === "GET" && url.pathname.startsWith(PHOTO_ROUTE_PREFIX)) return handlePhotoRequest(env, url.pathname);
+      if (request.method === "GET" && url.pathname.startsWith(PHOTO_ROUTE_PREFIX)) return handlePhotoRequest(request, env, url.pathname, ctx);
       if (request.method === "POST" && url.pathname === "/api/sukkah-quote") {
         return Response.json({ ok: true, message: "Quote calculation backend will be added later." });
       }
@@ -50,18 +50,14 @@ export function createWorker(fileRecords) {
 
       const normalizedPath = normalizePath(url.pathname);
       if (/^\/request\/[a-z0-9_-]+\/$/.test(normalizedPath)) {
-        const requestFile = staticFiles.get("/request/");
-        return requestFile ? staticFiles.response(requestFile, request.method) : staticFiles.notFound(request.method);
+        return staticFiles.response(request, "/request/");
       }
       if (normalizedPath === "/admin/" || normalizedPath === "/admin/index.html") {
-        const accessResponse = adminPageAccessResponse(request, env);
+        const accessResponse = await adminPageAccessResponse(request, env, ctx);
         if (accessResponse) return accessResponse;
-        const adminFile = staticFiles.get("/admin/");
-        if (!adminFile) return new Response("Not found", { status: 404 });
-        return withAdminPageHeaders(staticFiles.response(adminFile, request.method));
+        return withAdminPageHeaders(await staticFiles.response(request, "/admin/"));
       }
-      const file = staticFiles.get(url.pathname);
-      return file ? staticFiles.response(file, request.method) : staticFiles.notFound(request.method);
+      return staticFiles.response(request, url.pathname);
     },
   };
 }

@@ -45,7 +45,19 @@ When adding a task, use this format:
 
 ## Now
 
-No active task.
+- [ ] Refactor hosting and application architecture safely
+  - Why: The current generated Worker embeds the complete static site and has
+    become slow to build, deploy, and maintain as the site has grown.
+  - Scope: Preserve the live UI, forms, submissions, D1 data, R2 uploads, and
+    admin behavior while separating static assets from API code, adding a
+    conventional GitHub/Cloudflare pipeline, improving rollback and backups,
+    and splitting the largest source files into focused modules.
+  - Safety: Production remains on the protected
+    `pre-architecture-refactor-20260827` baseline until staging verification is
+    complete. Work happens on `codex/cloudflare-architecture-refactor`.
+  - Done when: CI passes, staging matches production behavior on desktop and
+    mobile, all forms and admin workflows pass end to end, rollback is
+    documented and tested, and the production cutover is verified.
 
 ## Next
 

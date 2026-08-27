@@ -19,18 +19,19 @@ Static website
         | npm run build:worker
         | bundles src/server/worker-entry.js
         v
-Hosted Worker
-  index.mjs and dist/server/index.js
+Cloudflare Worker API/router
+  index.mjs
+        |
+        +-- Cloudflare assets binding --> dist/
 ```
 
-The hosted Sites project deploys the generated Worker from
-`dist/server/index.js`. The same generated code is also kept in the root
-`index.mjs` file for source history and compatibility. Astro creates the static
-site first. `scripts/generate-static-worker.cjs` then packages the finished
-assets and bundles the modular server entry point into both Worker files. The
-generator contains packaging code only; form handling, database storage, photo
-storage, dashboard behavior, and routing live in focused files under
-`src/server/`.
+Astro creates the static site first. `scripts/generate-static-worker.cjs` then
+bundles only the modular server entry point into `index.mjs`. Cloudflare uploads
+the finished `dist/` directory separately and exposes it through the Worker’s
+assets binding. This prevents every image, stylesheet, and page from being
+embedded into one huge JavaScript file. The generator contains packaging code
+only; form handling, database storage, photo storage, dashboard behavior, and
+routing live in focused files under `src/server/`.
 
 ## Important Folders
 

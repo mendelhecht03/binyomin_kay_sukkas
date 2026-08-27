@@ -18,8 +18,8 @@ const PRIVATE_HEADERS = {
   "X-Frame-Options": "DENY",
 };
 
-export function checkAdminAccess(request, env) {
-  return authorizeAdminRequest(request, env);
+export function checkAdminAccess(request, env, ctx) {
+  return authorizeAdminRequest(request, env, ctx);
 }
 
 function sameOrigin(request) {
@@ -37,8 +37,8 @@ function googleSheetsErrorResponse(error) {
   return Response.json({ ok: false, code: error?.code || "GOOGLE_SHEETS_ERROR", message }, { status, headers: PRIVATE_HEADERS });
 }
 
-export async function handleAdminGoogleSheetsRequest(request, env, pathname) {
-  const access = authorizeAdminRequest(request, env);
+export async function handleAdminGoogleSheetsRequest(request, env, pathname, ctx) {
+  const access = await authorizeAdminRequest(request, env, ctx);
   if (!access.ok) return adminErrorResponse(access);
   if (!sameOrigin(request)) return Response.json({ ok: false, message: "This dashboard request was not allowed." }, { status: 403, headers: PRIVATE_HEADERS });
   try {
@@ -66,11 +66,11 @@ export async function handleAdminGoogleSheetsRequest(request, env, pathname) {
   }
 }
 
-export function adminPageAccessResponse(request, env) {
-  const access = authorizeAdminRequest(request, env);
+export async function adminPageAccessResponse(request, env, ctx) {
+  const access = await authorizeAdminRequest(request, env, ctx);
   if (access.ok) return null;
 
-  if (access.code === "SIGN_IN_REQUIRED") {
+  if (access.code === "SIGN_IN_REQUIRED" && env?.ADMIN_AUTH_MODE !== "cloudflare-access") {
     return Response.redirect(new URL("/signin-with-chatgpt?return_to=/admin/", request.url), 302);
   }
 
@@ -83,8 +83,8 @@ export function adminPageAccessResponse(request, env) {
   });
 }
 
-export async function handleAdminSubmissionsRequest(request, env) {
-  const access = authorizeAdminRequest(request, env);
+export async function handleAdminSubmissionsRequest(request, env, ctx) {
+  const access = await authorizeAdminRequest(request, env, ctx);
   if (!access.ok) return adminErrorResponse(access);
 
   if (request.method === "DELETE" || request.method === "PATCH") {

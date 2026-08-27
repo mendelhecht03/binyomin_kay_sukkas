@@ -1,0 +1,32 @@
+{
+  "name": "bk-sukkah-staging",
+  "main": "./index.mjs",
+  "compatibility_date": "2026-08-27",
+  "vars": {
+    "ADMIN_AUTH_MODE": "cloudflare-access"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "bk-sukkah-staging",
+      "database_id": "89d9540b-2985-411c-aa5a-b036efce7e9f"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "SUBMISSION_PHOTOS",
+      "bucket_name": "bk-sukkah-staging-submission-photos"
+    }
+  ],
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page",
+    "run_worker_first": [
+      "/api/*",
+      "/admin/*",
+      "/request/*"
+    ]
+  }
+}

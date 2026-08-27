@@ -7,15 +7,26 @@ function configuredAdmins(env) {
   );
 }
 
-export function authorizeAdminRequest(request, env) {
+async function cloudflareAccessEmail(ctx) {
+  if (typeof ctx?.access?.getIdentity !== "function") return "";
+  try {
+    const identity = await ctx.access.getIdentity();
+    return String(identity?.email || "").trim().toLowerCase();
+  } catch {
+    return "";
+  }
+}
+
+export async function authorizeAdminRequest(request, env, ctx) {
   const allowedEmails = configuredAdmins(env);
   if (allowedEmails.size === 0) {
     return { ok: false, status: 503, code: "ADMIN_NOT_CONFIGURED" };
   }
 
-  const email = String(request.headers.get("oai-authenticated-user-email") || "")
-    .trim()
-    .toLowerCase();
+  const usesCloudflareAccess = env?.ADMIN_AUTH_MODE === "cloudflare-access";
+  const email = usesCloudflareAccess
+    ? await cloudflareAccessEmail(ctx)
+    : String(request.headers.get("oai-authenticated-user-email") || "").trim().toLowerCase();
   if (!email) return { ok: false, status: 401, code: "SIGN_IN_REQUIRED" };
   if (!allowedEmails.has(email)) return { ok: false, status: 403, code: "ACCESS_DENIED" };
   return { ok: true, email };

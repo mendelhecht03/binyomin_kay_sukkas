@@ -1,4 +1,5 @@
 import { cleanText, jsonResponse } from "../common/http.js";
+import { adminErrorResponse, authorizeAdminRequest } from "../dashboard/admin-auth.js";
 
 export const PHOTO_ROUTE_PREFIX = "/api/sukkah-submission-photos/";
 const ALLOWED_PHOTO_TYPES = new Set(["image/jpeg", "image/png", "image/heic", "image/heif"]);
@@ -92,7 +93,9 @@ export function photoKeysFromUrls(urls = []) {
   });
 }
 
-export async function handlePhotoRequest(env, pathname) {
+export async function handlePhotoRequest(request, env, pathname, ctx) {
+  const access = await authorizeAdminRequest(request, env, ctx);
+  if (!access.ok) return adminErrorResponse(access);
   if (!env?.SUBMISSION_PHOTOS) return new Response("Photo storage unavailable", { status: 503 });
   const key = decodeURIComponent(pathname.slice(PHOTO_ROUTE_PREFIX.length));
   if (!key || key.includes("..")) return new Response("Not found", { status: 404 });

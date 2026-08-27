@@ -8,8 +8,8 @@ const HEADERS = { "Cache-Control": "private, no-store", "X-Content-Type-Options"
 
 function response(body, status = 200) { return Response.json(body, { status, headers: HEADERS }); }
 
-export async function handleAdminFormsRequest(request, env, pathname) {
-  const access = authorizeAdminRequest(request, env);
+export async function handleAdminFormsRequest(request, env, pathname, ctx) {
+  const access = await authorizeAdminRequest(request, env, ctx);
   if (!access.ok) return adminErrorResponse(access);
   if (request.method !== "GET") {
     const origin = request.headers.get("Origin");
