@@ -17,6 +17,12 @@ async function cloudflareAccessEmail(ctx) {
   }
 }
 
+function cloudflareAccessHeaderEmail(request) {
+  return String(request.headers.get("cf-access-authenticated-user-email") || "")
+    .trim()
+    .toLowerCase();
+}
+
 export async function authorizeAdminRequest(request, env, ctx) {
   const allowedEmails = configuredAdmins(env);
   if (allowedEmails.size === 0) {
@@ -25,7 +31,7 @@ export async function authorizeAdminRequest(request, env, ctx) {
 
   const usesCloudflareAccess = env?.ADMIN_AUTH_MODE === "cloudflare-access";
   const email = usesCloudflareAccess
-    ? await cloudflareAccessEmail(ctx)
+    ? (await cloudflareAccessEmail(ctx)) || cloudflareAccessHeaderEmail(request)
     : String(request.headers.get("oai-authenticated-user-email") || "").trim().toLowerCase();
   if (!email) return { ok: false, status: 401, code: "SIGN_IN_REQUIRED" };
   if (!allowedEmails.has(email)) return { ok: false, status: 403, code: "ACCESS_DENIED" };

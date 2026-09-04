@@ -361,11 +361,15 @@ a label-and-value snapshot for every visible answer. Consequently, renaming or
 removing a question in a later version does not make earlier submissions
 unreadable.
 
-Sites supplies the signed-in user's email in a trusted request header. The
-Worker compares that email with `DASHBOARD_ADMIN_EMAILS` before returning the
-page or any data. A missing allowlist fails closed. Signed-out visitors are sent
-to the Sites sign-in route, and signed-in accounts that are not on the allowlist
-receive a forbidden response.
+Sites supplies the signed-in user's email in a trusted request header. On the
+Cloudflare deployment, Access supplies the authenticated identity through
+`ctx.access` for direct Worker invocations. Workers with Static Assets run
+behind Cloudflare's internal asset router, which does not forward `ctx.access`,
+so that path uses Access's authenticated-user email header instead. The Worker
+compares either trusted identity with `DASHBOARD_ADMIN_EMAILS` before returning
+the page or any data. A missing allowlist fails closed. Signed-out visitors are
+sent to the configured sign-in flow, and signed-in accounts that are not on the
+allowlist receive a forbidden response.
 
 After authorization, the Worker queries D1 through prepared SQL statements.
 Results are cursor-paginated, searchable, newest first, and always returned

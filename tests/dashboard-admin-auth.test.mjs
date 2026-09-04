@@ -28,3 +28,11 @@ test("Cloudflare staging trusts the Access identity instead of a request header"
   const request = new Request("https://example.com/admin/", { headers: { "oai-authenticated-user-email": "attacker@example.com" } });
   assert.deepEqual(await authorizeAdminRequest(request, env, ctx), { ok: true, email: "owner@example.com" });
 });
+
+test("Cloudflare staging accepts the Access email header behind Static Assets", async () => {
+  const env = { DASHBOARD_ADMIN_EMAILS: "owner@example.com", ADMIN_AUTH_MODE: "cloudflare-access" };
+  const request = new Request("https://example.com/admin/", {
+    headers: { "cf-access-authenticated-user-email": "OWNER@example.com" },
+  });
+  assert.deepEqual(await authorizeAdminRequest(request, env), { ok: true, email: "owner@example.com" });
+});
