@@ -9,6 +9,7 @@ import {
 } from "../src/server/storage/form-repository.js";
 import { listSubmissions } from "../src/server/storage/submission-repository.js";
 import { createTestDatabase } from "./helpers/d1-test-database.mjs";
+import { withStaticAssets } from "./helpers/static-assets.mjs";
 
 function editableSchema(overrides = {}) {
   return {
@@ -213,7 +214,7 @@ test("form management APIs require an approved owner and public form pages use t
     assert.equal(publicConfig.status, 200);
     assert.equal((await publicConfig.json()).schema.slug, "custom-sukkah");
 
-    const shell = await worker.fetch(new Request("https://example.com/request/custom-sukkah/"), { DB });
+    const shell = await worker.fetch(new Request("https://example.com/request/custom-sukkah/"), withStaticAssets({ DB }));
     assert.equal(shell.status, 200);
     assert.match(await shell.text(), /data-dynamic-form/);
   } finally { DB.close(); }
@@ -231,13 +232,14 @@ test("the live request definitions use editable section icons and the shared pub
       assert.equal(body.schema.steps.at(-1).icon, "final");
     }
 
-    const buildsPage = await worker.fetch(new Request("https://example.com/sukka-builder/"), { DB });
-    const rentalsPage = await worker.fetch(new Request("https://example.com/sukkah-rentals/"), { DB });
-    const rentalFormPage = await worker.fetch(new Request("https://example.com/request/?form=rentals"), { DB });
-    const buyPage = await worker.fetch(new Request("https://example.com/purchases/"), { DB });
-    const buyFormPage = await worker.fetch(new Request("https://example.com/request/?form=purchases"), { DB });
-    const customPage = await worker.fetch(new Request("https://example.com/request/custom-sukkah/"), { DB });
-    const pergolaPage = await worker.fetch(new Request("https://example.com/request/?form=pergolas"), { DB });
+    const pageEnv = withStaticAssets({ DB });
+    const buildsPage = await worker.fetch(new Request("https://example.com/sukka-builder/"), pageEnv);
+    const rentalsPage = await worker.fetch(new Request("https://example.com/sukkah-rentals/"), pageEnv);
+    const rentalFormPage = await worker.fetch(new Request("https://example.com/request/?form=rentals"), pageEnv);
+    const buyPage = await worker.fetch(new Request("https://example.com/purchases/"), pageEnv);
+    const buyFormPage = await worker.fetch(new Request("https://example.com/request/?form=purchases"), pageEnv);
+    const customPage = await worker.fetch(new Request("https://example.com/request/custom-sukkah/"), pageEnv);
+    const pergolaPage = await worker.fetch(new Request("https://example.com/request/?form=pergolas"), pageEnv);
     const buildsHtml = await buildsPage.text();
     const buyHtml = await buyPage.text();
     const buyFormHtml = await buyFormPage.text();
@@ -295,8 +297,8 @@ test("the live request definitions use editable section icons and the shared pub
     assert.match(pergolaHtml, /Back to overview/);
     assert.match(pergolaHtml, /Custom pergola projects start as low as \$900/);
     assert.match(pergolaHtml, /\/pergolas\/#recent-projects/);
-    const customSukkahsPage = await worker.fetch(new Request("https://example.com/custom-sukkahs/"), { DB });
-    const pergolasPage = await worker.fetch(new Request("https://example.com/pergolas/"), { DB });
+    const customSukkahsPage = await worker.fetch(new Request("https://example.com/custom-sukkahs/"), pageEnv);
+    const pergolasPage = await worker.fetch(new Request("https://example.com/pergolas/"), pageEnv);
     const customSukkahsHtml = await customSukkahsPage.text();
     const pergolasHtml = await pergolasPage.text();
     assert.match(customSukkahsHtml, /form-page-actions/);
@@ -326,7 +328,7 @@ test("the live request definitions use editable section icons and the shared pub
 });
 
 test("the homepage presents the streamlined service cards", async () => {
-  const homePage = await worker.fetch(new Request("https://example.com/"));
+  const homePage = await worker.fetch(new Request("https://example.com/"), withStaticAssets());
   assert.equal(homePage.status, 200);
   const html = await homePage.text();
   const serviceChoicesStart = html.indexOf('class="service-choices"');
