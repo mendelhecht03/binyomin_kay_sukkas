@@ -342,9 +342,8 @@ test("the homepage presents the streamlined service cards", async () => {
   assert.ok(buildsIndex < rentalsIndex);
   assert.doesNotMatch(html.slice(serviceChoicesStart, serviceChoicesEnd), /href="\/purchases\/"/);
   assert.doesNotMatch(html.slice(serviceChoicesStart, serviceChoicesEnd), /href="\/pergolas\/"/);
-  assert.match(html, /src="\/assets\/images\/home-hero-wooden-sukkah\.jpg"/);
-  assert.match(html, /media="\(max-width: 760px\)"[\s\S]*home-hero-wooden-sukkah-mobile\.jpg/);
-  assert.match(html, /alt="A wooden sukkah with bamboo schach"/);
+  assert.match(html, /src="\/assets\/images\/home-hero-decorated-sukkah\.jpg"/);
+  assert.match(html, /alt="A finished sukkah prepared with schach, greenery, lighting and a set table"/);
   assert.match(html, /href="\/contact\/"[^>]*>Request a Quote<\/a>/);
   assert.match(html, /class="brand-copy"/);
   assert.doesNotMatch(html, /class="brand-copy footer-brand-copy"/);
